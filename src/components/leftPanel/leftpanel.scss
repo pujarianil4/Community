@@ -1,0 +1,32 @@
+.left_container {
+  width: 300px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+
+  div {
+    display: flex;
+
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--secondary-hov);
+    }
+    svg {
+      margin-inline: 10px;
+    }
+    h4 {
+      font-weight: 300;
+      font-size: 15px;
+    }
+  }
+  hr {
+    border: 1px solid var(--secondary-bg);
+    margin: 10px;
+  }
+  .active {
+    background-color: var(--secondary-bg);
+  }
+}
