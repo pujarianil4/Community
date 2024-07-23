@@ -3,20 +3,15 @@ import React, { useEffect, useRef, useState } from "react";
 import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
 import { MdOutlineGifBox } from "react-icons/md";
+import TestArea from "./testArea";
 
 export default function CreatePost() {
-  const textAreaRef = useRef(null);
-  const [pics, setPics] = useState([]);
+  const [pics, setPics] = useState<any>([]);
   const [text, setText] = useState("");
-
   const [content, setContent] = useState("");
 
-  const handleInput = (e: any) => {
-    setContent(e.target.innerHTML);
-  };
-
   const FileInput = ({ onChange, children }: any) => {
-    const fileRef = useRef(null);
+    const fileRef = useRef<HTMLInputElement>(null);
     const onPickFile = (event: any) => {
       onChange([...event.target.files]);
     };
@@ -40,16 +35,23 @@ export default function CreatePost() {
     );
   };
 
-  const Img = ({ file, onRemove, index }: any) => {
+  const Img = React.memo(({ file, onRemove, index }: any) => {
     const [fileUrl, setFileUrl] = useState<any>(null);
+
     useEffect(() => {
       if (file) {
         setFileUrl(URL.createObjectURL(file));
       }
-    }, [file]);
+      // Clean up the URL object when component unmounts or file changes
+      return () => {
+        if (fileUrl) {
+          URL.revokeObjectURL(fileUrl);
+        }
+      };
+    }, [file]); // Only re-run effect if `file` changes
 
     return fileUrl ? (
-      <div className='file'>
+      <div className='file' key={index}>
         <img alt='pic' src={fileUrl} />
         {onRemove && (
           <div className='remove' onClick={() => onRemove(index)}>
@@ -58,28 +60,24 @@ export default function CreatePost() {
         )}
       </div>
     ) : null;
-  };
+  });
 
   return (
     <div className='create_post_container'>
       <span className='label'>Create Post</span>
       <div className='create_post_form'>
         <div className='inputArea'>
-          <div
-            className='placeholder-container'
-            contentEditable
-            onInput={handleInput}
-            dangerouslySetInnerHTML={{ __html: content }}
-            data-placeholder='Type your text here...'
-          ></div>
+          <TestArea />
           <div className='file_container'>
-            {pics.map((picFile, index) => (
+            {pics.map((picFile: any, index: number) => (
               <Img
                 key={index}
                 index={index}
                 file={picFile}
                 onRemove={(rmIndx: any) =>
-                  setPics(pics.filter((pic, index) => index !== rmIndx))
+                  setPics(
+                    pics.filter((_: any, index: number) => index !== rmIndx)
+                  )
                 }
               />
             ))}
@@ -87,7 +85,11 @@ export default function CreatePost() {
         </div>
         <div className='media'>
           <div className='inputs'>
-            <FileInput onChange={(pics: any) => setPics(pics)}>
+            <FileInput
+              onChange={(newPics: any) =>
+                setPics((prevPics: any) => [...prevPics, ...newPics])
+              }
+            >
               <LuImagePlus color='var(--primary)' size={20} />
             </FileInput>
 

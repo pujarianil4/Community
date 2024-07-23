@@ -1,0 +1,27 @@
+.rightpanel_container {
+  width: 30%;
+  padding: 10px;
+}
+
+.createCommunity {
+  background-color: var(--secondary-bg);
+  padding: 15px;
+  border-radius: 10px;
+
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  button {
+    width: 100%;
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: transparent;
+    border: 1px solid var(--primary-text);
+    color: var(--primary-text);
+  }
+  p {
+    color: var(--primary-text);
+    font-size: 13px;
+  }
+}
