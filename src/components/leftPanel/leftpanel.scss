@@ -1,5 +1,6 @@
 .left_container {
-  width: 300px;
+  min-width: 200px;
+  width: 25%;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -19,7 +20,8 @@
     }
     h4 {
       font-weight: 300;
-      font-size: 15px;
+      font-size: 14px;
+      margin-top: 2px;
     }
   }
   hr {
