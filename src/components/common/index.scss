@@ -1,0 +1,29 @@
+.customButton {
+  padding: 7px 15px;
+  background-color: var(--primary);
+  border: 0px;
+  border-radius: 5px;
+  color: var(--primary-text);
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--primary-hover);
+  }
+}
+
+.customInput {
+  background: transparent;
+  border: 1px solid var(--primary-border);
+  color: var(--primary-text);
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 5px;
+  outline: none;
+  &:focus,
+  &:active,
+  &:focus-visible {
+    // border: none;
+    // outline: 1px solid var(--primary-text);
+  }
+}

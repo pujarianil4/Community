@@ -6,7 +6,7 @@ import { MdOutlineGifBox } from "react-icons/md";
 import TestArea from "./testArea";
 
 export default function CreatePost() {
-  const [pics, setPics] = useState<any>([]);
+  const [pics, setPics] = useState<Array<string>>([]);
   const [text, setText] = useState("");
   const [content, setContent] = useState("");
 
