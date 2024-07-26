@@ -1,16 +1,21 @@
 "use strict";
-import Image from "next/image";
-import styles from "./page.module.css";
+
 import "../styles/index.scss";
 import "../styles/antd.scss";
-import Navbar from "@/components/navbar/navbar";
-import HomeComponent from "@/components/Home/home";
+
+import PageWraper from "@/components/Wrapers/PageWraper";
+import CreatePost from "@/components/createPost/CreatePost";
+import UserHead from "@/components/userHead/UserHead";
+import FeedPost from "@/components/feedPost/feedPost";
 
 export default function Home() {
   return (
-    <main className='dark'>
-      <Navbar />
-      <HomeComponent />
+    <main>
+      <PageWraper>
+        <CreatePost />
+        <FeedPost />
+        <UserHead />
+      </PageWraper>
     </main>
   );
 }

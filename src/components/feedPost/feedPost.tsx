@@ -4,7 +4,7 @@ import { LiaArrowRightSolid } from "react-icons/lia";
 import { PiArrowFatUpLight, PiArrowFatDownLight } from "react-icons/pi";
 import { GoComment, GoShareAndroid } from "react-icons/go";
 
-export default function PostCard() {
+export default function FeedPost() {
   return (
     <div className='postcard_container'>
       <div className='user_head'>
