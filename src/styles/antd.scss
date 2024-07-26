@@ -10,3 +10,30 @@
   color: var(--primary-border) !important;
   border-block-start: var(--primary-border) !important;
 }
+.ant-tabs {
+  .ant-tabs-nav {
+    &::before {
+      border-bottom: 0px !important;
+    }
+  }
+  .ant-tabs-nav-list {
+    .ant-tabs-tab {
+      color: var(--label-text) !important;
+      min-width: 70px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .ant-tabs-tab-active {
+      .ant-tabs-tab-btn {
+        color: var(--primary) !important;
+      }
+    }
+  }
+  .ant-tabs-ink-bar {
+    background: var(--primary) !important;
+  }
+  .ant-tabs-content-holder {
+    color: var(--primary-text) !important;
+  }
+}

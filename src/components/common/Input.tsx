@@ -1,11 +1,11 @@
 import React from "react";
 import "./index.scss";
 
-interface ICustomInput {
+interface ICInput {
   className?: string;
   [key: string]: any; // Allows additional props
 }
 
-export default function CustomInput({ className, ...props }: ICustomInput) {
-  return <input className={`customInput ${className}`} {...props} />;
+export default function CInput({ className, ...props }: ICInput) {
+  return <input className={`CInput ${className}`} {...props} />;
 }

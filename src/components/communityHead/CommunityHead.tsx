@@ -1,7 +1,7 @@
 import React from "react";
 import CButton from "../common/Button";
 import "./index.scss";
-export default function UserHead() {
+export default function CommunityHead() {
   return (
     <div className='userhead_cotainer'>
       <div className='info'>

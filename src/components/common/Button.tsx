@@ -1,7 +1,7 @@
 import React from "react";
 import "./index.scss";
 
-interface ICustomButton {
+interface ICButton {
   children: React.ReactNode;
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
@@ -9,17 +9,17 @@ interface ICustomButton {
   size?: number | string;
 }
 
-export default function CustomButton({
+export default function CButton({
   children,
   size,
   onClick,
   className,
-}: ICustomButton) {
+}: ICButton) {
   return (
     <button
       style={{ fontSize: `${size}px` }}
       onClick={onClick}
-      className={`customButton ${className}`}
+      className={`CButton ${className}`}
     >
       {children}
     </button>
