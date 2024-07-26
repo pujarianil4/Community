@@ -5,8 +5,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, Modal, Divider } from "antd";
 import { useSignMessage, useDisconnect } from "wagmi";
 import "./navbar.scss";
-import CustomButton from "../common/Button";
-import CustomInput from "../common/Input";
+import CButton from "../common/Button";
+import CInput from "../common/Input";
 
 export default function Navbar() {
   const signer = useEthersSigner();
@@ -62,14 +62,14 @@ export default function Navbar() {
         <div className='login'>
           <h4>Log In</h4>
 
-          <CustomButton onClick={openConnectModal}>Connect Wallet</CustomButton>
+          <CButton onClick={openConnectModal}>Connect Wallet</CButton>
         </div>
         <Divider className='divider'>Or</Divider>
         <div className='signup'>
           <h4>SignUp</h4>
-          <CustomInput type='text' placeholder='UserName' />
-          <CustomInput type='text' placeholder='Name (Optional)' />
-          <CustomButton size={18}>Sign Up</CustomButton>
+          <CInput type='text' placeholder='UserName' />
+          <CInput type='text' placeholder='Name (Optional)' />
+          <CButton size={18}>Sign Up</CButton>
         </div>
       </div>
     );
@@ -84,7 +84,7 @@ export default function Navbar() {
           <a href=''>Stats</a>
         </div>
         <div className='signin'>
-          <CustomButton onClick={showModal}>LogIn</CustomButton>
+          <CButton onClick={showModal}>LogIn</CButton>
           {/* <ConnectButton /> */}
         </div>
       </nav>

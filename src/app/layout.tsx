@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
+import "../styles/index.scss";
+import "../styles/antd.scss";
 import { Providers } from "./providers";
+import Navbar from "@/components/navbar/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body suppressHydrationWarning className={inter.className}>
+      <body suppressHydrationWarning className={`${inter.className} dark`}>
         <Providers>{children}</Providers>
       </body>
     </html>
