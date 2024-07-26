@@ -67,7 +67,7 @@ export default function CreatePost() {
       <span className='label'>Create Post</span>
       <div className='create_post_form'>
         <div className='inputArea'>
-          <TestArea />
+          <TestArea content={content} setContent={setContent} />
           <div className='file_container'>
             {pics.map((picFile: any, index: number) => (
               <Img
