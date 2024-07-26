@@ -2,6 +2,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import "../styles/index.scss";
+import "../styles/antd.scss";
 import Navbar from "@/components/navbar/navbar";
 import HomeComponent from "@/components/Home/home";
 

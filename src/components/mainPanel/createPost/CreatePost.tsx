@@ -6,7 +6,7 @@ import { MdOutlineGifBox } from "react-icons/md";
 import TestArea from "./testArea";
 
 export default function CreatePost() {
-  const [pics, setPics] = useState<any>([]);
+  const [pics, setPics] = useState<Array<string>>([]);
   const [text, setText] = useState("");
   const [content, setContent] = useState("");
 
@@ -67,7 +67,7 @@ export default function CreatePost() {
       <span className='label'>Create Post</span>
       <div className='create_post_form'>
         <div className='inputArea'>
-          <TestArea />
+          <TestArea content={content} setContent={setContent} />
           <div className='file_container'>
             {pics.map((picFile: any, index: number) => (
               <Img
