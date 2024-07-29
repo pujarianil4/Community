@@ -1,13 +1,16 @@
 "use client";
 import { getSignMessage, useEthersSigner } from "@/config/ethers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import React, { useEffect, useRef, useState } from "react";
-import { Modal, Divider } from "antd";
+import React, { useEffect, useRef, useState, use } from "react";
+import { Modal, Divider, Popover } from "antd";
 import { useDisconnect } from "wagmi";
+import { PiUserCircleDuotone } from "react-icons/pi";
 import "./navbar.scss";
 import CButton from "../common/Button";
 import CInput from "../common/Input";
 import useRedux from "@/hooks/useRedux";
+import { handleLogIn, handleLogOut } from "@/services/api/api";
+import { LocalStore } from "@/utils/helpers";
 
 export default function Navbar() {
   const signer = useEthersSigner();
@@ -18,6 +21,7 @@ export default function Navbar() {
   const [messageHash, setMessageHash] = useState<`0x${string}` | undefined>(
     undefined
   );
+  const [userSession, setUserSession] = useState(LocalStore.get("userSession"));
   const hasCalledRef = useRef(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -32,29 +36,37 @@ export default function Navbar() {
   };
 
   const call = async () => {
-    const sign = await getSignMessage();
+    try {
+      const sign = await getSignMessage();
 
-    setMessageHash(sign);
-    console.log(sign);
-    setTimeout(() => {
-      handleDisconnect();
-    }, 5000);
+      setMessageHash(sign);
+
+      await handleLogIn(sign);
+      setUserSession(LocalStore.get("userSession"));
+      handleCancel();
+      console.log(sign);
+      setTimeout(() => {
+        disconnect();
+        setMessageHash(undefined);
+        hasCalledRef.current = false;
+      }, 4000);
+    } catch (error) {}
   };
 
-  const handleDisconnect = async () => {
-    disconnect();
-    setMessageHash(undefined);
-    hasCalledRef.current = false;
-    console.log("disconnected");
+  const userLogout = async () => {
+    try {
+      const logout = await handleLogOut();
+
+      setUserSession(null);
+    } catch (error) {}
   };
 
   useEffect(() => {
     dispatch(actions.setUserName("anil"));
+    setUserSession(LocalStore.get("userSession"));
     if (signer && !messageHash && !hasCalledRef.current) {
       call();
       hasCalledRef.current = true;
-    } else if (signer && hasCalledRef.current) {
-      // handleDisconnect();
     }
   }, [signer]);
 
@@ -77,6 +89,13 @@ export default function Navbar() {
     );
   };
 
+  const content = (
+    <div>
+      <p onClick={userLogout}>LogOut</p>
+      <p>Content</p>
+    </div>
+  );
+
   return (
     <>
       <nav className='nav_container'>
@@ -86,7 +105,16 @@ export default function Navbar() {
           <a href=''>Stats</a>
         </div>
         <div className='signin'>
-          <CButton onClick={showModal}>LogIn</CButton>
+          {userSession ? (
+            <div className='user_icon'>
+              <Popover content={content} trigger='click'>
+                <PiUserCircleDuotone color='var(--primary-border)' size={40} />
+              </Popover>
+            </div>
+          ) : (
+            <CButton onClick={showModal}>LogIn</CButton>
+          )}
+
           {/* <ConnectButton /> */}
         </div>
       </nav>
