@@ -6,7 +6,8 @@ import { WagmiProvider } from "wagmi";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { wagmiConfig } from "@/config/wagmi";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-
+import { Provider } from "react-redux";
+import { store } from "@/contexts/store";
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -14,7 +15,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <AntdRegistry>{children}</AntdRegistry>
+          <AntdRegistry>
+            <Provider store={store}>{children}</Provider>
+          </AntdRegistry>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
