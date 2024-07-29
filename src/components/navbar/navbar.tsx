@@ -1,17 +1,18 @@
 "use client";
 import { getSignMessage, useEthersSigner } from "@/config/ethers";
-import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Modal, Divider } from "antd";
-import { useSignMessage, useDisconnect } from "wagmi";
+import { Modal, Divider } from "antd";
+import { useDisconnect } from "wagmi";
 import "./navbar.scss";
 import CButton from "../common/Button";
 import CInput from "../common/Input";
+import useRedux from "@/hooks/useRedux";
 
 export default function Navbar() {
   const signer = useEthersSigner();
+  const [{ dispatch, actions }] = useRedux();
   const { disconnect } = useDisconnect();
-  const { signMessage } = useSignMessage();
   const { openConnectModal } = useConnectModal();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageHash, setMessageHash] = useState<`0x${string}` | undefined>(
@@ -48,6 +49,7 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    dispatch(actions.setUserName("anil"));
     if (signer && !messageHash && !hasCalledRef.current) {
       call();
       hasCalledRef.current = true;
