@@ -3,9 +3,12 @@ import axios from "axios";
 
 const userSession = LocalStore.get("userSession");
 const url = process.env.BASE_API_URL;
+
+console.log("api2", url, userSession);
+
 const api = axios.create({
   baseURL: url,
-  headers: { Authorization: `bearer ${userSession?.token}` },
+  headers: { Authorization: `Bearer ${userSession?.token}` },
 });
 
 export const handleLogIn = async (sign: `0x${string}` | undefined) => {
@@ -19,6 +22,7 @@ export const handleLogIn = async (sign: `0x${string}` | undefined) => {
 };
 
 export const handleLogOut = async () => {
+  console.log("api1", url);
   const response = await api.patch("/auth/logout");
 
   console.log(response);
