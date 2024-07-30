@@ -34,9 +34,21 @@ export const handleSignup = async (
   username: string,
   sig: string | undefined
 ) => {
-  const response = await api.post("/auth/signup", { username, sig });
-  console.log(response);
-  LocalStore.set("==============userSignUp=================", response.data);
+  try {
+    const response = await api.post("/auth/signup", { username, sig });
+    console.log("==============userSignUp=================", response);
+    LocalStore.set("userSession", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("SIGNUP_ERROR ", error);
+  }
+};
 
-  return response.data;
+export const handlePostToCommunity = async (data: any) => {
+  try {
+    const response = await api.post("/posts", data);
+    console.log("============Posted successfully=============", response);
+  } catch (error) {
+    console.error("POSTS_ERROR: ", error);
+  }
 };
