@@ -29,3 +29,14 @@ export const handleLogOut = async () => {
   LocalStore.remove("userSession");
   return response.data;
 };
+
+export const handleSignup = async (
+  username: string,
+  sig: string | undefined
+) => {
+  const response = await api.post("/auth/signup", { username, sig });
+  console.log(response);
+  LocalStore.set("==============userSignUp=================", response.data);
+
+  return response.data;
+};

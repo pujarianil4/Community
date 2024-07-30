@@ -1,7 +1,7 @@
 "use client";
 import { getSignMessage, useEthersSigner } from "@/config/ethers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import React, { useEffect, useRef, useState, use } from "react";
+import React, { useEffect, useRef, useState, use, ChangeEvent } from "react";
 import { Modal, Divider, Popover } from "antd";
 import { useDisconnect } from "wagmi";
 import { PiUserCircleDuotone } from "react-icons/pi";
@@ -9,7 +9,7 @@ import "./navbar.scss";
 import CButton from "../common/Button";
 import CInput from "../common/Input";
 import useRedux from "@/hooks/useRedux";
-import { handleLogIn, handleLogOut } from "@/services/api/api";
+import { handleLogIn, handleLogOut, handleSignup } from "@/services/api/api";
 import { LocalStore } from "@/utils/helpers";
 
 export default function Navbar() {
@@ -21,6 +21,7 @@ export default function Navbar() {
   const [messageHash, setMessageHash] = useState<`0x${string}` | undefined>(
     undefined
   );
+  const [signupData, setSignupData] = useState({ userName: "", Name: "" });
   const [userSession, setUserSession] = useState(LocalStore.get("userSession"));
   const hasCalledRef = useRef(false);
   const showModal = () => {
@@ -33,6 +34,25 @@ export default function Navbar() {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const handleSignupData = (
+    event: ChangeEvent<HTMLInputElement>,
+    field: string
+  ) => {
+    event.preventDefault();
+    const value = event.target.value;
+    const inputVal = {
+      ...signupData,
+      [field]: value,
+    };
+    setSignupData(inputVal);
+  };
+
+  const handleSignupUser = async () => {
+    if (signupData?.userName != "") {
+      openConnectModal;
+    }
   };
 
   const call = async () => {
@@ -70,6 +90,11 @@ export default function Navbar() {
     }
   }, [signer]);
 
+  useEffect(() => {
+    if (signupData.userName != "" && messageHash != undefined)
+      handleSignup(signupData.userName, messageHash);
+  }, [messageHash, signupData]);
+
   const SignUpModal = () => {
     return (
       <div className='signUpModal'>
@@ -81,9 +106,32 @@ export default function Navbar() {
         <Divider className='divider'>Or</Divider>
         <div className='signup'>
           <h4>SignUp</h4>
-          <CInput type='text' placeholder='UserName' />
+          {/* <CInput
+            // value={signupData.userName}
+            // onChange={(e: { target: { value: string } }) =>
+            //   setSignupData({ ...signupData, userName: e.target.value })
+            // }
+            value={signupData.userName}
+            name='userName'
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              handleSignupData(e, "userName")
+            }
+            type='text'
+            placeholder='userName'
+          /> */}
+          <input
+            value={signupData.userName}
+            placeholder='userName'
+            name='userName'
+            onChange={(e) =>
+              setSignupData({ ...signupData, userName: e.target.value })
+            }
+            type='text'
+          />
           <CInput type='text' placeholder='Name (Optional)' />
-          <CButton size={18}>Sign Up</CButton>
+          <CButton onClick={handleSignupUser} size={18}>
+            Sign Up
+          </CButton>
         </div>
       </div>
     );
