@@ -5,6 +5,8 @@ import React, { useEffect, useRef, useState, use } from "react";
 import { Modal, Divider, Popover } from "antd";
 import { useDisconnect } from "wagmi";
 import { PiUserCircleDuotone } from "react-icons/pi";
+import { IoLogOutOutline } from "react-icons/io5";
+
 import "./navbar.scss";
 import CButton from "../common/Button";
 import CInput from "../common/Input";
@@ -90,9 +92,20 @@ export default function Navbar() {
   };
 
   const content = (
-    <div>
-      <p onClick={userLogout}>LogOut</p>
-      <p>Content</p>
+    <div className='user_popover'>
+      <div className='row'>
+        <PiUserCircleDuotone size={25} />
+        <span className='text'>
+          <span className='text_main'>Edit user</span>
+          <span className='text_sub'>@username</span>
+        </span>
+      </div>
+      <div className='row'>
+        <IoLogOutOutline size={25} />
+        <span className='text'>
+          <span className='text_main'>Log Out</span>
+        </span>
+      </div>
     </div>
   );
 
@@ -107,7 +120,11 @@ export default function Navbar() {
         <div className='signin'>
           {userSession ? (
             <div className='user_icon'>
-              <Popover content={content} trigger='click'>
+              <Popover
+                placement='bottomRight'
+                content={content}
+                trigger='click'
+              >
                 <PiUserCircleDuotone color='var(--primary-border)' size={40} />
               </Popover>
             </div>

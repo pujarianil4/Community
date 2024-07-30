@@ -1,5 +1,6 @@
 .main_panel_container {
-  width: 45%;
+  flex: 2;
+  max-width: 600px;
   min-width: 450px;
   padding: 10px;
 }

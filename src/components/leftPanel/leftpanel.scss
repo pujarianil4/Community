@@ -1,6 +1,8 @@
 .left_container {
   min-width: 200px;
-  width: 25%;
+  // width: 25%;
+  max-width: 300px;
+  flex: 1;
   padding: 10px;
   display: flex;
   flex-direction: column;
