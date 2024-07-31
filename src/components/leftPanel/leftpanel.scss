@@ -6,7 +6,8 @@
   padding: 10px;
   display: flex;
   flex-direction: column;
-
+  border-right: 1px solid var(--primary-border);
+  height: calc(100vh - 80px);
   div {
     display: flex;
 

@@ -1,9 +1,13 @@
+@import "/src/styles";
+
 .rightpanel_container {
   // width: 30%;
 
-  min-width: 250px;
   flex: 1;
   padding: 10px;
+  @include lg {
+    display: none;
+  }
 }
 
 .createCommunity {

@@ -40,6 +40,7 @@ export default function Navbar() {
   const call = async () => {
     try {
       const sign = await getSignMessage();
+      console.log(sign);
 
       setMessageHash(sign);
 
@@ -52,7 +53,13 @@ export default function Navbar() {
         setMessageHash(undefined);
         hasCalledRef.current = false;
       }, 4000);
-    } catch (error) {}
+    } catch (error) {
+      setTimeout(() => {
+        disconnect();
+        setMessageHash(undefined);
+        hasCalledRef.current = false;
+      }, 4000);
+    }
   };
 
   const userLogout = async () => {
@@ -65,7 +72,7 @@ export default function Navbar() {
 
   useEffect(() => {
     dispatch(actions.setUserName("anil"));
-    setUserSession(LocalStore.get("userSession"));
+    setUserSession(null);
     if (signer && !messageHash && !hasCalledRef.current) {
       call();
       hasCalledRef.current = true;
@@ -100,7 +107,7 @@ export default function Navbar() {
           <span className='text_sub'>@username</span>
         </span>
       </div>
-      <div className='row'>
+      <div onClick={userLogout} className='row'>
         <IoLogOutOutline size={25} />
         <span className='text'>
           <span className='text_main'>Log Out</span>
@@ -125,7 +132,7 @@ export default function Navbar() {
                 content={content}
                 trigger='click'
               >
-                <PiUserCircleDuotone color='var(--primary-border)' size={40} />
+                <PiUserCircleDuotone color='var(--primary-text)' size={40} />
               </Popover>
             </div>
           ) : (
