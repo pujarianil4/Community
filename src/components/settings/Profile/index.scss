@@ -13,6 +13,9 @@
       object-fit: cover;
       background: var(--secondary-bg);
     }
+    .upload {
+      position: absolute;
+    }
   }
   .info {
     display: flex;
@@ -40,5 +43,10 @@
       color: var(--primary-text);
       outline: none;
     }
+  }
+  .btns {
+    margin: 10px 0px;
+    display: flex;
+    justify-content: end;
   }
 }

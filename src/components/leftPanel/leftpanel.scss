@@ -1,13 +1,18 @@
+@import "/src/styles";
 .left_container {
-  min-width: 200px;
-  // width: 25%;
+  width: 25%;
   max-width: 300px;
-  flex: 1;
+  min-width: 200px;
   padding: 10px;
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--primary-border);
   height: calc(100vh - 80px);
+
+  @include lg {
+    flex: none;
+  }
+
   div {
     display: flex;
 

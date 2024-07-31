@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import React from "react";
 import "./index.scss";
 
@@ -7,6 +8,8 @@ interface ICButton {
   onClick?: () => void;
   className?: string;
   size?: number | string;
+  loading?: boolean;
+  disabled?: boolean;
 }
 
 export default function CButton({
@@ -14,14 +17,18 @@ export default function CButton({
   size,
   onClick,
   className,
+  loading,
+  disabled,
 }: ICButton) {
   return (
-    <button
+    <Button
+      loading={loading}
+      disabled={disabled}
       style={{ fontSize: `${size}px` }}
       onClick={onClick}
       className={`CButton ${className}`}
     >
       {children}
-    </button>
+    </Button>
   );
 }
