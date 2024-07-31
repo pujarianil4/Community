@@ -5,6 +5,8 @@ import React, { useEffect, useRef, useState, use } from "react";
 import { Modal, Divider, Popover } from "antd";
 import { useDisconnect } from "wagmi";
 import { PiUserCircleDuotone } from "react-icons/pi";
+import { IoLogOutOutline } from "react-icons/io5";
+
 import "./navbar.scss";
 import CButton from "../common/Button";
 import CInput from "../common/Input";
@@ -23,6 +25,7 @@ export default function Navbar() {
   );
   const [userSession, setUserSession] = useState(LocalStore.get("userSession"));
   const hasCalledRef = useRef(false);
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -38,6 +41,7 @@ export default function Navbar() {
   const call = async () => {
     try {
       const sign = await getSignMessage();
+      console.log(sign);
 
       setMessageHash(sign);
 
@@ -50,7 +54,13 @@ export default function Navbar() {
         setMessageHash(undefined);
         hasCalledRef.current = false;
       }, 4000);
-    } catch (error) {}
+    } catch (error) {
+      setTimeout(() => {
+        disconnect();
+        setMessageHash(undefined);
+        hasCalledRef.current = false;
+      }, 4000);
+    }
   };
 
   const userLogout = async () => {
@@ -63,36 +73,28 @@ export default function Navbar() {
 
   useEffect(() => {
     dispatch(actions.setUserName("anil"));
-    setUserSession(LocalStore.get("userSession"));
+    setUserSession(null);
     if (signer && !messageHash && !hasCalledRef.current) {
       call();
       hasCalledRef.current = true;
     }
   }, [signer]);
 
-  const SignUpModal = () => {
-    return (
-      <div className='signUpModal'>
-        <div className='login'>
-          <h4>Log In</h4>
-
-          <CButton onClick={openConnectModal}>Connect Wallet</CButton>
-        </div>
-        <Divider className='divider'>Or</Divider>
-        <div className='signup'>
-          <h4>SignUp</h4>
-          <CInput type='text' placeholder='UserName' />
-          <CInput type='text' placeholder='Name (Optional)' />
-          <CButton size={18}>Sign Up</CButton>
-        </div>
-      </div>
-    );
-  };
-
   const content = (
-    <div>
-      <p onClick={userLogout}>LogOut</p>
-      <p>Content</p>
+    <div className='user_popover'>
+      <div className='row'>
+        <PiUserCircleDuotone size={25} />
+        <span className='text'>
+          <span className='text_main'>Edit user</span>
+          <span className='text_sub'>@username</span>
+        </span>
+      </div>
+      <div onClick={userLogout} className='row'>
+        <IoLogOutOutline size={25} />
+        <span className='text'>
+          <span className='text_main'>Log Out</span>
+        </span>
+      </div>
     </div>
   );
 
@@ -107,8 +109,12 @@ export default function Navbar() {
         <div className='signin'>
           {userSession ? (
             <div className='user_icon'>
-              <Popover content={content} trigger='click'>
-                <PiUserCircleDuotone color='var(--primary-border)' size={40} />
+              <Popover
+                placement='bottomRight'
+                content={content}
+                trigger='click'
+              >
+                <PiUserCircleDuotone color='var(--primary-text)' size={40} />
               </Popover>
             </div>
           ) : (
@@ -119,8 +125,42 @@ export default function Navbar() {
         </div>
       </nav>
       <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
-        <SignUpModal />
+        <SignUpModal openModal={openConnectModal} />
       </Modal>
     </>
   );
 }
+
+interface ISignUpModal {
+  openModal: (() => void) | undefined;
+}
+
+const SignUpModal = ({ openModal }: ISignUpModal) => {
+  const [signUpData, setSignupData] = useState("");
+
+  useEffect(() => {
+    console.log(signUpData);
+  }, [signUpData]);
+  return (
+    <div className='signUpModal'>
+      <div className='login'>
+        <h4>Log In</h4>
+
+        <CButton onClick={openModal}>Connect Wallet</CButton>
+      </div>
+      <Divider className='divider'>Or</Divider>
+      <div className='signup'>
+        <h4>SignUp</h4>
+        <CInput type='text' placeholder='UserName' />
+        <CInput
+          onChange={(e: any) => setSignupData(e.target.value)}
+          type='text'
+          placeholder='Name (Optional)'
+        />
+        <CButton onClick={openModal} size={18}>
+          Sign Up
+        </CButton>
+      </div>
+    </div>
+  );
+};

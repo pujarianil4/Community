@@ -11,7 +11,7 @@ import FeedPost from "@/components/feedPost/feedPost";
 export default function Home() {
   return (
     <main>
-      <PageWraper>
+      <PageWraper hideRightPanel={true}>
         <CreatePost />
         <FeedPost />
         <UserHead />

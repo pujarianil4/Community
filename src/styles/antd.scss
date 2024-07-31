@@ -37,3 +37,20 @@
     color: var(--primary-text) !important;
   }
 }
+
+.ant-popover {
+  margin: 10px !important;
+
+  .ant-popover-content {
+    .ant-popover-inner {
+      padding: 5px !important;
+      background-color: var(--secondary-bg) !important;
+      .ant-popover-inner-content {
+        color: var(--primary-text) !important;
+      }
+    }
+  }
+  .ant-popover-arrow::before {
+    background: var(--secondary-bg) !important;
+  }
+}

@@ -1,18 +1,25 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Wraper from "./wraper";
 import LeftPanel from "../leftPanel/LeftPanel";
 import MainPanel from "./mainPanel";
 import Navbar from "../navbar/navbar";
 import RightPanel from "../rightPanel/RightPanel";
+interface PageWrapperProps {
+  children: ReactNode;
+  hideRightPanel?: boolean;
+}
 
-export default function PageWraper({ children }: any) {
+export default function PageWraper({
+  children,
+  hideRightPanel,
+}: PageWrapperProps) {
   return (
     <>
       <Navbar />
       <Wraper>
         <LeftPanel />
         <MainPanel>{children}</MainPanel>
-        <RightPanel />
+        {!hideRightPanel && <RightPanel />}
       </Wraper>
     </>
   );

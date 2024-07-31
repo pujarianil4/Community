@@ -72,3 +72,30 @@
     }
   }
 }
+
+.user_popover {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+
+  .row {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 10px;
+    height: 50px;
+    padding: 5px;
+    border-radius: 10px;
+    .text {
+      display: flex;
+      flex-direction: column;
+      gap: -5px;
+      .text_sub {
+        color: var(--label-text);
+      }
+    }
+    &:hover {
+      background-color: var(--secondary-hov);
+    }
+  }
+}
