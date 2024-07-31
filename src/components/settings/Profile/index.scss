@@ -1,0 +1,44 @@
+.profile_container {
+  .avatar {
+    display: flex;
+    flex-direction: column;
+    .label {
+      font-size: 12px;
+      color: var(--label-text);
+    }
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--secondary-bg);
+    }
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0px;
+    .label {
+      font-size: 12px;
+      color: var(--label-text);
+    }
+    input {
+      padding: 10px;
+      background: transparent;
+      border: 1px solid var(--primary-border);
+      border-radius: 5px;
+      color: var(--primary-text);
+      outline: none;
+    }
+
+    textarea {
+      resize: none;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid var(--primary-border);
+      border-radius: 5px;
+      color: var(--primary-text);
+      outline: none;
+    }
+  }
+}

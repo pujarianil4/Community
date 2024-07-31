@@ -1,22 +1,37 @@
 import { LocalStore } from "@/utils/helpers";
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
+import { store } from "@contexts/store";
 
 const userSession = LocalStore.get("userSession");
 const url = process.env.BASE_API_URL;
-
 console.log("api2", url, userSession);
 
-const api = axios.create({
+const api: AxiosInstance = axios.create({
   baseURL: url,
-  headers: { Authorization: `Bearer ${userSession?.token}` },
 });
+
+const updateAuthorizationHeader = () => {
+  const token = store.getState().user?.token;
+  if (token) {
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else if (userSession?.token) {
+    api.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${userSession?.token}`;
+  } else {
+    delete api.defaults.headers.common["Authorization"];
+  }
+};
+
+updateAuthorizationHeader();
+store.subscribe(updateAuthorizationHeader);
 
 export const handleLogIn = async (sign: `0x${string}` | undefined) => {
   const response = await api.post("/auth/login", {
     sig: sign,
   });
 
-  console.log(response);
+  console.log("LOGIN_RES", response);
   LocalStore.set("userSession", response.data);
   return response.data;
 };
