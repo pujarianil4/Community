@@ -2,10 +2,10 @@ import React from "react";
 
 import { useSelector, useDispatch, Selector } from "react-redux";
 import { RootState } from "@/contexts/store";
-import { setUserName } from "@/contexts/reducers";
+import { setUserData } from "@/contexts/reducers";
 
 type ActionCreators = {
-  setUserName: typeof setUserName;
+  setUserData: typeof setUserData;
   // Add other actions here if needed
 };
 
@@ -19,7 +19,7 @@ export default function useRedux<T>(
 ): [UseReduxHook, T[]] {
   const dispatch = useDispatch();
   const actions: ActionCreators = {
-    setUserName,
+    setUserData,
     // Add other actions here if needed
   };
 

@@ -4,6 +4,8 @@ import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
 import { MdOutlineGifBox } from "react-icons/md";
 import TestArea from "./testArea";
+import { handlePostToCommunity } from "@/services/api/api";
+import { LocalStore } from "@/utils/helpers";
 
 export default function CreatePost() {
   const [pics, setPics] = useState<Array<string>>([]);
@@ -62,6 +64,19 @@ export default function CreatePost() {
     ) : null;
   });
 
+  const handlePost = async () => {
+    const { uid } = LocalStore.get("userSession");
+    const data = {
+      uid,
+      cid: 1,
+      text: content,
+      up: 0,
+      down: 0,
+      comments: 0,
+    };
+    await handlePostToCommunity(data);
+  };
+
   return (
     <div className='create_post_container'>
       <span className='label'>Create Post</span>
@@ -98,7 +113,7 @@ export default function CreatePost() {
           </div>
 
           <div className='postbtn'>
-            <button>Post</button>
+            <button onClick={handlePost}>Post</button>
           </div>
         </div>
         {/* <textarea
