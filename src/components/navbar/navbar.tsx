@@ -25,6 +25,7 @@ export default function Navbar() {
   );
   const [userSession, setUserSession] = useState(LocalStore.get("userSession"));
   const hasCalledRef = useRef(false);
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -79,25 +80,6 @@ export default function Navbar() {
     }
   }, [signer]);
 
-  const SignUpModal = () => {
-    return (
-      <div className='signUpModal'>
-        <div className='login'>
-          <h4>Log In</h4>
-
-          <CButton onClick={openConnectModal}>Connect Wallet</CButton>
-        </div>
-        <Divider className='divider'>Or</Divider>
-        <div className='signup'>
-          <h4>SignUp</h4>
-          <CInput type='text' placeholder='UserName' />
-          <CInput type='text' placeholder='Name (Optional)' />
-          <CButton size={18}>Sign Up</CButton>
-        </div>
-      </div>
-    );
-  };
-
   const content = (
     <div className='user_popover'>
       <div className='row'>
@@ -143,8 +125,42 @@ export default function Navbar() {
         </div>
       </nav>
       <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
-        <SignUpModal />
+        <SignUpModal openModal={openConnectModal} />
       </Modal>
     </>
   );
 }
+
+interface ISignUpModal {
+  openModal: (() => void) | undefined;
+}
+
+const SignUpModal = ({ openModal }: ISignUpModal) => {
+  const [signUpData, setSignupData] = useState("");
+
+  useEffect(() => {
+    console.log(signUpData);
+  }, [signUpData]);
+  return (
+    <div className='signUpModal'>
+      <div className='login'>
+        <h4>Log In</h4>
+
+        <CButton onClick={openModal}>Connect Wallet</CButton>
+      </div>
+      <Divider className='divider'>Or</Divider>
+      <div className='signup'>
+        <h4>SignUp</h4>
+        <CInput type='text' placeholder='UserName' />
+        <CInput
+          onChange={(e: any) => setSignupData(e.target.value)}
+          type='text'
+          placeholder='Name (Optional)'
+        />
+        <CButton onClick={openModal} size={18}>
+          Sign Up
+        </CButton>
+      </div>
+    </div>
+  );
+};
