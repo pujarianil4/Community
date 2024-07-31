@@ -1,6 +1,7 @@
 import { LocalStore } from "@/utils/helpers";
 import axios, { AxiosInstance } from "axios";
 import { store } from "@contexts/store";
+import { User } from "@/utils/types/types";
 
 const userSession = LocalStore.get("userSession");
 const url = process.env.BASE_API_URL;
@@ -65,5 +66,25 @@ export const handlePostToCommunity = async (data: any) => {
     console.log("============Posted successfully=============", response);
   } catch (error) {
     console.error("POSTS_ERROR: ", error);
+  }
+};
+
+export const fetchUser = async (payload: any = { username: "anilpujari" }) => {
+  try {
+    const response = await api.get("/users/username", payload);
+
+    return response.data;
+  } catch (error) {
+    console.error("SIGNUP_ERROR ", error);
+  }
+};
+
+export const updateUser = async (payload: Partial<User>) => {
+  try {
+    const response = await api.patch("/users", payload);
+
+    return response.data;
+  } catch (error) {
+    console.error("SIGNUP_ERROR ", error);
   }
 };

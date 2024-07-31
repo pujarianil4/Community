@@ -87,15 +87,16 @@ export default function Navbar() {
       handleCancel();
       setTimeout(() => {
         disconnect();
+        console.log("disconnect");
         setMessageHash(undefined);
         hasCalledRef.current = false;
-      }, 40000);
+      }, 4000);
     } catch (error) {
       setTimeout(() => {
         disconnect();
         setMessageHash(undefined);
         hasCalledRef.current = false;
-      }, 40000);
+      }, 4000);
     }
   };
 
@@ -164,7 +165,7 @@ export default function Navbar() {
 }
 
 interface ISignUpModal {
-  openModal: () => void;
+  openModal: (() => void) | undefined;
   signupData: ISignupData;
   setSignupData: React.Dispatch<React.SetStateAction<ISignupData>>;
   setIsSignup: React.Dispatch<React.SetStateAction<boolean>>;
@@ -177,7 +178,7 @@ const SignUpModal = ({
   setIsSignup,
 }: ISignUpModal) => {
   const handleAuth = (isSignup: boolean = true) => {
-    openModal();
+    openModal && openModal();
     setIsSignup(isSignup);
   };
   return (
