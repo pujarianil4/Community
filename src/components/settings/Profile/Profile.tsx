@@ -3,14 +3,21 @@ import { FiUpload } from "react-icons/fi";
 
 import React from "react";
 import "./index.scss";
+import Image from "next/image";
 export default function Profile() {
   return (
     <div className='profile_container'>
       <div className='avatar'>
         {/* <span className='label'>Avatar</span> */}
-        <img src='https://picsum.photos/200/300' alt='Avatar' />
+
+        <Image
+          width={100}
+          height={100}
+          src='https://picsum.photos/200/300'
+          alt='Avatar'
+        />
         <div className='upload'>
-          <FiUpload />
+          <FiUpload size={20} />
         </div>
       </div>
       <div className='info'>
