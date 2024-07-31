@@ -1,7 +1,9 @@
 "use client";
-import { getSignMessage, useEthersSigner } from "@/config/ethers";
+import { getSignMessage } from "@/config/ethers";
+import { useAccount } from "wagmi";
+// import { useSigner } from 'wagmi';
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import React, { useEffect, useRef, useState, use } from "react";
+import React, { useEffect, useRef, useState, ChangeEvent } from "react";
 import { Modal, Divider, Popover } from "antd";
 import { useDisconnect } from "wagmi";
 import { PiUserCircleDuotone } from "react-icons/pi";
@@ -11,11 +13,18 @@ import "./navbar.scss";
 import CButton from "../common/Button";
 import CInput from "../common/Input";
 import useRedux from "@/hooks/useRedux";
-import { handleLogIn, handleLogOut } from "@/services/api/api";
+import { handleLogIn, handleLogOut, handleSignup } from "@/services/api/api";
 import { LocalStore } from "@/utils/helpers";
+import { User } from "@/contexts/reducers/user";
+
+export interface ISignupData {
+  username: string;
+  name: string;
+}
 
 export default function Navbar() {
-  const signer = useEthersSigner();
+  const user = useAccount(); // UseAccount get is connected, accountId
+
   const [{ dispatch, actions }] = useRedux();
   const { disconnect } = useDisconnect();
   const { openConnectModal } = useConnectModal();
@@ -23,7 +32,12 @@ export default function Navbar() {
   const [messageHash, setMessageHash] = useState<`0x${string}` | undefined>(
     undefined
   );
+  const [signupData, setSignupData] = useState<ISignupData>({
+    username: "UnilendOfficials",
+    name: "Unilend",
+  });
   const [userSession, setUserSession] = useState(LocalStore.get("userSession"));
+  const [isSignup, setIsSignup] = useState<boolean>(false);
   const hasCalledRef = useRef(false);
 
   const showModal = () => {
@@ -38,47 +52,60 @@ export default function Navbar() {
     setIsModalOpen(false);
   };
 
-  const call = async () => {
+  const userLogout = async () => {
+    try {
+      const logout = await handleLogOut();
+      setUserSession(null);
+      const initialState: any = {
+        username: "",
+        name: "",
+        uid: 0,
+        token: "",
+      };
+      dispatch(actions.setUserData(initialState));
+    } catch (error) {}
+  };
+
+  const handleAuth = async () => {
     try {
       const sign = await getSignMessage();
-      console.log(sign);
-
       setMessageHash(sign);
-
-      await handleLogIn(sign);
+      let response;
+      if (isSignup) {
+        response = await handleSignup(signupData.username, sign);
+      } else {
+        response = await handleLogIn(sign);
+      }
+      const user = {
+        username: signupData.username,
+        name: signupData.name,
+        uid: response?.uid || 0,
+        token: response?.token || "",
+      };
+      dispatch(actions.setUserData(user));
       setUserSession(LocalStore.get("userSession"));
       handleCancel();
-      console.log(sign);
       setTimeout(() => {
         disconnect();
         setMessageHash(undefined);
         hasCalledRef.current = false;
-      }, 4000);
+      }, 40000);
     } catch (error) {
       setTimeout(() => {
         disconnect();
         setMessageHash(undefined);
         hasCalledRef.current = false;
-      }, 4000);
+      }, 40000);
     }
-  };
-
-  const userLogout = async () => {
-    try {
-      const logout = await handleLogOut();
-
-      setUserSession(null);
-    } catch (error) {}
   };
 
   useEffect(() => {
-    dispatch(actions.setUserName("anil"));
-    setUserSession(null);
-    if (signer && !messageHash && !hasCalledRef.current) {
-      call();
+    // setUserSession(null);
+    if (user.isConnected && !messageHash && !hasCalledRef.current) {
+      handleAuth();
       hasCalledRef.current = true;
     }
-  }, [signer]);
+  }, [user.isConnected]);
 
   const content = (
     <div className='user_popover'>
@@ -125,39 +152,58 @@ export default function Navbar() {
         </div>
       </nav>
       <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
-        <SignUpModal openModal={openConnectModal} />
+        <SignUpModal
+          openModal={openConnectModal}
+          signupData={signupData}
+          setSignupData={setSignupData}
+          setIsSignup={setIsSignup}
+        />
       </Modal>
     </>
   );
 }
 
 interface ISignUpModal {
-  openModal: (() => void) | undefined;
+  openModal: () => void;
+  signupData: ISignupData;
+  setSignupData: React.Dispatch<React.SetStateAction<ISignupData>>;
+  setIsSignup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SignUpModal = ({ openModal }: ISignUpModal) => {
-  const [signUpData, setSignupData] = useState("");
-
-  useEffect(() => {
-    console.log(signUpData);
-  }, [signUpData]);
+const SignUpModal = ({
+  openModal,
+  signupData,
+  setSignupData,
+  setIsSignup,
+}: ISignUpModal) => {
+  const handleAuth = (isSignup: boolean = true) => {
+    openModal();
+    setIsSignup(isSignup);
+  };
   return (
     <div className='signUpModal'>
       <div className='login'>
         <h4>Log In</h4>
-
-        <CButton onClick={openModal}>Connect Wallet</CButton>
+        <CButton onClick={() => handleAuth(false)}>Connect Wallet</CButton>
       </div>
       <Divider className='divider'>Or</Divider>
       <div className='signup'>
         <h4>SignUp</h4>
-        <CInput type='text' placeholder='UserName' />
         <CInput
-          onChange={(e: any) => setSignupData(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setSignupData({ ...signupData, username: e.target.value })
+          }
+          type='text'
+          placeholder='UserName'
+        />
+        <CInput
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setSignupData({ ...signupData, name: e.target.value })
+          }
           type='text'
           placeholder='Name (Optional)'
         />
-        <CButton onClick={openModal} size={18}>
+        <CButton onClick={() => handleAuth()} size={18}>
           Sign Up
         </CButton>
       </div>
