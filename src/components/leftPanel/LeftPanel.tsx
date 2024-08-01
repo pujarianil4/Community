@@ -2,6 +2,7 @@ import React from "react";
 import "./leftpanel.scss";
 import { GoHome } from "react-icons/go";
 import { PiMegaphone } from "react-icons/pi";
+
 export default function LeftPanel() {
   return (
     <div className='left_container'>
