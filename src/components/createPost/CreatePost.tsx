@@ -15,6 +15,8 @@ export default function CreatePost() {
   const FileInput = ({ onChange, children }: any) => {
     const fileRef = useRef<HTMLInputElement>(null);
     const onPickFile = (event: any) => {
+      console.log(event);
+
       onChange([...event.target.files]);
     };
     return (
@@ -42,6 +44,8 @@ export default function CreatePost() {
 
     useEffect(() => {
       if (file) {
+        console.log("file", file, URL.createObjectURL(file));
+
         setFileUrl(URL.createObjectURL(file));
       }
       // Clean up the URL object when component unmounts or file changes

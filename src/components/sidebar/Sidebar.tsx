@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MenuProps, Modal } from "antd";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -18,7 +18,7 @@ const communities = [
     key: "5",
     label: (
       <div className='community_item'>
-        <img src='https://picsum.photos/200/300' alt='profile' />
+        <img loading='lazy' src='https://picsum.photos/200/300' alt='profile' />
         <span>Community Name</span>
       </div>
     ),
@@ -27,7 +27,7 @@ const communities = [
     key: "6",
     label: (
       <div className='community_item'>
-        <img src='https://picsum.photos/200/300' alt='profile' />
+        <img loading='lazy' src='https://picsum.photos/200/300' alt='profile' />
         <span>Community Name</span>
       </div>
     ),
@@ -36,7 +36,7 @@ const communities = [
     key: "7",
     label: (
       <div className='community_item'>
-        <img src='https://picsum.photos/200/300' alt='profile' />
+        <img loading='lazy' src='https://picsum.photos/200/300' alt='profile' />
         <span>Community Name</span>
       </div>
     ),
@@ -45,7 +45,7 @@ const communities = [
     key: "8",
     label: (
       <div className='community_item'>
-        <img src='https://picsum.photos/200/300' alt='profile' />
+        <img loading='lazy' src='https://picsum.photos/200/300' alt='profile' />
         <span>Community Name</span>
       </div>
     ),
@@ -128,16 +128,31 @@ const SideBar: React.FC = () => {
 
 const CreateCommunityModal = () => {
   const [imgSrc, setImgSrc] = useState(
-    "https://static.vecteezy.com/system/resources/previews/018/765/757/original/user-profile-icon-in-flat-style-member-avatar-illustration-on-isolated-background-human-permission-sign-business-concept-vector.jpg"
+    "https://cdn-icons-png.freepik.com/512/2774/2774806.png"
   );
+  const fileRef = useRef<HTMLInputElement>(null);
+  const onPickFile = (event: any) => {
+    // onChange([...event.target.files]);
+    console.log(event);
+    setImgSrc(URL.createObjectURL(event.target.files[0]));
+  };
   return (
     <div className='create_community_container'>
       <div className='avatar'>
-        {/* <span className='label'>Avatar</span> */}
+        {/* <span className='label'>Select Logo</span> */}
 
-        <img src={imgSrc} alt='Avatar' />
-        <div className='upload'>
+        <img src={imgSrc} alt='logo' />
+        <div
+          onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
+          className='upload'
+        >
           <FiUpload size={20} />
+          <input
+            ref={fileRef}
+            onChange={onPickFile}
+            type='file'
+            style={{ visibility: "hidden" }}
+          />
         </div>
       </div>
       <div className='info'>
@@ -150,16 +165,12 @@ const CreateCommunityModal = () => {
       </div>
       <div className='info'>
         <span className='label'>Ticker</span>
-        <input type='text' name='username' />
+        <input type='text' name='ticker' />
       </div>
 
       <div className='info'>
         <span className='label'>Description</span>
-        <textarea
-          rows={5}
-          cols={10}
-          defaultValue=' Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nostrum quo nisi repudiandae laboriosam dolor. Incidunt amet laudantium asperiores illo officiis! Voluptate aperiam error omnis explicabo voluptates, nostrum repellat fugit accusamus!'
-        />
+        <textarea rows={5} cols={10} />
       </div>
       <div className='btns'>
         <CButton> Save </CButton>
