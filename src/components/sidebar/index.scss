@@ -28,8 +28,7 @@
     }
     .upload {
       position: absolute;
-      display: grid;
-      place-items: center;
+
       right: 0px;
       bottom: 0px;
       background: var(--secondary-bg);
@@ -37,6 +36,9 @@
       width: 30px;
       height: 30px;
       cursor: pointer;
+      svg {
+        margin: 4px;
+      }
     }
   }
   .info {

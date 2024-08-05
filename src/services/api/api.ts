@@ -27,10 +27,11 @@ const updateAuthorizationHeader = () => {
 updateAuthorizationHeader();
 store.subscribe(updateAuthorizationHeader);
 
-export const handleLogIn = async (sign: `0x${string}` | undefined) => {
-  const response = await api.post("/auth/login", {
-    sig: sign,
-  });
+export const handleLogIn = async (payload: {
+  sig: `0x${string}` | undefined;
+  msg: string;
+}) => {
+  const response = await api.post("/auth/login", payload);
 
   console.log("LOGIN_RES", response);
   LocalStore.set("userSession", response.data);
@@ -75,7 +76,7 @@ export const fetchUser = async (payload: any = { username: "anilpujari" }) => {
 
     return response.data;
   } catch (error) {
-    console.error("SIGNUP_ERROR ", error);
+    console.error("Fetch User ", error);
   }
 };
 
@@ -85,6 +86,25 @@ export const updateUser = async (payload: Partial<User>) => {
 
     return response.data;
   } catch (error) {
-    console.error("SIGNUP_ERROR ", error);
+    console.error("UpdateUser ", error);
+  }
+};
+
+export const fetchCommunities = async () => {
+  try {
+    const response = await api.get("/community");
+
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Communities ", error);
+  }
+};
+
+export const createCommunity = async (data: any) => {
+  try {
+    const response = await api.post("/community", data);
+    return response.data;
+  } catch (error) {
+    console.error("POSTS_ERROR: ", error);
   }
 };

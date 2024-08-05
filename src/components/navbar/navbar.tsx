@@ -22,6 +22,8 @@ export interface ISignupData {
   name: string;
 }
 
+const msg = `Sign this message to prove you have access to this wallet in order to sign in to Community. This won't cost you any Gas. Date: ${Date.now()} `;
+
 export default function Navbar() {
   const user = useAccount(); // UseAccount get is connected, accountId
 
@@ -68,13 +70,13 @@ export default function Navbar() {
 
   const handleAuth = async () => {
     try {
-      const sign = await getSignMessage();
+      const sign = await getSignMessage(msg);
       setMessageHash(sign);
       let response;
       if (isSignup) {
         response = await handleSignup(signupData.username, sign);
       } else {
-        response = await handleLogIn(sign);
+        response = await handleLogIn({ sig: sign, msg });
       }
       const user = {
         username: signupData.username,
