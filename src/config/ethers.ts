@@ -54,13 +54,10 @@ export function useEthersSigner({ chainId }: { chainId?: number } = {}) {
   return useMemo(() => (client ? clientToSigner(client) : undefined), [client]);
 }
 
-export const getSignMessage = async () => {
+export const getSignMessage = async (msg: string) => {
   try {
-    console.log("Called2");
-
     const result = await signMessage(wagmiConfig, {
-      message:
-        "Sign this message to prove you have access to this wallet in order to sign in to Community. This won't cost you any Gas.",
+      message: msg,
     });
 
     return result;

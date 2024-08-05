@@ -62,11 +62,13 @@
   height: calc(100vh - 80px) !important;
 
   .ant-menu-item {
+    padding-left: 24px !important;
     &:hover {
       background-color: var(--secondary-hov) !important;
     }
     .ant-menu-title-content {
       font-size: 15px !important;
+      flex: none !important;
     }
   }
   .ant-menu-item-selected {
