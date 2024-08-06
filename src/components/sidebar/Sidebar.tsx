@@ -82,7 +82,20 @@ const SideBar: React.FC = () => {
             </div>
           ),
         },
-      ].concat(communityList),
+      ].concat(
+        isLoading
+          ? [
+              {
+                key: "loading",
+                label: (
+                  <div className='community_item'>
+                    <span>Loading...</span>
+                  </div>
+                ),
+              },
+            ]
+          : communityList
+      ),
     },
   ];
 

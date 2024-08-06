@@ -5,7 +5,7 @@ import React from "react";
 
 export default function CommuityPage() {
   return (
-    <PageWraper>
+    <PageWraper hideRightPanel>
       <CommunityHead />
       <CTabs
         items={[
