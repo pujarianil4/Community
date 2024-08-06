@@ -5,7 +5,6 @@ import { LuImagePlus } from "react-icons/lu";
 import { MdOutlineGifBox } from "react-icons/md";
 import TestArea from "./testArea";
 import { handlePostToCommunity } from "@/services/api/api";
-import { LocalStore } from "@/utils/helpers";
 
 export default function CreatePost() {
   const [pics, setPics] = useState<Array<string>>([]);
@@ -69,7 +68,8 @@ export default function CreatePost() {
   });
 
   const handlePost = async () => {
-    const { uid } = LocalStore.get("userSession");
+    const value = window?.localStorage?.getItem("userSession");
+    const { uid } = value ? JSON.parse(value) : null;
     const data = {
       uid,
       cid: 1,

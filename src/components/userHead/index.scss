@@ -17,9 +17,10 @@
 
     div {
       display: flex;
-      align-content: center;
-      align-items: center;
-      gap: 10px;
+
+      flex-direction: column;
+      width: 50%;
+      gap: 2px;
       margin-left: 100px;
       img {
         width: 80px;
@@ -29,14 +30,25 @@
         margin: 0px 20px;
         margin-right: 0px;
         left: -5px;
+        top: -15px;
         position: absolute;
         padding: 10px;
+      }
+
+      h4 {
+        color: var(--primary-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       span {
         margin-top: 2px;
         font-size: 12px;
         color: var(--label-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
