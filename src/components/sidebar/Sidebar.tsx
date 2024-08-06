@@ -120,7 +120,7 @@ const SideBar: React.FC = () => {
   };
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.src = "https://picsum.photos/200/300";
+    e.currentTarget.src = "https://picsum.photos/300/300";
   };
 
   const getCommunities = async (cmnties: Array<any>) => {
