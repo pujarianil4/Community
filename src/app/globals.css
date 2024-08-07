@@ -33,3 +33,24 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--secondary-bg);
 }
+
+/* skeleton loader css */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #414b50 20px,
+    rgba(155, 155, 155, 0.9) 60px,
+    #414b50 80px
+  );
+
+  background-size: 250%;
+  background-position: 100% 0;
+  min-height: 20px;
+  width: 100%;
+  animation: shimmer 3s infinite;
+}
+@keyframes shimmer {
+  to {
+    background-position: -100%;
+  }
+}

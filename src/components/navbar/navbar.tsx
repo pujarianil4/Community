@@ -14,7 +14,6 @@ import CButton from "../common/Button";
 import CInput from "../common/Input";
 import useRedux from "@/hooks/useRedux";
 import { handleLogIn, handleLogOut, handleSignup } from "@/services/api/api";
-import { LocalStore } from "@/utils/helpers";
 import { User } from "@/contexts/reducers/user";
 import CreatePost from "../createPost/CreatePost";
 
@@ -40,7 +39,9 @@ export default function Navbar() {
     username: "UnilendOfficials",
     name: "Unilend",
   });
-  const [userSession, setUserSession] = useState(LocalStore.get("userSession"));
+  const [userSession, setUserSession] = useState<any>(
+    localStorage?.getItem("userSession")
+  );
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const hasCalledRef = useRef(false);
 
@@ -97,7 +98,8 @@ export default function Navbar() {
         img: response?.img || "",
       };
       dispatch(actions.setUserData(user));
-      setUserSession(LocalStore.get("userSession"));
+      const value = window?.localStorage?.getItem("userSession");
+      setUserSession(value ? JSON.parse(value) : null);
       handleCancel();
       setTimeout(() => {
         disconnect();
@@ -115,6 +117,8 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    const value = window?.localStorage?.getItem("userSession");
+    setUserSession(value ? JSON.parse(value) : null);
     // setUserSession(null);
     if (user.isConnected && !messageHash && !hasCalledRef.current) {
       handleAuth();

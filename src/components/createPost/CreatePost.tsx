@@ -105,9 +105,10 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   console.log("SELECTED_op", selectedOption);
 
   const handlePost = async () => {
-    // const { uid } = LocalStore.get("userSession");
+    const value = window?.localStorage?.getItem("userSession");
+    const { uid } = value ? JSON.parse(value) : null;
     const data = {
-      uid: 8,
+      uid: uid,
       cid: 1,
       text: content,
       up: 0,

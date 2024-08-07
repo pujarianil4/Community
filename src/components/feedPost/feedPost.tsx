@@ -5,43 +5,52 @@ import { PiArrowFatUpLight, PiArrowFatDownLight } from "react-icons/pi";
 import { GoComment, GoShareAndroid } from "react-icons/go";
 import Image from "next/image";
 import { patchPost } from "@/services/api/api";
+import Link from "next/link";
 
 interface IProps {
   post: any;
 }
 
 // DO we need isUp and isDown?
+
+const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post }: IProps) {
   const { text, up, down, comments, time, user, community } = post;
 
-  // const handleUP = async () => {
-  //   await patchPost({ up: up + 1 });
-  // };
+  const handleUP = async () => {
+    await patchPost({ up: up + 1 });
+  };
 
-  // const handleDown = async () => {
-  //   await patchPost({ up: down + 1 });
-  // };
+  const handleDown = async () => {
+    await patchPost({ up: down + 1 });
+  };
   return (
     <div className='postcard_container'>
       <div className='user_head'>
         <div>
           {/* <Image src={user?.img ?? imgLink} alt='user' width={24} height={24} /> */}
-          <Image
-            src='https://cdn.vectorstock.com/i/1000x1000/26/37/user-profile-icon-in-flat-style-member-avatar-vector-45692637.webp'
-            alt='user'
-            width={24}
-            height={24}
-          />
-          <span>{user?.username ?? "User Name"}</span>
+          <Link href={`u/${user.username}`} as={`/u/${user.username}`}>
+            <div className='head'>
+              <Image src={imgLink} alt='user' width={24} height={24} />
+              <span>{user?.username ?? "User Name"}</span>
+            </div>
+          </Link>
           <LiaArrowRightSolid />
-          <Image
-            // src={community?.logo ?? imgLink}
-            src='https://cdn.vectorstock.com/i/1000x1000/26/37/user-profile-icon-in-flat-style-member-avatar-vector-45692637.webp'
-            alt='community'
-            width={24}
-            height={24}
-          />
-          <span>{community?.username ?? "Community"}</span>
+          <Link
+            href={`c/${community?.username}`}
+            as={`/c/${community.username}`}
+          >
+            <div className='head'>
+              <Image
+                // src={community?.logo ?? imgLink}
+                src={imgLink}
+                alt='community'
+                width={24}
+                height={24}
+              />
+              <span>{community?.username ?? "Community"}</span>
+            </div>
+          </Link>
         </div>
         <span>{time}</span>
       </div>

@@ -32,7 +32,7 @@ export default function useAsync<T>(
     if (loadOnRefresh) {
       callFunction(loadOnRefresh, arg);
     }
-  }, [loadOnRefresh, arg]);
+  }, [loadOnRefresh, arg, callFunction]);
 
   return { isLoading, error, data, callFunction };
 }

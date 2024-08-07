@@ -1,25 +1,27 @@
-import { LocalStore } from "@/utils/helpers";
+import { removeFromLocalStorage } from "./../../utils/helpers/index";
+import { setToLocalStorage } from "@/utils/helpers";
 import axios, { AxiosInstance } from "axios";
 import { store } from "@contexts/store";
 import { User } from "@/utils/types/types";
 
-const userSession = LocalStore.get("userSession");
 const url = process.env.BASE_API_URL;
-console.log("api2", url, userSession);
-
 const api: AxiosInstance = axios.create({
   baseURL: url,
 });
-
+// TODO create seperate file for each catogery
 const updateAuthorizationHeader = () => {
   const token = store.getState().user?.token;
+  // const value = winodw && localStorage?.getItem("userSession");
+  // const userSession: any = value ? JSON.parse(value) : null;
   if (token) {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  } else if (userSession?.token) {
-    api.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${userSession?.token}`;
-  } else {
+  }
+  //if (userSession?.token) {
+  // api.defaults.headers.common[
+  //   "Authorization"
+  // ] = `Bearer ${userSession?.token}`;
+  //} else
+  else {
     delete api.defaults.headers.common["Authorization"];
   }
 };
@@ -34,7 +36,7 @@ export const handleLogIn = async (payload: {
   const response = await api.post("/auth/login", payload);
 
   console.log("LOGIN_RES", response);
-  LocalStore.set("userSession", response.data);
+  setToLocalStorage("userSession", response.data);
   return response.data;
 };
 
@@ -43,7 +45,7 @@ export const handleLogOut = async () => {
   const response = await api.patch("/auth/logout");
 
   console.log(response);
-  LocalStore.remove("userSession");
+  removeFromLocalStorage("userSession");
   return response.data;
 };
 
@@ -54,7 +56,7 @@ export const handleSignup = async (
   try {
     const response = await api.post("/auth/signup", { username, sig });
     console.log("==============userSignUp=================", response);
-    LocalStore.set("userSession", response.data);
+    setToLocalStorage("userSession", response.data);
     return response.data;
   } catch (error) {
     console.error("SIGNUP_ERROR ", error);
@@ -70,28 +72,9 @@ export const handlePostToCommunity = async (data: any) => {
   }
 };
 
-export const getPosts = async () => {
+export const fetchUser = async (username: string) => {
   try {
-    const response = await api.get("/posts");
-    console.log("============Fetched all posts=============", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("GET_POSTS_ERROR", error);
-  }
-};
-
-export const patchPost = async (data: any) => {
-  try {
-    const response = await api.patch("/posts", data);
-    console.log("============Fetched all posts=============", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("GET_POSTS_ERROR", error);
-  }
-};
-export const fetchUser = async (payload: any = { username: "anilpujari" }) => {
-  try {
-    const response = await api.get("/users/username", payload);
+    const response = await api.get(`/users/${username}`);
 
     return response.data;
   } catch (error) {
@@ -125,5 +108,35 @@ export const createCommunity = async (data: any) => {
     return response.data;
   } catch (error) {
     console.error("POSTS_ERROR: ", error);
+  }
+};
+
+export const fetchCommunityByCname = async (cName: string) => {
+  try {
+    const response = await api.get(`/community/${cName}`);
+
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Communities ", error);
+  }
+};
+
+export const getPosts = async () => {
+  try {
+    const response = await api.get("/posts");
+    console.log("============Fetched all posts=============", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+  }
+};
+
+export const patchPost = async (data: any) => {
+  try {
+    const response = await api.patch("/posts", data);
+    console.log("============Fetched all posts=============", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
   }
 };
