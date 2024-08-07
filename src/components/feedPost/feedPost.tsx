@@ -5,6 +5,7 @@ import { PiArrowFatUpLight, PiArrowFatDownLight } from "react-icons/pi";
 import { GoComment, GoShareAndroid } from "react-icons/go";
 import Image from "next/image";
 import { patchPost } from "@/services/api/api";
+import Link from "next/link";
 
 interface IProps {
   post: any;
@@ -28,17 +29,28 @@ export default function FeedPost({ post }: IProps) {
       <div className='user_head'>
         <div>
           {/* <Image src={user?.img ?? imgLink} alt='user' width={24} height={24} /> */}
-          <Image src={imgLink} alt='user' width={24} height={24} />
-          <span>{user?.username ?? "User Name"}</span>
+          <Link href={`u/${user.username}`} as={`/u/${user.username}`}>
+            <div className='head'>
+              <Image src={imgLink} alt='user' width={24} height={24} />
+              <span>{user?.username ?? "User Name"}</span>
+            </div>
+          </Link>
           <LiaArrowRightSolid />
-          <Image
-            // src={community?.logo ?? imgLink}
-            src={imgLink}
-            alt='community'
-            width={24}
-            height={24}
-          />
-          <span>{community?.username ?? "Community"}</span>
+          <Link
+            href={`c/${community?.username}`}
+            as={`/c/${community.username}`}
+          >
+            <div className='head'>
+              <Image
+                // src={community?.logo ?? imgLink}
+                src={imgLink}
+                alt='community'
+                width={24}
+                height={24}
+              />
+              <span>{community?.username ?? "Community"}</span>
+            </div>
+          </Link>
         </div>
         <span>{time}</span>
       </div>
