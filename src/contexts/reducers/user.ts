@@ -6,13 +6,18 @@ export interface User {
   name: string;
   uid: number;
   token: string;
+  img: string;
 }
 
+const value = localStorage?.getItem("userSession");
+const userData: any = value ? JSON.parse(value) : null;
+//TODO update Later
 const initialState: User = {
-  username: "",
-  name: "",
-  uid: 0,
-  token: "",
+  username: "unilendOfficials",
+  name: "Unilend",
+  uid: userData?.id || 0,
+  token: userData?.token || "",
+  img: "https://i.imgur.com/Qpw6j8D_d.webp?maxwidth=760&fidelity=grand",
 };
 
 export const userSlice = createSlice({
@@ -20,12 +25,11 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserData: (state, action: PayloadAction<User>) => {
-      state.username = action.payload.username;
-      state.name = action.payload.name;
-      state.uid = action.payload.uid;
-      state.token = action.payload.token;
+      state.username = action.payload?.username;
+      state.name = action.payload?.name;
+      state.uid = action.payload?.uid;
+      state.token = action.payload?.token;
+      state.img = action.payload?.img;
     },
   },
 });
-
-// Action creators are generated for each case reducer function

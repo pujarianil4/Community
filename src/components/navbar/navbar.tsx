@@ -16,6 +16,7 @@ import useRedux from "@/hooks/useRedux";
 import { handleLogIn, handleLogOut, handleSignup } from "@/services/api/api";
 import { User } from "@/contexts/reducers/user";
 import CreatePost from "../createPost/CreatePost";
+import { RootState } from "@/contexts/store";
 
 export interface ISignupData {
   username: string;
@@ -25,9 +26,9 @@ export interface ISignupData {
 const msg = `Sign this message to prove you have access to this wallet in order to sign in to Community. This won't cost you any Gas. Date: ${Date.now()} `;
 
 export default function Navbar() {
-  const user = useAccount(); // UseAccount get is connected, accountId
-
-  const [{ dispatch, actions }] = useRedux();
+  const userAccount = useAccount();
+  const userNameSelector = (state: RootState) => state?.user;
+  const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
   const { disconnect } = useDisconnect();
   const { openConnectModal } = useConnectModal();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,9 +40,7 @@ export default function Navbar() {
     username: "UnilendOfficials",
     name: "Unilend",
   });
-  const [userSession, setUserSession] = useState<any>(
-    localStorage?.getItem("userSession")
-  );
+  const [userSession, setUserSession] = useState<any>(user);
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const hasCalledRef = useRef(false);
 
@@ -98,8 +97,7 @@ export default function Navbar() {
         img: response?.img || "",
       };
       dispatch(actions.setUserData(user));
-      const value = window?.localStorage?.getItem("userSession");
-      setUserSession(value ? JSON.parse(value) : null);
+      setUserSession(user);
       handleCancel();
       setTimeout(() => {
         disconnect();
@@ -117,14 +115,12 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    const value = window?.localStorage?.getItem("userSession");
-    setUserSession(value ? JSON.parse(value) : null);
-    // setUserSession(null);
-    if (user.isConnected && !messageHash && !hasCalledRef.current) {
+    setUserSession(user);
+    if (userAccount.isConnected && !messageHash && !hasCalledRef.current) {
       handleAuth();
       hasCalledRef.current = true;
     }
-  }, [user.isConnected]);
+  }, [userAccount.isConnected]);
 
   const content = (
     <div className='user_popover'>

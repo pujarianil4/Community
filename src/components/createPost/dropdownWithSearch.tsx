@@ -6,9 +6,24 @@ import { SearchOutlined } from "@ant-design/icons";
 import CInput from "../common/Input";
 import Image from "next/image";
 
+export interface ICommunity {
+  id: number;
+  username: string;
+  name: string;
+  ticker: string;
+  logo: string;
+  metadata: string;
+  pCount: number;
+  followers: number;
+  totalSupply: number;
+  sts: number;
+  cta: string;
+  uta: string;
+}
+
 interface DropdownWithSearchProps {
-  onSelect: (value: string) => void;
-  options: string[]; // Assuming options is an array of strings
+  onSelect: (value: ICommunity) => void;
+  options: ICommunity[];
 }
 
 const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
@@ -35,11 +50,25 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
     }, 200);
   };
 
-  const handleSelect = (value: string) => {
-    onSelect(value);
+  const handleSelect = (item: ICommunity) => {
+    onSelect(item);
     // setSelectedValue(value);
-    setSearchTerm(value);
+    // console.log("SEARCH", item);
+    setSearchTerm(item?.username);
     setVisible(false);
+  };
+
+  const getImageSource = (logo: string) => {
+    if (
+      logo &&
+      (logo.startsWith("http://") ||
+        logo.startsWith("https://") ||
+        logo.startsWith("/"))
+    ) {
+      return logo;
+    } else {
+      return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    }
   };
 
   return (
@@ -59,18 +88,23 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
           <List
             className='dropdown_list'
             dataSource={options?.filter((option) =>
-              option?.toLowerCase().includes(searchTerm.toLowerCase())
+              option?.username.toLowerCase().includes(searchTerm.toLowerCase())
             )}
             renderItem={(item) => (
               <List.Item onClick={() => handleSelect(item)}>
-                {/* <Image
-                  loading='lazy'
-                  src='https://cdn.vectorstock.com/i/1000x1000/26/37/user-profile-icon-in-flat-style-member-avatar-vector-45692637.webp'
-                  alt='user_img'
-                  width={24}
-                  height={24}
-                /> */}
-                {item}
+                <div className='dropdown_item'>
+                  {/* <img src={item.logo} alt={item.username} /> */}
+                  <Image
+                    src={getImageSource(item?.logo)}
+                    alt={item?.name}
+                    width={32}
+                    height={32}
+                  />
+                  <div>
+                    <p className='community_name'>{item.username}</p>
+                    <p className='followers'>{item.followers} followers</p>
+                  </div>
+                </div>
               </List.Item>
             )}
           />

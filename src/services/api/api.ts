@@ -9,8 +9,10 @@ const api: AxiosInstance = axios.create({
   baseURL: url,
 });
 // TODO create seperate file for each catogery
+// UI for notification
 const updateAuthorizationHeader = () => {
   const token = store.getState().user?.token;
+
   // const value = winodw && localStorage?.getItem("userSession");
   // const userSession: any = value ? JSON.parse(value) : null;
   if (token) {
@@ -21,9 +23,9 @@ const updateAuthorizationHeader = () => {
   //   "Authorization"
   // ] = `Bearer ${userSession?.token}`;
   //} else
-  else {
-    delete api.defaults.headers.common["Authorization"];
-  }
+  // else {
+  //   delete api.defaults.headers.common["Authorization"];
+  // }
 };
 
 updateAuthorizationHeader();
@@ -138,5 +140,16 @@ export const patchPost = async (data: any) => {
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
+  }
+};
+
+export const getUserById = async (userId: string) => {
+  console.log("Called with", userId);
+  try {
+    const response = await api.get(`/users/${userId}`);
+    console.log("============Fetche user by ID=============", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("GET_USER_BY_ID_ERROR", error);
   }
 };

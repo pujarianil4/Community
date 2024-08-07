@@ -5,12 +5,17 @@ import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
 import { MdOutlineGifBox } from "react-icons/md";
 import TestArea from "./testArea";
-import { handlePostToCommunity } from "@/services/api/api";
+import {
+  fetchCommunities,
+  getPosts,
+  handlePostToCommunity,
+} from "@/services/api/api";
 // import { LocalStore } from "@/utils/helpers";
 import Image from "next/image";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
-import DropdownWithSearch from "./dropdownWithSearch";
+import DropdownWithSearch, { ICommunity } from "./dropdownWithSearch";
+import useAsync from "@/hooks/useAsync";
 
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -82,41 +87,30 @@ FileInput.displayName = "FileInput";
 const userNameSelector = (state: RootState) => state?.user;
 const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   const [{}, [user]] = useRedux([userNameSelector]);
-  console.log("USER", user);
+  const { isLoading, data: communityList } = useAsync(fetchCommunities);
 
   const [pics, setPics] = useState<File[]>([]);
   const [content, setContent] = useState<string>("");
-  const [selectedOption, setSelectedOption] = useState<string>("");
-  const communityList = [
-    "Option 1",
-    "Option 2",
-    "Option 3",
-    "Option 1",
-    "Option 2",
-    "Option 3",
-    "Option 1",
-    "Option 2",
-    "Option 3",
-    "Option 1",
-    "Option 2",
-    "Option 3",
-  ];
-
-  console.log("SELECTED_op", selectedOption);
+  const [selectedOption, setSelectedOption] = useState<ICommunity | null>();
 
   const handlePost = async () => {
-    const value = window?.localStorage?.getItem("userSession");
-    const { uid } = value ? JSON.parse(value) : null;
-    const data = {
-      uid: uid,
-      cid: 1,
-      text: content,
-      up: 0,
-      down: 0,
-      comments: 0,
-    };
-    await handlePostToCommunity(data);
-    setIsPostModalOpen(false);
+    try {
+      const data = {
+        // uid: user?.uid,
+        cid: selectedOption?.id,
+        text: content,
+        // up: 0,
+        // down: 0,
+        // comments: 0,
+      };
+      await handlePostToCommunity(data);
+      setIsPostModalOpen(false);
+      setSelectedOption(null);
+      setContent("");
+      await getPosts();
+    } catch (error) {
+      console.log("POST_ERROR", error);
+    }
   };
 
   return (
@@ -124,7 +118,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
       <section className='user_data'>
         <Image
           loading='lazy'
-          src='https://cdn.vectorstock.com/i/1000x1000/26/37/user-profile-icon-in-flat-style-member-avatar-vector-45692637.webp'
+          src={user?.img || ""}
           alt='user_img'
           width={48}
           height={48}
@@ -139,7 +133,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
           />
           <TestArea content={content} setContent={setContent} />
           <div className='file_container'>
-            {pics.map((picFile, index) => (
+            {pics?.map((picFile, index) => (
               <Img
                 key={index}
                 index={index}
