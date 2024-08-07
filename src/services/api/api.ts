@@ -72,9 +72,9 @@ export const handlePostToCommunity = async (data: any) => {
   }
 };
 
-export const fetchUser = async (payload: any = { username: "anilpujari" }) => {
+export const fetchUser = async (username: string) => {
   try {
-    const response = await api.get("/users/username", payload);
+    const response = await api.get(`/users/${username}`);
 
     return response.data;
   } catch (error) {
