@@ -37,7 +37,9 @@ export default function Navbar() {
     username: "UnilendOfficials",
     name: "Unilend",
   });
-  const [userSession, setUserSession] = useState<any>();
+  const [userSession, setUserSession] = useState<any>(
+    localStorage?.getItem("userSession")
+  );
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const hasCalledRef = useRef(false);
 
@@ -103,6 +105,8 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    const value = window?.localStorage?.getItem("userSession");
+    setUserSession(value ? JSON.parse(value) : null);
     // setUserSession(null);
     if (user.isConnected && !messageHash && !hasCalledRef.current) {
       handleAuth();

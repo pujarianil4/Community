@@ -13,8 +13,6 @@ export default function Home() {
     <main>
       <PageWraper hideRightPanel={true}>
         <CreatePost />
-        <FeedPost />
-        <UserHead />
       </PageWraper>
     </main>
   );
