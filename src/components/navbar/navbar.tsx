@@ -16,6 +16,7 @@ import useRedux from "@/hooks/useRedux";
 import { handleLogIn, handleLogOut, handleSignup } from "@/services/api/api";
 import { LocalStore } from "@/utils/helpers";
 import { User } from "@/contexts/reducers/user";
+import CreatePost from "../createPost/CreatePost";
 
 export interface ISignupData {
   username: string;
@@ -31,6 +32,7 @@ export default function Navbar() {
   const { disconnect } = useDisconnect();
   const { openConnectModal } = useConnectModal();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [messageHash, setMessageHash] = useState<`0x${string}` | undefined>(
     undefined
   );
@@ -46,12 +48,20 @@ export default function Navbar() {
     setIsModalOpen(true);
   };
 
+  const showCreatePost = () => {
+    setIsPostModalOpen(true);
+  };
+
   const handleOk = () => {
     setIsModalOpen(false);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const handleClosePostModal = () => {
+    setIsPostModalOpen(false);
   };
 
   const userLogout = async () => {
@@ -63,6 +73,7 @@ export default function Navbar() {
         name: "",
         uid: 0,
         token: "",
+        img: "",
       };
       dispatch(actions.setUserData(initialState));
     } catch (error) {}
@@ -83,6 +94,7 @@ export default function Navbar() {
         name: signupData.name,
         uid: response?.uid || 0,
         token: response?.token || "",
+        img: response?.img || "",
       };
       dispatch(actions.setUserData(user));
       setUserSession(LocalStore.get("userSession"));
@@ -138,14 +150,17 @@ export default function Navbar() {
         </div>
         <div className='signin'>
           {userSession ? (
-            <div className='user_icon'>
-              <Popover
-                placement='bottomRight'
-                content={content}
-                trigger='click'
-              >
-                <PiUserCircleDuotone color='var(--primary-text)' size={40} />
-              </Popover>
+            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <CButton onClick={showCreatePost}>Post</CButton>
+              <div className='user_icon'>
+                <Popover
+                  placement='bottomRight'
+                  content={content}
+                  trigger='click'
+                >
+                  <PiUserCircleDuotone color='var(--primary-text)' size={40} />
+                </Popover>
+              </div>
             </div>
           ) : (
             <CButton onClick={showModal}>LogIn</CButton>
@@ -161,6 +176,14 @@ export default function Navbar() {
           setSignupData={setSignupData}
           setIsSignup={setIsSignup}
         />
+      </Modal>
+      <Modal
+        open={isPostModalOpen}
+        onCancel={handleClosePostModal}
+        footer={<></>}
+        centered
+      >
+        <CreatePost setIsPostModalOpen={setIsPostModalOpen} />
       </Modal>
     </>
   );

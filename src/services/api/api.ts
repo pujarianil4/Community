@@ -70,6 +70,25 @@ export const handlePostToCommunity = async (data: any) => {
   }
 };
 
+export const getPosts = async () => {
+  try {
+    const response = await api.get("/posts");
+    console.log("============Fetched all posts=============", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+  }
+};
+
+export const patchPost = async (data: any) => {
+  try {
+    const response = await api.patch("/posts", data);
+    console.log("============Fetched all posts=============", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+  }
+};
 export const fetchUser = async (payload: any = { username: "anilpujari" }) => {
   try {
     const response = await api.get("/users/username", payload);

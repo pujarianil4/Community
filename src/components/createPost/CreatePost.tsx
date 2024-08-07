@@ -1,77 +1,113 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+
+import React, { useState, useEffect, useRef, memo } from "react";
 import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
 import { MdOutlineGifBox } from "react-icons/md";
 import TestArea from "./testArea";
 import { handlePostToCommunity } from "@/services/api/api";
-import { LocalStore } from "@/utils/helpers";
+// import { LocalStore } from "@/utils/helpers";
+import Image from "next/image";
+import useRedux from "@/hooks/useRedux";
+import { RootState } from "@/contexts/store";
+import DropdownWithSearch from "./dropdownWithSearch";
 
-export default function CreatePost() {
-  const [pics, setPics] = useState<Array<string>>([]);
-  const [text, setText] = useState("");
-  const [content, setContent] = useState("");
+interface Props {
+  setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-  const FileInput = ({ onChange, children }: any) => {
+const Img: React.FC<{
+  file: File;
+  onRemove: (index: number) => void;
+  index: number;
+}> = React.memo(({ file, onRemove, index }) => {
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setFileUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
+  }, [file]);
+
+  return fileUrl ? (
+    <div className='file' key={index}>
+      <img alt='pic' src={fileUrl} />
+      {onRemove && (
+        <div className='remove' onClick={() => onRemove(index)}>
+          x
+        </div>
+      )}
+    </div>
+  ) : null;
+});
+
+// Set displayName for Img component
+Img.displayName = "Img";
+
+interface FileInputProps {
+  onChange: (files: FileList) => void;
+  children: React.ReactNode;
+}
+
+const FileInput: React.FC<FileInputProps> = React.memo(
+  ({ onChange, children }) => {
     const fileRef = useRef<HTMLInputElement>(null);
-    const onPickFile = (event: any) => {
-      console.log(event);
 
-      onChange([...event.target.files]);
+    const onPickFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files) {
+        onChange(event.target.files);
+      }
     };
+
     return (
-      <div
-        style={{
-          width: "20px",
-          height: "20px",
-        }}
-        onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
-      >
+      <div onClick={() => fileRef.current && fileRef.current.click()}>
         {children}
         <input
           multiple
           ref={fileRef}
           onChange={onPickFile}
           type='file'
-          style={{ visibility: "hidden" }}
+          style={{ display: "none" }}
         />
       </div>
     );
-  };
+  }
+);
 
-  const Img = React.memo(({ file, onRemove, index }: any) => {
-    const [fileUrl, setFileUrl] = useState<any>(null);
+// Set displayName for FileInput component
+FileInput.displayName = "FileInput";
 
-    useEffect(() => {
-      if (file) {
-        console.log("file", file, URL.createObjectURL(file));
+const userNameSelector = (state: RootState) => state?.user;
+const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
+  const [{}, [user]] = useRedux([userNameSelector]);
+  console.log("USER", user);
 
-        setFileUrl(URL.createObjectURL(file));
-      }
-      // Clean up the URL object when component unmounts or file changes
-      return () => {
-        if (fileUrl) {
-          URL.revokeObjectURL(fileUrl);
-        }
-      };
-    }, [file]); // Only re-run effect if `file` changes
+  const [pics, setPics] = useState<File[]>([]);
+  const [content, setContent] = useState<string>("");
+  const [selectedOption, setSelectedOption] = useState<string>("");
+  const communityList = [
+    "Option 1",
+    "Option 2",
+    "Option 3",
+    "Option 1",
+    "Option 2",
+    "Option 3",
+    "Option 1",
+    "Option 2",
+    "Option 3",
+    "Option 1",
+    "Option 2",
+    "Option 3",
+  ];
 
-    return fileUrl ? (
-      <div className='file' key={index}>
-        <img alt='pic' src={fileUrl} />
-        {onRemove && (
-          <div className='remove' onClick={() => onRemove(index)}>
-            x
-          </div>
-        )}
-      </div>
-    ) : null;
-  });
+  console.log("SELECTED_op", selectedOption);
 
   const handlePost = async () => {
-    const { uid } = LocalStore.get("userSession");
+    // const { uid } = LocalStore.get("userSession");
     const data = {
-      uid,
+      uid: 8,
       cid: 1,
       text: content,
       up: 0,
@@ -79,57 +115,61 @@ export default function CreatePost() {
       comments: 0,
     };
     await handlePostToCommunity(data);
+    setIsPostModalOpen(false);
   };
 
   return (
-    <div className='create_post_container'>
-      <span className='label'>Create Post</span>
-      <div className='create_post_form'>
+    <main className='create_post_container'>
+      <section className='user_data'>
+        <Image
+          loading='lazy'
+          src='https://cdn.vectorstock.com/i/1000x1000/26/37/user-profile-icon-in-flat-style-member-avatar-vector-45692637.webp'
+          alt='user_img'
+          width={48}
+          height={48}
+        />
+        <h3 className='heading02'>{user?.name ?? "user name"}</h3>
+      </section>
+      <section className='create_post_form'>
         <div className='inputArea'>
+          <DropdownWithSearch
+            onSelect={setSelectedOption}
+            options={communityList}
+          />
           <TestArea content={content} setContent={setContent} />
           <div className='file_container'>
-            {pics.map((picFile: any, index: number) => (
+            {pics.map((picFile, index) => (
               <Img
                 key={index}
                 index={index}
                 file={picFile}
-                onRemove={(rmIndx: any) =>
-                  setPics(
-                    pics.filter((_: any, index: number) => index !== rmIndx)
-                  )
+                onRemove={(rmIndx) =>
+                  setPics(pics.filter((_, idx) => idx !== rmIndx))
                 }
               />
             ))}
           </div>
         </div>
+        <hr />
         <div className='media'>
           <div className='inputs'>
             <FileInput
-              onChange={(newPics: any) =>
-                setPics((prevPics: any) => [...prevPics, ...newPics])
+              onChange={(newPics) =>
+                setPics((prevPics) => [...prevPics, ...Array.from(newPics)])
               }
             >
               <LuImagePlus color='var(--primary)' size={20} />
             </FileInput>
-
             <MdOutlineGifBox color='var(--primary)' size={20} />
             <LuImagePlus color='var(--primary)' size={20} />
           </div>
-
           <div className='postbtn'>
             <button onClick={handlePost}>Post</button>
           </div>
         </div>
-        {/* <textarea
-            ref={textAreaRef}
-            value={text}
-            placeholder='What is happening...'
-            // style={{ flex: 1, border: "none", minHeight: "150px" }}
-            onChange={(e) => setText(e.target.value)}
-            name=''
-            id='textarea'
-          ></textarea> */}
-      </div>
-    </div>
+      </section>
+    </main>
   );
-}
+};
+
+export default CreatePost;

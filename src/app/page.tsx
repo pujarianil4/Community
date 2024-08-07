@@ -4,16 +4,14 @@ import "../styles/index.scss";
 import "../styles/antd.scss";
 
 import PageWraper from "@/components/Wrapers/PageWraper";
-import CreatePost from "@/components/createPost/CreatePost";
 import UserHead from "@/components/userHead/UserHead";
-import FeedPost from "@/components/feedPost/feedPost";
+import FeedPosts from "@/components/feedPosts";
 
 export default function Home() {
   return (
     <main>
       <PageWraper hideRightPanel={true}>
-        <CreatePost />
-        <FeedPost />
+        <FeedPosts />
         <UserHead />
       </PageWraper>
     </main>
