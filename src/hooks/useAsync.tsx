@@ -8,7 +8,7 @@ export default function useAsync<T>(
 ) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
-  const [data, setData] = useState<T | null>(null);
+  const [data, setData] = useState<T | null | any>(null);
 
   const callFunction = useCallback(
     async (callback: AsyncFunction<T>, arg?: any) => {
@@ -28,11 +28,15 @@ export default function useAsync<T>(
     []
   );
 
-  useEffect(() => {
+  const refetch = () => {
     if (loadOnRefresh) {
       callFunction(loadOnRefresh, arg);
     }
+  };
+
+  useEffect(() => {
+    refetch();
   }, [loadOnRefresh, arg, callFunction]);
 
-  return { isLoading, error, data, callFunction };
+  return { isLoading, error, data, callFunction, refetch };
 }

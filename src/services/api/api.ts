@@ -74,7 +74,17 @@ export const handlePostToCommunity = async (data: any) => {
 
 export const fetchUser = async (username: string) => {
   try {
-    const response = await api.get(`/users/${username}`);
+    const response = await api.get(`/users/uname/${username}`);
+
+    return response.data;
+  } catch (error) {
+    console.error("Fetch User ", error);
+  }
+};
+
+export const fetchUserById = async (id: string) => {
+  try {
+    const response = await api.get(`/users/${id}`);
 
     return response.data;
   } catch (error) {
@@ -113,7 +123,7 @@ export const createCommunity = async (data: any) => {
 
 export const fetchCommunityByCname = async (cName: string) => {
   try {
-    const response = await api.get(`/community/${cName}`);
+    const response = await api.get(`/community/cname/${cName}`);
 
     return response.data;
   } catch (error) {
@@ -124,6 +134,26 @@ export const fetchCommunityByCname = async (cName: string) => {
 export const getPosts = async () => {
   try {
     const response = await api.get("/posts");
+    console.log("============Fetched all posts=============", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+  }
+};
+
+export const getPostsBycName = async (cname: string) => {
+  try {
+    const response = await api.get(`/posts/community/cname/${cname}`);
+    console.log("============Fetched all posts=============", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+  }
+};
+
+export const getPostsByuName = async (uname: string) => {
+  try {
+    const response = await api.get(`/posts/uname/${uname}`);
     console.log("============Fetched all posts=============", response.data);
     return response.data;
   } catch (error) {
