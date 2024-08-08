@@ -16,7 +16,7 @@ interface IProps {
 
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post }: IProps) {
-  const { text, up, down, comments, time, user, community } = post;
+  const { text, up, down, comments, time, user, community, id } = post;
 
   const handleUP = async () => {
     await patchPost({ up: up + 1 });
@@ -68,10 +68,10 @@ export default function FeedPost({ post }: IProps) {
           <PiArrowFatDownLight size={18} />
           {/* </button> */}
         </div>
-        <div>
+        <Link href={`post/${id}`}>
           <GoComment size={18} />
           <span>Comments</span>
-        </div>
+        </Link>
         <div>
           <GoShareAndroid size={18} />
           <span>Share</span>
