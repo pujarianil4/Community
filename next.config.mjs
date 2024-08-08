@@ -8,6 +8,9 @@ const nextConfig = {
       "www.google.com",
       "cdn.vectorstock.com",
       "cdn-icons-png.flaticon.com",
+      "i.imgur.com",
+      "cdn-icons-png.freepik.com",
+      "picsum.photos",
     ],
   },
   env: {

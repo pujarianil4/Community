@@ -9,6 +9,10 @@ body {
   color: var(--primary-text);
 }
 
+a {
+  text-decoration: none;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 5px;

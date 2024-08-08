@@ -1,9 +1,11 @@
 "use client";
+import React from "react";
 import useAsync from "@/hooks/useAsync";
 import { getPosts, getPostsBycName, getPostsByuName } from "@/services/api/api";
 import { useParams } from "next/navigation";
-import React from "react";
 import FeedPost from "./feedPost";
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
 
 const getFunctionByMethod = {
   allPosts: getPosts,
@@ -21,14 +23,17 @@ export default function FeedList({ method }: IFeedList) {
     communityId: string;
   }>();
 
-  const { isLoading, data } = useAsync(getFunctionByMethod[method], userId);
+  const { isLoading, data: posts } = useAsync(
+    getFunctionByMethod[method],
+    userId
+  );
 
-  console.log("data", data);
+  console.log("data", posts);
 
   return (
     <>
-      {!isLoading && data ? (
-        data.map((post: any) => <FeedPost key={post.id} post={post} />)
+      {!isLoading && posts ? (
+        posts?.map((post: any) => <FeedPost key={post.id} post={post} />)
       ) : (
         <h1>Loading...</h1>
       )}
