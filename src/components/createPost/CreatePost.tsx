@@ -93,6 +93,8 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   const [content, setContent] = useState<string>("");
   const [selectedOption, setSelectedOption] = useState<ICommunity | null>();
 
+  console.log("CHEKC", selectedOption);
+
   const handlePost = async () => {
     try {
       const data = {

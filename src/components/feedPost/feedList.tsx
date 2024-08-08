@@ -25,7 +25,7 @@ export default function FeedList({ method }: IFeedList) {
 
   const { isLoading, data: posts } = useAsync(
     getFunctionByMethod[method],
-    userId
+    userId || communityId
   );
 
   console.log("data", posts);
