@@ -1,0 +1,25 @@
+.followers_containers {
+  padding: 10px;
+  .user {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border-bottom: 1px solid var(--primary-border);
+    cursor: pointer;
+    &:hover {
+      background-color: var(--secondary-bg);
+    }
+    img {
+      border-radius: 50%;
+    }
+    .name {
+      color: var(--primary-text);
+      font-size: 18px;
+    }
+    .username {
+      color: var(--label-text);
+      font-size: 12px;
+    }
+  }
+}

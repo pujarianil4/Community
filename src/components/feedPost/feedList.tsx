@@ -28,8 +28,6 @@ export default function FeedList({ method }: IFeedList) {
     userId || communityId
   );
 
-  console.log("data", posts);
-
   return (
     <>
       {!isLoading && posts ? (
