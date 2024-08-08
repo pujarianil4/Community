@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState, ChangeEvent } from "react";
 import { Modal, Divider, Popover } from "antd";
 import { useDisconnect } from "wagmi";
 import { PiUserCircleDuotone } from "react-icons/pi";
+import { AiOutlinePlus } from "react-icons/ai";
 import { IoLogOutOutline } from "react-icons/io5";
 
 import "./navbar.scss";
@@ -151,7 +152,10 @@ export default function Navbar() {
         <div className='signin'>
           {userSession ? (
             <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-              <CButton onClick={showCreatePost}>Post</CButton>
+              <CButton className='create_post' onClick={showCreatePost}>
+                <AiOutlinePlus />
+                Create
+              </CButton>
               <div className='user_icon'>
                 <Popover
                   placement='bottomRight'

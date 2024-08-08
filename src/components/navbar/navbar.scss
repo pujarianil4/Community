@@ -16,9 +16,21 @@
   }
   .signin {
     margin-inline: 20px;
-    // button {
-    //   margin: 20px;
-    // }
+    button {
+      background-color: transparent !important;
+      outline: none;
+      height: 40px;
+      padding: 8px 12px;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      &:hover {
+        background-color: var(--secondary-bg) !important;
+      }
+    }
 
     .user_icon {
       svg {

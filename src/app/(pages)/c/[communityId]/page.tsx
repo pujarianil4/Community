@@ -10,7 +10,7 @@ export default function CommuityPage() {
       <CommunityHead />
       <CTabs
         items={[
-          { key: "1", label: "Posts", content: <FeedList /> },
+          { key: "1", label: "Posts", content: <FeedList method='allPosts' /> },
           { key: "2", label: "Proposals", content: "This is tab2" },
           { key: "3", label: "Voters", content: "This is tab3" },
         ]}

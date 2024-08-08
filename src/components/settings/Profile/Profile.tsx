@@ -6,15 +6,15 @@ import React, { useEffect, useState } from "react";
 import "./index.scss";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { fetchUser, updateUser } from "@/services/api/api";
+import { fetchUser, fetchUserById, updateUser } from "@/services/api/api";
 import { User } from "@/utils/types/types";
+import useAsync from "@/hooks/useAsync";
+import useRedux from "@/hooks/useRedux";
+import { RootState } from "@/contexts/store";
 
 export default function Profile() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["user"],
-    queryFn: fetchUser,
-  });
-
+  const [{}, [userData]] = useRedux([(state: RootState) => state.user]);
+  const { isLoading, data, refetch, callFunction } = useAsync();
   const [user, setUser] = useState<User>({
     username: "",
     name: "",
@@ -37,12 +37,16 @@ export default function Profile() {
   };
 
   useEffect(() => {
+    callFunction(fetchUserById, userData.uid);
+  }, [userData]);
+
+  useEffect(() => {
     console.log("data", data);
     if (data) {
       const userData = {
         username: data.username,
         name: data.name,
-        img: data.img,
+        img: user.img ? user.img : "https://picsum.photos/200/300",
       };
       setUser(userData);
       setOriginalUser(userData);

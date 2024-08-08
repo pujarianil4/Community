@@ -1,21 +1,35 @@
 "use client";
+import React from "react";
 import useAsync from "@/hooks/useAsync";
-import { getPosts, getUserById } from "@/services/api/api";
-import React, { useEffect } from "react";
+import { getPosts, getPostsBycName, getPostsByuName } from "@/services/api/api";
+import { useParams } from "next/navigation";
 import FeedPost from "./feedPost";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 
-export default function FeedList() {
-  const userNameSelector = (state: RootState) => state?.user;
-  const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
-  const { data: userData, error } = useAsync(getUserById, user.uid);
-  const { isLoading, data: posts } = useAsync(getPosts);
-  console.log("USER_DATA", userData);
+const getFunctionByMethod = {
+  allPosts: getPosts,
+  byCName: getPostsBycName,
+  byUName: getPostsByuName,
+};
 
-  // useEffect(() => {
-  //   dispatch(actions.setUserData(userData));
-  // }, [user]);
+interface IFeedList {
+  method: keyof typeof getFunctionByMethod;
+}
+
+export default function FeedList({ method }: IFeedList) {
+  const { userId, communityId } = useParams<{
+    userId: string;
+    communityId: string;
+  }>();
+
+  const { isLoading, data: posts } = useAsync(
+    getFunctionByMethod[method],
+    userId
+  );
+
+  console.log("data", posts);
+
   return (
     <>
       {!isLoading && posts ? (

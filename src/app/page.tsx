@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <main>
       <PageWraper hideRightPanel={true}>
-        <FeedList />
+        <FeedList method='allPosts' />
       </PageWraper>
     </main>
   );
