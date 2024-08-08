@@ -13,11 +13,13 @@ const value = localStorage?.getItem("userSession");
 const userData: any = value ? JSON.parse(value) : null;
 //TODO update Later
 const initialState: User = {
-  username: "unilendOfficials",
-  name: "Unilend",
-  uid: userData?.id || 0,
+  username: userData?.username || "",
+  name: userData?.name || "",
+  uid: userData?.uid || 0,
   token: userData?.token || "",
-  img: "https://i.imgur.com/Qpw6j8D_d.webp?maxwidth=760&fidelity=grand",
+  img:
+    userData?.img ||
+    "https://i.imgur.com/Qpw6j8D_d.webp?maxwidth=760&fidelity=grand",
 };
 
 export const userSlice = createSlice({

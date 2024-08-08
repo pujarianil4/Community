@@ -21,6 +21,7 @@ export default function useAsync<T>(
         return result;
       } catch (err) {
         setError(err as Error);
+        throw err;
       } finally {
         setIsLoading(false);
       }

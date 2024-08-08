@@ -14,10 +14,17 @@ import "./navbar.scss";
 import CButton from "../common/Button";
 import CInput from "../common/Input";
 import useRedux from "@/hooks/useRedux";
-import { handleLogIn, handleLogOut, handleSignup } from "@/services/api/api";
+import {
+  getUserById,
+  handleLogIn,
+  handleLogOut,
+  handleSignup,
+} from "@/services/api/api";
 import { User } from "@/contexts/reducers/user";
 import CreatePost from "../createPost/CreatePost";
 import { RootState } from "@/contexts/store";
+import Link from "next/link";
+import { setToLocalStorage } from "@/utils/helpers";
 
 export interface ISignupData {
   username: string;
@@ -90,13 +97,15 @@ export default function Navbar() {
       } else {
         response = await handleLogIn({ sig: sign, msg });
       }
+      const userdata = await getUserById(response.uid);
       const user = {
-        username: signupData.username,
-        name: signupData.name,
+        username: userdata.username,
+        name: userdata.name,
         uid: response?.uid || 0,
         token: response?.token || "",
-        img: response?.img || "",
+        img: userdata?.img || "",
       };
+      setToLocalStorage("userSession", user);
       dispatch(actions.setUserData(user));
       if (user?.token == "" || user.token == null || user.token == undefined) {
         setUserSession(null);
@@ -134,13 +143,27 @@ export default function Navbar() {
 
   const content = (
     <div className='user_popover'>
-      <div className='row'>
-        <PiUserCircleDuotone size={25} />
-        <span className='text'>
-          <span className='text_main'>Edit user</span>
-          <span className='text_sub'>@username</span>
-        </span>
-      </div>
+      <Link
+        href={`/u/${userSession?.username}`}
+        as={`/u/${userSession?.username}`}
+      >
+        <div className='row'>
+          <PiUserCircleDuotone size={25} />
+          <span className='text'>
+            <span className='text_main'>Profile</span>
+            <span className='text_sub'>@{userSession?.username}</span>
+          </span>
+        </div>
+      </Link>
+
+      <Link href={"/settings"} as={"/settings"}>
+        <div className='row'>
+          <PiUserCircleDuotone size={25} />
+          <span className='text'>
+            <span className='text_main'>Settings</span>
+          </span>
+        </div>
+      </Link>
       <div onClick={userLogout} className='row'>
         <IoLogOutOutline size={25} />
         <span className='text'>
