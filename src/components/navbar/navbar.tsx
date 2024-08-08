@@ -86,7 +86,7 @@ export default function Navbar() {
       setMessageHash(sign);
       let response;
       if (isSignup) {
-        response = await handleSignup(signupData.username, sign);
+        response = await handleSignup(signupData.username, sign, msg);
       } else {
         response = await handleLogIn({ sig: sign, msg });
       }
@@ -98,7 +98,11 @@ export default function Navbar() {
         img: response?.img || "",
       };
       dispatch(actions.setUserData(user));
-      setUserSession(user);
+      if (user?.token == "" || user.token == null || user.token == undefined) {
+        setUserSession(null);
+      } else {
+        setUserSession(user);
+      }
       handleCancel();
       setTimeout(() => {
         disconnect();
@@ -116,7 +120,12 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    setUserSession(user);
+    console.log("USER", user);
+    if (user?.token == "" || user.token == null || user.token == undefined) {
+      setUserSession(null);
+    } else {
+      setUserSession(user);
+    }
     if (userAccount.isConnected && !messageHash && !hasCalledRef.current) {
       handleAuth();
       hasCalledRef.current = true;
