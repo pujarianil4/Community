@@ -3,3 +3,9 @@ export interface User {
   name: string;
   img: string;
 }
+
+export interface IFollowAPI {
+  uid: number;
+  typ: string;
+  fwid: number;
+}

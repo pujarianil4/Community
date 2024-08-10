@@ -2,7 +2,7 @@ import { removeFromLocalStorage } from "./../../utils/helpers/index";
 import { setToLocalStorage } from "@/utils/helpers";
 import axios, { AxiosInstance } from "axios";
 import { store } from "@contexts/store";
-import { User } from "@/utils/types/types";
+import { IFollowAPI, User } from "@/utils/types/types";
 
 const url = process.env.BASE_API_URL;
 const api: AxiosInstance = axios.create({
@@ -43,12 +43,14 @@ export const handleLogIn = async (payload: {
 };
 
 export const handleLogOut = async () => {
-  console.log("api1", url);
-  const response = await api.patch("/auth/logout");
+  try {
+    const response = await api.patch("/auth/logout");
 
-  console.log(response);
-  removeFromLocalStorage("userSession");
-  return response.data;
+    removeFromLocalStorage("userSession");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const handleSignup = async (
@@ -63,6 +65,7 @@ export const handleSignup = async (
     return response.data;
   } catch (error) {
     console.error("SIGNUP_ERROR ", error);
+    throw error;
   }
 };
 
@@ -85,6 +88,7 @@ export const handlePostToCommunity = async (data: any) => {
     console.log("============Posted successfully=============", response);
   } catch (error) {
     console.error("POSTS_ERROR: ", error);
+    throw error;
   }
 };
 
@@ -95,6 +99,7 @@ export const fetchUser = async (username: string) => {
     return response.data;
   } catch (error) {
     console.error("Fetch User ", error);
+    throw error;
   }
 };
 
@@ -105,6 +110,7 @@ export const fetchUserById = async (id: string) => {
     return response.data;
   } catch (error) {
     console.error("Fetch User ", error);
+    throw error;
   }
 };
 
@@ -115,6 +121,7 @@ export const updateUser = async (payload: Partial<User>) => {
     return response.data;
   } catch (error) {
     console.error("UpdateUser ", error);
+    throw error;
   }
 };
 
@@ -125,6 +132,7 @@ export const fetchCommunities = async () => {
     return response.data;
   } catch (error) {
     console.error("Fetch Communities ", error);
+    throw error;
   }
 };
 
@@ -134,6 +142,7 @@ export const createCommunity = async (data: any) => {
     return response.data;
   } catch (error) {
     console.error("POSTS_ERROR: ", error);
+    throw error;
   }
 };
 
@@ -144,6 +153,7 @@ export const fetchCommunityByCname = async (cName: string) => {
     return response.data;
   } catch (error) {
     console.error("Fetch Communities ", error);
+    throw error;
   }
 };
 
@@ -154,6 +164,7 @@ export const getPosts = async () => {
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
+    throw error;
   }
 };
 
@@ -164,6 +175,7 @@ export const getPostsBycName = async (cname: string) => {
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
+    throw error;
   }
 };
 
@@ -174,6 +186,7 @@ export const getPostsByuName = async (uname: string) => {
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
+    throw error;
   }
 };
 
@@ -194,16 +207,37 @@ export const patchPost = async (data: any) => {
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
+    throw error;
   }
 };
 
 export const getUserById = async (userId: string) => {
-  console.log("Called with", userId);
   try {
     const response = await api.get(`/users/${userId}`);
-    console.log("============Fetche user by ID=============", response.data);
+
     return response.data;
   } catch (error) {
     console.error("GET_USER_BY_ID_ERROR", error);
+    throw error;
+  }
+};
+
+export const getFollowinsByUserId = async (userId: string) => {
+  try {
+    const response = await api.get(`/followers/fwng/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error("getFollowinsByUserId", error);
+    throw error;
+  }
+};
+
+export const followApi = async (data: IFollowAPI) => {
+  try {
+    const response = await api.post("/followers", data);
+    return response.data;
+  } catch (error) {
+    console.error("POSTS_ERROR: ", error);
+    throw error;
   }
 };
