@@ -16,6 +16,8 @@ import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
 import DropdownWithSearch, { ICommunity } from "./dropdownWithSearch";
 import useAsync from "@/hooks/useAsync";
+import { getImageSource } from "@/utils/helpers";
+import SkeltonLoader from "./skeltonLoader";
 
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -92,46 +94,48 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   const [pics, setPics] = useState<File[]>([]);
   const [content, setContent] = useState<string>("");
   const [selectedOption, setSelectedOption] = useState<ICommunity | null>();
-
-  console.log("CHEKC", selectedOption);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handlePost = async () => {
     try {
       const data = {
-        // uid: user?.uid,
         cid: selectedOption?.id,
         text: content,
-        // up: 0,
-        // down: 0,
-        // comments: 0,
       };
       await handlePostToCommunity(data);
       setIsPostModalOpen(false);
       setSelectedOption(null);
       setContent("");
+      setSearchTerm("");
       await getPosts();
     } catch (error) {
       console.log("POST_ERROR", error);
     }
   };
+  if (isLoading) {
+    return <p>loading...</p>;
+  }
 
   return (
     <main className='create_post_container'>
       <section className='user_data'>
         <Image
           loading='lazy'
-          src={user?.img || ""}
+          src={getImageSource(user?.img)}
           alt='user_img'
           width={48}
           height={48}
         />
-        <h3 className='heading02'>{user?.name ?? "user name"}</h3>
+        {/* TODO  */}
+        <h3 className='heading02'>{user?.name || "user name"}</h3>
       </section>
       <section className='create_post_form'>
         <div className='inputArea'>
           <DropdownWithSearch
             onSelect={setSelectedOption}
             options={communityList}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
           />
           <TestArea content={content} setContent={setContent} />
           <div className='file_container'>

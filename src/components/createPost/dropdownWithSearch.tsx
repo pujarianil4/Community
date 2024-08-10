@@ -5,6 +5,7 @@ import { Input, List } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import CInput from "../common/Input";
 import Image from "next/image";
+import { getImageSource } from "@/utils/helpers";
 
 export interface ICommunity {
   id: number;
@@ -24,15 +25,17 @@ export interface ICommunity {
 interface DropdownWithSearchProps {
   onSelect: (value: ICommunity) => void;
   options: ICommunity[];
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
   onSelect,
   options,
+  searchTerm,
+  setSearchTerm,
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
   const [visible, setVisible] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -51,25 +54,16 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
   };
 
   const handleSelect = (item: ICommunity) => {
-    onSelect(item);
-    // setSelectedValue(value);
-    // console.log("SEARCH", item);
+    if (onSelect) {
+      onSelect(item);
+    }
     setSearchTerm(item?.username);
     setVisible(false);
   };
 
-  const getImageSource = (logo: string) => {
-    if (
-      logo &&
-      (logo.startsWith("http://") ||
-        logo.startsWith("https://") ||
-        logo.startsWith("/"))
-    ) {
-      return logo;
-    } else {
-      return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-    }
-  };
+  if (!options) {
+    return <div>Loading communities...</div>;
+  }
 
   return (
     <main className='dropdown_with_search'>
@@ -93,7 +87,6 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
             renderItem={(item) => (
               <List.Item onClick={() => handleSelect(item)}>
                 <div className='dropdown_item'>
-                  {/* <img src={item.logo} alt={item.username} /> */}
                   <Image
                     src={getImageSource(item?.logo)}
                     alt={item?.name}
