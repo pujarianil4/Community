@@ -211,17 +211,6 @@ export const patchPost = async (data: any) => {
   }
 };
 
-export const getUserById = async (userId: string) => {
-  try {
-    const response = await api.get(`/users/${userId}`);
-
-    return response.data;
-  } catch (error) {
-    console.error("GET_USER_BY_ID_ERROR", error);
-    throw error;
-  }
-};
-
 export const getFollowinsByUserId = async (userId: string) => {
   try {
     const response = await api.get(`/followers/fwng/${userId}`);
