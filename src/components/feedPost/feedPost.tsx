@@ -68,7 +68,7 @@ export default function FeedPost({ post }: IProps) {
           <PiArrowFatDownLight size={18} />
           {/* </button> */}
         </div>
-        <Link href={`post/${id}`}>
+        <Link href={`post/${id}`} as={`/post/${id}`}>
           <GoComment size={18} />
           <span>Comments</span>
         </Link>

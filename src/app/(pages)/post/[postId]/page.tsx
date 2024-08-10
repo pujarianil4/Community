@@ -2,19 +2,23 @@
 
 import React from "react";
 import PageWraper from "@/components/Wrapers/PageWraper";
-// import { useParams } from "next/navigation";
+import "./index.scss";
+import Comments from "./comments";
+import Post from "./post";
 
 interface Iprops {
   params: any;
 }
 
-export default async function PostPage({ params }: Iprops) {
+export default function PostPage({ params }: Iprops) {
   const { postId } = params;
 
-  console.log("POST_ID", postId);
   return (
     <PageWraper hideRightPanel>
-      <p>Hello</p>
+      <main className='post_page'>
+        <Post postId={postId} />
+        <Comments />
+      </main>
     </PageWraper>
   );
 }

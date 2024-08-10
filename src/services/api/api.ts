@@ -177,6 +177,16 @@ export const getPostsByuName = async (uname: string) => {
   }
 };
 
+export const getPostsByPostId = async (postId: string) => {
+  try {
+    const response = await api.get(`/posts/${postId}`);
+    console.log("============Fetched Post=============", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+  }
+};
+
 export const patchPost = async (data: any) => {
   try {
     const response = await api.patch("/posts", data);

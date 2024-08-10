@@ -113,7 +113,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
     }
   };
   if (isLoading) {
-    return <p>loading...</p>;
+    return <div className='create_post_loader'>loading...</div>;
   }
 
   return (
