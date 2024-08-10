@@ -66,6 +66,19 @@ export const handleSignup = async (
   }
 };
 
+export const fetchUserByUserName = async (username: string) => {
+  try {
+    const response = await api.get(`/users/uname/${username}`);
+    console.log(
+      "==========fetchUserByUserName successfully===========",
+      response.data
+    );
+    return response.data;
+  } catch (error) {
+    console.error("FETCH_BY_NAME_ERROR", error);
+  }
+};
+
 export const handlePostToCommunity = async (data: any) => {
   try {
     const response = await api.post("/posts", data);

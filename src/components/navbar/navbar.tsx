@@ -14,10 +14,17 @@ import "./navbar.scss";
 import CButton from "../common/Button";
 import CInput from "../common/Input";
 import useRedux from "@/hooks/useRedux";
-import { handleLogIn, handleLogOut, handleSignup } from "@/services/api/api";
+import {
+  fetchUserById,
+  fetchUserByUserName,
+  handleLogIn,
+  handleLogOut,
+  handleSignup,
+} from "@/services/api/api";
 import { User } from "@/contexts/reducers/user";
 import CreatePost from "../createPost/CreatePost";
 import { RootState } from "@/contexts/store";
+import { debounce, getImageSource } from "@/utils/helpers";
 
 export interface ISignupData {
   username: string;
@@ -38,8 +45,8 @@ export default function Navbar() {
     undefined
   );
   const [signupData, setSignupData] = useState<ISignupData>({
-    username: "UnilendOfficials",
-    name: "Unilend",
+    username: "",
+    name: "",
   });
   const [userSession, setUserSession] = useState<any>(user);
   const [isSignup, setIsSignup] = useState<boolean>(false);
@@ -91,11 +98,11 @@ export default function Navbar() {
         response = await handleLogIn({ sig: sign, msg });
       }
       const user = {
-        username: signupData.username,
-        name: signupData.name,
+        username: response?.username,
+        name: response?.name,
         uid: response?.uid || 0,
         token: response?.token || "",
-        img: response?.img || "",
+        img: getImageSource(response?.img),
       };
       dispatch(actions.setUserData(user));
       if (user?.token == "" || user.token == null || user.token == undefined) {
@@ -104,6 +111,7 @@ export default function Navbar() {
         setUserSession(user);
       }
       handleCancel();
+      setSignupData({ username: "", name: "" });
       setTimeout(() => {
         disconnect();
         console.log("disconnect");
@@ -120,7 +128,6 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    console.log("USER", user);
     if (user?.token == "" || user.token == null || user.token == undefined) {
       setUserSession(null);
     } else {
@@ -131,6 +138,26 @@ export default function Navbar() {
       hasCalledRef.current = true;
     }
   }, [userAccount.isConnected]);
+
+  // fetch user details after refresh
+  const fetchUser = async () => {
+    const value = localStorage?.getItem("userSession");
+    const userData: any = value ? JSON.parse(value) : null;
+    if (userData?.uid) {
+      const response = await fetchUserById(userData?.uid);
+      const user = {
+        username: response?.username,
+        name: response?.name,
+        uid: response?.uid || 0,
+        // token: response?.token || "",
+        img: getImageSource(response?.img),
+      };
+      dispatch(actions.setUserData(user));
+    }
+  };
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const content = (
     <div className='user_popover'>
@@ -215,9 +242,31 @@ const SignUpModal = ({
   setSignupData,
   setIsSignup,
 }: ISignUpModal) => {
+  const [usernameError, setUsernameError] = useState<string>("");
+
+  const debouncedCheckUsername = debounce(async (username: string) => {
+    try {
+      const user = await fetchUserByUserName(username);
+      const isAvailable = user?.username === username;
+      if (isAvailable) {
+        setUsernameError("Username already exists");
+      } else {
+        setUsernameError("");
+      }
+    } catch (error) {
+      setUsernameError("Error checking username availability");
+    }
+  }, 500);
   const handleAuth = (isSignup: boolean = true) => {
-    openModal && openModal();
-    setIsSignup(isSignup);
+    if (!!usernameError || !signupData?.username || !signupData?.name) {
+      openModal && openModal();
+      setIsSignup(isSignup);
+    }
+  };
+  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSignupData({ ...signupData, username: value.trim() });
+    debouncedCheckUsername(value);
   };
   return (
     <div className='signUpModal'>
@@ -229,20 +278,25 @@ const SignUpModal = ({
       <div className='signup'>
         <h4>SignUp</h4>
         <CInput
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setSignupData({ ...signupData, username: e.target.value })
-          }
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
           type='text'
           placeholder='UserName'
         />
+        <p className='user_name_message'>{usernameError}</p>
         <CInput
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setSignupData({ ...signupData, name: e.target.value })
+            setSignupData({ ...signupData, name: e.target.value.trim() })
           }
           type='text'
           placeholder='Name (Optional)'
         />
-        <CButton onClick={() => handleAuth()} size={18}>
+        <CButton
+          disabled={
+            !!usernameError || !signupData?.username || !signupData?.name
+          }
+          onClick={() => handleAuth()}
+          size={18}
+        >
           Sign Up
         </CButton>
       </div>

@@ -5,7 +5,7 @@ export interface User {
   username: string;
   name: string;
   uid: number;
-  token: string;
+  token?: string;
   img: string;
 }
 
@@ -13,11 +13,11 @@ const value = localStorage?.getItem("userSession");
 const userData: any = value ? JSON.parse(value) : null;
 //TODO update Later
 const initialState: User = {
-  username: "unilendOfficials",
-  name: "Unilend",
+  username: "",
+  name: "",
   uid: userData?.id || 0,
   token: userData?.token || "",
-  img: "https://i.imgur.com/Qpw6j8D_d.webp?maxwidth=760&fidelity=grand",
+  img: "",
 };
 
 export const userSlice = createSlice({
