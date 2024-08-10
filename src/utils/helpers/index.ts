@@ -34,3 +34,26 @@ export const timeAgo = (timestamp: string): string => {
   }
   return "just now";
 };
+
+export const debounce = (func: (...args: any[]) => void, delay: number) => {
+  let timer: NodeJS.Timeout;
+  return (...args: any[]) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+};
+
+export const getImageSource = (logo: string) => {
+  if (
+    logo &&
+    (logo.startsWith("http://") ||
+      logo.startsWith("https://") ||
+      logo.startsWith("/"))
+  ) {
+    return logo;
+  } else {
+    return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+  }
+};
