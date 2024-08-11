@@ -15,6 +15,7 @@ import useRedux from "@/hooks/useRedux";
 import CTabs from "../common/Tabs";
 import FeedList from "../feedPost/feedList";
 import Followers from "./followers/Followers";
+import Followings from "./Followings/Followings";
 export default function UserHead() {
   const { userId } = useParams<{ userId: string }>();
   const [isFollowed, setIsFollowed] = useState<boolean>(false);
@@ -123,9 +124,13 @@ export default function UserHead() {
               {
                 key: "2",
                 label: "Followers",
-                content: <Followers uid={data.id} />,
+                content: <Followings uid={data.id} />,
               },
-              { key: "3", label: "Followings", content: "This is tab3" },
+              {
+                key: "3",
+                label: "Followings",
+                content: <Followers uid={data.id} entityType='u' />,
+              },
             ]}
           />
         </div>

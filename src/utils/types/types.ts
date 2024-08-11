@@ -9,3 +9,8 @@ export interface IFollowAPI {
   typ: string;
   fwid: number;
 }
+
+export interface IFollowersAPI {
+  userId: string;
+  type: string;
+}

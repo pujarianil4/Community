@@ -1,12 +1,13 @@
 import React from "react";
 import CTabs from "../common/Tabs";
+import General from "./General/General";
 import Profile from "./Profile/Profile";
 
 export default function Settings() {
   const tabsList = [
     {
       label: "Account",
-      content: <div>General settings</div>,
+      content: <General />,
       key: "1",
     },
     {

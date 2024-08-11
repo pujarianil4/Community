@@ -2,7 +2,7 @@ import { removeFromLocalStorage } from "./../../utils/helpers/index";
 import { setToLocalStorage } from "@/utils/helpers";
 import axios, { AxiosInstance } from "axios";
 import { store } from "@contexts/store";
-import { IFollowAPI, User } from "@/utils/types/types";
+import { IFollowAPI, IFollowersAPI, User } from "@/utils/types/types";
 
 const url = process.env.BASE_API_URL;
 const api: AxiosInstance = axios.create({
@@ -221,12 +221,45 @@ export const getFollowinsByUserId = async (userId: string) => {
   }
 };
 
+export const getFollowersByUserId = async ({ userId, type }: IFollowersAPI) => {
+  console.log(userId, type);
+
+  try {
+    const response = await api.get(`/followers/fwrs/${userId}?typ=${type}`);
+    return response.data;
+  } catch (error) {
+    console.error("getFollowinsByUserId", error);
+    throw error;
+  }
+};
+
 export const followApi = async (data: IFollowAPI) => {
   try {
     const response = await api.post("/followers", data);
     return response.data;
   } catch (error) {
     console.error("POSTS_ERROR: ", error);
+    throw error;
+  }
+};
+
+export const linkAddress = async (payload: {
+  sig: `0x${string}` | undefined;
+  msg: string;
+}) => {
+  const response = await api.post("/users/address", payload);
+
+  console.log("LOGIN_RES", response);
+  setToLocalStorage("userSession", response.data);
+  return response.data;
+};
+
+export const getAddressesByUserId = async (userId: string) => {
+  try {
+    const response = await api.get(`/users/address/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error("getFollowinsByUserId", error);
     throw error;
   }
 };

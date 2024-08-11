@@ -10,6 +10,7 @@ import CTabs from "../common/Tabs";
 import FeedList from "../feedPost/feedList";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
+import Followers from "../userHead/followers/Followers";
 
 export default function CommunityHead() {
   const { communityId } = useParams<{ communityId: string }>();
@@ -101,7 +102,11 @@ export default function CommunityHead() {
                 label: "Posts",
                 content: <FeedList method='byCName' />,
               },
-              { key: "2", label: "Proposals", content: "This is tab2" },
+              {
+                key: "2",
+                label: "Followers",
+                content: <Followers uid={data.id} entityType='c' />,
+              },
               { key: "3", label: "Voters", content: "This is tab3" },
             ]}
           />
