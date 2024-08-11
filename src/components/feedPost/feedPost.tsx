@@ -12,8 +12,6 @@ interface IProps {
   post: any;
 }
 
-// DO we need isUp and isDown?
-
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post }: IProps) {
   const { text, up, down, comments, time, user, community, id } = post;
@@ -55,9 +53,9 @@ export default function FeedPost({ post }: IProps) {
         </div>
         <span>{timeAgo(time)}</span>
       </div>
-      <div className='content'>
+      <Link href={`post/${id}`} as={`/post/${id}`} className='content'>
         <p>{text}</p>
-      </div>
+      </Link>
       <div className='actions'>
         <div>
           {/* <button onClick={() => handleUP()}> */}
