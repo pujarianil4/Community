@@ -1,5 +1,7 @@
 "use client";
 
+import CButton from "@/components/common/Button";
+import TextArea from "@/components/common/textArea";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
@@ -110,6 +112,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
 
     return (
       <div className='comment_item'>
+        {comment.pcid !== null && <div className='comment_line' />}
         <div className='user_head'>
           <Link
             href={`u/${comment?.user.username}`}
@@ -232,12 +235,27 @@ const CommentInput: React.FC<ICommentInputProps> = ({
 
   return (
     <div className='comment_input'>
-      <input
+      {/* <input
         value={commentBody}
         onChange={(event) => setCommentBody(event.target.value)}
         placeholder='Write your comment'
+      /> */}
+      <TextArea
+        content={commentBody}
+        setContent={setCommentBody}
+        placeholder='Write your comment'
       />
-      <button onClick={() => handlePostComment()}>Comment</button>
+      <div>
+        <div>{/* TODO: add media icons */}</div>
+        <CButton
+          className='comment_btn'
+          disabled={commentBody === ""}
+          onClick={() => handlePostComment()}
+        >
+          Comment
+        </CButton>
+      </div>
+      {/* // <button onClick={() => handlePostComment()}>Comment</button> */}
     </div>
   );
 };

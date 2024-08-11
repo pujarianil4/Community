@@ -50,13 +50,14 @@
       font-size: 14px;
       text-align: left;
       word-spacing: 1px;
-      margin: 10px 0px;
+      margin: 0 0px 0 40px;
     }
   }
 
   .actions {
     display: flex;
     gap: 16px;
+    margin: 0 0px 0 40px;
     div,
     a {
       background-color: var(--secondary-bg);
@@ -97,27 +98,27 @@
 }
 
 .comments {
-  input {
-    border: 1px solid var(--primary-border);
-    padding: 4px;
-    width: 100%;
-  }
   .comment_input {
-    input {
-      border: 1px solid var(--primary-border);
-      padding: 4px;
-      width: 100%;
-      margin: 12px 0 8px;
+    padding: 8px;
+    border: 1px solid var(--primary-border);
+    border-radius: 8px;
+    margin: 16px 0;
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    button {
+    .comment_btn {
       width: fit-content;
-      background-color: var(--secondary-bg);
       height: 36px;
-      border-radius: 16px;
-      padding: 0px 12px;
-      outline: none;
-      border: none;
-      color: var(--primary-text);
+      border-radius: 16px !important;
+      padding: 4px 12px !important;
+      font-size: 14px !important;
+
+      &:disabled {
+        background-color: var(--primary);
+        color: var(--primary-text);
+      }
     }
   }
   .comment_container {
@@ -126,14 +127,26 @@
     gap: 16px;
     margin-top: 16px;
     .comment_item {
-      border: 1px solid var(--primary-border);
+      position: relative;
+      box-sizing: border-box;
       border-radius: 4px;
-      padding: 8px 0 8px 12px;
+      padding: 8px 0 0 16px;
       display: flex;
       flex-direction: column;
       gap: 8px;
 
+      .comment_line {
+        position: absolute;
+        top: 0;
+        left: 8px; /* Adjust based on your design */
+        bottom: 0;
+        width: 1px; /* Line thickness */
+        background-color: var(--primary-bg-hover); /* Line color */
+      }
+
       .user_head {
+        position: relative;
+        z-index: 1;
         .post_time {
           margin-top: auto;
         }
@@ -143,6 +156,7 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
+        margin-left: 10px;
       }
     }
   }
