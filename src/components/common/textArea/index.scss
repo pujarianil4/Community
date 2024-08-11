@@ -1,0 +1,22 @@
+.textArea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 32px;
+  // max-height: 300px; /* Maximum height as needed */
+  padding: 10px;
+  background-color: transparent;
+  font-size: 14px;
+  resize: none; /* Prevents resizing by the user */
+  outline: none;
+  border: none;
+  color: var(--primary-text);
+}
+
+.textArea::placeholder {
+  color: var(--label-text);
+  font-size: 14px;
+}
+
+.textArea:focus::placeholder {
+  color: transparent;
+}
