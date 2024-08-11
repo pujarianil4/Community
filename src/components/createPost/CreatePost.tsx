@@ -14,10 +14,11 @@ import {
 import Image from "next/image";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
-import DropdownWithSearch, { ICommunity } from "./dropdownWithSearch";
+import DropdownWithSearch from "./dropdownWithSearch";
 import useAsync from "@/hooks/useAsync";
 import { getImageSource } from "@/utils/helpers";
-import SkeltonLoader from "./skeltonLoader";
+import { ICommunity } from "@/utils/types/types";
+// import SkeltonLoader from "./skeltonLoader";
 
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;

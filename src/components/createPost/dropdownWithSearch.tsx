@@ -6,21 +6,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import CInput from "../common/Input";
 import Image from "next/image";
 import { getImageSource } from "@/utils/helpers";
-
-export interface ICommunity {
-  id: number;
-  username: string;
-  name: string;
-  ticker: string;
-  logo: string;
-  metadata: string;
-  pCount: number;
-  followers: number;
-  totalSupply: number;
-  sts: number;
-  cta: string;
-  uta: string;
-}
+import { ICommunity } from "@/utils/types/types";
 
 interface DropdownWithSearchProps {
   onSelect: (value: ICommunity) => void;
