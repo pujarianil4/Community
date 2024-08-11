@@ -58,6 +58,11 @@ export interface IFollowAPI {
   fwid: number;
 }
 
+export interface IFollowersAPI {
+  userId: string;
+  type: string;
+}
+
 export interface IPostCommentAPI {
   uid: number;
   content: string;

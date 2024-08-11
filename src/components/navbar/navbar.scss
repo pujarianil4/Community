@@ -4,6 +4,8 @@
   background-color: var(--primary-bg);
   border-bottom: 1px solid var(--primary-border);
   display: flex;
+  position: fixed;
+  top: 0;
   justify-content: space-between;
   align-items: center;
   div {

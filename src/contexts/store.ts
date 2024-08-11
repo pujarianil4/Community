@@ -1,10 +1,11 @@
-import { userReducer } from "./reducers/index";
+import { userReducer, commonReducer } from "./reducers/index";
 import { configureStore } from "@reduxjs/toolkit";
 import logger from "redux-logger";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
+    common: commonReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });
