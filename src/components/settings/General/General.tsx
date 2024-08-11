@@ -1,4 +1,5 @@
 "use client";
+import "./index.scss";
 import { getSignMessage } from "@/config/ethers";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
@@ -8,6 +9,7 @@ import { sigMsg } from "@/utils/constants";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import React, { useEffect, useRef, useState } from "react";
 import { useAccount, useDisconnect } from "wagmi";
+import CButton from "@/components/common/Button";
 
 export default function General() {
   const { openConnectModal } = useConnectModal();
@@ -41,6 +43,7 @@ export default function General() {
         sig: sign,
         msg: sigMsg,
       });
+      callFunction(getAddressesByUserId, user.uid);
       setTimeout(() => {
         disconnect();
         console.log("disconnect");
@@ -74,8 +77,18 @@ export default function General() {
   }, [userAccount.isConnected, user]);
 
   return (
-    <div>
-      <button onClick={handleOpenModal}>Link Address</button>
+    <div className='general_container'>
+      <div className='linkAddress'>
+        <div className='header'>
+          <h2>Link Address</h2>
+          <CButton onClick={handleOpenModal}>Link </CButton>
+        </div>
+        <div className='addresses'>
+          {data?.map((wallet: { address: string }) => (
+            <span key={wallet.address}>{wallet.address}</span>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

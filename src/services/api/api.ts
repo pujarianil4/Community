@@ -95,8 +95,15 @@ export const handlePostToCommunity = async (data: any) => {
 export const fetchUser = async (username: string) => {
   try {
     const response = await api.get(`/users/uname/${username}`);
+    const isFollowed = await isUserFollowed({
+      fwid: response?.data?.id,
+      type: "u",
+    });
 
-    return response.data;
+    return {
+      ...response.data,
+      isFollowed,
+    };
   } catch (error) {
     console.error("Fetch User ", error);
     throw error;
@@ -149,7 +156,15 @@ export const createCommunity = async (data: any) => {
 export const fetchCommunityByCname = async (cName: string) => {
   try {
     const response = await api.get(`/community/cname/${cName}`);
+    const isFollowed = await isUserFollowed({
+      fwid: response?.data?.id,
+      type: "c",
+    });
 
+    return {
+      ...response.data,
+      isFollowed,
+    };
     return response.data;
   } catch (error) {
     console.error("Fetch Communities ", error);
@@ -260,6 +275,35 @@ export const getAddressesByUserId = async (userId: string) => {
     return response.data;
   } catch (error) {
     console.error("getFollowinsByUserId", error);
+    throw error;
+  }
+};
+
+export const isUserFollowed = async ({
+  fwid,
+  type,
+}: {
+  fwid: string;
+  type: string;
+}) => {
+  const uid = store.getState().user?.uid;
+  try {
+    const response = await api.get(
+      `/followers/isFollow/${uid}?fwid=${fwid}&typ=${type}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("getFollowinsByUserId", error);
+    throw error;
+  }
+};
+
+export const UnFollowAPI = async (id: string) => {
+  try {
+    const response = await api.delete(`/followers/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("POSTS_ERROR: ", error);
     throw error;
   }
 };

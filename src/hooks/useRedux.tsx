@@ -1,7 +1,7 @@
 import React from "react";
 
-import { useSelector, useDispatch, Selector } from "react-redux";
-import { RootState, store } from "@/contexts/store";
+import { useDispatch } from "react-redux";
+import { store } from "@/contexts/store";
 import { setUserData, setWalletRoute } from "@/contexts/reducers";
 
 type ActionCreators = {
@@ -25,8 +25,6 @@ export default function useRedux<T>(selectors?: any): [UseReduxHook, any] {
 
   const selectedStates =
     selectors?.map((selector: any) => selector(store.getState())) || [];
-
-  console.log("selectors", selectors, selectedStates);
 
   return [{ dispatch, actions }, selectedStates];
 }

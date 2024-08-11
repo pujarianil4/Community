@@ -1,7 +1,11 @@
 "use client";
 import useAsync from "@/hooks/useAsync";
-import { fetchCommunityByCname, followApi } from "@/services/api/api";
-import React, { useState } from "react";
+import {
+  fetchCommunityByCname,
+  followApi,
+  UnFollowAPI,
+} from "@/services/api/api";
+import React, { useEffect, useState } from "react";
 import CButton from "../common/Button";
 import { useParams } from "next/navigation";
 import "./index.scss";
@@ -20,7 +24,7 @@ export default function CommunityHead() {
   );
   const userNameSelector = (state: RootState) => state?.user;
   const [{}, [user]] = useRedux([userNameSelector]);
-  const [isFollowed, setIsFollowed] = useState<boolean>(false);
+  const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
   const {
     isLoading: isLoadingFollow,
     data: followResponse,
@@ -30,20 +34,27 @@ export default function CommunityHead() {
 
   const handleFollow = async () => {
     try {
-      const data1 = await callFunction(followApi, {
-        uid: user.uid,
-        typ: "c",
-        fwid: data.id,
-      });
-      console.log("data1", {
-        uid: user.uid,
-        typ: "c",
-        fwid: data.id,
-      });
-      refetch();
-      setIsFollowed(!isFollowed);
+      if (!isFollowed) {
+        const data1 = await callFunction(followApi, {
+          uid: user.uid,
+          typ: "c",
+          fwid: data.id,
+        });
+
+        refetch();
+        setIsFollowed(true);
+      } else {
+        await UnFollowAPI(data.id);
+        refetch();
+        setIsFollowed(false);
+      }
     } catch (error) {}
   };
+
+  useEffect(() => {
+    setIsFollowed(data?.isFollowed);
+    console.log("User", data);
+  }, [data]);
   return (
     <>
       {!data ? (
@@ -71,7 +82,7 @@ export default function CommunityHead() {
                   onClick={handleFollow}
                   className={`${isFollowed && "followed"}`}
                 >
-                  {isFollowed ? "Following" : "Follow"}
+                  {isFollowed ? "Unfollow" : "Follow"}
                 </CButton>
               </div>
             </div>
