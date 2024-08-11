@@ -5,7 +5,7 @@ export interface User {
   username: string;
   name: string;
   uid: number;
-  token: string;
+  token?: string;
   img: string;
 }
 

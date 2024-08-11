@@ -7,6 +7,7 @@
   font-weight: 500 !important;
   font-size: 15px !important;
   cursor: pointer;
+  transition: background-color 0.3s ease;
   &:hover {
     background-color: var(--primary-hover) !important;
     color: var(--primary-text) !important;

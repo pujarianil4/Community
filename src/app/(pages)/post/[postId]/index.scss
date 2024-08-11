@@ -1,0 +1,149 @@
+.post_page {
+  width: 100%;
+  margin: auto;
+}
+
+.post_container,
+.comment_item {
+  .user_head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-direction: row;
+
+    img {
+      border-radius: 50%;
+    }
+    a {
+      color: var(--primary-text);
+      transition: color 0.3s ease;
+      &:hover {
+        color: var(--primary);
+      }
+    }
+    a,
+    p {
+      font-size: 15px;
+    }
+    .names {
+      display: flex;
+      flex-direction: column;
+    }
+    .post_time {
+      margin-bottom: auto;
+      color: var(--label-text);
+    }
+    .more {
+      margin-left: auto;
+      cursor: pointer;
+    }
+  }
+
+  .content {
+    margin: 12px 0;
+    .post_image {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+    }
+    p {
+      font-size: 14px;
+      text-align: left;
+      word-spacing: 1px;
+      margin: 10px 0px;
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 16px;
+    div,
+    a {
+      background-color: var(--secondary-bg);
+      height: 36px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0px 12px;
+      text-decoration: none;
+      span {
+        font-size: 12px;
+      }
+      color: var(--primary-text);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: var(--tertiary-bg);
+      }
+
+      &:nth-child(1) {
+        svg {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          padding: 8px;
+          &:hover {
+            background-color: var(--tertiary-bg);
+          }
+        }
+        &:hover {
+          background-color: var(--secondary-bg);
+        }
+      }
+    }
+  }
+}
+
+.comments {
+  input {
+    border: 1px solid var(--primary-border);
+    padding: 4px;
+    width: 100%;
+  }
+  .comment_input {
+    input {
+      border: 1px solid var(--primary-border);
+      padding: 4px;
+      width: 100%;
+      margin: 12px 0 8px;
+    }
+    button {
+      width: fit-content;
+      background-color: var(--secondary-bg);
+      height: 36px;
+      border-radius: 16px;
+      padding: 0px 12px;
+      outline: none;
+      border: none;
+      color: var(--primary-text);
+    }
+  }
+  .comment_container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+    .comment_item {
+      border: 1px solid var(--primary-border);
+      border-radius: 4px;
+      padding: 8px 0 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .user_head {
+        .post_time {
+          margin-top: auto;
+        }
+      }
+
+      .nested_comments {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  }
+}

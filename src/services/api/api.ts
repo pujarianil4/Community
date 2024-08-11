@@ -69,6 +69,19 @@ export const handleSignup = async (
   }
 };
 
+export const fetchUserByUserName = async (username: string) => {
+  try {
+    const response = await api.get(`/users/uname/${username}`);
+    console.log(
+      "==========fetchUserByUserName successfully===========",
+      response.data
+    );
+    return response.data;
+  } catch (error) {
+    console.error("FETCH_BY_NAME_ERROR", error);
+  }
+};
+
 export const handlePostToCommunity = async (data: any) => {
   try {
     const response = await api.post("/posts", data);
@@ -177,6 +190,16 @@ export const getPostsByuName = async (uname: string) => {
   }
 };
 
+export const getPostsByPostId = async (postId: string) => {
+  try {
+    const response = await api.get(`/posts/${postId}`);
+    console.log("============Fetched Post=============", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+  }
+};
+
 export const patchPost = async (data: any) => {
   try {
     const response = await api.patch("/posts", data);
@@ -184,17 +207,6 @@ export const patchPost = async (data: any) => {
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
-    throw error;
-  }
-};
-
-export const getUserById = async (userId: string) => {
-  try {
-    const response = await api.get(`/users/${userId}`);
-
-    return response.data;
-  } catch (error) {
-    console.error("GET_USER_BY_ID_ERROR", error);
     throw error;
   }
 };
