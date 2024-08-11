@@ -21,24 +21,33 @@ import {
   handleLogOut,
   handleSignup,
 } from "@/services/api/api";
-import { User } from "@/contexts/reducers/user";
+
 import CreatePost from "../createPost/CreatePost";
 import { RootState } from "@/contexts/store";
 import { debounce, getImageSource } from "@/utils/helpers";
 import Link from "next/link";
 import { setToLocalStorage } from "@/utils/helpers";
+import { sigMsg } from "@/utils/constants";
+
+import { Common } from "@/contexts/reducers/common";
 
 export interface ISignupData {
   username: string;
   name: string;
 }
 
-const msg = `Sign this message to prove you have access to this wallet in order to sign in to Community. This won't cost you any Gas. Date: ${Date.now()} `;
+const msg = sigMsg;
+
+const commonSelector = (state: RootState) => state?.common;
+const userNameSelector = (state: RootState) => state?.user;
 
 export default function Navbar() {
   const userAccount = useAccount();
-  const userNameSelector = (state: RootState) => state?.user;
-  const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
+
+  const [{ dispatch, actions }, [user, common]] = useRedux([
+    userNameSelector,
+    commonSelector,
+  ]);
   const { disconnect } = useDisconnect();
   const { openConnectModal } = useConnectModal();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -132,16 +141,23 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    console.log("userEffect", user, common);
+
     if (user?.token == "" || user.token == null || user.token == undefined) {
       setUserSession(null);
     } else {
       setUserSession(user);
     }
-    if (userAccount.isConnected && !messageHash && !hasCalledRef.current) {
+    if (
+      userAccount.isConnected &&
+      !messageHash &&
+      !hasCalledRef.current &&
+      common.walletRoute == "auth"
+    ) {
       handleAuth();
       hasCalledRef.current = true;
     }
-  }, [userAccount.isConnected]);
+  }, [userAccount.isConnected, user]);
 
   // fetch user details after refresh
   const fetchUser = async () => {
@@ -152,7 +168,7 @@ export default function Navbar() {
       const user = {
         username: response?.username,
         name: response?.name,
-        uid: response?.uid || 0,
+        uid: response?.id,
         // token: response?.token || "",
         img: getImageSource(response?.img),
       };
@@ -261,7 +277,8 @@ const SignUpModal = ({
   setIsSignup,
 }: ISignUpModal) => {
   const [usernameError, setUsernameError] = useState<string>("");
-
+  const CommonSelector = (state: RootState) => state?.common;
+  const [{ dispatch, actions }, [common]] = useRedux([CommonSelector]);
   const debouncedCheckUsername = debounce(async (username: string) => {
     try {
       const user = await fetchUserByUserName(username);
@@ -277,6 +294,7 @@ const SignUpModal = ({
   }, 500);
   const handleAuth = (isSignup: boolean = true) => {
     if (!!usernameError || !signupData?.username || !signupData?.name) {
+      dispatch(actions.setWalletRoute("auth"));
       openModal && openModal();
       setIsSignup(isSignup);
     }

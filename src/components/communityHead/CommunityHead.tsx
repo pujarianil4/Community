@@ -1,7 +1,11 @@
 "use client";
 import useAsync from "@/hooks/useAsync";
-import { fetchCommunityByCname, followApi } from "@/services/api/api";
-import React, { useState } from "react";
+import {
+  fetchCommunityByCname,
+  followApi,
+  UnFollowAPI,
+} from "@/services/api/api";
+import React, { useEffect, useState } from "react";
 import CButton from "../common/Button";
 import { useParams } from "next/navigation";
 import "./index.scss";
@@ -10,6 +14,7 @@ import CTabs from "../common/Tabs";
 import FeedList from "../feedPost/feedList";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
+import Followers from "../userHead/followers/Followers";
 
 export default function CommunityHead() {
   const { communityId } = useParams<{ communityId: string }>();
@@ -19,7 +24,7 @@ export default function CommunityHead() {
   );
   const userNameSelector = (state: RootState) => state?.user;
   const [{}, [user]] = useRedux([userNameSelector]);
-  const [isFollowed, setIsFollowed] = useState<boolean>(false);
+  const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
   const {
     isLoading: isLoadingFollow,
     data: followResponse,
@@ -29,20 +34,27 @@ export default function CommunityHead() {
 
   const handleFollow = async () => {
     try {
-      const data1 = await callFunction(followApi, {
-        uid: user.uid,
-        typ: "c",
-        fwid: data.id,
-      });
-      console.log("data1", {
-        uid: user.uid,
-        typ: "c",
-        fwid: data.id,
-      });
-      refetch();
-      setIsFollowed(!isFollowed);
+      if (!isFollowed) {
+        const data1 = await callFunction(followApi, {
+          uid: user.uid,
+          typ: "c",
+          fwid: data.id,
+        });
+
+        refetch();
+        setIsFollowed(true);
+      } else {
+        await UnFollowAPI(data.id);
+        refetch();
+        setIsFollowed(false);
+      }
     } catch (error) {}
   };
+
+  useEffect(() => {
+    setIsFollowed(data?.isFollowed);
+    console.log("User", data);
+  }, [data]);
   return (
     <>
       {!data ? (
@@ -70,7 +82,7 @@ export default function CommunityHead() {
                   onClick={handleFollow}
                   className={`${isFollowed && "followed"}`}
                 >
-                  {isFollowed ? "Following" : "Follow"}
+                  {isFollowed ? "Unfollow" : "Follow"}
                 </CButton>
               </div>
             </div>
@@ -101,7 +113,11 @@ export default function CommunityHead() {
                 label: "Posts",
                 content: <FeedList method='byCName' />,
               },
-              { key: "2", label: "Proposals", content: "This is tab2" },
+              {
+                key: "2",
+                label: "Followers",
+                content: <Followers uid={data.id} entityType='c' />,
+              },
               { key: "3", label: "Voters", content: "This is tab3" },
             ]}
           />

@@ -37,7 +37,7 @@ export default function useAsync<T>(
 
   useEffect(() => {
     refetch();
-  }, [loadOnRefresh, arg, callFunction]);
+  }, [loadOnRefresh, callFunction]);
 
   return { isLoading, error, data, callFunction, refetch };
 }

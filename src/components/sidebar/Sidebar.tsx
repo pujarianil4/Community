@@ -58,7 +58,7 @@ const SideBar: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [communityList, SetCommunityList] = useState<Array<any>>([]);
 
-  const { isLoading, callFunction, data } = useAsync(fetchCommunities);
+  const { isLoading, callFunction, data, refetch } = useAsync(fetchCommunities);
 
   const router = useRouter();
 
@@ -167,7 +167,10 @@ const SideBar: React.FC = () => {
         />
       </div>
       <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
-        <CreateCommunityModal onClose={handleCancel} />
+        <CreateCommunityModal
+          onClose={handleCancel}
+          refetchCommunities={refetch}
+        />
       </Modal>
     </>
   );
@@ -176,37 +179,56 @@ const SideBar: React.FC = () => {
 interface ICommunityForm {
   name?: string;
   username?: string;
-  ticket?: string;
+  ticker?: string;
   metadata?: string;
   logo?: string;
 }
 interface ICreateCommunityModal {
   onClose: () => void;
+  refetchCommunities: () => void;
 }
 
-const CreateCommunityModal = ({ onClose }: ICreateCommunityModal) => {
+const CreateCommunityModal = ({
+  onClose,
+  refetchCommunities,
+}: ICreateCommunityModal) => {
   const [imgSrc, setImgSrc] = useState("https://picsum.photos/200/300");
 
-  const [form, setForm] = useState<ICommunityForm>({ logo: imgSrc });
+  const [form, setForm] = useState<ICommunityForm>({
+    logo: imgSrc,
+    name: "",
+    username: "",
+    metadata: "",
+    ticker: "",
+  });
   const { isLoading, callFunction, data } = useAsync();
   const fileRef = useRef<HTMLInputElement>(null);
   const onPickFile = (event: any) => {
     setImgSrc(URL.createObjectURL(event.target.files[0]));
   };
-
+  function checkWhitespace(str: string) {
+    return /\s/.test(str);
+  }
   const handleForm = (
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    if (name == "username" && !checkWhitespace(value)) {
+      console.log("form", name, value, !checkWhitespace(value));
 
-    setForm((prevForm) => ({ ...prevForm, [name]: value }));
+      setForm((prevForm) => ({ ...prevForm, [name]: value }));
+    } else if (name != "username") {
+      console.log("form2", name, value);
+      setForm((prevForm) => ({ ...prevForm, [name]: value }));
+    }
   };
 
   const handleCreateCommunity = async () => {
     try {
       await callFunction(createCommunity, form);
+      refetchCommunities();
       onClose();
     } catch (error) {}
   };
@@ -233,20 +255,41 @@ const CreateCommunityModal = ({ onClose }: ICreateCommunityModal) => {
       </div>
       <div className='info'>
         <span className='label'>Community Name</span>
-        <input type='text' name='name' onChange={handleForm} />
+        <input
+          type='text'
+          name='name'
+          value={form.name}
+          onChange={handleForm}
+        />
       </div>
       <div className='info'>
         <span className='label'>UserName</span>
-        <input type='text' name='username' onChange={handleForm} />
+        <input
+          type='text'
+          name='username'
+          value={form.username}
+          onChange={handleForm}
+        />
       </div>
       <div className='info'>
         <span className='label'>Ticker</span>
-        <input type='text' name='ticker' onChange={handleForm} />
+        <input
+          type='text'
+          name='ticker'
+          value={form.ticker}
+          onChange={handleForm}
+        />
       </div>
 
       <div className='info'>
         <span className='label'>Description</span>
-        <textarea name='metadata' rows={5} cols={10} onChange={handleForm} />
+        <textarea
+          name='metadata'
+          value={form.metadata}
+          rows={5}
+          cols={10}
+          onChange={handleForm}
+        />
       </div>
       <div className='btns'>
         <CButton onClick={handleCreateCommunity} loading={isLoading}>

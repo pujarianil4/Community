@@ -2,28 +2,24 @@
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
-import { getFollowersByUserId } from "@/services/api/api";
+import { getFollowinsByUserId } from "@/services/api/api";
 import Image from "next/image";
 import React from "react";
 import "./index.scss";
 
-interface IFollowers {
+interface IFollowings {
   uid: string;
-  entityType: "u" | "c";
 }
 
-export default function Followers({ uid, entityType }: IFollowers) {
+export default function Followings({ uid }: IFollowings) {
   // const userNameSelector = (state: RootState) => state?.user;
 
   // const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
 
-  const { isLoading, data } = useAsync(getFollowersByUserId, {
-    userId: uid,
-    type: entityType,
-  });
+  const { isLoading, data } = useAsync(getFollowinsByUserId, uid);
 
   return (
-    <div className='followers_containers'>
+    <div className='followings_containers'>
       {Array.from({ length: 10 }, () => () => 0).map((_, i) => {
         return (
           <div key={i} className='user'>

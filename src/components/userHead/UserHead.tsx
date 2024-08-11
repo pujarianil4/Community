@@ -5,6 +5,7 @@ import {
   fetchCommunityByCname,
   fetchUser,
   followApi,
+  UnFollowAPI,
 } from "@/services/api/api";
 import { useParams } from "next/navigation";
 import CButton from "../common/Button";
@@ -15,16 +16,17 @@ import useRedux from "@/hooks/useRedux";
 import CTabs from "../common/Tabs";
 import FeedList from "../feedPost/feedList";
 import Followers from "./followers/Followers";
+import Followings from "./Followings/Followings";
 export default function UserHead() {
   const { userId } = useParams<{ userId: string }>();
-  const [isFollowed, setIsFollowed] = useState<boolean>(false);
+
   const userNameSelector = (state: RootState) => state?.user;
   const [{}, [user]] = useRedux([userNameSelector]);
-  const { isLoading, data } = useAsync(fetchUser, userId);
+  const { isLoading, data, refetch } = useAsync(fetchUser, userId);
   const [isSelf, setIsSelf] = useState<boolean>(user.uid === data?.id);
-
+  const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
   useEffect(() => {
-    console.log("userId", user, data);
+    setIsFollowed(data?.isFollowed);
     if (user.uid === data?.id) {
       setIsSelf(true);
     } else {
@@ -40,14 +42,20 @@ export default function UserHead() {
 
   const handleFollow = async () => {
     try {
-      const data1 = await callFunction(followApi, {
-        uid: user.uid,
-        typ: "u",
-        fwid: data.id,
-      });
-      console.log("data1", data1);
+      if (!isFollowed) {
+        const data1 = await callFunction(followApi, {
+          uid: user.uid,
+          typ: "c",
+          fwid: data.id,
+        });
 
-      setIsFollowed(!isFollowed);
+        refetch();
+        setIsFollowed(true);
+      } else {
+        await UnFollowAPI(data.id);
+        refetch();
+        setIsFollowed(false);
+      }
     } catch (error) {}
   };
 
@@ -83,7 +91,7 @@ export default function UserHead() {
                     onClick={handleFollow}
                     className={`${isFollowed && "followed"}`}
                   >
-                    {isFollowed ? "Following" : "Follow"}
+                    {isFollowed ? "Unfollow" : "Follow"}
                   </CButton>
                 )}
               </div>
@@ -123,9 +131,13 @@ export default function UserHead() {
               {
                 key: "2",
                 label: "Followers",
-                content: <Followers uid={data.id} />,
+                content: <Followings uid={data.id} />,
               },
-              { key: "3", label: "Followings", content: "This is tab3" },
+              {
+                key: "3",
+                label: "Followings",
+                content: <Followers uid={data.id} entityType='u' />,
+              },
             ]}
           />
         </div>
