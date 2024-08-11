@@ -2,7 +2,7 @@ import { removeFromLocalStorage } from "./../../utils/helpers/index";
 import { setToLocalStorage } from "@/utils/helpers";
 import axios, { AxiosInstance } from "axios";
 import { store } from "@contexts/store";
-import { IFollowAPI, IUser } from "@/utils/types/types";
+import { IFollowAPI, IPostCommentAPI, IUser } from "@/utils/types/types";
 
 const url = process.env.BASE_API_URL;
 const api: AxiosInstance = axios.create({
@@ -237,6 +237,16 @@ export const fetchComments = async () => {
     return response.data;
   } catch (error) {
     console.error("COMMENTS_ERROR: ", error);
+    throw error;
+  }
+};
+
+export const postComments = async (data: IPostCommentAPI) => {
+  try {
+    const response = await api.post("/comments", data);
+    return response.data;
+  } catch (error) {
+    console.error("POST_COMMENT_ERROR: ", error);
     throw error;
   }
 };

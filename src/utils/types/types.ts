@@ -36,7 +36,7 @@ export interface IPost {
   community: ICommunity;
 }
 
-interface IComment {
+export interface IComment {
   id: number;
   uid: number;
   pid: number;
@@ -48,11 +48,20 @@ interface IComment {
   cta: string;
   uta: string;
   user: IUser;
-  parentComment?: Comment | null;
+  parentComment?: IComment | null;
+  comments?: IComment[];
 }
 
 export interface IFollowAPI {
   uid: number;
   typ: string;
   fwid: number;
+}
+
+export interface IPostCommentAPI {
+  uid: number;
+  content: string;
+  img?: string | null;
+  pid: number;
+  pcid: number | null;
 }

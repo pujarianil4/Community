@@ -149,7 +149,7 @@ const SideBar: React.FC = () => {
   }, [data]);
   return (
     <>
-      <div style={{ width: 256 }}>
+      <div className='community_container' style={{ width: 256 }}>
         {/* <Button
         type='primary'
         onClick={toggleCollapsed}
