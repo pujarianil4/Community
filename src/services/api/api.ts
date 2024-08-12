@@ -60,11 +60,17 @@ export const handleLogOut = async () => {
 
 export const handleSignup = async (
   username: string,
+  name: string,
   sig: string | undefined,
   msg: string
 ) => {
   try {
-    const response = await api.post("/auth/signup", { username, sig, msg });
+    const response = await api.post("/auth/signup", {
+      username,
+      name,
+      sig,
+      msg,
+    });
     console.log("==============userSignUp=================", response);
     setToLocalStorage("userSession", response.data);
     return response.data;

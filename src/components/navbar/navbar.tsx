@@ -104,7 +104,12 @@ export default function Navbar() {
       setMessageHash(sign);
       let response;
       if (isSignup) {
-        response = await handleSignup(signupData.username, sign, msg);
+        response = await handleSignup(
+          signupData.username,
+          signupData.name,
+          sign,
+          msg
+        );
       } else {
         response = await handleLogIn({ sig: sign, msg });
       }
@@ -282,12 +287,16 @@ const SignUpModal = ({
   const [{ dispatch, actions }, [common]] = useRedux([CommonSelector]);
   const debouncedCheckUsername = debounce(async (username: string) => {
     try {
+      if (username == "") {
+        setUsernameError("");
+        return;
+      }
       const user = await fetchUserByUserName(username);
       const isAvailable = user?.username === username;
       if (isAvailable) {
         setUsernameError("Username already exists");
       } else {
-        setUsernameError("");
+        setUsernameError("Username is available");
       }
     } catch (error) {
       setUsernameError("Error checking username availability");
@@ -304,6 +313,7 @@ const SignUpModal = ({
     setSignupData({ ...signupData, username: value.trim() });
     debouncedCheckUsername(value);
   };
+
   return (
     <div className='signUpModal'>
       <div className='login'>
@@ -319,7 +329,13 @@ const SignUpModal = ({
           placeholder='UserName'
           value={signupData.username}
         />
-        <p className='user_name_message'>{usernameError}</p>
+        <p
+          className={`${
+            usernameError == "Username is available" ? "success" : "error"
+          }`}
+        >
+          {usernameError}
+        </p>
         <CInput
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setSignupData({ ...signupData, name: e.target.value.trim() })
@@ -330,7 +346,9 @@ const SignUpModal = ({
         />
         <CButton
           disabled={
-            !!usernameError || !signupData?.username || !signupData?.name
+            usernameError === "Username already exists" ||
+            !signupData?.username ||
+            !signupData?.name
           }
           onClick={() => handleAuth()}
           size={18}
