@@ -6,7 +6,7 @@ import { GoComment, GoShareAndroid } from "react-icons/go";
 import Image from "next/image";
 import { patchPost } from "@/services/api/api";
 import Link from "next/link";
-import { getImageSource, timeAgo } from "@/utils/helpers";
+import { getImageSource, getRandomImageLink, timeAgo } from "@/utils/helpers";
 
 interface IProps {
   post: any;
@@ -58,8 +58,15 @@ export default function FeedPost({ post }: IProps) {
         </div>
         <span>{timeAgo(time)}</span>
       </div>
-      <Link href={`post/${id}`} as={`/post/${id}`} className='content'>
-        <p>{text}</p>
+
+      <Link href={`post/${id}`} as={`/post/${id}`}>
+        <div className='content'>
+          <p>{text}</p>
+          <div className='postMedia'>
+            <img className='imgbg' src={getRandomImageLink()} alt='postbg' />
+            <img src={getRandomImageLink()} alt='post' />
+          </div>
+        </div>
       </Link>
       <div className='actions'>
         <div>

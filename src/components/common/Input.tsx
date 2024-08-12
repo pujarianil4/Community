@@ -1,3 +1,4 @@
+import { Input } from "antd";
 import React from "react";
 import "./index.scss";
 
@@ -7,5 +8,5 @@ interface ICInput {
 }
 
 export default function CInput({ className, ...props }: ICInput) {
-  return <input className={`CInput ${className}`} {...props} />;
+  return <Input className={`CInput ${className}`} {...props} />;
 }

@@ -1,4 +1,5 @@
 "use client";
+import EmptyData from "@/components/common/Empty";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
@@ -41,30 +42,36 @@ export default function Followings({ uid }: IFollowings) {
 
   return (
     <div className='followings_containers'>
-      {data?.map((follow: any, i: number) => {
-        return (
-          <Link
-            key={i}
-            href={`/${returnFollow(follow).type}/${
-              returnFollow(follow)?.username
-            }`}
-            as={`/${returnFollow(follow).type}/${
-              returnFollow(follow)?.username
-            }`}
-          >
-            <div className='user'>
-              <Image
-                width={40}
-                height={40}
-                src={"https://picsum.photos/300/300"}
-                alt='avatar'
-              />
-              <span className='name'>{returnFollow(follow).name}</span>
-              <span className='username'>@{returnFollow(follow).username}</span>
-            </div>
-          </Link>
-        );
-      })}
+      {data?.length > 0 ? (
+        data?.map((follow: any, i: number) => {
+          return (
+            <Link
+              key={i}
+              href={`/${returnFollow(follow).type}/${
+                returnFollow(follow)?.username
+              }`}
+              as={`/${returnFollow(follow).type}/${
+                returnFollow(follow)?.username
+              }`}
+            >
+              <div className='user'>
+                <Image
+                  width={40}
+                  height={40}
+                  src={"https://picsum.photos/300/300"}
+                  alt='avatar'
+                />
+                <span className='name'>{returnFollow(follow).name}</span>
+                <span className='username'>
+                  @{returnFollow(follow).username}
+                </span>
+              </div>
+            </Link>
+          );
+        })
+      ) : (
+        <EmptyData />
+      )}
     </div>
   );
 }

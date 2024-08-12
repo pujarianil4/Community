@@ -28,9 +28,30 @@
   outline: none;
   &:focus,
   &:active,
+  &:hover,
   &:focus-visible {
-    // border: none;
+    background: transparent;
+    border: 1px solid var(--primary-text);
+    outline: none;
     // outline: 1px solid var(--primary-text);
+  }
+  &::placeholder {
+    color: var(--label-text);
+  }
+
+  &::-ms-input-placeholder {
+    /* Edge 12-18 */
+    color: var(--label-text);
+  }
+  input {
+    &::placeholder {
+      color: var(--label-text);
+    }
+
+    &::-ms-input-placeholder {
+      /* Edge 12-18 */
+      color: var(--label-text);
+    }
   }
 }
 

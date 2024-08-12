@@ -55,6 +55,19 @@ export const getImageSource = (logo: string | null, user: boolean = false) => {
     return logo;
   } else {
     if (user) return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-    return "https://picsum.photos/300/300";
+    return getRandomImageLink();
   }
 };
+
+export function getRandomImageLink(): string {
+  const imageUrls = [
+    "https://picsum.photos/300/300?random=1",
+    "https://picsum.photos/200/300?random=2",
+    "https://picsum.photos/300/300?random=3",
+    "https://picsum.photos/200/300?random=4",
+    "https://picsum.photos/300/300?random=5",
+  ];
+
+  const randomIndex = Math.floor(Math.random() * imageUrls.length);
+  return imageUrls[randomIndex];
+}
