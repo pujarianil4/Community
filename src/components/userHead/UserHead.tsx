@@ -63,7 +63,7 @@ export default function UserHead() {
         setIsFollowed(true);
       } else {
         await UnFollowAPI(data.id);
-        refetch();
+        dispatch(actions.setRefetchUser(true));
         setIsFollowed(false);
       }
     } catch (error) {}
