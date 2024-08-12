@@ -11,14 +11,18 @@ import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
 import { IUser } from "@/utils/types/types";
+import { getImageSource } from "@/utils/helpers";
+import NotificationMessage from "@/components/common/Notification";
 
 export default function Profile() {
   const [{}, [userData]] = useRedux([(state: RootState) => state.user]);
+  const [isLoadingUpadte, setIsLoadingUpdate] = useState(false);
   const { isLoading, data, refetch, callFunction } = useAsync();
   const [user, setUser] = useState<IUser>({
     username: "",
     name: "",
     img: "",
+    desc: "",
   });
   const [originalUser, setOriginalUser] = useState<IUser>({
     username: "",
@@ -46,7 +50,8 @@ export default function Profile() {
       const userData = {
         username: data.username,
         name: data.name,
-        img: user.img ? user.img : "https://picsum.photos/200/300",
+        img: getImageSource(user?.img),
+        desc: data?.desc,
       };
       setUser(userData);
       setOriginalUser(userData);
@@ -62,19 +67,23 @@ export default function Profile() {
     if (user.username !== originalUser.username)
       updates.username = user.username;
     if (user.name !== originalUser.name) updates.name = user.name;
-    if (user.img !== originalUser.img) updates.img = user.img;
+    if (user.desc !== originalUser.desc) updates.desc = user.desc;
+    updates.img = user.img;
 
     if (Object.keys(updates).length > 0) {
-      console.log(updates);
-
+      setIsLoadingUpdate(true);
       updateUser(updates)
         .then((user) => {
           console.log("user", user);
-
+          setIsLoadingUpdate(false);
+          NotificationMessage("success", "Profile updated !");
+          setUser(user);
+          setOriginalUser(user);
           // Optionally show success message
         })
         .catch((error) => {
           console.error("Error updating user:", error);
+          NotificationMessage("error", error?.message);
           // Optionally show error message
         });
     }
@@ -114,7 +123,9 @@ export default function Profile() {
         <textarea
           rows={5}
           cols={10}
-          defaultValue=' Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nostrum quo nisi repudiandae laboriosam dolor. Incidunt amet laudantium asperiores illo officiis! Voluptate aperiam error omnis explicabo voluptates, nostrum repellat fugit accusamus!'
+          onChange={handleChange}
+          name='desc'
+          defaultValue={user.desc}
         />
       </div>
       <div className='btns'>

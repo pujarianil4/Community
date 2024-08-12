@@ -45,7 +45,7 @@ export const debounce = (func: (...args: any[]) => void, delay: number) => {
   };
 };
 
-export const getImageSource = (logo: string | null) => {
+export const getImageSource = (logo: string | null, user: boolean = false) => {
   if (
     logo &&
     (logo.startsWith("http://") ||
@@ -54,6 +54,7 @@ export const getImageSource = (logo: string | null) => {
   ) {
     return logo;
   } else {
-    return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    if (user) return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    return "https://picsum.photos/300/300";
   }
 };
