@@ -82,3 +82,15 @@
   overflow-y: scroll !important;
   border-right: 1px solid var(--primary-border) !important;
 }
+
+.ant-notification-notice-wrapper {
+  background-color: var(--secondary-bg) !important;
+
+  .ant-notification-notice-message {
+    color: var(--primary-text) !important;
+    text-transform: capitalize !important;
+  }
+  .ant-notification-notice-description {
+    color: var(--label-text) !important;
+  }
+}

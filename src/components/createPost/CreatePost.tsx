@@ -17,7 +17,9 @@ import { RootState } from "@/contexts/store";
 import DropdownWithSearch from "./dropdownWithSearch";
 import useAsync from "@/hooks/useAsync";
 import { getImageSource } from "@/utils/helpers";
-import { ICommunity } from "@/utils/types/types";
+import { ErrorType, ICommunity } from "@/utils/types/types";
+import NotificationMessage from "../common/Notification";
+import CButton from "../common/Button";
 // import SkeltonLoader from "./skeltonLoader";
 
 interface Props {
@@ -89,9 +91,9 @@ FileInput.displayName = "FileInput";
 
 const userNameSelector = (state: RootState) => state?.user;
 const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
-  const [{}, [user]] = useRedux([userNameSelector]);
+  const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
   const { isLoading, data: communityList } = useAsync(fetchCommunities);
-
+  const [isLoadingPost, setIsLoadingPost] = useState(false);
   const [pics, setPics] = useState<File[]>([]);
   const [content, setContent] = useState<string>("");
   const [selectedOption, setSelectedOption] = useState<ICommunity | null>();
@@ -99,18 +101,23 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
 
   const handlePost = async () => {
     try {
+      setIsLoadingPost(true);
       const data = {
         cid: selectedOption?.id,
         text: content,
       };
       await handlePostToCommunity(data);
+      setIsLoadingPost(false);
+      NotificationMessage("success", "Post Created");
+      dispatch(actions.setRefetchUser(true));
       setIsPostModalOpen(false);
       setSelectedOption(null);
       setContent("");
       setSearchTerm("");
       await getPosts();
-    } catch (error) {
+    } catch (error: any) {
       console.log("POST_ERROR", error);
+      NotificationMessage("error", error?.message);
     }
   };
   if (isLoading) {
@@ -166,7 +173,9 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
             <LuImagePlus color='var(--primary)' size={20} />
           </div>
           <div className='postbtn'>
-            <button onClick={handlePost}>Post</button>
+            <CButton loading={isLoadingPost} onClick={handlePost}>
+              Post
+            </CButton>
           </div>
         </div>
       </section>

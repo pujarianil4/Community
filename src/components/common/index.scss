@@ -29,3 +29,23 @@
     // outline: 1px solid var(--primary-text);
   }
 }
+
+.notification_class {
+  height: 5rem;
+  $border: 1px;
+  background-clip: padding-box;
+  border-radius: 12px;
+  color: var(--pure-black);
+  background-color: var(--secondary-bg);
+  border-radius: 11px;
+  padding: 8px 5px;
+
+  // @media ($mobile) {
+  //   .notification_class {
+  //     padding: 3px;
+  //   }
+}
+
+.ant-notification-notice {
+  height: fit-content;
+}
