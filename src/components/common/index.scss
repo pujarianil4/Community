@@ -12,6 +12,10 @@
     background-color: var(--primary-hover) !important;
     color: var(--primary-text) !important;
   }
+  &:disabled {
+    background-color: var(--primary-disable) !important;
+    color: var(--primary-disable-tx) !important;
+  }
 }
 
 .CInput {

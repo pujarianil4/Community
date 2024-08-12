@@ -13,6 +13,7 @@ import CButton from "../common/Button";
 import { createCommunity, fetchCommunities } from "@/services/api/api";
 import { RxHamburgerMenu } from "react-icons/rx";
 import useAsync from "@/hooks/useAsync";
+import NotificationMessage from "../common/Notification";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -193,7 +194,6 @@ const CreateCommunityModal = ({
   refetchCommunities,
 }: ICreateCommunityModal) => {
   const [imgSrc, setImgSrc] = useState("https://picsum.photos/200/300");
-
   const [form, setForm] = useState<ICommunityForm>({
     logo: imgSrc,
     name: "",
@@ -201,43 +201,73 @@ const CreateCommunityModal = ({
     metadata: "",
     ticker: "",
   });
+
   const { isLoading, callFunction, data } = useAsync();
   const fileRef = useRef<HTMLInputElement>(null);
-  const onPickFile = (event: any) => {
-    setImgSrc(URL.createObjectURL(event.target.files[0]));
+
+  const onPickFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setImgSrc(URL.createObjectURL(event.target.files[0]));
+    }
   };
-  function checkWhitespace(str: string) {
+
+  const checkWhitespace = (str: string) => {
     return /\s/.test(str);
-  }
+  };
+
   const handleForm = (
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if (name == "username" && !checkWhitespace(value)) {
-      console.log("form", name, value, !checkWhitespace(value));
-
+    if (name === "username" && !checkWhitespace(value)) {
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
-    } else if (name != "username") {
-      console.log("form2", name, value);
+    } else if (name !== "username") {
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
     }
+  };
+
+  const isFormValid = () => {
+    const bool =
+      form.name?.trim() !== "" &&
+      form.username?.trim() !== "" &&
+      form.ticker?.trim() !== "" &&
+      form.metadata?.trim() !== "";
+    console.log("isFormValid", bool);
+
+    return bool;
   };
 
   const handleCreateCommunity = async () => {
     try {
       await callFunction(createCommunity, form);
+      NotificationMessage("success", "Community Created");
       refetchCommunities();
       onClose();
-    } catch (error) {}
+    } catch (error: any) {
+      let errorMessage;
+      if (
+        Array.isArray(error.response.data.message) &&
+        error.response.data.message.length > 0
+      ) {
+        errorMessage = error.response.data.message[0]; // Get the first element of the array
+      } else {
+        errorMessage = "Please Enter valid values";
+      }
+
+      console.log("error", errorMessage);
+
+      NotificationMessage("error", errorMessage);
+
+      // Handle error appropriately
+      console.error("Failed to create community:", error);
+    }
   };
 
   return (
     <div className='create_community_container'>
       <div className='avatar'>
-        {/* <span className='label'>Select Logo</span> */}
-
         <img src={imgSrc} alt='logo' />
         <div
           onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
@@ -280,7 +310,6 @@ const CreateCommunityModal = ({
           onChange={handleForm}
         />
       </div>
-
       <div className='info'>
         <span className='label'>Description</span>
         <textarea
@@ -292,9 +321,12 @@ const CreateCommunityModal = ({
         />
       </div>
       <div className='btns'>
-        <CButton onClick={handleCreateCommunity} loading={isLoading}>
-          {" "}
-          Create Community{" "}
+        <CButton
+          onClick={handleCreateCommunity}
+          loading={isLoading}
+          disabled={!isFormValid()}
+        >
+          Create Community
         </CButton>
       </div>
     </div>
