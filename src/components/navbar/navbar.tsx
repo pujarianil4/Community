@@ -104,14 +104,19 @@ export default function Navbar() {
       setMessageHash(sign);
       let response;
       if (isSignup) {
-        response = await handleSignup(signupData.username, sign, msg);
+        response = await handleSignup(
+          signupData.username,
+          signupData.name,
+          sign,
+          msg
+        );
       } else {
         response = await handleLogIn({ sig: sign, msg });
       }
-      const userdata = await fetchUserById(response.uid);
+      const userdata = await fetchUserById(response?.uid);
       const user = {
         username: userdata.username,
-        name: userdata.name,
+        name: userdata?.name || "",
         uid: response?.uid || 0,
         token: response?.token || "",
         img: getImageSource(userdata?.img),
@@ -163,13 +168,14 @@ export default function Navbar() {
   const fetchUser = async () => {
     const value = localStorage?.getItem("userSession");
     const userData: any = value ? JSON.parse(value) : null;
+    console.log("FETCH", userData);
     if (userData?.uid) {
       const response = await fetchUserById(userData?.uid);
       const user = {
         username: response?.username,
         name: response?.name,
         uid: response?.id,
-        // token: response?.token || "",
+        token: userData?.token,
         img: getImageSource(response?.img),
       };
       dispatch(actions.setUserData(user));
@@ -281,29 +287,33 @@ const SignUpModal = ({
   const [{ dispatch, actions }, [common]] = useRedux([CommonSelector]);
   const debouncedCheckUsername = debounce(async (username: string) => {
     try {
+      if (username == "") {
+        setUsernameError("");
+        return;
+      }
       const user = await fetchUserByUserName(username);
       const isAvailable = user?.username === username;
       if (isAvailable) {
         setUsernameError("Username already exists");
       } else {
-        setUsernameError("");
+        setUsernameError("Username is available");
       }
     } catch (error) {
       setUsernameError("Error checking username availability");
     }
   }, 500);
   const handleAuth = (isSignup: boolean = true) => {
-    if (!!usernameError || !signupData?.username || !signupData?.name) {
-      dispatch(actions.setWalletRoute("auth"));
-      openModal && openModal();
-      setIsSignup(isSignup);
-    }
+    console.log("IF_CALL");
+    dispatch(actions.setWalletRoute("auth"));
+    openModal && openModal();
+    setIsSignup(isSignup);
   };
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSignupData({ ...signupData, username: value.trim() });
     debouncedCheckUsername(value);
   };
+
   return (
     <div className='signUpModal'>
       <div className='login'>
@@ -317,18 +327,28 @@ const SignUpModal = ({
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
           type='text'
           placeholder='UserName'
+          value={signupData.username}
         />
-        <p className='user_name_message'>{usernameError}</p>
+        <p
+          className={`${
+            usernameError == "Username is available" ? "success" : "error"
+          }`}
+        >
+          {usernameError}
+        </p>
         <CInput
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setSignupData({ ...signupData, name: e.target.value.trim() })
           }
           type='text'
           placeholder='Name (Optional)'
+          value={signupData.name}
         />
         <CButton
           disabled={
-            !!usernameError || !signupData?.username || !signupData?.name
+            usernameError === "Username already exists" ||
+            !signupData?.username ||
+            !signupData?.name
           }
           onClick={() => handleAuth()}
           size={18}

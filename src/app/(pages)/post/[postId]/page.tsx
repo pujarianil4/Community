@@ -17,7 +17,7 @@ export default function PostPage({ params }: Iprops) {
     <PageWraper hideRightPanel>
       <main className='post_page'>
         <Post postId={postId} />
-        <Comments />
+        <Comments postId={postId} />
       </main>
     </PageWraper>
   );

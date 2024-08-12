@@ -6,17 +6,23 @@ import React, { useEffect, useState } from "react";
 import "./index.scss";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { fetchUser, fetchUserById, updateUser } from "@/services/api/api";
+import {
+  fetchUser,
+  fetchUserById,
+  fetchUserByUserName,
+  updateUser,
+} from "@/services/api/api";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
 import { IUser } from "@/utils/types/types";
-import { getImageSource } from "@/utils/helpers";
+import { debounce, getImageSource } from "@/utils/helpers";
 import NotificationMessage from "@/components/common/Notification";
 
 export default function Profile() {
   const [{}, [userData]] = useRedux([(state: RootState) => state.user]);
   const [isLoadingUpadte, setIsLoadingUpdate] = useState(false);
+  const [usernameError, setUsernameError] = useState<string>("");
   const { isLoading, data, refetch, callFunction } = useAsync();
   const [user, setUser] = useState<IUser>({
     username: "",
@@ -30,10 +36,31 @@ export default function Profile() {
     img: "",
   });
 
+  const debouncedCheckUsername = debounce(async (username: string) => {
+    try {
+      if (username == "" || data?.username === username) {
+        setUsernameError("");
+        return;
+      }
+      const userData = await fetchUserByUserName(username);
+      const isAvailable = userData?.username === username;
+      if (isAvailable) {
+        setUsernameError("Username already exists");
+      } else {
+        setUsernameError("Username is available");
+      }
+    } catch (error) {
+      setUsernameError("Error checking username availability");
+    }
+  }, 500);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    if (name === "username") {
+      debouncedCheckUsername(value);
+    }
     setUser((prevUser) => ({
       ...prevUser,
       [name]: value,
@@ -129,6 +156,13 @@ export default function Profile() {
         />
       </div>
       <div className='btns'>
+        <p
+          className={`${
+            usernameError == "Username is available" ? "success" : "error"
+          }`}
+        >
+          {usernameError}
+        </p>
         <CButton onClick={handleSave}> Save </CButton>
       </div>
     </div>

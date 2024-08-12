@@ -14,11 +14,12 @@ import React, { useEffect, useState } from "react";
 import { GoComment, GoShareAndroid } from "react-icons/go";
 import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 
-export default function Comments() {
-  const userNameSelector = (state: RootState) => state?.user;
-  const { isLoading, data: commentsData } = useAsync(fetchComments);
+interface Iprops {
+  postId: number;
+}
+export default function Comments({ postId }: Iprops) {
+  const { isLoading, data: commentsData } = useAsync(fetchComments, postId);
   const [comments, setComments] = useState<IComment[]>();
-  const [{}, [user]] = useRedux([userNameSelector]);
 
   function organizeComments(comments: IComment[]): IComment[] {
     const commentMap = new Map<number, IComment>();
@@ -58,12 +59,19 @@ export default function Comments() {
     }
   }, [commentsData]);
 
+  // const onComment = (newComment: IComment) => {
+  //   setComments((prev) => [newComment, ...(prev || [])]);
+  // };
   const onComment = (newComment: IComment) => {
-    setComments((prev) => [newComment, ...(prev || [])]);
+    if (newComment.pcid === null) {
+      // If it's a top-level comment, add it to the beginning of comments
+      // setComments((prevComments) => [newComment, ...(prevComments || [])]);
+      setComments([newComment, ...(comments || [])]);
+    }
   };
   return (
     <section className='comments'>
-      <CommentInput onComment={onComment} user={user} />
+      <CommentInput onComment={onComment} postId={postId} />
       {isLoading ? (
         <div>Loading...</div>
       ) : (
@@ -78,6 +86,7 @@ export default function Comments() {
               <CommentItem
                 key={index}
                 comment={comment}
+                postId={postId}
                 //  refetch={refetch}
               />
             ))}
@@ -90,12 +99,14 @@ export default function Comments() {
 interface ICommentItemProps {
   comment: IComment;
   // refetch?: any;
+  postId: number;
 }
 
 const CommentItem: React.FC<ICommentItemProps> = React.memo(
   ({
     comment,
     //  refetch
+    postId,
   }) => {
     const [isReplying, setIsReplying] = useState(false);
     const [childComments, setChildComments] = useState<IComment[]>(
@@ -164,8 +175,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
             onComment={onComment}
             setIsReplying={setIsReplying}
             parentComment={comment}
-            // refetch={refetch}
-            user={comment?.user}
+            postId={postId}
           />
         )}
         {childComments.length > 0 && (
@@ -175,6 +185,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
                 key={childComment.id}
                 comment={childComment}
                 // refetch={refetch}
+                postId={postId}
               />
             ))}
           </div>
@@ -191,24 +202,24 @@ interface ICommentInputProps {
   setIsReplying?: (val: boolean) => void;
   parentComment?: IComment;
   // refetch?: any;
-  user?: IUser;
+  postId: number;
 }
 
 const CommentInput: React.FC<ICommentInputProps> = ({
   onComment,
   setIsReplying,
   parentComment,
-  // refetch,
-  user,
+  postId,
 }) => {
   const [commentBody, setCommentBody] = useState("");
-
+  const userNameSelector = (state: RootState) => state?.user;
+  const [{}, [user]] = useRedux([userNameSelector]);
   const handlePostComment = async () => {
     const postData: IPostCommentAPI = {
-      uid: 8,
+      uid: user?.uid,
       content: commentBody,
-      // img: null,
-      pid: 1,
+      img: null,
+      pid: +postId,
       pcid: parentComment?.id || null,
     };
     const response = await postComments(postData);
@@ -235,11 +246,6 @@ const CommentInput: React.FC<ICommentInputProps> = ({
 
   return (
     <div className='comment_input'>
-      {/* <input
-        value={commentBody}
-        onChange={(event) => setCommentBody(event.target.value)}
-        placeholder='Write your comment'
-      /> */}
       <TextArea
         content={commentBody}
         setContent={setCommentBody}
@@ -255,7 +261,6 @@ const CommentInput: React.FC<ICommentInputProps> = ({
           Comment
         </CButton>
       </div>
-      {/* // <button onClick={() => handlePostComment()}>Comment</button> */}
     </div>
   );
 };
