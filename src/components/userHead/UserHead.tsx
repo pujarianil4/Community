@@ -21,18 +21,28 @@ export default function UserHead() {
   const { userId } = useParams<{ userId: string }>();
 
   const userNameSelector = (state: RootState) => state?.user;
-  const [{}, [user]] = useRedux([userNameSelector]);
+  const refetchRoute = (state: RootState) => state?.common.refetch;
+  const [{ dispatch, actions }, [user, refetchData]] = useRedux([
+    userNameSelector,
+    refetchRoute,
+  ]);
   const { isLoading, data, refetch } = useAsync(fetchUser, userId);
   const [isSelf, setIsSelf] = useState<boolean>(user.uid === data?.id);
   const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
   useEffect(() => {
     setIsFollowed(data?.isFollowed);
+
+    if (refetchData?.user == true) {
+      refetch();
+      dispatch(actions.resetRefetch());
+    }
+
     if (user.uid === data?.id) {
       setIsSelf(true);
     } else {
       setIsSelf(false);
     }
-  }, [user, data]);
+  }, [user, data, refetchData]);
 
   const {
     isLoading: isLoadingFollow,
@@ -45,15 +55,15 @@ export default function UserHead() {
       if (!isFollowed) {
         const data1 = await callFunction(followApi, {
           uid: user.uid,
-          typ: "c",
+          typ: "u",
           fwid: data.id,
         });
 
-        refetch();
+        dispatch(actions.setRefetchUser(true));
         setIsFollowed(true);
       } else {
         await UnFollowAPI(data.id);
-        refetch();
+        dispatch(actions.setRefetchUser(true));
         setIsFollowed(false);
       }
     } catch (error) {}
@@ -65,7 +75,7 @@ export default function UserHead() {
   };
   return (
     <>
-      {isLoading || !data ? (
+      {!data ? (
         <UandCHeadLoader />
       ) : (
         <div className='user-head'>
@@ -99,7 +109,7 @@ export default function UserHead() {
             <div className='content'>
               <div className='statics'>
                 <div>
-                  <h4>10</h4>
+                  <h4>{data.pcount}</h4>
                   <span>Posts</span>
                 </div>
                 <div>
@@ -112,12 +122,7 @@ export default function UserHead() {
                 </div>
               </div>
               <div className='overview'>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Aspernatur recusandae voluptates aut perferendis omnis esse
-                  sequi nemo rem aliquid eos provident enim exercitationem amet
-                  commodi accusamus magnam, molestias atque quae?
-                </p>
+                <p>{data.desc}</p>
               </div>
             </div>
           </div>
@@ -131,12 +136,12 @@ export default function UserHead() {
               {
                 key: "2",
                 label: "Followers",
-                content: <Followings uid={data.id} />,
+                content: <Followers uid={data.id} entityType='u' />,
               },
               {
                 key: "3",
                 label: "Followings",
-                content: <Followers uid={data.id} entityType='u' />,
+                content: <Followings uid={data.id} />,
               },
             ]}
           />

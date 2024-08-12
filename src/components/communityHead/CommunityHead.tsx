@@ -15,6 +15,7 @@ import FeedList from "../feedPost/feedList";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import Followers from "../userHead/followers/Followers";
+import Followings from "../userHead/Followings/Followings";
 
 export default function CommunityHead() {
   const { communityId } = useParams<{ communityId: string }>();
@@ -23,13 +24,26 @@ export default function CommunityHead() {
     communityId
   );
   const userNameSelector = (state: RootState) => state?.user;
-  const [{}, [user]] = useRedux([userNameSelector]);
+  const refetchRoute = (state: RootState) => state?.common.refetch;
+  const [{ dispatch, actions }, [user, refetchData]] = useRedux([
+    userNameSelector,
+    refetchRoute,
+  ]);
   const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
   const {
     isLoading: isLoadingFollow,
     data: followResponse,
     callFunction,
   } = useAsync();
+
+  useEffect(() => {
+    setIsFollowed(data?.isFollowed);
+
+    if (refetchData?.user == true) {
+      refetch();
+      dispatch(actions.resetRefetch());
+    }
+  }, [refetchData]);
   //const data = await fetchCommunityByCname("nifty50");
 
   const handleFollow = async () => {
@@ -41,11 +55,11 @@ export default function CommunityHead() {
           fwid: data.id,
         });
 
-        refetch();
+        dispatch(actions.setRefetchUser(true));
         setIsFollowed(true);
       } else {
         await UnFollowAPI(data.id);
-        refetch();
+        dispatch(actions.setRefetchUser(true));
         setIsFollowed(false);
       }
     } catch (error) {}
@@ -118,7 +132,11 @@ export default function CommunityHead() {
                 label: "Followers",
                 content: <Followers uid={data.id} entityType='c' />,
               },
-              { key: "3", label: "Voters", content: "This is tab3" },
+              {
+                key: "3",
+                label: "Voters",
+                content: <Followings uid={data.id} />,
+              },
             ]}
           />
         </div>

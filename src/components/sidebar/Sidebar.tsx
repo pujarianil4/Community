@@ -11,6 +11,7 @@ import { FiUpload } from "react-icons/fi";
 import "./index.scss";
 import CButton from "../common/Button";
 import { createCommunity, fetchCommunities } from "@/services/api/api";
+import { RxHamburgerMenu } from "react-icons/rx";
 import useAsync from "@/hooks/useAsync";
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -57,7 +58,7 @@ const communities = [
 const SideBar: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [communityList, SetCommunityList] = useState<Array<any>>([]);
-
+  const [isOpen, setIsOpen] = useState(false);
   const { isLoading, callFunction, data, refetch } = useAsync(fetchCommunities);
 
   const router = useRouter();
@@ -149,14 +150,13 @@ const SideBar: React.FC = () => {
   }, [data]);
   return (
     <>
-      <div className='sidebar_container' style={{ width: 256 }}>
-        {/* <Button
-        type='primary'
-        onClick={toggleCollapsed}
-        style={{ marginBottom: 16 }}
-      >
-        {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-      </Button> */}
+      {" "}
+      <RxHamburgerMenu
+        className='hamburger'
+        size={30}
+        onClick={() => setIsOpen(!isOpen)}
+      />
+      <div className={`sidebar_container ${isOpen && "open"}`}>
         <Menu
           defaultSelectedKeys={["1"]}
           defaultOpenKeys={["sub1"]}

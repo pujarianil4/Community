@@ -29,11 +29,15 @@
     }
 
     .head {
-      margin-left: 100px;
+      // margin-left: 100px;
       display: flex;
       justify-content: space-between;
       width: 100%;
 
+      .names {
+        margin-left: 100px;
+        width: 45%;
+      }
       h4 {
         color: var(--primary-text);
         white-space: nowrap;

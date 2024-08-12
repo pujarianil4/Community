@@ -1,11 +1,12 @@
 export interface IUser {
   id?: number;
   username: string;
-  name?: string | null;
-  img: string | null;
+  name?: string;
+  img: string;
   sts?: number;
   cta?: string;
   uta?: string;
+  desc?: string;
 }
 
 export interface ICommunity {
@@ -70,3 +71,9 @@ export interface IPostCommentAPI {
   pid: number;
   pcid: number | null;
 }
+
+export type ErrorType = {
+  error: string;
+  message: string;
+  statusCode: number;
+};

@@ -3,8 +3,10 @@ import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
 import { getFollowersByUserId } from "@/services/api/api";
+import { getImageSource } from "@/utils/helpers";
 import Image from "next/image";
-import React from "react";
+import Link from "next/link";
+import React, { useEffect } from "react";
 import "./index.scss";
 
 interface IFollowers {
@@ -17,25 +19,49 @@ export default function Followers({ uid, entityType }: IFollowers) {
 
   // const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
 
-  const { isLoading, data } = useAsync(getFollowersByUserId, {
+  const { isLoading, data, refetch } = useAsync(getFollowersByUserId, {
     userId: uid,
     type: entityType,
   });
 
+  const refetchRoute = (state: RootState) => state?.common.refetch.user;
+  const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
+
+  useEffect(() => {
+    console.log("refetchData?.user", refetchData);
+
+    if (refetchData == true) {
+      refetch();
+      dispatch(actions.resetRefetch());
+    }
+  }, [refetchData]);
+
+  const returnFollow = (data: any) => {
+    return data.user;
+  };
+
   return (
     <div className='followers_containers'>
-      {Array.from({ length: 10 }, () => () => 0).map((_, i) => {
+      {data?.map((follow: any, i: number) => {
         return (
-          <div key={i} className='user'>
-            <Image
-              width={40}
-              height={40}
-              src={"https://picsum.photos/300/300"}
-              alt='avatar'
-            />
-            <span className='name'>Anil Pujari</span>
-            <span className='username'>@anilpujari</span>
-          </div>
+          <Link
+            key={i}
+            href={`/u/${returnFollow(follow)?.username}`}
+            as={`/u/${returnFollow(follow)?.username}`}
+          >
+            <div className='user'>
+              <Image
+                width={40}
+                height={40}
+                src={getImageSource(returnFollow(follow)?.img)}
+                alt='avatar'
+              />
+              <span className='name'>{returnFollow(follow)?.name}</span>
+              <span className='username'>
+                @{returnFollow(follow)?.username}
+              </span>
+            </div>
+          </Link>
         );
       })}
     </div>
