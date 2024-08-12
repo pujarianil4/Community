@@ -18,9 +18,17 @@ export default function Followings({ uid }: IFollowings) {
 
   const { isLoading, data } = useAsync(getFollowinsByUserId, uid);
 
+  const returnFollow = (data: any) => {
+    if (data.followedUser == null) {
+      return data.followedCommunity;
+    } else {
+      return data.followedUser;
+    }
+  };
+
   return (
     <div className='followings_containers'>
-      {Array.from({ length: 10 }, () => () => 0).map((_, i) => {
+      {data?.map((follow: any, i: number) => {
         return (
           <div key={i} className='user'>
             <Image
@@ -29,8 +37,8 @@ export default function Followings({ uid }: IFollowings) {
               src={"https://picsum.photos/300/300"}
               alt='avatar'
             />
-            <span className='name'>Anil Pujari</span>
-            <span className='username'>@anilpujari</span>
+            <span className='name'>{returnFollow(follow).name}</span>
+            <span className='username'>@{returnFollow(follow).username}</span>
           </div>
         );
       })}

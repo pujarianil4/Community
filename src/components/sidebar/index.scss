@@ -1,6 +1,32 @@
+@import "/src/styles";
 .sidebar_container {
   position: fixed;
+  background-color: var(--body-bg);
+  z-index: 1;
+  width: 250px;
+  transition: left ease-in-out 0.2s;
+  @media (width < 700px) {
+    width: 200px;
+    left: 0px;
+  }
+  @include lessThan(sm) {
+    left: -300px;
+    width: 250px;
+  }
+}
+
+.open {
   left: 0;
+}
+
+.hamburger {
+  position: absolute;
+  top: -55px;
+  margin: 0px 15px;
+  display: none;
+  @include lessThan(sm) {
+    display: block;
+  }
 }
 .community_item {
   width: 100%;
