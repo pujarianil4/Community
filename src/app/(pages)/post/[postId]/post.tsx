@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { IoIosMore } from "react-icons/io";
-import { timeAgo } from "@/utils/helpers";
+import { getImageSource, timeAgo } from "@/utils/helpers";
 import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 import { GoComment, GoShareAndroid } from "react-icons/go";
 import { getPostsByPostId } from "@/services/api/api";
@@ -17,33 +17,7 @@ interface Iprops {
 export default function Post({ postId }: Iprops) {
   // TODO use below code to get data after fixing local storage problem
   // const posts = await getPostsByPostId(postId);
-  const { isLoading, data: posts } = useAsync(getPostsByPostId, postId);
-
-  const user = {
-    id: 5,
-    username: "test_me",
-    name: "test",
-    img: "https://i.imgur.com/Qpw6j8D_d.webp?maxwidth=760&fidelity=grand",
-    sts: 1,
-    cta: "2024-08-02T10:09:15.193Z",
-    uta: "2024-08-02T10:09:15.193Z",
-  };
-  const community = {
-    id: 1,
-    username: "example community",
-    name: "unilend Finance Community",
-    ticker: "string",
-    logo: "https://i.imgur.com/Qpw6j8D_d.webp?maxwidth=760&fidelity=grand",
-    metadata: "string",
-    pCount: 0,
-    followers: 0,
-    totalSupply: 0,
-    sts: 0,
-    cta: "2024-08-02T10:09:15.193Z",
-    uta: "2024-08-05T06:38:15.128Z",
-  };
-  // TODO: update this after API update
-  const post = { ...posts, user, community };
+  const { isLoading, data: post } = useAsync(getPostsByPostId, postId);
 
   return (
     <section className='post_container'>
@@ -54,8 +28,8 @@ export default function Post({ postId }: Iprops) {
           className='community_logo'
         >
           <Image
-            src={post?.community.logo}
-            alt={post?.community.username}
+            src={getImageSource(post?.community.logo)}
+            alt={post?.community.username || "community"}
             width={32}
             height={32}
           />

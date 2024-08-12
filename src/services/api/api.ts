@@ -231,7 +231,6 @@ export const getPostsByPostId = async (postId: string) => {
 export const patchPost = async (data: any) => {
   try {
     const response = await api.patch("/posts", data);
-    console.log("============Fetched all posts=============", response.data);
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
