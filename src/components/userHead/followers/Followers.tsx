@@ -1,4 +1,5 @@
 "use client";
+import EmptyData from "@/components/common/Empty";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
@@ -42,28 +43,32 @@ export default function Followers({ uid, entityType }: IFollowers) {
 
   return (
     <div className='followers_containers'>
-      {data?.map((follow: any, i: number) => {
-        return (
-          <Link
-            key={i}
-            href={`/u/${returnFollow(follow)?.username}`}
-            as={`/u/${returnFollow(follow)?.username}`}
-          >
-            <div className='user'>
-              <Image
-                width={40}
-                height={40}
-                src={getImageSource(returnFollow(follow)?.img)}
-                alt='avatar'
-              />
-              <span className='name'>{returnFollow(follow)?.name}</span>
-              <span className='username'>
-                @{returnFollow(follow)?.username}
-              </span>
-            </div>
-          </Link>
-        );
-      })}
+      {data?.length > 0 ? (
+        data?.map((follow: any, i: number) => {
+          return (
+            <Link
+              key={i}
+              href={`/u/${returnFollow(follow)?.username}`}
+              as={`/u/${returnFollow(follow)?.username}`}
+            >
+              <div className='user'>
+                <Image
+                  width={40}
+                  height={40}
+                  src={getImageSource(returnFollow(follow)?.img)}
+                  alt='avatar'
+                />
+                <span className='name'>{returnFollow(follow)?.name}</span>
+                <span className='username'>
+                  @{returnFollow(follow)?.username}
+                </span>
+              </div>
+            </Link>
+          );
+        })
+      ) : (
+        <EmptyData />
+      )}
     </div>
   );
 }

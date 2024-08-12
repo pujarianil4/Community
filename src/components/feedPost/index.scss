@@ -34,10 +34,33 @@
 
   .content {
     p {
-      font-size: 14px;
+      font-size: 17px;
       text-align: left;
       word-spacing: 1px;
       margin: 10px 0px;
+    }
+  }
+
+  .postMedia {
+    height: 400px;
+    margin: 10px 0px;
+    width: 100%;
+    border: 1px solid var(--primary-border);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    .imgbg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: blur(15px);
+    }
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
   }
 
@@ -67,4 +90,8 @@
       }
     }
   }
+}
+
+.feedlist {
+  padding: 10px;
 }

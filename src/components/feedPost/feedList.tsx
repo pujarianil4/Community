@@ -7,6 +7,9 @@ import FeedPost from "./feedPost";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import { useSelector } from "react-redux";
+import EmptyData from "../common/Empty";
+import "./index.scss";
+import FeedPostLoader from "../common/loaders/Feedpost";
 
 const getFunctionByMethod = {
   allPosts: getPosts,
@@ -32,7 +35,7 @@ export default function FeedList({ method }: IFeedList) {
 
   const refetchRoute = (state: RootState) => state?.common.refetch.user;
   const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
-
+  const loadingArray = Array(5).fill(() => 0);
   useEffect(() => {
     console.log("refetchData?.user", refetchData);
 
@@ -44,11 +47,17 @@ export default function FeedList({ method }: IFeedList) {
 
   return (
     <>
-      {posts ? (
-        posts?.map((post: any) => <FeedPost key={post.id} post={post} />)
-      ) : (
-        <h1>Loading...</h1>
-      )}
+      <div className='feedlist'>
+        {posts ? (
+          posts.length > 0 ? (
+            posts?.map((post: any) => <FeedPost key={post.id} post={post} />)
+          ) : (
+            <EmptyData />
+          )
+        ) : (
+          loadingArray.map(() => <FeedPostLoader />)
+        )}
+      </div>
     </>
   );
 }

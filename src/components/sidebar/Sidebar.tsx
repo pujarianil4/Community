@@ -17,44 +17,42 @@ import {
 } from "@/services/api/api";
 import { RxHamburgerMenu } from "react-icons/rx";
 import useAsync from "@/hooks/useAsync";
-import { debounce } from "@/utils/helpers";
+import NotificationMessage from "../common/Notification";
+import { debounce, getRandomImageLink } from "@/utils/helpers";
+import CommunityList from "../common/loaders/communityList";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
-const communities = [
+const LodingCommunities = [
   {
-    key: "5",
+    key: "loading1",
     label: (
       <div className='community_item'>
-        <img loading='lazy' src='https://picsum.photos/200/300' alt='profile' />
-        <span>Community Name</span>
+        <div className='skeleton'></div>
       </div>
     ),
   },
   {
-    key: "6",
+    key: "loading2",
     label: (
       <div className='community_item'>
-        <img loading='lazy' src='https://picsum.photos/200/300' alt='profile' />
-        <span>Community Name</span>
+        <div className='skeleton'></div>
       </div>
     ),
   },
   {
-    key: "7",
+    key: "loading3",
     label: (
       <div className='community_item'>
-        <img loading='lazy' src='https://picsum.photos/200/300' alt='profile' />
-        <span>Community Name</span>
+        <div className='skeleton'></div>
       </div>
     ),
   },
   {
-    key: "8",
+    key: "loading4",
     label: (
       <div className='community_item'>
-        <img loading='lazy' src='https://picsum.photos/200/300' alt='profile' />
-        <span>Community Name</span>
+        <div className='skeleton'></div>
       </div>
     ),
   },
@@ -88,20 +86,7 @@ const SideBar: React.FC = () => {
             </div>
           ),
         },
-      ].concat(
-        isLoading
-          ? [
-              {
-                key: "loading",
-                label: (
-                  <div className='community_item'>
-                    <span>Loading...</span>
-                  </div>
-                ),
-              },
-            ]
-          : communityList
-      ),
+      ].concat(isLoading ? LodingCommunities : communityList),
     },
   ];
 
@@ -126,7 +111,7 @@ const SideBar: React.FC = () => {
   };
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.src = "https://picsum.photos/300/300";
+    e.currentTarget.src = getRandomImageLink();
   };
 
   const getCommunities = async (cmnties: Array<any>) => {
@@ -164,7 +149,7 @@ const SideBar: React.FC = () => {
       <div className={`sidebar_container ${isOpen && "open"}`}>
         <Menu
           defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
+          defaultOpenKeys={["community"]}
           mode='inline'
           theme='dark'
           onClick={onClick}
@@ -198,7 +183,6 @@ const CreateCommunityModal = ({
   refetchCommunities,
 }: ICreateCommunityModal) => {
   const [imgSrc, setImgSrc] = useState("https://picsum.photos/200/300");
-
   const [form, setForm] = useState<ICommunityForm>({
     logo: imgSrc,
     name: "",
@@ -206,12 +190,17 @@ const CreateCommunityModal = ({
     metadata: "",
     ticker: "",
   });
+
   const [usernameError, setUsernameError] = useState<string>("");
   const { isLoading, callFunction, data } = useAsync();
   const fileRef = useRef<HTMLInputElement>(null);
-  const onPickFile = (event: any) => {
-    setImgSrc(URL.createObjectURL(event.target.files[0]));
+
+  const onPickFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setImgSrc(URL.createObjectURL(event.target.files[0]));
+    }
   };
+
   const debouncedCheckUsername = debounce(async (username: string) => {
     try {
       if (username == "") {
@@ -230,9 +219,11 @@ const CreateCommunityModal = ({
       setUsernameError("Error checking community availability");
     }
   }, 500);
+
   function checkWhitespace(str: string) {
     return /\s/.test(str);
   }
+
   const handleForm = (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -243,27 +234,51 @@ const CreateCommunityModal = ({
       console.log("form", name, value, !checkWhitespace(value));
       debouncedCheckUsername(value);
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
-    } else if (name != "username") {
-      console.log("form2", name, value);
+    } else if (name !== "username") {
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
     }
   };
 
-  console.log("ERROR", usernameError);
+  const isFormValid = () => {
+    const bool =
+      form.name?.trim() !== "" &&
+      form.username?.trim() !== "" &&
+      form.ticker?.trim() !== "" &&
+      form.metadata?.trim() !== "";
+    console.log("isFormValid", bool);
+
+    return bool;
+  };
 
   const handleCreateCommunity = async () => {
     try {
       await callFunction(createCommunity, form);
+      NotificationMessage("success", "Community Created");
       refetchCommunities();
       onClose();
-    } catch (error) {}
+    } catch (error: any) {
+      let errorMessage;
+      if (
+        Array.isArray(error.response.data.message) &&
+        error.response.data.message.length > 0
+      ) {
+        errorMessage = error.response.data.message[0]; // Get the first element of the array
+      } else {
+        errorMessage = "Please Enter valid values";
+      }
+
+      console.log("error", errorMessage);
+
+      NotificationMessage("error", errorMessage);
+
+      // Handle error appropriately
+      console.error("Failed to create community:", error);
+    }
   };
 
   return (
     <div className='create_community_container'>
       <div className='avatar'>
-        {/* <span className='label'>Select Logo</span> */}
-
         <img src={imgSrc} alt='logo' />
         <div
           onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
@@ -306,7 +321,6 @@ const CreateCommunityModal = ({
           onChange={handleForm}
         />
       </div>
-
       <div className='info'>
         <span className='label'>Description</span>
         <textarea
@@ -318,15 +332,18 @@ const CreateCommunityModal = ({
         />
       </div>
       <div className='btns'>
-        <p
-          className={`${
-            usernameError == "Community is available" ? "success" : "error"
-          }`}
+        <CButton
+          disabled={!isFormValid()}
+          onClick={handleCreateCommunity}
+          loading={isLoading}
         >
-          {usernameError}
-        </p>
-        <CButton onClick={handleCreateCommunity} loading={isLoading}>
-          Create Community
+          <p
+            className={`${
+              usernameError == "Community is available" ? "success" : "error"
+            }`}
+          >
+            {usernameError}
+          </p>
         </CButton>
       </div>
     </div>

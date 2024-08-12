@@ -1,5 +1,6 @@
 .nav_container {
   width: 100%;
+  padding-left: 60px;
   height: 80px;
   background-color: var(--primary-bg);
   border-bottom: 1px solid var(--primary-border);
@@ -15,6 +16,15 @@
       margin: 10px;
       text-decoration: none;
       cursor: pointer;
+    }
+  }
+  .search_container {
+    width: 40%;
+    .search {
+      width: 100%;
+      border-radius: 20px;
+      border: 0px;
+      background: var(--secondary-bg);
     }
   }
   .signin {

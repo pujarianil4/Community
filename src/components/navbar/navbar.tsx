@@ -9,10 +9,11 @@ import { useDisconnect } from "wagmi";
 import { PiUserCircleDuotone } from "react-icons/pi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { IoLogOutOutline } from "react-icons/io5";
-
+import { CiSearch } from "react-icons/ci";
 import "./navbar.scss";
 import CButton from "../common/Button";
-import CInput from "../common/Input";
+import { FaRegBell } from "react-icons/fa6";
+import { IoSearch } from "react-icons/io5";
 import useRedux from "@/hooks/useRedux";
 import {
   fetchUserById,
@@ -28,8 +29,9 @@ import { debounce, getImageSource } from "@/utils/helpers";
 import Link from "next/link";
 import { setToLocalStorage } from "@/utils/helpers";
 import { sigMsg } from "@/utils/constants";
-
+import { IoSettingsOutline } from "react-icons/io5";
 import { Common } from "@/contexts/reducers/common";
+import CInput from "../common/Input";
 
 export interface ISignupData {
   username: string;
@@ -202,7 +204,7 @@ export default function Navbar() {
 
       <Link href={"/settings"} as={"/settings"}>
         <div className='row'>
-          <PiUserCircleDuotone size={25} />
+          <IoSettingsOutline size={25} />
           <span className='text'>
             <span className='text_main'>Settings</span>
           </span>
@@ -220,10 +222,15 @@ export default function Navbar() {
   return (
     <>
       <nav className='nav_container'>
-        <div></div>
         <div>
-          <a href=''>Home</a>
-          <a href=''>Stats</a>
+          <h2>Numity</h2>
+        </div>
+        <div className='search_container'>
+          <CInput
+            prefix={<IoSearch />}
+            placeholder='Search Numity'
+            className='search'
+          />
         </div>
         <div className='signin'>
           {userSession ? (
@@ -232,6 +239,7 @@ export default function Navbar() {
                 <AiOutlinePlus />
                 Create
               </CButton>
+              <FaRegBell size={25} />
               <div className='user_icon'>
                 <Popover
                   placement='bottomRight'
