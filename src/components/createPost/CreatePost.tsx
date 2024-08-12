@@ -128,7 +128,9 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
           height={48}
         />
         {/* TODO  */}
-        <h3 className='heading02'>{user?.name || "user name"}</h3>
+        <h3 className='heading02'>
+          {user?.name || user?.username || "user name"}
+        </h3>
       </section>
       <section className='create_post_form'>
         <div className='inputArea'>

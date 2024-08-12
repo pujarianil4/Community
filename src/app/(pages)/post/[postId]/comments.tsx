@@ -58,8 +58,31 @@ export default function Comments() {
     }
   }, [commentsData]);
 
+  // const onComment = (newComment: IComment) => {
+  //   setComments((prev) => [newComment, ...(prev || [])]);
+  // };
   const onComment = (newComment: IComment) => {
-    setComments((prev) => [newComment, ...(prev || [])]);
+    if (newComment.pcid === null) {
+      // If it's a top-level comment, add it to the beginning of comments
+      setComments((prevComments) => [newComment, ...(prevComments || [])]);
+    } else {
+      // If it's a reply to an existing comment, find the parent and update
+      setComments((prevComments) => {
+        // Find the parent comment in the existing structure
+        const updatedComments = prevComments.map((comment) => {
+          if (comment.id === newComment.pcid) {
+            // Clone the parent comment and append the new reply
+            const updatedComment = {
+              ...comment,
+              comments: [...(comment.comments || []), newComment],
+            };
+            return updatedComment;
+          }
+          return comment;
+        });
+        return updatedComments;
+      });
+    }
   };
   return (
     <section className='comments'>
@@ -202,16 +225,17 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   user,
 }) => {
   const [commentBody, setCommentBody] = useState("");
-
+  console.log("USER_IN_INPUT", user);
   const handlePostComment = async () => {
     const postData: IPostCommentAPI = {
       uid: 8,
       content: commentBody,
-      // img: null,
+      img: null,
       pid: 1,
       pcid: parentComment?.id || null,
     };
     const response = await postComments(postData);
+    console.log("COMMENT_USER", response, user);
     // // refetch();
     const data: IComment = {
       id: response?.id,
@@ -255,7 +279,6 @@ const CommentInput: React.FC<ICommentInputProps> = ({
           Comment
         </CButton>
       </div>
-      {/* // <button onClick={() => handlePostComment()}>Comment</button> */}
     </div>
   );
 };

@@ -108,10 +108,10 @@ export default function Navbar() {
       } else {
         response = await handleLogIn({ sig: sign, msg });
       }
-      const userdata = await fetchUserById(response.uid);
+      const userdata = await fetchUserById(response?.uid);
       const user = {
         username: userdata.username,
-        name: userdata.name,
+        name: userdata?.name || "",
         uid: response?.uid || 0,
         token: response?.token || "",
         img: getImageSource(userdata?.img),
@@ -163,13 +163,14 @@ export default function Navbar() {
   const fetchUser = async () => {
     const value = localStorage?.getItem("userSession");
     const userData: any = value ? JSON.parse(value) : null;
+    console.log("FETCH", userData);
     if (userData?.uid) {
       const response = await fetchUserById(userData?.uid);
       const user = {
         username: response?.username,
         name: response?.name,
         uid: response?.id,
-        // token: response?.token || "",
+        token: userData?.token,
         img: getImageSource(response?.img),
       };
       dispatch(actions.setUserData(user));
@@ -293,11 +294,10 @@ const SignUpModal = ({
     }
   }, 500);
   const handleAuth = (isSignup: boolean = true) => {
-    if (!!usernameError || !signupData?.username || !signupData?.name) {
-      dispatch(actions.setWalletRoute("auth"));
-      openModal && openModal();
-      setIsSignup(isSignup);
-    }
+    console.log("IF_CALL");
+    dispatch(actions.setWalletRoute("auth"));
+    openModal && openModal();
+    setIsSignup(isSignup);
   };
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -317,6 +317,7 @@ const SignUpModal = ({
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
           type='text'
           placeholder='UserName'
+          value={signupData.username}
         />
         <p className='user_name_message'>{usernameError}</p>
         <CInput
@@ -325,6 +326,7 @@ const SignUpModal = ({
           }
           type='text'
           placeholder='Name (Optional)'
+          value={signupData.name}
         />
         <CButton
           disabled={

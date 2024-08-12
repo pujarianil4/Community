@@ -263,7 +263,7 @@ export const followApi = async (data: IFollowAPI) => {
   }
 };
 
-export const fetchComments = async () => {
+export const fetchComments = async (postId: string) => {
   try {
     const response = await api.get("/comments");
     return response.data;
