@@ -131,12 +131,12 @@ export default function UserHead() {
               {
                 key: "2",
                 label: "Followers",
-                content: <Followings uid={data.id} />,
+                content: <Followers uid={data.id} entityType='u' />,
               },
               {
                 key: "3",
                 label: "Followings",
-                content: <Followers uid={data.id} entityType='u' />,
+                content: <Followings uid={data.id} />,
               },
             ]}
           />

@@ -15,6 +15,7 @@ import FeedList from "../feedPost/feedList";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import Followers from "../userHead/followers/Followers";
+import Followings from "../userHead/Followings/Followings";
 
 export default function CommunityHead() {
   const { communityId } = useParams<{ communityId: string }>();
@@ -118,7 +119,11 @@ export default function CommunityHead() {
                 label: "Followers",
                 content: <Followers uid={data.id} entityType='c' />,
               },
-              { key: "3", label: "Voters", content: "This is tab3" },
+              {
+                key: "3",
+                label: "Voters",
+                content: <Followings uid={data.id} />,
+              },
             ]}
           />
         </div>

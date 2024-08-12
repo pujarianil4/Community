@@ -1,9 +1,17 @@
+@import "/src/styles";
 .main_panel_container {
   flex: 2;
   max-width: 700px;
-  min-width: 450px;
+  min-width: 410px;
   padding: 30px;
-  margin-left: 256px;
+  margin-left: 250px;
+  @media (width < 700px) {
+    margin-left: 200px;
+  }
+  @include lessThan(sm) {
+    margin-left: 0px;
+    padding: 10px;
+  }
 }
 .wraper {
   width: 100%;
