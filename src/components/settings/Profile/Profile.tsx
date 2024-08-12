@@ -7,20 +7,20 @@ import "./index.scss";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { fetchUser, fetchUserById, updateUser } from "@/services/api/api";
-import { User } from "@/utils/types/types";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
+import { IUser } from "@/utils/types/types";
 
 export default function Profile() {
   const [{}, [userData]] = useRedux([(state: RootState) => state.user]);
   const { isLoading, data, refetch, callFunction } = useAsync();
-  const [user, setUser] = useState<User>({
+  const [user, setUser] = useState<IUser>({
     username: "",
     name: "",
     img: "",
   });
-  const [originalUser, setOriginalUser] = useState<User>({
+  const [originalUser, setOriginalUser] = useState<IUser>({
     username: "",
     name: "",
     img: "",
@@ -58,7 +58,7 @@ export default function Profile() {
   };
 
   const handleSave = () => {
-    const updates: Partial<User> = {};
+    const updates: Partial<IUser> = {};
     if (user.username !== originalUser.username)
       updates.username = user.username;
     if (user.name !== originalUser.name) updates.name = user.name;

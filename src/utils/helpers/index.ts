@@ -45,7 +45,7 @@ export const debounce = (func: (...args: any[]) => void, delay: number) => {
   };
 };
 
-export const getImageSource = (logo: string) => {
+export const getImageSource = (logo: string | null) => {
   if (
     logo &&
     (logo.startsWith("http://") ||

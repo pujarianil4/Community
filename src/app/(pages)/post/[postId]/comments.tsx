@@ -1,200 +1,261 @@
 "use client";
 
-import { timeAgo } from "@/utils/helpers";
+import CButton from "@/components/common/Button";
+import TextArea from "@/components/common/textArea";
+import { RootState } from "@/contexts/store";
+import useAsync from "@/hooks/useAsync";
+import useRedux from "@/hooks/useRedux";
+import { fetchComments, postComments } from "@/services/api/api";
+import { getImageSource, timeAgo } from "@/utils/helpers";
+import { IComment, IPostCommentAPI, IUser } from "@/utils/types/types";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GoComment, GoShareAndroid } from "react-icons/go";
 import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 
-interface IUser {
-  username: string;
-  img: string;
-}
-
-interface IComment {
-  body: string;
-  id?: number;
-  comments: IComment[];
-  user: IUser;
-  cta: string;
-}
-
-const dummyComments: IComment[] = [
-  {
-    id: 1,
-    body: "this is comment 1",
-    comments: [],
-    user: {
-      username: "test45",
-      img: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-    },
-    cta: "2024-08-02T10:09:15.193Z",
-  },
-  {
-    id: 2,
-    body: "this is comment 2",
-    comments: [],
-    user: {
-      username: "test45",
-      img: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-    },
-    cta: "2024-08-02T10:09:15.193Z",
-  },
-  {
-    id: 3,
-    body: "this is comment 3",
-    comments: [],
-    user: {
-      username: "test45",
-      img: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-    },
-    cta: "2024-08-02T10:09:15.193Z",
-  },
-];
 export default function Comments() {
-  const [comments, setComments] = useState(dummyComments);
+  const userNameSelector = (state: RootState) => state?.user;
+  const { isLoading, data: commentsData } = useAsync(fetchComments);
+  const [comments, setComments] = useState<IComment[]>();
+  const [{}, [user]] = useRedux([userNameSelector]);
+
+  function organizeComments(comments: IComment[]): IComment[] {
+    const commentMap = new Map<number, IComment>();
+    const rootComments: IComment[] = [];
+
+    comments?.forEach((comment) => {
+      comment.comments = [];
+      commentMap.set(comment.id, comment);
+    });
+
+    comments?.forEach((comment) => {
+      const parentCommentId = comment.pcid;
+      if (parentCommentId !== null) {
+        const parentComment = commentMap.get(parentCommentId);
+        if (parentComment) {
+          if (!parentComment.comments) {
+            parentComment.comments = [];
+          }
+          parentComment.comments.push(comment);
+        } else {
+          console.warn(
+            `Parent comment ${parentCommentId} not found for comment ${comment.id}`
+          );
+        }
+      } else {
+        rootComments.push(comment);
+      }
+    });
+
+    return rootComments;
+  }
+
+  useEffect(() => {
+    if (commentsData) {
+      const updatedCommentsData = organizeComments(commentsData);
+      setComments(updatedCommentsData);
+    }
+  }, [commentsData]);
 
   const onComment = (newComment: IComment) => {
-    setComments((prev) => [newComment, ...prev]);
+    setComments((prev) => [newComment, ...(prev || [])]);
   };
   return (
     <section className='comments'>
-      {/* <UploadComponent limit={1} /> */}
-      <CommentInput onComment={onComment} />
-      <div className='comment_container'>
-        {comments?.map((comment, index) => (
-          <CommentItem key={index} comment={comment} />
-        ))}
-      </div>
+      <CommentInput onComment={onComment} user={user} />
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className='comment_container'>
+          {comments
+            ?.filter((comment: any) => comment?.pcid === null)
+            ?.sort(
+              (a: any, b: any) =>
+                new Date(b.cta).getTime() - new Date(a.cta).getTime()
+            )
+            ?.map((comment: any, index: number) => (
+              <CommentItem
+                key={index}
+                comment={comment}
+                //  refetch={refetch}
+              />
+            ))}
+        </div>
+      )}
     </section>
   );
 }
 
-interface ICommentItem {
+interface ICommentItemProps {
   comment: IComment;
+  // refetch?: any;
 }
-const CommentItem = ({ comment }: ICommentItem) => {
-  const [isreplying, setIsReplying] = useState(false);
-  const [comments, setComments] = useState(comment.comments);
 
-  const onComment = (newComment: IComment) => {
-    setComments((prev) => [newComment, ...prev]);
-  };
+const CommentItem: React.FC<ICommentItemProps> = React.memo(
+  ({
+    comment,
+    //  refetch
+  }) => {
+    const [isReplying, setIsReplying] = useState(false);
+    const [childComments, setChildComments] = useState<IComment[]>(
+      comment?.comments || []
+    );
 
-  const handleClick = (val: boolean) => {
-    setIsReplying(val);
-  };
+    const onComment = (newComment: IComment) => {
+      setChildComments((prevComments) => [newComment, ...prevComments]);
+    };
 
-  return (
-    <div className='comment_item'>
-      <div className='user_head'>
-        <Link
-          href={`u/${comment?.user.username}`}
-          as={`/u/${comment?.user.username}`}
-          className='community_logo'
-        >
-          <Image
-            src={comment?.user.img}
-            alt={comment?.user.username}
-            width={32}
-            height={32}
-          />
-        </Link>
-        <Link
-          href={`u/${comment?.user.username}`}
-          as={`/u/${comment?.user.username}`}
-          className='community_logo'
-        >
-          {comment?.user.username}
-        </Link>
-        <p className='post_time'>&bull; {timeAgo(comment?.cta)}</p>
-      </div>
-      {/* <span>{comment.body}</span> */}
-      <div className='content'>
-        {/* <div className='post_image'>
-              <Image
-                src='https://i.imgur.com/Qpw6j8D_d.webp?maxwidth=760&fidelity=grand'
-                loading='lazy'
-                alt='blog'
-                fill
-              />
-            </div> */}
-        <p>{comment?.body}</p>
-      </div>
+    const handleClick = (val: boolean) => {
+      setIsReplying(val);
+    };
 
-      <div className='actions'>
-        <div>
-          <PiArrowFatUpLight size={18} />
-          {/* <span>{comment?.up}</span> */}
-          <span>1</span>
-          <PiArrowFatDownLight size={18} />
+    return (
+      <div className='comment_item'>
+        {comment.pcid !== null && <div className='comment_line' />}
+        <div className='user_head'>
+          <Link
+            href={`u/${comment?.user.username}`}
+            as={`/u/${comment?.user.username}`}
+            className='community_logo'
+          >
+            <Image
+              src={getImageSource(comment?.user.img)}
+              alt={comment?.user.username}
+              width={32}
+              height={32}
+            />
+          </Link>
+          <Link
+            href={`u/${comment?.user.username}`}
+            as={`/u/${comment?.user.username}`}
+            className='community_logo'
+          >
+            {comment?.user.username}
+          </Link>
+          <p className='post_time'>&bull; {timeAgo(comment?.cta)}</p>
         </div>
-        {isreplying ? (
-          <div onClick={() => handleClick(false)}>
-            <span>Cancel</span>
+        <div className='content'>
+          <p>{comment?.content}</p>
+        </div>
+        <div className='actions'>
+          <div>
+            <PiArrowFatUpLight size={18} />
+            <span>{comment?.up}</span>
+            <PiArrowFatDownLight size={18} />
           </div>
-        ) : (
-          <div onClick={() => handleClick(true)}>
-            <GoComment size={18} />
-            <span>Reply</span>
+          {isReplying ? (
+            <div onClick={() => handleClick(false)}>
+              <span>Cancel</span>
+            </div>
+          ) : (
+            <div onClick={() => handleClick(true)}>
+              <GoComment size={18} />
+              <span>Reply</span>
+            </div>
+          )}
+          <div>
+            <GoShareAndroid size={18} />
+            <span>Share</span>
+          </div>
+        </div>
+        {isReplying && (
+          <CommentInput
+            onComment={onComment}
+            setIsReplying={setIsReplying}
+            parentComment={comment}
+            // refetch={refetch}
+            user={comment?.user}
+          />
+        )}
+        {childComments.length > 0 && (
+          <div className='nested_comments'>
+            {childComments.map((childComment) => (
+              <CommentItem
+                key={childComment.id}
+                comment={childComment}
+                // refetch={refetch}
+              />
+            ))}
           </div>
         )}
-        <div>
-          <GoShareAndroid size={18} />
-          <span>Share</span>
-        </div>
       </div>
+    );
+  }
+);
 
-      {/* {isreplying ? (
-        <button onClick={() => handleClick(false)}>cancel</button>
-      ) : (
-        <button onClick={() => handleClick(true)}>reply</button>
-      )} */}
+CommentItem.displayName = "CommentItem";
 
-      {isreplying && (
-        <CommentInput onComment={onComment} setIsReplying={setIsReplying} />
-      )}
-      <div className='nested_comments'>
-        {comments?.map((comment, index) => (
-          <CommentItem key={index} comment={comment} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-interface ICommentInput {
+interface ICommentInputProps {
   onComment: (newComment: IComment) => void;
-  setIsReplying?: any;
+  setIsReplying?: (val: boolean) => void;
+  parentComment?: IComment;
+  // refetch?: any;
+  user?: IUser;
 }
 
-const CommentInput = ({ onComment, setIsReplying }: ICommentInput) => {
+const CommentInput: React.FC<ICommentInputProps> = ({
+  onComment,
+  setIsReplying,
+  parentComment,
+  // refetch,
+  user,
+}) => {
   const [commentBody, setCommentBody] = useState("");
+
+  const handlePostComment = async () => {
+    const postData: IPostCommentAPI = {
+      uid: 8,
+      content: commentBody,
+      // img: null,
+      pid: 1,
+      pcid: parentComment?.id || null,
+    };
+    const response = await postComments(postData);
+    // // refetch();
+    const data: IComment = {
+      id: response?.id,
+      uid: response?.uid,
+      pid: response?.pid,
+      pcid: response?.pcid,
+      content: response?.content,
+      up: response?.up,
+      down: response?.down,
+      rCount: response?.rCount,
+      cta: response?.cta,
+      uta: response?.uta,
+      user: user as IUser,
+      parentComment: parentComment || null,
+      comments: [],
+    };
+    onComment(data);
+    setCommentBody("");
+    if (setIsReplying) setIsReplying(false);
+  };
+
   return (
     <div className='comment_input'>
-      <input
+      {/* <input
         value={commentBody}
         onChange={(event) => setCommentBody(event.target.value)}
-        placeholder='write your comment'
+        placeholder='Write your comment'
+      /> */}
+      <TextArea
+        content={commentBody}
+        setContent={setCommentBody}
+        placeholder='Write your comment'
       />
-      <button
-        onClick={() => {
-          onComment({
-            body: commentBody,
-            comments: [],
-            user: {
-              username: "test45",
-              img: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-            },
-            cta: "2024-08-02T10:09:15.193Z",
-          });
-          setCommentBody("");
-          setIsReplying(false);
-        }}
-      >
-        comment
-      </button>
+      <div>
+        <div>{/* TODO: add media icons */}</div>
+        <CButton
+          className='comment_btn'
+          disabled={commentBody === ""}
+          onClick={() => handlePostComment()}
+        >
+          Comment
+        </CButton>
+      </div>
+      {/* // <button onClick={() => handlePostComment()}>Comment</button> */}
     </div>
   );
 };
