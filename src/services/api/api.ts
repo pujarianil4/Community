@@ -167,11 +167,13 @@ export const createCommunity = async (data: any) => {
 export const fetchCommunityByCname = async (cName: string) => {
   try {
     const response = await api.get(`/community/cname/${cName}`);
-    const isFollowed = await isUserFollowed({
-      fwid: response?.data?.id,
-      type: "c",
-    });
-
+    let isFollowed = false;
+    if (response?.data?.id) {
+      isFollowed = await isUserFollowed({
+        fwid: response?.data?.id,
+        type: "c",
+      });
+    }
     return {
       ...response.data,
       isFollowed,
@@ -271,7 +273,7 @@ export const followApi = async (data: IFollowAPI) => {
 
 export const fetchComments = async (postId: string) => {
   try {
-    const response = await api.get("/comments");
+    const response = await api.get(`/comments/post/${postId}`);
     return response.data;
   } catch (error) {
     console.error("COMMENTS_ERROR: ", error);

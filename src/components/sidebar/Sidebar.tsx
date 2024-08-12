@@ -10,9 +10,14 @@ import { Button, Menu } from "antd";
 import { FiUpload } from "react-icons/fi";
 import "./index.scss";
 import CButton from "../common/Button";
-import { createCommunity, fetchCommunities } from "@/services/api/api";
+import {
+  createCommunity,
+  fetchCommunities,
+  fetchCommunityByCname,
+} from "@/services/api/api";
 import { RxHamburgerMenu } from "react-icons/rx";
 import useAsync from "@/hooks/useAsync";
+import { debounce } from "@/utils/helpers";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -201,11 +206,30 @@ const CreateCommunityModal = ({
     metadata: "",
     ticker: "",
   });
+  const [usernameError, setUsernameError] = useState<string>("");
   const { isLoading, callFunction, data } = useAsync();
   const fileRef = useRef<HTMLInputElement>(null);
   const onPickFile = (event: any) => {
     setImgSrc(URL.createObjectURL(event.target.files[0]));
   };
+  const debouncedCheckUsername = debounce(async (username: string) => {
+    try {
+      if (username == "") {
+        setUsernameError("");
+        return;
+      }
+      const community = await fetchCommunityByCname(username);
+      console.log("COMMUNITY", community);
+      const isAvailable = community?.username === username;
+      if (isAvailable) {
+        setUsernameError("Community already exists");
+      } else {
+        setUsernameError("Community is available");
+      }
+    } catch (error) {
+      setUsernameError("Error checking community availability");
+    }
+  }, 500);
   function checkWhitespace(str: string) {
     return /\s/.test(str);
   }
@@ -217,13 +241,15 @@ const CreateCommunityModal = ({
     const { name, value } = e.target;
     if (name == "username" && !checkWhitespace(value)) {
       console.log("form", name, value, !checkWhitespace(value));
-
+      debouncedCheckUsername(value);
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
     } else if (name != "username") {
       console.log("form2", name, value);
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
     }
   };
+
+  console.log("ERROR", usernameError);
 
   const handleCreateCommunity = async () => {
     try {
@@ -292,9 +318,15 @@ const CreateCommunityModal = ({
         />
       </div>
       <div className='btns'>
+        <p
+          className={`${
+            usernameError == "Community is available" ? "success" : "error"
+          }`}
+        >
+          {usernameError}
+        </p>
         <CButton onClick={handleCreateCommunity} loading={isLoading}>
-          {" "}
-          Create Community{" "}
+          Create Community
         </CButton>
       </div>
     </div>
