@@ -30,7 +30,7 @@ export const userSlice = createSlice({
       state.username = action.payload?.username;
       state.name = action.payload?.name;
       state.uid = action.payload?.uid;
-      state.token = action.payload?.token || userData?.token;
+      state.token = action.payload?.token;
       state.img = action.payload?.img;
     },
   },

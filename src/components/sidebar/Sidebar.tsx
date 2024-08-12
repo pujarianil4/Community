@@ -10,10 +10,15 @@ import { Button, Menu } from "antd";
 import { FiUpload } from "react-icons/fi";
 import "./index.scss";
 import CButton from "../common/Button";
-import { createCommunity, fetchCommunities } from "@/services/api/api";
+import {
+  createCommunity,
+  fetchCommunities,
+  fetchCommunityByCname,
+} from "@/services/api/api";
 import { RxHamburgerMenu } from "react-icons/rx";
 import useAsync from "@/hooks/useAsync";
 import NotificationMessage from "../common/Notification";
+import { debounce } from "@/utils/helpers";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -202,6 +207,7 @@ const CreateCommunityModal = ({
     ticker: "",
   });
 
+  const [usernameError, setUsernameError] = useState<string>("");
   const { isLoading, callFunction, data } = useAsync();
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -211,9 +217,28 @@ const CreateCommunityModal = ({
     }
   };
 
-  const checkWhitespace = (str: string) => {
+  const debouncedCheckUsername = debounce(async (username: string) => {
+    try {
+      if (username == "") {
+        setUsernameError("");
+        return;
+      }
+      const community = await fetchCommunityByCname(username);
+      console.log("COMMUNITY", community);
+      const isAvailable = community?.username === username;
+      if (isAvailable) {
+        setUsernameError("Community already exists");
+      } else {
+        setUsernameError("Community is available");
+      }
+    } catch (error) {
+      setUsernameError("Error checking community availability");
+    }
+  }, 500);
+
+  function checkWhitespace(str: string) {
     return /\s/.test(str);
-  };
+  }
 
   const handleForm = (
     e:
@@ -221,7 +246,9 @@ const CreateCommunityModal = ({
       | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if (name === "username" && !checkWhitespace(value)) {
+    if (name == "username" && !checkWhitespace(value)) {
+      console.log("form", name, value, !checkWhitespace(value));
+      debouncedCheckUsername(value);
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
     } else if (name !== "username") {
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
@@ -322,11 +349,17 @@ const CreateCommunityModal = ({
       </div>
       <div className='btns'>
         <CButton
+          disabled={!isFormValid()}
           onClick={handleCreateCommunity}
           loading={isLoading}
-          disabled={!isFormValid()}
         >
-          Create Community
+          <p
+            className={`${
+              usernameError == "Community is available" ? "success" : "error"
+            }`}
+          >
+            {usernameError}
+          </p>
         </CButton>
       </div>
     </div>

@@ -60,11 +60,17 @@ export const handleLogOut = async () => {
 
 export const handleSignup = async (
   username: string,
+  name: string,
   sig: string | undefined,
   msg: string
 ) => {
   try {
-    const response = await api.post("/auth/signup", { username, sig, msg });
+    const response = await api.post("/auth/signup", {
+      username,
+      name,
+      sig,
+      msg,
+    });
     console.log("==============userSignUp=================", response);
     setToLocalStorage("userSession", response.data);
     return response.data;
@@ -161,11 +167,13 @@ export const createCommunity = async (data: any) => {
 export const fetchCommunityByCname = async (cName: string) => {
   try {
     const response = await api.get(`/community/cname/${cName}`);
-    const isFollowed = await isUserFollowed({
-      fwid: response?.data?.id,
-      type: "c",
-    });
-
+    let isFollowed = false;
+    if (response?.data?.id) {
+      isFollowed = await isUserFollowed({
+        fwid: response?.data?.id,
+        type: "c",
+      });
+    }
     return {
       ...response.data,
       isFollowed,
@@ -213,7 +221,6 @@ export const getPostsByuName = async (uname: string) => {
 export const getPostsByPostId = async (postId: string) => {
   try {
     const response = await api.get(`/posts/${postId}`);
-    console.log("============Fetched Post=============", response.data);
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
@@ -223,7 +230,6 @@ export const getPostsByPostId = async (postId: string) => {
 export const patchPost = async (data: any) => {
   try {
     const response = await api.patch("/posts", data);
-    console.log("============Fetched all posts=============", response.data);
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
@@ -263,9 +269,9 @@ export const followApi = async (data: IFollowAPI) => {
   }
 };
 
-export const fetchComments = async () => {
+export const fetchComments = async (postId: string) => {
   try {
-    const response = await api.get("/comments");
+    const response = await api.get(`/comments/post/${postId}`);
     return response.data;
   } catch (error) {
     console.error("COMMENTS_ERROR: ", error);

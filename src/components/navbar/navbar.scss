@@ -65,7 +65,14 @@
     p {
       margin: 10px 0 0 10px;
       height: 16px;
+    }
+
+    .error {
       color: var(--error);
+    }
+
+    .success {
+      color: var(--success);
     }
   }
 
