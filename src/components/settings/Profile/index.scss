@@ -58,6 +58,19 @@
   .btns {
     margin: 10px 0px;
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
+    align-items: center;
+
+    p {
+      height: 16px;
+    }
+
+    .error {
+      color: var(--error);
+    }
+
+    .success {
+      color: var(--success);
+    }
   }
 }
