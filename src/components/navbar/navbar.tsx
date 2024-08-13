@@ -25,7 +25,12 @@ import {
 
 import CreatePost from "../createPost/CreatePost";
 import { RootState } from "@/contexts/store";
-import { debounce, getImageSource } from "@/utils/helpers";
+import {
+  debounce,
+  deleteClientSideCookie,
+  getImageSource,
+  setClientSideCookie,
+} from "@/utils/helpers";
 import Link from "next/link";
 import { setToLocalStorage } from "@/utils/helpers";
 import { sigMsg } from "@/utils/constants";
@@ -88,6 +93,7 @@ export default function Navbar() {
   const userLogout = async () => {
     try {
       const logout = await handleLogOut();
+      deleteClientSideCookie("authToken");
       setUserSession(null);
       const initialState: any = {
         username: "",
@@ -123,6 +129,7 @@ export default function Navbar() {
         token: response?.token || "",
         img: getImageSource(userdata?.img),
       };
+      setClientSideCookie("authToken", JSON.stringify(user));
       setToLocalStorage("userSession", user);
       dispatch(actions.setUserData(user));
       if (user?.token == "" || user.token == null || user.token == undefined) {

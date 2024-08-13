@@ -337,13 +337,14 @@ const CreateCommunityModal = ({
           onClick={handleCreateCommunity}
           loading={isLoading}
         >
-          <p
+          {/* <p
             className={`${
               usernameError == "Community is available" ? "success" : "error"
             }`}
           >
             {usernameError}
-          </p>
+          </p> */}
+          Create Community
         </CButton>
       </div>
     </div>

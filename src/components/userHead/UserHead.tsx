@@ -75,10 +75,10 @@ export default function UserHead() {
   };
   return (
     <>
-      {!data ? (
-        <UandCHeadLoader />
-      ) : (
-        <div className='user-head'>
+      <div className='user-head'>
+        {!data ? (
+          <UandCHeadLoader />
+        ) : (
           <div className='userhead_cotainer'>
             <div className='info'>
               <img
@@ -126,27 +126,27 @@ export default function UserHead() {
               </div>
             </div>
           </div>
-          <CTabs
-            items={[
-              {
-                key: "1",
-                label: "Posts",
-                content: <FeedList method='byUName' />,
-              },
-              {
-                key: "2",
-                label: "Followers",
-                content: <Followers uid={data.id} entityType='u' />,
-              },
-              {
-                key: "3",
-                label: "Followings",
-                content: <Followings uid={data.id} />,
-              },
-            ]}
-          />
-        </div>
-      )}
+        )}
+        <CTabs
+          items={[
+            {
+              key: "1",
+              label: "Posts",
+              content: <FeedList method='byUName' />,
+            },
+            {
+              key: "2",
+              label: "Followers",
+              content: <Followers uid={data?.id} entityType='u' />,
+            },
+            {
+              key: "3",
+              label: "Followings",
+              content: <Followings uid={data?.id} />,
+            },
+          ]}
+        />
+      </div>
     </>
   );
 }

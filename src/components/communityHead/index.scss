@@ -54,9 +54,9 @@
         text-overflow: ellipsis;
       }
       .followed {
-        background-color: transparent;
-        border: 1px solid var(--primary);
-        color: var(--primary);
+        background-color: transparent !important;
+        border: 1px solid var(--primary) !important;
+        color: var(--primary) !important;
       }
     }
   }

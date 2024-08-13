@@ -1,3 +1,18 @@
+import { parseCookies, setCookie, destroyCookie } from "nookies";
+
+export function setClientSideCookie(name: string, value: any) {
+  setCookie(null, name, value);
+}
+
+export function getClientSideCookie(name: string) {
+  const cookies = parseCookies();
+  return cookies[name];
+}
+
+export function deleteClientSideCookie(name: string) {
+  destroyCookie(null, name);
+}
+
 export const setToLocalStorage = (key: string, value: any) => {
   localStorage?.setItem(key, JSON.stringify(value));
 };

@@ -55,7 +55,7 @@ export default function FeedList({ method }: IFeedList) {
             <EmptyData />
           )
         ) : (
-          loadingArray.map(() => <FeedPostLoader />)
+          loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />)
         )}
       </div>
     </>

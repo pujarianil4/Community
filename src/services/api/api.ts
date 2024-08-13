@@ -83,10 +83,7 @@ export const handleSignup = async (
 export const fetchUserByUserName = async (username: string) => {
   try {
     const response = await api.get(`/users/uname/${username}`);
-    console.log(
-      "==========fetchUserByUserName successfully===========",
-      response.data
-    );
+
     return response.data;
   } catch (error) {
     console.error("FETCH_BY_NAME_ERROR", error);
@@ -96,7 +93,6 @@ export const fetchUserByUserName = async (username: string) => {
 export const handlePostToCommunity = async (data: any) => {
   try {
     const response = await api.post("/posts", data);
-    console.log("============Posted successfully=============", response);
   } catch (error) {
     console.error("POSTS_ERROR: ", error);
     throw error;
@@ -168,6 +164,7 @@ export const fetchCommunityByCname = async (cName: string) => {
   try {
     const response = await api.get(`/community/cname/${cName}`);
     let isFollowed = false;
+
     if (response?.data?.id) {
       isFollowed = await isUserFollowed({
         fwid: response?.data?.id,
@@ -315,6 +312,9 @@ export const isUserFollowed = async ({
   type: string;
 }) => {
   const uid = store.getState().user?.uid;
+
+  console.log("UID", uid);
+
   try {
     const response = await api.get(
       `/followers/isFollow/${uid}?fwid=${fwid}&typ=${type}`
