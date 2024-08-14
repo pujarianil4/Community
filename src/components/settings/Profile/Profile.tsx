@@ -79,7 +79,7 @@ export default function Profile() {
       const userData = {
         username: data.username,
         name: data.name,
-        img: getImageSource(user?.img),
+        img: getImageSource(data.img),
         desc: data?.desc,
       };
       setUser(userData);
@@ -123,7 +123,7 @@ export default function Profile() {
       const file = event.target.files[0];
       const imgURL = await uploadSingleFile(file);
       console.log("IMGURL", imgURL);
-
+      setUser({ ...user, img: imgURL?.url });
       //setImgSrc(imgURL);
     }
   };
@@ -133,7 +133,12 @@ export default function Profile() {
       <div className='avatar'>
         {/* <span className='label'>Avatar</span> */}
 
-        <img onError={setFallbackURL} src={user.img} alt='Avatar' />
+        <img
+          loading='lazy'
+          onError={setFallbackURL}
+          src={user?.img}
+          alt='Avatar'
+        />
         <div
           onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
           className='upload'

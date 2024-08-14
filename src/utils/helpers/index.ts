@@ -86,3 +86,64 @@ export function getRandomImageLink(): string {
   const randomIndex = Math.floor(Math.random() * imageUrls.length);
   return imageUrls[randomIndex];
 }
+
+export function getRandomPost(): string {
+  const imageUrls = [
+    "https://picsum.photos/300/300?random=1",
+    "https://picsum.photos/200/300?random=2",
+    "https://picsum.photos/300/300?random=3",
+    "https://picsum.photos/200/300?random=4",
+    "https://picsum.photos/300/300?random=5",
+    "https://www.w3schools.com/html/mov_bbb.mp4",
+    "https://www.w3schools.com/html/movie.mp4",
+    "https://media.w3.org/2010/05/sintel/trailer.mp4",
+    "https://media.w3.org/2010/05/bunny/movie.mp4",
+    "https://media.w3.org/2010/05/video/movie_300.mp4",
+    "https://media.w3.org/2010/05/video/movie.mp4",
+    "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
+    "https://samplelib.com/lib/preview/mp4/sample-10s.mp4",
+    "https://samplelib.com/lib/preview/mp4/sample-20s.mp4",
+    "https://filesamples.com/samples/video/mp4/sample_640x360.mp4",
+    "https://filesamples.com/samples/video/mp4/sample_960x540.mp4",
+    "https://filesamples.com/samples/video/mp4/sample_1280x720.mp4",
+    "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+    "https://media.w3.org/2010/05/bunny/trailer.mp4",
+  ];
+
+  const randomIndex = Math.floor(Math.random() * imageUrls.length);
+  return imageUrls[randomIndex];
+}
+
+export function identifyMediaType(url: string): "image" | "video" | "unknown" {
+  // Define common image and video extensions
+  const imageExtensions: string[] = [
+    "jpg",
+    "jpeg",
+    "png",
+    "gif",
+    "bmp",
+    "svg",
+    "webp",
+  ];
+  const videoExtensions: string[] = [
+    "mp4",
+    "webm",
+    "ogg",
+    "mov",
+    "avi",
+    "mkv",
+    "flv",
+  ];
+
+  // Extract the file extension from the URL
+  const extension: string =
+    url.split(".").pop()?.split(/\#|\?/)[0].toLowerCase() || "";
+
+  if (imageExtensions.includes(extension)) {
+    return "image";
+  } else if (videoExtensions.includes(extension)) {
+    return "video";
+  } else {
+    return "image";
+  }
+}

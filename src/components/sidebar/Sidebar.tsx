@@ -8,6 +8,7 @@ import { PiMegaphone } from "react-icons/pi";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { Button, Menu } from "antd";
 import { FiUpload } from "react-icons/fi";
+import { RiGalleryView } from "react-icons/ri";
 import "./index.scss";
 import CButton from "../common/Button";
 import {
@@ -70,6 +71,7 @@ const SideBar: React.FC = () => {
   const items: MenuItem[] = [
     { key: "", icon: <GoHome size={20} />, label: "Home" },
     { key: "popular", icon: <PiMegaphone size={20} />, label: "Popular" },
+    { key: "all", icon: <RiGalleryView size={20} />, label: "All" },
     {
       type: "divider",
     },
@@ -202,7 +204,7 @@ const CreateCommunityModal = ({
       const imgURL = await uploadSingleFile(file);
       console.log("IMGURL", imgURL);
 
-      //setImgSrc(imgURL);
+      setImgSrc(imgURL.url);
     }
   };
 

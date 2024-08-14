@@ -7,7 +7,7 @@ import Followers from "@/components/userHead/followers/Followers";
 
 export default function UserPage() {
   return (
-    <PageWraper hideRightPanel>
+    <PageWraper>
       <UserHead />
     </PageWraper>
   );

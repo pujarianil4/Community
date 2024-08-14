@@ -37,6 +37,7 @@ import { sigMsg } from "@/utils/constants";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Common } from "@/contexts/reducers/common";
 import CInput from "../common/Input";
+import Image from "next/image";
 
 export interface ISignupData {
   username: string;
@@ -201,7 +202,7 @@ export default function Navbar() {
         as={`/u/${userSession?.username}`}
       >
         <div className='row'>
-          <PiUserCircleDuotone size={25} />
+          <PiUserCircleDuotone size={28} />
           <span className='text'>
             <span className='text_main'>Profile</span>
             <span className='text_sub'>@{userSession?.username}</span>
@@ -253,7 +254,20 @@ export default function Navbar() {
                   content={content}
                   trigger='click'
                 >
-                  <PiUserCircleDuotone color='var(--primary-text)' size={40} />
+                  {userSession?.img ? (
+                    <Image
+                      width={40}
+                      height={40}
+                      className='avatar'
+                      src={userSession?.img}
+                      alt='avatar'
+                    />
+                  ) : (
+                    <PiUserCircleDuotone
+                      color='var(--primary-text)'
+                      size={40}
+                    />
+                  )}
                 </Popover>
               </div>
             </div>
