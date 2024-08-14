@@ -14,6 +14,7 @@ import {
   createCommunity,
   fetchCommunities,
   fetchCommunityByCname,
+  uploadSingleFile,
 } from "@/services/api/api";
 import { RxHamburgerMenu } from "react-icons/rx";
 import useAsync from "@/hooks/useAsync";
@@ -195,9 +196,13 @@ const CreateCommunityModal = ({
   const { isLoading, callFunction, data } = useAsync();
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const onPickFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onPickFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      setImgSrc(URL.createObjectURL(event.target.files[0]));
+      const file = event.target.files[0];
+      const imgURL = await uploadSingleFile(file);
+      console.log("IMGURL", imgURL);
+
+      //setImgSrc(imgURL);
     }
   };
 

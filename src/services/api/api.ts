@@ -295,6 +295,9 @@ export const linkAddress = async (payload: {
 };
 
 export const getAddressesByUserId = async (userId: string) => {
+  if (userId == "0") {
+    return null;
+  }
   try {
     const response = await api.get(`/users/address/${userId}`);
     return response.data;
@@ -332,6 +335,27 @@ export const UnFollowAPI = async (id: string) => {
     return response.data;
   } catch (error) {
     console.error("POSTS_ERROR: ", error);
+    throw error;
+  }
+};
+
+export const uploadSingleFile = async (file: File) => {
+  try {
+    // Create a new FormData instance
+    const formData = new FormData();
+
+    // Append the file to the form data
+    formData.append("file", file);
+
+    const response = await api.post("/upload/single", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log("File uploaded successfully", response.data);
+  } catch (error) {
+    console.error("Error uploading file", error);
     throw error;
   }
 };

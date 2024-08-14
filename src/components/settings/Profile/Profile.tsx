@@ -2,7 +2,7 @@
 import CButton from "@/components/common/Button";
 import { FiUpload } from "react-icons/fi";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./index.scss";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +11,7 @@ import {
   fetchUserById,
   fetchUserByUserName,
   updateUser,
+  uploadSingleFile,
 } from "@/services/api/api";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
@@ -24,6 +25,7 @@ export default function Profile() {
   const [isLoadingUpadte, setIsLoadingUpdate] = useState(false);
   const [usernameError, setUsernameError] = useState<string>("");
   const { isLoading, data, refetch, callFunction } = useAsync();
+  const fileRef = useRef<HTMLInputElement>(null);
   const [user, setUser] = useState<IUser>({
     username: "",
     name: "",
@@ -116,14 +118,35 @@ export default function Profile() {
     }
   };
 
+  const onPickFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      const imgURL = await uploadSingleFile(file);
+      console.log("IMGURL", imgURL);
+
+      //setImgSrc(imgURL);
+    }
+  };
+
   return (
     <div className='profile_container'>
       <div className='avatar'>
         {/* <span className='label'>Avatar</span> */}
 
         <img onError={setFallbackURL} src={user.img} alt='Avatar' />
-        <div className='upload'>
+        <div
+          onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
+          className='upload'
+        >
           <FiUpload size={20} />
+          <input
+            ref={fileRef}
+            onChange={onPickFile}
+            type='file'
+            accept='image/*'
+            name='img'
+            style={{ visibility: "hidden" }}
+          />
         </div>
       </div>
       <div className='info'>
