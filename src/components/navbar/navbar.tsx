@@ -258,6 +258,7 @@ export default function Navbar() {
                     <Image
                       width={40}
                       height={40}
+                      loading='lazy'
                       className='avatar'
                       src={userSession?.img}
                       alt='avatar'
