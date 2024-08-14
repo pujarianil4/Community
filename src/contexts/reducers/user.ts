@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { parseCookies } from "nookies";
 
 export interface User {
   username: string;
@@ -8,9 +9,10 @@ export interface User {
   token?: string;
   img: string;
 }
+const cookies = parseCookies();
+const auth = cookies?.authToken;
 
-const value = localStorage?.getItem("userSession");
-const userData: any = value ? JSON.parse(value) : null;
+const userData: any = auth;
 //TODO update Later
 const initialState: User = {
   username: userData?.username || "",

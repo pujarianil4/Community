@@ -46,6 +46,10 @@
     }
 
     .user_icon {
+      .avatar {
+        border-radius: 50%;
+        border: 1px solid var(--primary-text);
+      }
       svg {
         cursor: pointer;
       }

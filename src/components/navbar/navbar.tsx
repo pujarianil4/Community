@@ -25,13 +25,19 @@ import {
 
 import CreatePost from "../createPost/CreatePost";
 import { RootState } from "@/contexts/store";
-import { debounce, getImageSource } from "@/utils/helpers";
+import {
+  debounce,
+  deleteClientSideCookie,
+  getImageSource,
+  setClientSideCookie,
+} from "@/utils/helpers";
 import Link from "next/link";
 import { setToLocalStorage } from "@/utils/helpers";
 import { sigMsg } from "@/utils/constants";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Common } from "@/contexts/reducers/common";
 import CInput from "../common/Input";
+import Image from "next/image";
 
 export interface ISignupData {
   username: string;
@@ -88,6 +94,7 @@ export default function Navbar() {
   const userLogout = async () => {
     try {
       const logout = await handleLogOut();
+      deleteClientSideCookie("authToken");
       setUserSession(null);
       const initialState: any = {
         username: "",
@@ -123,6 +130,7 @@ export default function Navbar() {
         token: response?.token || "",
         img: getImageSource(userdata?.img),
       };
+      setClientSideCookie("authToken", JSON.stringify(user));
       setToLocalStorage("userSession", user);
       dispatch(actions.setUserData(user));
       if (user?.token == "" || user.token == null || user.token == undefined) {
@@ -194,7 +202,7 @@ export default function Navbar() {
         as={`/u/${userSession?.username}`}
       >
         <div className='row'>
-          <PiUserCircleDuotone size={25} />
+          <PiUserCircleDuotone size={28} />
           <span className='text'>
             <span className='text_main'>Profile</span>
             <span className='text_sub'>@{userSession?.username}</span>
@@ -246,7 +254,21 @@ export default function Navbar() {
                   content={content}
                   trigger='click'
                 >
-                  <PiUserCircleDuotone color='var(--primary-text)' size={40} />
+                  {userSession?.img ? (
+                    <Image
+                      width={40}
+                      height={40}
+                      loading='lazy'
+                      className='avatar'
+                      src={userSession?.img}
+                      alt='avatar'
+                    />
+                  ) : (
+                    <PiUserCircleDuotone
+                      color='var(--primary-text)'
+                      size={40}
+                    />
+                  )}
                 </Popover>
               </div>
             </div>

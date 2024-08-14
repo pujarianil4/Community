@@ -6,7 +6,14 @@ import { GoComment, GoShareAndroid } from "react-icons/go";
 import Image from "next/image";
 import { patchPost } from "@/services/api/api";
 import Link from "next/link";
-import { getImageSource, getRandomImageLink, timeAgo } from "@/utils/helpers";
+import {
+  getImageSource,
+  getRandomImageLink,
+  getRandomPost,
+  identifyMediaType,
+  timeAgo,
+} from "@/utils/helpers";
+import CVideo from "../common/Video";
 
 interface IProps {
   post: any;
@@ -23,6 +30,10 @@ export default function FeedPost({ post }: IProps) {
   const handleDown = async () => {
     await patchPost({ up: down + 1 });
   };
+  const mediaURL = getRandomPost();
+
+  console.log("media", mediaURL);
+
   return (
     <div className='postcard_container'>
       <div className='user_head'>
@@ -63,8 +74,18 @@ export default function FeedPost({ post }: IProps) {
         <div className='content'>
           <p>{text}</p>
           <div className='postMedia'>
-            <img className='imgbg' src={getRandomImageLink()} alt='postbg' />
-            <img src={getRandomImageLink()} alt='post' />
+            <img
+              loading='lazy'
+              className='imgbg'
+              src={getRandomImageLink()}
+              alt='postbg'
+            />
+            {identifyMediaType(mediaURL) == "image" && (
+              <img className='media' src={mediaURL} alt='post' />
+            )}
+            {identifyMediaType(mediaURL) == "video" && (
+              <CVideo src={mediaURL} />
+            )}
           </div>
         </div>
       </Link>

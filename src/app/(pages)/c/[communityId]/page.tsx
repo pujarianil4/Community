@@ -6,7 +6,7 @@ import React from "react";
 
 export default function CommuityPage() {
   return (
-    <PageWraper hideRightPanel>
+    <PageWraper>
       <CommunityHead />
     </PageWraper>
   );
