@@ -11,6 +11,7 @@ const nextConfig = {
       "i.imgur.com",
       "cdn-icons-png.freepik.com",
       "picsum.photos",
+      "testcommunity.s3.ap-south-1.amazonaws.com",
     ],
   },
   env: {

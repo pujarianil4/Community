@@ -1,3 +1,5 @@
+import { getClientSideCookie } from "@/utils/helpers";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Button } from "antd";
 import React from "react";
 import "./index.scss";
@@ -20,12 +22,23 @@ export default function CButton({
   loading,
   disabled,
 }: ICButton) {
+  const { openConnectModal } = useConnectModal();
+  const handleAction = () => {
+    const user = getClientSideCookie("authToken");
+
+    if (!user) {
+      openConnectModal?.();
+    } else {
+      onClick?.();
+    }
+  };
+
   return (
     <Button
       loading={loading}
       disabled={disabled}
       style={{ fontSize: `${size}px` }}
-      onClick={onClick}
+      onClick={handleAction}
       className={`CButton ${className}`}
     >
       {children}

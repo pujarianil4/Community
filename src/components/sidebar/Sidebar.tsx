@@ -13,12 +13,14 @@ import { FcAbout } from "react-icons/fc";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import { PiGlobeStand } from "react-icons/pi";
 import { MdOutlineTopic, MdContentPaste } from "react-icons/md";
+import { RiGalleryView } from "react-icons/ri";
 import "./index.scss";
 import CButton from "../common/Button";
 import {
   createCommunity,
   fetchCommunities,
   fetchCommunityByCname,
+  uploadSingleFile,
 } from "@/services/api/api";
 import { RxHamburgerMenu } from "react-icons/rx";
 import useAsync from "@/hooks/useAsync";
@@ -102,6 +104,7 @@ const SideBar: React.FC = () => {
   const items: MenuItem[] = [
     { key: "", icon: <GoHome size={20} />, label: "Home" },
     { key: "popular", icon: <PiMegaphone size={20} />, label: "Popular" },
+    { key: "all", icon: <RiGalleryView size={20} />, label: "All" },
     {
       type: "divider",
     },
@@ -234,9 +237,13 @@ const CreateCommunityModal = ({
   const { isLoading, callFunction, data } = useAsync();
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const onPickFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onPickFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      setImgSrc(URL.createObjectURL(event.target.files[0]));
+      const file = event.target.files[0];
+      const imgURL = await uploadSingleFile(file);
+      console.log("IMGURL", imgURL);
+
+      setImgSrc(imgURL.url);
     }
   };
 
@@ -376,13 +383,14 @@ const CreateCommunityModal = ({
           onClick={handleCreateCommunity}
           loading={isLoading}
         >
-          <p
+          {/* <p
             className={`${
               usernameError == "Community is available" ? "success" : "error"
             }`}
           >
             {usernameError}
-          </p>
+          </p> */}
+          Create Community
         </CButton>
       </div>
     </div>
