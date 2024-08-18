@@ -141,7 +141,7 @@ export const updateUser = async (payload: Partial<IUser>) => {
 
 export const fetchCommunities = async () => {
   try {
-    const response = await api.get("/community");
+    const response = await api.get("/community?page=1&limit=20");
 
     return response.data;
   } catch (error) {
@@ -184,7 +184,7 @@ export const fetchCommunityByCname = async (cName: string) => {
 
 export const getPosts = async () => {
   try {
-    const response = await api.get("/posts");
+    const response = await api.get("/posts?page=1&limit=20");
     console.log("============Fetched all posts=============", response.data);
     return response.data;
   } catch (error) {
@@ -206,7 +206,7 @@ export const getPostsBycName = async (cname: string) => {
 
 export const getPostsByuName = async (uname: string) => {
   try {
-    const response = await api.get(`/posts/uname/${uname}`);
+    const response = await api.get(`/posts/username/${uname}?page=1&limit=20`);
     console.log("============Fetched all posts=============", response.data);
     return response.data;
   } catch (error) {
@@ -268,7 +268,7 @@ export const followApi = async (data: IFollowAPI) => {
 
 export const fetchComments = async (postId: string) => {
   try {
-    const response = await api.get(`/comments/post/${postId}`);
+    const response = await api.get(`/comments/post/${postId}?page=1&limit=100`);
     return response.data;
   } catch (error) {
     console.error("COMMENTS_ERROR: ", error);
