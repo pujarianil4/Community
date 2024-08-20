@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, memo } from "react";
+import dynamic from "next/dynamic";
 import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
 import { MdDeleteOutline, MdOutlineGifBox } from "react-icons/md";
@@ -21,8 +22,12 @@ import { getImageSource } from "@/utils/helpers";
 import { ErrorType, ICommunity } from "@/utils/types/types";
 import NotificationMessage from "../common/Notification";
 import CButton from "../common/Button";
-import RichTextEditor from "../common/richTextEditor";
+// import RichTextEditor from "../common/richTextEditor";
 // import SkeltonLoader from "./skeltonLoader";
+
+const RichTextEditor = dynamic(() => import("../common/richTextEditor"), {
+  ssr: false,
+});
 
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
