@@ -12,4 +12,4 @@ function SettingsPage() {
   );
 }
 
-export default PrivateRoute(SettingsPage);
+export default SettingsPage;

@@ -12,7 +12,7 @@ function PrivateRoute<P extends React.JSX.IntrinsicAttributes>(
   const WrappedComponent: React.FC<P> = (props) => {
     const cookies = parseCookies();
     const token = cookies["authToken"];
-    console.log("Toekn", token);
+
     const router = useRouter();
     if (!token) {
       router.push("/");

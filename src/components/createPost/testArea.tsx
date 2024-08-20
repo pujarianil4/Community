@@ -17,15 +17,14 @@ export default function TestArea({ content, setContent }: TestAreaProps) {
 
     if (input) {
       // Update the content
-      input.innerHTML = content;
-
-      // Move cursor to the end
-      const range = document.createRange();
-      const selection = window.getSelection();
-      range.selectNodeContents(input);
-      range.collapse(false); // Collapse the range to the end
-      selection?.removeAllRanges();
-      selection?.addRange(range);
+      // input.innerHTML = content;
+      // // Move cursor to the end
+      // const range = document.createRange();
+      // const selection = window?.getSelection();
+      // range.selectNodeContents(input);
+      // range.collapse(false); // Collapse the range to the end
+      // selection?.removeAllRanges();
+      // selection?.addRange(range);
     }
   }, [content]);
 

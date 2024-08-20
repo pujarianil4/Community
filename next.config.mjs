@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  output: "export",
   images: {
     domains: [
       "localhost",
@@ -14,6 +15,7 @@ const nextConfig = {
       "testcommunity.s3.ap-south-1.amazonaws.com",
       "testcommunity.s3.amazonaws.com",
     ],
+    unoptimized: true,
   },
   env: {
     BASE_API_URL: process.env.BASE_API_URL,

@@ -130,8 +130,10 @@ export default function Navbar() {
         token: response?.token || "",
         img: userdata?.img,
       };
+      console.log("auth", user);
+
       setClientSideCookie("authToken", JSON.stringify(user));
-      setToLocalStorage("userSession", user);
+      // setToLocalStorage("userSession", user);
       dispatch(actions.setUserData(user));
       if (user?.token == "" || user.token == null || user.token == undefined) {
         setUserSession(null);
@@ -273,7 +275,9 @@ export default function Navbar() {
               </div>
             </div>
           ) : (
-            <CButton onClick={showModal}>LogIn</CButton>
+            <CButton auth={true} onClick={showModal}>
+              LogIn
+            </CButton>
           )}
 
           {/* <ConnectButton /> */}
