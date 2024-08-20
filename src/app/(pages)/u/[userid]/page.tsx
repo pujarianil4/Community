@@ -5,8 +5,7 @@ import CTabs from "@/components/common/Tabs";
 import FeedList from "@/components/feedPost/feedList";
 import Followers from "@/components/userHead/followers/Followers";
 
-export default function UserPage({ params }: any) {
-  const { userId } = params;
+export default function UserPage() {
   return (
     <PageWraper>
       <UserHead />

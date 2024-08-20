@@ -26,15 +26,24 @@ export default function UserHead() {
     userNameSelector,
     refetchRoute,
   ]);
-  const { isLoading, data, refetch } = useAsync(fetchUser, userId);
+  const {
+    isLoading,
+    data,
+    error,
+    callFunction: callBack,
+  } = useAsync(fetchUser, userId);
   const [isSelf, setIsSelf] = useState<boolean>(user.uid === data?.id);
   const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
+
+  useEffect(() => {
+    callBack(fetchUser, userId);
+  }, [userId]);
 
   useEffect(() => {
     setIsFollowed(data?.isFollowed);
 
     if (refetchData?.user == true) {
-      refetch();
+      callBack(fetchUser, userId);
       dispatch(actions.resetRefetch());
     }
 

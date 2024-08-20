@@ -100,6 +100,9 @@ export const handlePostToCommunity = async (data: any) => {
 };
 
 export const fetchUser = async (username: string) => {
+  if (!username) {
+    return null;
+  }
   try {
     const response = await api.get(`/users/uname/${username}`);
     const isFollowed = await isUserFollowed({
@@ -161,6 +164,9 @@ export const createCommunity = async (data: any) => {
 };
 
 export const fetchCommunityByCname = async (cName: string) => {
+  if (!cName) {
+    return null;
+  }
   try {
     const response = await api.get(`/community/cname/${cName}`);
     let isFollowed = false;
@@ -195,7 +201,9 @@ export const getPosts = async () => {
 
 export const getPostsBycName = async (cname: string) => {
   try {
-    const response = await api.get(`/posts/community/cname/${cname}`);
+    const response = await api.get(
+      `/posts/community/cname/${cname}?page=1&limit=20`
+    );
     console.log("============Fetched all posts=============", response.data);
     return response.data;
   } catch (error) {
