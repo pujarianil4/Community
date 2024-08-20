@@ -43,7 +43,7 @@ export const handleLogIn = async (payload: {
   const response = await api.post("/auth/login", payload);
 
   console.log("LOGIN_RES", response);
-  setToLocalStorage("userSession", response.data);
+  // setToLocalStorage("userSession", response.data);
   return response.data;
 };
 
@@ -51,7 +51,7 @@ export const handleLogOut = async () => {
   try {
     const response = await api.patch("/auth/logout");
 
-    removeFromLocalStorage("userSession");
+    // removeFromLocalStorage("userSession");
     return response.data;
   } catch (error) {
     throw error;
@@ -72,7 +72,7 @@ export const handleSignup = async (
       msg,
     });
     console.log("==============userSignUp=================", response);
-    setToLocalStorage("userSession", response.data);
+    // setToLocalStorage("userSession", response.data);
     return response.data;
   } catch (error) {
     console.error("SIGNUP_ERROR ", error);
@@ -290,7 +290,7 @@ export const linkAddress = async (payload: {
   const response = await api.post("/users/address", payload);
 
   console.log("LOGIN_RES", response);
-  setToLocalStorage("userSession", response.data);
+  // setToLocalStorage("userSession", response.data);
   return response.data;
 };
 

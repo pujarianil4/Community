@@ -6,6 +6,8 @@ import "../styles/index.scss";
 import "../styles/antd.scss";
 import { Providers } from "./providers";
 import Navbar from "@/components/navbar/navbar";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body suppressHydrationWarning className={`${inter.className} dark`}>
-        <Providers>{children}</Providers>
+        <Suspense fallback={<Loading />}>
+          <Providers>{children}</Providers>
+        </Suspense>
       </body>
     </html>
   );

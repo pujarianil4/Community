@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef, memo } from "react";
 import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
 import { MdDeleteOutline, MdOutlineGifBox } from "react-icons/md";
-import TestArea from "./testArea";
 import {
   fetchCommunities,
   getPosts,
@@ -29,7 +28,7 @@ interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Img: React.FC<{
+export const Img: React.FC<{
   file: File;
   onRemove: (index: number) => void;
   index: number;
@@ -173,7 +172,6 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   // };
 
   const handleUploadFile = async (file: any) => {
-    console.log("FILE_DATA", file[0]);
     setPics([file[0]]);
     try {
       const uploadedFile = await uploadSingleFile(file[0]);

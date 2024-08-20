@@ -1,9 +1,10 @@
 import React from "react";
 import CTabs from "../common/Tabs";
+import PrivateRoute from "../Wrapers/PrivateRoute";
 import General from "./General/General";
 import Profile from "./Profile/Profile";
 
-export default function Settings() {
+function Setting() {
   const tabsList = [
     {
       label: "Account",
@@ -39,3 +40,5 @@ export default function Settings() {
     </div>
   );
 }
+
+export default Setting;

@@ -1,4 +1,5 @@
 "use client";
+// @ts-nocheck
 import { getSignMessage } from "@/config/ethers";
 import { useAccount } from "wagmi";
 // import { useSigner } from 'wagmi';
@@ -9,7 +10,6 @@ import { useDisconnect } from "wagmi";
 import { PiUserCircleDuotone } from "react-icons/pi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { IoLogOutOutline } from "react-icons/io5";
-import { CiSearch } from "react-icons/ci";
 import "./navbar.scss";
 import CButton from "../common/Button";
 import { FaRegBell } from "react-icons/fa6";
@@ -32,10 +32,10 @@ import {
   setClientSideCookie,
 } from "@/utils/helpers";
 import Link from "next/link";
-import { setToLocalStorage } from "@/utils/helpers";
+
 import { sigMsg } from "@/utils/constants";
 import { IoSettingsOutline } from "react-icons/io5";
-import { Common } from "@/contexts/reducers/common";
+
 import CInput from "../common/Input";
 import Image from "next/image";
 
@@ -130,8 +130,10 @@ export default function Navbar() {
         token: response?.token || "",
         img: userdata?.img,
       };
+      console.log("auth", user);
+
       setClientSideCookie("authToken", JSON.stringify(user));
-      setToLocalStorage("userSession", user);
+      // setToLocalStorage("userSession", user);
       dispatch(actions.setUserData(user));
       if (user?.token == "" || user.token == null || user.token == undefined) {
         setUserSession(null);
@@ -156,8 +158,6 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    console.log("userEffect", user, common);
-
     if (user?.token == "" || user.token == null || user.token == undefined) {
       setUserSession(null);
     } else {
@@ -175,25 +175,25 @@ export default function Navbar() {
   }, [userAccount.isConnected, user]);
 
   // fetch user details after refresh
-  const fetchUser = async () => {
-    const value = localStorage?.getItem("userSession");
-    const userData: any = value ? JSON.parse(value) : null;
+  // const fetchUser = async () => {
+  //   const value = localStorage?.getItem("userSession");
+  //   const userData: any = value ? JSON.parse(value) : null;
 
-    if (userData?.uid) {
-      const response = await fetchUserById(userData?.uid);
-      const user = {
-        username: response?.username,
-        name: response?.name,
-        uid: response?.id,
-        token: userData?.token,
-        img: getImageSource(response?.img),
-      };
-      dispatch(actions.setUserData(user));
-    }
-  };
-  useEffect(() => {
-    // fetchUser();
-  }, []);
+  //   if (userData?.uid) {
+  //     const response = await fetchUserById(userData?.uid);
+  //     const user = {
+  //       username: response?.username,
+  //       name: response?.name,
+  //       uid: response?.id,
+  //       token: userData?.token,
+  //       img: getImageSource(response?.img),
+  //     };
+  //     dispatch(actions.setUserData(user));
+  //   }
+  // };
+  // useEffect(() => {
+  //   // fetchUser();
+  // }, []);
 
   const content = (
     <div className='user_popover'>
@@ -226,6 +226,8 @@ export default function Navbar() {
       </div>
     </div>
   );
+
+  // return <></>;
 
   return (
     <>
@@ -273,10 +275,10 @@ export default function Navbar() {
               </div>
             </div>
           ) : (
-            <CButton onClick={showModal}>LogIn</CButton>
+            <CButton auth={true} onClick={showModal}>
+              LogIn
+            </CButton>
           )}
-
-          {/* <ConnectButton /> */}
         </div>
       </nav>
       <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
