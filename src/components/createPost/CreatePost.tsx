@@ -200,7 +200,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
             setSearchTerm={setSearchTerm}
           />
           {/* <TestArea content={content} setContent={setContent} /> */}
-          <RichTextEditor setContent={setContent} />
+          {/* <RichTextEditor showToolbar={false} setContent={setContent} /> */}
           <div className='file_container'>
             {pics?.map((picFile, index) => (
               <Img

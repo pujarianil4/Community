@@ -1,15 +1,15 @@
 "use client";
-import PrivateRoute from "@/components/Wrapers/PrivateRoute";
-import Settings from "@/components/settings/Settings";
+
 import PageWraper from "@/components/Wrapers/PageWraper";
 import React from "react";
 
-function SettingsPage() {
+function Settings() {
   return (
-    <PageWraper hideRightPanel>
-      <Settings />
+    <PageWraper>
+      {/* <Settings /> */}
+      <></>
     </PageWraper>
   );
 }
 
-export default SettingsPage;
+export default Settings;

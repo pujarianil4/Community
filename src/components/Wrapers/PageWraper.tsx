@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import Wraper from "./wraper";
-import LeftPanel from "../leftPanel/LeftPanel";
+
 import MainPanel from "./mainPanel";
 import Navbar from "../navbar/navbar";
 import RightPanel from "../rightPanel/RightPanel";
@@ -19,10 +19,9 @@ export default function PageWraper({
     <div className='pagewraper'>
       <Navbar />
       <Wraper>
-        {/* <LeftPanel /> */}
         <SideBar />
         <MainPanel>{children}</MainPanel>
-        {!hideRightPanel && <RightPanel />}
+        {/* {!hideRightPanel && <RightPanel />} */}
       </Wraper>
     </div>
   );
