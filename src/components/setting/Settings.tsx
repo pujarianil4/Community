@@ -4,7 +4,7 @@ import PrivateRoute from "../Wrapers/PrivateRoute";
 import General from "./General/General";
 import Profile from "./Profile/Profile";
 
-function Settings() {
+function Setting() {
   const tabsList = [
     {
       label: "Account",
@@ -41,4 +41,4 @@ function Settings() {
   );
 }
 
-export default PrivateRoute(Settings);
+export default Setting;
