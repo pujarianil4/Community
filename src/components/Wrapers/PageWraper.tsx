@@ -21,7 +21,7 @@ export default function PageWraper({
       <Wraper>
         <SideBar />
         <MainPanel>{children}</MainPanel>
-        {/* {!hideRightPanel && <RightPanel />} */}
+        {!hideRightPanel && <RightPanel />}
       </Wraper>
     </div>
   );
