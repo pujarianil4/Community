@@ -11,9 +11,9 @@ import FeedList from "@/components/feedPost/feedList";
 export default function Home() {
   return (
     <main>
-      {/* <PageWraper>
+      <PageWraper>
         <FeedList method='allPosts' />
-      </PageWraper> */}
+      </PageWraper>
     </main>
   );
 }
