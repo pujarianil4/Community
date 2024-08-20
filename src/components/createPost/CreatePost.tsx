@@ -29,7 +29,7 @@ interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Img: React.FC<{
+export const Img: React.FC<{
   file: File;
   onRemove: (index: number) => void;
   index: number;
@@ -137,10 +137,10 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
       // const uploadedFiles = await Promise.all(
       //   filesArray?.map((file) => uploadMultipleFile(file))
       // );
-      const uploadedFiles = await uploadMultipleFile(filesArray);
+      // const uploadedFiles = await uploadMultipleFile(filesArray);
 
-      setPics((prevPics) => [...prevPics, ...filesArray]);
-      console.log("Uploaded files:", uploadedFiles);
+      // setPics((prevPics) => [...prevPics, ...filesArray]);
+      // console.log("Uploaded files:", uploadedFiles);
     } catch (error) {
       console.error("Error uploading files", error);
       NotificationMessage("error", "Error uploading files");

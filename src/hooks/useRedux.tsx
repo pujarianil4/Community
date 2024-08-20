@@ -38,8 +38,10 @@ export default function useRedux<T>(selectors?: any): [UseReduxHook, any] {
     // Add other actions here if needed
   };
 
+  // const selectedStates =
+  //   selectors?.map((selector: any) => useSelector(selector)) || [];
   const selectedStates =
-    selectors?.map((selector: any) => useSelector(selector)) || [];
+    selectors?.map((selector: any) => selector(store.getState())) || [];
 
   return [{ dispatch, actions }, selectedStates];
 }

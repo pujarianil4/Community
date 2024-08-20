@@ -13,8 +13,8 @@ export default function RightPanel() {
         <span className='title'>Recent Posts</span>
         {Array(3)
           .fill(() => 0)
-          .map(() => (
-            <Post />
+          .map((_, i: number) => (
+            <Post key={i} />
           ))}
       </div>
     </div>
