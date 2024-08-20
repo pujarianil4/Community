@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, memo } from "react";
 import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
 import { MdOutlineGifBox } from "react-icons/md";
-import TestArea from "./testArea";
+
 import {
   fetchCommunities,
   getPosts,

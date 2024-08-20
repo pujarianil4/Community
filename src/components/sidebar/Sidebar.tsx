@@ -191,7 +191,7 @@ const SideBar: React.FC = () => {
       <div className={`sidebar_container ${isOpen && "open"}`}>
         <Menu
           defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["community"]}
+          defaultOpenKeys={["community", "categories"]}
           mode='inline'
           theme='dark'
           onClick={onClick}
