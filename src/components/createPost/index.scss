@@ -33,7 +33,7 @@
       flex: 1;
       // height: 464px;
       height: fit-content;
-
+      min-height: 400px;
       margin-top: 16px;
 
       textarea {
@@ -98,18 +98,19 @@
         }
       }
 
-      .postbtn {
-        button {
-          padding: 7px 15px;
-          background-color: var(--primary);
-          border: 0px;
-          border-radius: 5px;
-          color: var(--primary-text);
-          font-weight: 500;
-          font-size: 13px;
-          cursor: pointer;
-        }
+      button {
+        padding: 7px 15px;
+        background-color: var(--primary);
+        border: 0px;
+        border-radius: 5px;
+        color: var(--primary-text);
+        font-weight: 500;
+        font-size: 13px;
+        cursor: pointer;
       }
+    }
+    .fr-element {
+      min-height: 172px;
     }
   }
 
@@ -117,9 +118,8 @@
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
-    // min-height: 95px;
+    min-height: 95px;
     margin: 12px 0px;
-    height: 150px;
   }
   .file {
     position: relative;
@@ -139,7 +139,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: var(--black);
+      // background-color: var(--black);
       color: var(--white);
       border-radius: 50%;
       cursor: pointer;

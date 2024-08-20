@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, memo } from "react";
 import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
-import { MdOutlineGifBox } from "react-icons/md";
+import { MdDeleteOutline, MdOutlineGifBox } from "react-icons/md";
 import TestArea from "./testArea";
 import {
   fetchCommunities,
@@ -49,7 +49,7 @@ const Img: React.FC<{
       <img alt='pic' src={fileUrl} />
       {onRemove && (
         <div className='remove' onClick={() => onRemove(index)}>
-          x
+          <MdDeleteOutline color='var(--primary)' size={20} />
         </div>
       )}
     </div>
@@ -125,27 +125,27 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
     }
   };
 
-  const handleUploadFile = async (newPics: FileList) => {
-    console.log("FILES_DATA", newPics);
-    try {
-      if (newPics.length === 0) {
-        return;
-      }
+  // const handleUploadFile = async (newPics: FileList) => {
+  //   console.log("FILES_DATA", newPics);
+  //   try {
+  //     if (newPics.length === 0) {
+  //       return;
+  //     }
 
-      const filesArray = Array.from(newPics);
-      console.log("FILES_ARR", filesArray);
-      // const uploadedFiles = await Promise.all(
-      //   filesArray?.map((file) => uploadMultipleFile(file))
-      // );
-      const uploadedFiles = await uploadMultipleFile(filesArray);
+  //     const filesArray = Array.from(newPics);
+  //     console.log("FILES_ARR", filesArray);
+  //     // const uploadedFiles = await Promise.all(
+  //     //   filesArray?.map((file) => uploadMultipleFile(file))
+  //     // );
+  //     const uploadedFiles = await uploadMultipleFile(filesArray);
 
-      setPics((prevPics) => [...prevPics, ...filesArray]);
-      console.log("Uploaded files:", uploadedFiles);
-    } catch (error) {
-      console.error("Error uploading files", error);
-      NotificationMessage("error", "Error uploading files");
-    }
-  };
+  //     setPics((prevPics) => [...prevPics, ...filesArray]);
+  //     console.log("Uploaded files:", uploadedFiles);
+  //   } catch (error) {
+  //     console.error("Error uploading files", error);
+  //     NotificationMessage("error", "Error uploading files");
+  //   }
+  // };
 
   // const handleUploadFile = async (newPics: FileList) => {
   //   try {
@@ -171,6 +171,17 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   //     NotificationMessage("error", "Error uploading files");
   //   }
   // };
+
+  const handleUploadFile = async (file: any) => {
+    console.log("FILE_DATA", file[0]);
+    setPics([file[0]]);
+    try {
+      const uploadedFile = await uploadSingleFile(file[0]);
+    } catch (error) {
+      console.error("Error uploading files", error);
+      NotificationMessage("error", "Error uploading files");
+    }
+  };
 
   if (isLoading) {
     return <div className='create_post_loader'>loading...</div>;
@@ -201,18 +212,20 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
           />
           {/* <TestArea content={content} setContent={setContent} /> */}
           <RichTextEditor setContent={setContent} />
-          <div className='file_container'>
-            {pics?.map((picFile, index) => (
-              <Img
-                key={index}
-                index={index}
-                file={picFile}
-                onRemove={(rmIndx) =>
-                  setPics(pics.filter((_, idx) => idx !== rmIndx))
-                }
-              />
-            ))}
-          </div>
+          {pics?.length > 0 && (
+            <div className='file_container'>
+              {pics?.map((picFile, index) => (
+                <Img
+                  key={index}
+                  index={index}
+                  file={picFile}
+                  onRemove={(rmIndx) =>
+                    setPics(pics.filter((_, idx) => idx !== rmIndx))
+                  }
+                />
+              ))}
+            </div>
+          )}
         </div>
         <hr />
         <div className='media'>
@@ -228,11 +241,15 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
             <MdOutlineGifBox color='var(--primary)' size={20} />
             <LuImagePlus color='var(--primary)' size={20} />
           </div>
-          <div className='postbtn'>
-            <CButton loading={isLoadingPost} onClick={handlePost}>
-              Post
-            </CButton>
-          </div>
+          {/* <div className='postbtn'> */}
+          <CButton
+            loading={isLoadingPost}
+            disabled={content === "" || selectedOption === null}
+            onClick={handlePost}
+          >
+            Post
+          </CButton>
+          {/* </div> */}
         </div>
       </section>
     </main>

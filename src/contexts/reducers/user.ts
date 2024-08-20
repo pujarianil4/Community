@@ -12,7 +12,7 @@ export interface User {
 const cookies = parseCookies();
 const auth = cookies?.authToken;
 
-const userData: any = JSON.parse(auth);
+const userData: any = auth && JSON.parse(auth);
 
 //TODO update Later
 const initialState: User = {

@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import React from "react";
 import Image from "next/image";
@@ -7,23 +7,24 @@ import { IoIosMore } from "react-icons/io";
 import { getImageSource, timeAgo } from "@/utils/helpers";
 import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 import { GoComment, GoShareAndroid } from "react-icons/go";
-import { getPostsByPostId } from "@/services/api/api";
-import useAsync from "@/hooks/useAsync";
+// import { getPostsByPostId } from "@/services/api/api";
+// import useAsync from "@/hooks/useAsync";
 import ReactMarkdown from "react-markdown";
-import PostPageLoader from "@/components/common/loaders/postPage";
+// import PostPageLoader from "@/components/common/loaders/postPage";
+import { IPost } from "@/utils/types/types";
 
 interface Iprops {
-  postId: string;
+  post: IPost;
 }
 
-export default function Post({ postId }: Iprops) {
+export default function Post({ post }: Iprops) {
   // TODO use below code to get data after fixing local storage problem
   // const posts = await getPostsByPostId(postId);
-  const { isLoading, data: post } = useAsync(getPostsByPostId, postId);
+  // const { isLoading, data: post } = useAsync(getPostsByPostId, postId);
 
-  if (isLoading) {
-    return <PostPageLoader />;
-  }
+  // if (isLoading) {
+  //   return <PostPageLoader />;
+  // }
 
   return (
     <section className='post_container'>
@@ -85,7 +86,7 @@ export default function Post({ postId }: Iprops) {
         </div>
         <div>
           <GoComment size={18} />
-          <span>{post?.comments > 0 ? post.comments : "comments"}</span>
+          <span>{post?.ccount > 0 ? post.ccount : "comments"}</span>
         </div>
         <div>
           <GoShareAndroid size={18} />
