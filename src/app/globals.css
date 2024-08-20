@@ -67,9 +67,9 @@ main {
 }
 
 .fr-wrapper:first-child {
-  display: none;
+  display: none !important;
 }
 
 .fr-placeholder {
-  margin-top: 0px;
+  margin-top: 0px !important;
 }

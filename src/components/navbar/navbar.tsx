@@ -40,6 +40,8 @@ import { IoSettingsOutline } from "react-icons/io5";
 
 import CInput from "../common/Input";
 import Image from "next/image";
+import NotificationMessage from "../common/Notification";
+import { useRouter } from "next/navigation";
 
 export interface ISignupData {
   username: string;
@@ -71,6 +73,7 @@ export default function Navbar() {
     username: "",
     name: "",
   });
+  const router = useRouter();
   const [userSession, setUserSession] = useState<any>(user || userData);
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const hasCalledRef = useRef(false);
@@ -111,6 +114,7 @@ export default function Navbar() {
         token: "",
         img: "",
       };
+      router.push("/");
       dispatch(actions.setUserData(initialState));
     } catch (error) {}
   };
@@ -157,7 +161,13 @@ export default function Navbar() {
         setMessageHash(undefined);
         hasCalledRef.current = false;
       }, 4000);
-    } catch (error) {
+    } catch (error: any) {
+      console.log({ error });
+
+      NotificationMessage(
+        "error",
+        error.response.data.message || "User Not Registered !"
+      );
       setTimeout(() => {
         disconnect();
         setMessageHash(undefined);
