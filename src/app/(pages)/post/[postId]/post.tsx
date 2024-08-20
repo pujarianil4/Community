@@ -9,6 +9,8 @@ import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 import { GoComment, GoShareAndroid } from "react-icons/go";
 import { getPostsByPostId } from "@/services/api/api";
 import useAsync from "@/hooks/useAsync";
+import ReactMarkdown from "react-markdown";
+import PostPageLoader from "@/components/common/loaders/postPage";
 
 interface Iprops {
   postId: string;
@@ -18,6 +20,10 @@ export default function Post({ postId }: Iprops) {
   // TODO use below code to get data after fixing local storage problem
   // const posts = await getPostsByPostId(postId);
   const { isLoading, data: post } = useAsync(getPostsByPostId, postId);
+
+  if (isLoading) {
+    return <PostPageLoader />;
+  }
 
   return (
     <section className='post_container'>
@@ -68,7 +74,8 @@ export default function Post({ postId }: Iprops) {
         fill
       />
     </div> */}
-        <p>{post?.text}</p>
+        {/* <p>{post?.text}</p> */}
+        <ReactMarkdown>{post?.text}</ReactMarkdown>
       </div>
       <div className='actions'>
         <div>

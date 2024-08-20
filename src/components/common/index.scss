@@ -13,13 +13,14 @@
     color: var(--primary-text) !important;
   }
   &:disabled {
-    background-color: var(--primary-disable) !important;
-    color: var(--primary-disable-tx) !important;
+    background-color: var(--primary) !important;
+    color: var(--primary-text) !important;
+    opacity: 0.9;
   }
 }
 
 .CInput {
-  background: transparent;
+  background: transparent !important;
   border: 1px solid var(--primary-border) !important;
   color: var(--primary-text) !important;
   font-size: 18px !important;
@@ -30,13 +31,13 @@
   &:active,
   &:hover,
   &:focus-visible {
-    background: transparent;
+    background: transparent !important;
     border: 1px solid var(--primary-text);
     outline: none;
     // outline: 1px solid var(--primary-text);
   }
   &::placeholder {
-    color: var(--label-text);
+    color: var(--label-text) !important;
   }
 
   &::-ms-input-placeholder {
