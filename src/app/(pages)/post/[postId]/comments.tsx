@@ -2,6 +2,7 @@
 
 import CButton from "@/components/common/Button";
 import CommentsLoader from "@/components/common/loaders/comments";
+import MarkdownRenderer from "@/components/common/MarkDownRender";
 import NotificationMessage from "@/components/common/Notification";
 import RichTextEditor from "@/components/common/richTextEditor";
 import TextArea from "@/components/common/textArea";
@@ -23,7 +24,7 @@ import { LuImagePlus } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
 import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 import { RiText } from "react-icons/ri";
-import ReactMarkdown from "react-markdown";
+// import ReactMarkdown from "react-markdown";
 
 interface Iprops {
   postId: number;
@@ -168,8 +169,8 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
               className='comment_img'
             />
           )}
-          <ReactMarkdown>{comment?.content}</ReactMarkdown>
-
+          {/* <ReactMarkdown>{comment?.content}</ReactMarkdown> */}
+          <MarkdownRenderer markdownContent={comment?.content} />
           {/* <p>{comment?.content}</p> */}
         </div>
         <div className='actions'>
@@ -235,7 +236,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   postId,
 }) => {
   const [commentBody, setCommentBody] = useState("");
-  const [commentImg, setCommentImg] = useState("");
+  const [commentImg, setCommentImg] = useState(null);
   const [imgLoading, setImageLoading] = useState<boolean>(false);
   const [showToolbar, setShowToolbar] = useState<boolean>(false);
   const userNameSelector = (state: RootState) => state?.user;
@@ -268,7 +269,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     };
     onComment(data);
     setCommentBody("");
-    setCommentImg("");
+    setCommentImg(null);
     if (setIsReplying) setIsReplying(false);
   };
 
@@ -286,12 +287,11 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   };
 
   const handleDeleteImage = () => {
-    console.log("DELETE");
     const wrapper = document.querySelector(".comment_image_wrapper");
     wrapper?.classList.add("fade-out");
 
     setTimeout(() => {
-      setCommentImg("");
+      setCommentImg(null);
       wrapper?.classList.remove("fade-out");
     }, 300);
   };

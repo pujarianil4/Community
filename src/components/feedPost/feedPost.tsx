@@ -1,4 +1,5 @@
 import React from "react";
+import dynamic from "next/dynamic";
 import "./index.scss";
 import { LiaArrowRightSolid } from "react-icons/lia";
 import { PiArrowFatUpLight, PiArrowFatDownLight } from "react-icons/pi";
@@ -6,7 +7,7 @@ import { GoComment, GoShareAndroid } from "react-icons/go";
 import Image from "next/image";
 import { patchPost } from "@/services/api/api";
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
+// import ReactMarkdown from "react-markdown";
 import {
   getImageSource,
   getRandomImageLink,
@@ -15,14 +16,20 @@ import {
   timeAgo,
 } from "@/utils/helpers";
 import CVideo from "../common/Video";
+import { IPost } from "@/utils/types/types";
+// import MarkdownRenderer from "../common/MarkDownRender";
+
+const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
+  ssr: false,
+});
 
 interface IProps {
-  post: any;
+  post: IPost;
 }
 
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post }: IProps) {
-  const { text, up, down, comments, time, user, community, id } = post;
+  const { text, up, down, time, user, community, id } = post;
 
   const handleUP = async () => {
     await patchPost({ up: up + 1 });
@@ -71,25 +78,22 @@ export default function FeedPost({ post }: IProps) {
         <span>{timeAgo(time)}</span>
       </div>
 
-      <Link href={`post/${id}`} as={`/post/${id}`}>
-        <div className='content'>
-          {/* <p>{text}</p> */}
-          <ReactMarkdown>{text}</ReactMarkdown>
-          <div className='postMedia'>
-            <img
-              loading='lazy'
-              className='imgbg'
-              src={getRandomImageLink()}
-              alt='postbg'
-            />
-            {identifyMediaType(mediaURL) == "image" && (
-              <img className='media' src={mediaURL} alt='post' />
-            )}
-            {identifyMediaType(mediaURL) == "video" && (
-              <CVideo src={mediaURL} />
-            )}
-          </div>
+      <Link className='content' href={`post/${id}`} as={`/post/${id}`}>
+        {/* <div className='content'> */}
+        <MarkdownRenderer markdownContent={text} />
+        <div className='postMedia'>
+          <img
+            loading='lazy'
+            className='imgbg'
+            src={getRandomImageLink()}
+            alt='postbg'
+          />
+          {identifyMediaType(mediaURL) == "image" && (
+            <img className='media' src={mediaURL} alt='post' />
+          )}
+          {identifyMediaType(mediaURL) == "video" && <CVideo src={mediaURL} />}
         </div>
+        {/* </div> */}
       </Link>
       <div className='actions'>
         <div>
