@@ -8,6 +8,11 @@ import { PiMegaphone } from "react-icons/pi";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { Button, Menu } from "antd";
 import { FiUpload } from "react-icons/fi";
+import { BiCategory } from "react-icons/bi";
+import { FcAbout } from "react-icons/fc";
+import { IoIosHelpCircleOutline } from "react-icons/io";
+import { PiGlobeStand } from "react-icons/pi";
+import { MdOutlineTopic, MdContentPaste } from "react-icons/md";
 import { RiGalleryView } from "react-icons/ri";
 import "./index.scss";
 import CButton from "../common/Button";
@@ -60,6 +65,34 @@ const LodingCommunities = [
   },
 ];
 
+const categories = [
+  {
+    key: "about",
+    label: "About",
+    icon: <FcAbout size={20} />,
+  },
+  {
+    key: "help",
+    label: "Help",
+    icon: <IoIosHelpCircleOutline size={20} />,
+  },
+  {
+    key: "best_of_numa",
+    label: "Best of Numa",
+    icon: <PiGlobeStand size={20} />,
+  },
+  {
+    key: "topics",
+    label: "Topics",
+    icon: <MdOutlineTopic size={20} />,
+  },
+  {
+    key: "content_policy",
+    label: "Content Policy",
+    icon: <MdContentPaste size={20} />,
+  },
+];
+
 const SideBar: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [communityList, SetCommunityList] = useState<Array<any>>([]);
@@ -91,6 +124,12 @@ const SideBar: React.FC = () => {
         },
       ].concat(isLoading ? LodingCommunities : communityList),
     },
+    {
+      key: "categories",
+      label: "Categories",
+      icon: <BiCategory size={20} />,
+      children: categories,
+    },
   ];
 
   const showModal = () => {
@@ -108,7 +147,7 @@ const SideBar: React.FC = () => {
   const onClick: MenuProps["onClick"] = (e) => {
     if (e.key == "createCommunity") {
       showModal();
-    } else {
+    } else if (!["popular"].includes(e.key)) {
       router.push(`/${e.key}`);
     }
   };
