@@ -6,6 +6,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 8px;
     div {
       display: flex;
       gap: 10px;
@@ -33,11 +34,28 @@
   }
 
   .content {
+    // p {
+    //   font-size: 17px;
+    //   text-align: left;
+    //   word-spacing: 1px;
+    //   margin: 10px 0px;
+    // }
+    margin: 12px 0;
+    .post_image {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+    }
     p {
-      font-size: 17px;
+      font-size: 15px;
       text-align: left;
       word-spacing: 1px;
-      margin: 10px 0px;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    li {
+      margin: 4px 0;
+      margin-left: 16px;
     }
   }
 
@@ -67,6 +85,7 @@
   .actions {
     display: flex;
     gap: 15px;
+    margin-top: 8px;
     div,
     a {
       background-color: var(--secondary-bg);
