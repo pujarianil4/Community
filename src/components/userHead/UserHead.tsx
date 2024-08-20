@@ -19,6 +19,7 @@ import Followers from "./followers/Followers";
 import Followings from "./Followings/Followings";
 export default function UserHead() {
   const { userId } = useParams<{ userId: string }>();
+  console.log("USERID", userId);
 
   const userNameSelector = (state: RootState) => state?.user;
   const refetchRoute = (state: RootState) => state?.common.refetch;
@@ -37,6 +38,7 @@ export default function UserHead() {
 
   useEffect(() => {
     callBack(fetchUser, userId);
+    console.log("USERID useEffect", userId);
   }, [userId]);
 
   useEffect(() => {

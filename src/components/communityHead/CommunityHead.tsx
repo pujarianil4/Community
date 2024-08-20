@@ -37,6 +37,10 @@ export default function CommunityHead() {
   } = useAsync();
 
   useEffect(() => {
+    refetch();
+  }, [communityId]);
+
+  useEffect(() => {
     setIsFollowed(data?.isFollowed);
 
     if (refetchData?.user == true) {
