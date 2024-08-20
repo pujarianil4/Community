@@ -128,7 +128,7 @@ export default function Navbar() {
         name: userdata?.name || "",
         uid: response?.uid || 0,
         token: response?.token || "",
-        img: getImageSource(userdata?.img),
+        img: userdata?.img,
       };
       setClientSideCookie("authToken", JSON.stringify(user));
       setToLocalStorage("userSession", user);
@@ -178,7 +178,7 @@ export default function Navbar() {
   const fetchUser = async () => {
     const value = localStorage?.getItem("userSession");
     const userData: any = value ? JSON.parse(value) : null;
-    console.log("FETCH", userData);
+
     if (userData?.uid) {
       const response = await fetchUserById(userData?.uid);
       const user = {
@@ -192,7 +192,7 @@ export default function Navbar() {
     }
   };
   useEffect(() => {
-    fetchUser();
+    // fetchUser();
   }, []);
 
   const content = (

@@ -120,6 +120,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
       await getPosts();
     } catch (error: any) {
       console.log("POST_ERROR", error);
+      setIsLoadingPost(false);
       NotificationMessage("error", error?.message);
     }
   };
