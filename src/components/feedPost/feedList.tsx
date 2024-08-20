@@ -19,7 +19,7 @@ const getFunctionByMethod = {
 
 interface IFeedList {
   method: keyof typeof getFunctionByMethod;
-  id: string;
+  id: string | null;
 }
 
 export default function FeedList({ method, id }: IFeedList) {
