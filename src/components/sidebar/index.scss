@@ -60,6 +60,11 @@
       object-fit: cover;
       background: var(--secondary-bg);
     }
+    .msg {
+      position: absolute;
+      right: -80px;
+      bottom: 0px;
+    }
     .upload {
       position: absolute;
 
@@ -107,6 +112,17 @@
     display: flex;
     justify-content: end;
     align-items: center;
+    position: relative;
+    .user_msg {
+      position: absolute;
+      left: 0px;
+      color: var(--success);
+    }
+    .user_msg_error {
+      position: absolute;
+      left: 0px;
+      color: var(--error);
+    }
 
     p {
       height: 16px;

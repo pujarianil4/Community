@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { store } from "@/contexts/store";
@@ -40,8 +40,24 @@ export default function useRedux<T>(selectors?: any): [UseReduxHook, any] {
 
   // const selectedStates =
   //   selectors?.map((selector: any) => useSelector(selector)) || [];
-  const selectedStates =
-    selectors?.map((selector: any) => selector(store.getState())) || [];
+  // const selectedStates =
+  //   selectors?.map((selector: any) => selector(store.getState())) || [];
 
+  const [selectedStates, setSelectedStates] = useState<T[]>(
+    selectors.map((selector: any) => selector(store.getState()))
+  );
+
+  useEffect(() => {
+    const handleChange = () => {
+      setSelectedStates(
+        selectors.map((selector: any) => selector(store.getState()))
+      );
+    };
+
+    const unsubscribe = store.subscribe(handleChange);
+    return () => {
+      unsubscribe();
+    };
+  }, [selectors]);
   return [{ dispatch, actions }, selectedStates];
 }

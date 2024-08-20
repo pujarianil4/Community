@@ -233,36 +233,51 @@ const CreateCommunityModal = ({
     ticker: "",
   });
 
-  const [usernameError, setUsernameError] = useState<string>("");
+  const [usernameError, setUsernameError] = useState({
+    type: "error",
+    msg: "",
+  });
   const { isLoading, callFunction, data } = useAsync();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const onPickFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-      const imgURL = await uploadSingleFile(file);
-      console.log("IMGURL", imgURL);
+      try {
+        setIsUploading(true);
+        const file = event.target.files[0];
+        const imgURL = await uploadSingleFile(file);
+        console.log("IMGURL", imgURL);
 
-      setImgSrc(imgURL.url);
+        setImgSrc(imgURL.url);
+        setForm({ ...form, logo: imgURL?.url });
+        setIsUploading(false);
+      } catch (error) {
+        NotificationMessage("error", "Uploading failed");
+        setIsUploading(false);
+      }
     }
   };
 
   const debouncedCheckUsername = debounce(async (username: string) => {
     try {
       if (username == "") {
-        setUsernameError("");
+        setUsernameError({ type: "error", msg: "" });
         return;
       }
       const community = await fetchCommunityByCname(username);
       console.log("COMMUNITY", community);
       const isAvailable = community?.username === username;
       if (isAvailable) {
-        setUsernameError("Community already exists");
+        setUsernameError({ type: "error", msg: "Community already exists" });
       } else {
-        setUsernameError("Community is available");
+        setUsernameError({ type: "success", msg: "Community is available" });
       }
     } catch (error) {
-      setUsernameError("Error checking community availability");
+      setUsernameError({
+        type: "error",
+        msg: "Error checking community availability",
+      });
     }
   }, 500);
 
@@ -292,12 +307,16 @@ const CreateCommunityModal = ({
       form.ticker?.trim() !== "" &&
       form.metadata?.trim() !== "";
     console.log("isFormValid", bool);
-
+    if (usernameError.type == "error") {
+      return false;
+    }
     return bool;
   };
 
   const handleCreateCommunity = async () => {
     try {
+      console.log("Form", form);
+
       await callFunction(createCommunity, form);
       NotificationMessage("success", "Community Created");
       refetchCommunities();
@@ -326,6 +345,7 @@ const CreateCommunityModal = ({
     <div className='create_community_container'>
       <div className='avatar'>
         <img src={imgSrc} alt='logo' />
+
         <div
           onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
           className='upload'
@@ -339,6 +359,7 @@ const CreateCommunityModal = ({
             style={{ visibility: "hidden" }}
           />
         </div>
+        {isUploading && <span className='msg'>uploading...</span>}
       </div>
       <div className='info'>
         <span className='label'>Community Name</span>
@@ -378,6 +399,12 @@ const CreateCommunityModal = ({
         />
       </div>
       <div className='btns'>
+        {usernameError.type == "success" && (
+          <span className='user_msg'>{usernameError.msg}</span>
+        )}
+        {usernameError.type == "error" && (
+          <span className='user_msg_error'>{usernameError.msg}</span>
+        )}
         <CButton
           disabled={!isFormValid()}
           onClick={handleCreateCommunity}

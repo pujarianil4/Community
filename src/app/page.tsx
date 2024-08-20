@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <main>
       <PageWraper>
-        <FeedList method='allPosts' />
+        <FeedList method='allPosts' id={null} />
       </PageWraper>
     </main>
   );

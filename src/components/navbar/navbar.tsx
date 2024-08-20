@@ -14,6 +14,7 @@ import "./navbar.scss";
 import CButton from "../common/Button";
 import { FaRegBell } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
+
 import useRedux from "@/hooks/useRedux";
 import {
   fetchUserById,
@@ -28,6 +29,7 @@ import { RootState } from "@/contexts/store";
 import {
   debounce,
   deleteClientSideCookie,
+  getClientSideCookie,
   getImageSource,
   setClientSideCookie,
 } from "@/utils/helpers";
@@ -56,6 +58,8 @@ export default function Navbar() {
     userNameSelector,
     commonSelector,
   ]);
+
+  const userData: any = getClientSideCookie("authToken");
   const { disconnect } = useDisconnect();
   const { openConnectModal } = useConnectModal();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,7 +71,7 @@ export default function Navbar() {
     username: "",
     name: "",
   });
-  const [userSession, setUserSession] = useState<any>(user);
+  const [userSession, setUserSession] = useState<any>(user || userData);
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const hasCalledRef = useRef(false);
 
@@ -90,6 +94,10 @@ export default function Navbar() {
   const handleClosePostModal = () => {
     setIsPostModalOpen(false);
   };
+
+  useEffect(() => {
+    console.log("userSession", userSession, user, userData);
+  }, [userSession]);
 
   const userLogout = async () => {
     try {
@@ -161,6 +169,8 @@ export default function Navbar() {
     if (user?.token == "" || user.token == null || user.token == undefined) {
       setUserSession(null);
     } else {
+      console.log("user", user);
+
       setUserSession(user);
     }
     if (
@@ -175,25 +185,33 @@ export default function Navbar() {
   }, [userAccount.isConnected, user]);
 
   // fetch user details after refresh
-  // const fetchUser = async () => {
-  //   const value = localStorage?.getItem("userSession");
-  //   const userData: any = value ? JSON.parse(value) : null;
+  const fetchUser = async () => {
+    const userData1: any = getClientSideCookie("authToken");
+    console.log("userFetc", userData1);
 
-  //   if (userData?.uid) {
-  //     const response = await fetchUserById(userData?.uid);
-  //     const user = {
-  //       username: response?.username,
-  //       name: response?.name,
-  //       uid: response?.id,
-  //       token: userData?.token,
-  //       img: getImageSource(response?.img),
-  //     };
-  //     dispatch(actions.setUserData(user));
-  //   }
-  // };
-  // useEffect(() => {
-  //   // fetchUser();
-  // }, []);
+    if (userData?.uid) {
+      const response = await fetchUserById(userData?.uid);
+      const user = {
+        username: response?.username,
+        name: response?.name,
+        uid: response?.id,
+        token: userData1?.token,
+        img: response?.img,
+      };
+      setUserSession(user);
+      // setClientSideCookie("authToken", JSON.stringify(user));
+      dispatch(actions.setUserData(user));
+    }
+  };
+  useEffect(() => {
+    fetchUser();
+
+    console.log("fetchUser", common?.refetch?.user);
+
+    if (common?.refetch?.user) {
+      dispatch(actions.setRefetchUser(false));
+    }
+  }, [common]);
 
   const content = (
     <div className='user_popover'>

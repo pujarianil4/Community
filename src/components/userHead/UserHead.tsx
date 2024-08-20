@@ -17,8 +17,15 @@ import CTabs from "../common/Tabs";
 import FeedList from "../feedPost/feedList";
 import Followers from "./followers/Followers";
 import Followings from "./Followings/Followings";
+
+import { usePathname, useSearchParams } from "next/navigation";
 export default function UserHead() {
-  const { userId } = useParams<{ userId: string }>();
+  const { userId: id } = useParams<{ userId: string }>();
+
+  const pathname = usePathname();
+  const pathArray = pathname.split("/");
+  const userId = id || pathArray[pathArray.length - 1];
+  console.log("USERID", userId, pathname, id);
 
   const userNameSelector = (state: RootState) => state?.user;
   const refetchRoute = (state: RootState) => state?.common.refetch;
@@ -26,15 +33,25 @@ export default function UserHead() {
     userNameSelector,
     refetchRoute,
   ]);
-  const { isLoading, data, refetch } = useAsync(fetchUser, userId);
+  const {
+    isLoading,
+    data,
+    error,
+    callFunction: callBack,
+  } = useAsync(fetchUser, userId || id);
   const [isSelf, setIsSelf] = useState<boolean>(user.uid === data?.id);
   const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
+
+  useEffect(() => {
+    callBack(fetchUser, userId || id);
+    console.log("USERID useEffect", userId, pathname, id);
+  }, [userId]);
 
   useEffect(() => {
     setIsFollowed(data?.isFollowed);
 
     if (refetchData?.user == true) {
-      refetch();
+      callBack(fetchUser, userId);
       dispatch(actions.resetRefetch());
     }
 
@@ -133,7 +150,7 @@ export default function UserHead() {
             {
               key: "1",
               label: "Posts",
-              content: <FeedList method='byUName' />,
+              content: <FeedList method='byUName' id={userId} />,
             },
             {
               key: "2",

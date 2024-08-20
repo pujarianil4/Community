@@ -17,14 +17,17 @@ import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
 import { IUser } from "@/utils/types/types";
-import { debounce, getImageSource } from "@/utils/helpers";
+import { debounce, getImageSource, setClientSideCookie } from "@/utils/helpers";
 import NotificationMessage from "@/components/common/Notification";
 
 export default function Profile() {
-  const [{}, [userData]] = useRedux([(state: RootState) => state.user]);
+  const [{ dispatch, actions }, [userData]] = useRedux([
+    (state: RootState) => state.user,
+  ]);
   const [isLoadingUpadte, setIsLoadingUpdate] = useState(false);
   const [usernameError, setUsernameError] = useState<string>("");
   const { isLoading, data, refetch, callFunction } = useAsync();
+  const [isUploading, setIsUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const [user, setUser] = useState<IUser>({
     username: "",
@@ -102,8 +105,19 @@ export default function Profile() {
     if (Object.keys(updates).length > 0) {
       setIsLoadingUpdate(true);
       updateUser(updates)
-        .then((user) => {
-          console.log("user", user);
+        .then((response) => {
+          dispatch(actions.setRefetchUser(true));
+          const updatedUser = {
+            username: response?.username,
+            name: response?.name,
+            uid: response?.id,
+            token: userData?.token,
+            img: response?.img,
+          };
+
+          // setClientSideCookie("authToken", JSON.stringify(user));
+
+          dispatch(actions.setUserData(updatedUser));
           setIsLoadingUpdate(false);
           NotificationMessage("success", "Profile updated !");
           setUser(user);
@@ -120,10 +134,18 @@ export default function Profile() {
 
   const onPickFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-      const imgURL = await uploadSingleFile(file);
-      console.log("IMGURL", imgURL);
-      setUser({ ...user, img: imgURL?.url });
+      try {
+        setIsUploading(true);
+        const file = event.target.files[0];
+        const imgURL = await uploadSingleFile(file);
+        console.log("IMGURL", imgURL);
+        setUser({ ...user, img: imgURL?.url });
+        setIsUploading(false);
+      } catch (error) {
+        setIsUploading(false);
+        NotificationMessage("error", "Uploading failed");
+      }
+
       //setImgSrc(imgURL);
     }
   };
@@ -153,6 +175,7 @@ export default function Profile() {
             style={{ visibility: "hidden" }}
           />
         </div>
+        {isUploading && <span className='msg'>uploading...</span>}
       </div>
       <div className='info'>
         <span className='label'>Name</span>
