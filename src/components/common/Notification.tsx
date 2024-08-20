@@ -1,6 +1,7 @@
 import React from "react";
 import { notification } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { IoCloseSharp } from "react-icons/io5";
 // import "./styles/notificationMessage.scss";
 
 export default function NotificationMessage(result: any, msg: string) {
@@ -9,8 +10,8 @@ export default function NotificationMessage(result: any, msg: string) {
     description: msg,
     onClick: () => {},
     className: "notification_class",
-    closeIcon: false,
-    duration: 5,
+    closeIcon: <CloseCircleOutlined style={{ color: "white", fontSize: 35 }} />,
+    duration: 1000,
     icon:
       result == "success" ? (
         <CheckCircleOutlined style={{ color: "green" }} />

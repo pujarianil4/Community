@@ -235,7 +235,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   postId,
 }) => {
   const [commentBody, setCommentBody] = useState("");
-  const [commentImg, setCommentImg] = useState("");
+  const [commentImg, setCommentImg] = useState(null);
   const [imgLoading, setImageLoading] = useState<boolean>(false);
   const [showToolbar, setShowToolbar] = useState<boolean>(false);
   const userNameSelector = (state: RootState) => state?.user;
@@ -268,7 +268,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     };
     onComment(data);
     setCommentBody("");
-    setCommentImg("");
+    setCommentImg(null);
     if (setIsReplying) setIsReplying(false);
   };
 
@@ -291,7 +291,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     wrapper?.classList.add("fade-out");
 
     setTimeout(() => {
-      setCommentImg("");
+      setCommentImg(null);
       wrapper?.classList.remove("fade-out");
     }, 300);
   };

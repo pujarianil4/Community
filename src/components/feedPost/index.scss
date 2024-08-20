@@ -114,3 +114,32 @@
 .feedlist {
   padding: 10px;
 }
+
+.filter_list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100px;
+
+  p {
+    padding: 5px;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--tertiary-bg);
+      border-radius: 5px;
+    }
+  }
+}
+.filter {
+  div {
+    width: 100px;
+    padding: 5px 10px;
+    background-color: var(--secondary-bg);
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    svg {
+      margin-top: 2px;
+    }
+  }
+}

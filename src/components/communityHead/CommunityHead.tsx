@@ -16,6 +16,7 @@ import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import Followers from "../userHead/followers/Followers";
 import Followings from "../userHead/Followings/Followings";
+import { getImageSource, getRandomImageLink } from "@/utils/helpers";
 
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
@@ -87,11 +88,7 @@ export default function CommunityHead() {
           <div className='userhead_cotainer'>
             <div className='info'>
               <img
-                src={
-                  data?.img
-                    ? data?.img
-                    : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                }
+                src={data?.logo ? data?.logo : getImageSource(data?.logo)}
                 alt='avatar'
               />
               <div className='head'>

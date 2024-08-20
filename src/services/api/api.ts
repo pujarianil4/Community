@@ -188,9 +188,13 @@ export const fetchCommunityByCname = async (cName: string) => {
   }
 };
 
-export const getPosts = async () => {
+export const getPosts = async (sortby: string) => {
+  console.log("sortBy", sortby);
+
   try {
-    const response = await api.get("/posts?page=1&limit=20");
+    const response = await api.get(
+      `/posts?sortBy=${sortby}&order=desc&page=1&limit=20`
+    );
     console.log("============Fetched all posts=============", response.data);
     return response.data;
   } catch (error) {

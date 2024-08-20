@@ -6,7 +6,7 @@ export function setClientSideCookie(name: string, value: any) {
 
 export function getClientSideCookie(name: string) {
   const cookies = parseCookies();
-  return cookies[name];
+  return cookies[name] && JSON.parse(cookies[name]);
 }
 
 export function deleteClientSideCookie(name: string) {
