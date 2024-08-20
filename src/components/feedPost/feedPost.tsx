@@ -59,7 +59,7 @@ export default function FeedPost({ post }: IProps) {
             <div className='head'>
               <Image
                 // src={community?.logo ?? imgLink}
-                src={imgLink}
+                src={community.logo || imgLink}
                 alt='community'
                 width={24}
                 height={24}
