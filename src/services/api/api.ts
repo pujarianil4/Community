@@ -9,7 +9,7 @@ import {
   IUser,
 } from "@/utils/types/types";
 
-const url = process.env.BASE_API_URL;
+const url = "https://community-slr7.onrender.com"; //process.env.BASE_API_URL;
 const api: AxiosInstance = axios.create({
   baseURL: url,
 });
