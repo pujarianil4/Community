@@ -116,7 +116,6 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
       setSelectedOption(null);
       setContent("");
       setSearchTerm("");
-      await getPosts();
     } catch (error: any) {
       console.log("POST_ERROR", error);
       setIsLoadingPost(false);
