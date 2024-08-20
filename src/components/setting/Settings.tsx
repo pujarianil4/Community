@@ -41,4 +41,4 @@ function Setting() {
   );
 }
 
-export default Setting;
+export default PrivateRoute(Setting);
