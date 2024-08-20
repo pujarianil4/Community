@@ -12,7 +12,8 @@ export interface User {
 const cookies = parseCookies();
 const auth = cookies?.authToken;
 
-const userData: any = auth;
+const userData: any = JSON.parse(auth);
+
 //TODO update Later
 const initialState: User = {
   username: userData?.username || "",
