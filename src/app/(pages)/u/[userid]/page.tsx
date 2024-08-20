@@ -9,7 +9,7 @@ export default function UserPage({ params }: any) {
   const { userId } = params;
   return (
     <PageWraper>
-      <UserHead userId={userId} />
+      <UserHead />
     </PageWraper>
   );
 }
