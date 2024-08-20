@@ -7,7 +7,7 @@ import {
   followApi,
   UnFollowAPI,
 } from "@/services/api/api";
-// import { useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import CButton from "../common/Button";
 import "./userhead.scss";
 import UandCHeadLoader from "../common/loaders/UandCHead";
@@ -17,8 +17,8 @@ import CTabs from "../common/Tabs";
 import FeedList from "../feedPost/feedList";
 import Followers from "./followers/Followers";
 import Followings from "./Followings/Followings";
-export default function UserHead({ userId }: any) {
-  //const { userId } = useParams<{ userId: string }>();
+export default function UserHead() {
+  const { userId } = useParams<{ userId: string }>();
 
   const userNameSelector = (state: RootState) => state?.user;
   const refetchRoute = (state: RootState) => state?.common.refetch;
