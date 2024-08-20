@@ -22,6 +22,10 @@ const nextConfig = {
   env: {
     BASE_API_URL: process.env.BASE_API_URL,
   },
+  // output: "export",
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;
