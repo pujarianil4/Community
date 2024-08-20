@@ -6,6 +6,7 @@ import { GoComment, GoShareAndroid } from "react-icons/go";
 import Image from "next/image";
 import { patchPost } from "@/services/api/api";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 import {
   getImageSource,
   getRandomImageLink,
@@ -72,7 +73,8 @@ export default function FeedPost({ post }: IProps) {
 
       <Link href={`post/${id}`} as={`/post/${id}`}>
         <div className='content'>
-          <p>{text}</p>
+          {/* <p>{text}</p> */}
+          <ReactMarkdown>{text}</ReactMarkdown>
           <div className='postMedia'>
             <img
               loading='lazy'

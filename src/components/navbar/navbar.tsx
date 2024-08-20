@@ -288,6 +288,7 @@ export default function Navbar() {
         />
       </Modal>
       <Modal
+        className='create_post_modal'
         open={isPostModalOpen}
         onCancel={handleClosePostModal}
         footer={<></>}
@@ -317,7 +318,7 @@ const SignUpModal = ({
   const [{ dispatch, actions }, [common]] = useRedux([CommonSelector]);
   const debouncedCheckUsername = debounce(async (username: string) => {
     try {
-      if (username == "") {
+      if (username === "") {
         setUsernameError("");
         return;
       }

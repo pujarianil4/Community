@@ -360,3 +360,59 @@ export const uploadSingleFile = async (file: File) => {
     throw error;
   }
 };
+
+// export const uploadMultipleFile = async (files: FileList) => {
+//   try {
+//     console.log("BEFORE", files);
+//     const formData = new FormData();
+
+//     // Append each file to the form data
+//     // Array.from(files).forEach((file, index) => {
+//     //   formData.append(`files[]`, file);
+//     // });
+
+//     for (let i = 0; i < files.length; i++) {
+//       console.log("CURRENT_FILE", files[i]);
+//       formData.append("files[]", files[i]);
+//     }
+//     console.log("UPLOAD_FILES", formData);
+
+//     const response = await api.post("/upload/multi", files, {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     });
+
+//     console.log("Files uploaded successfully", response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error uploading files", error);
+//     throw error;
+//   }
+// };
+
+export const uploadMultipleFile = async (files: FileList) => {
+  try {
+    console.log("Selected Files:", files);
+
+    const formData = new FormData();
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files[]", files[i]);
+    }
+
+    console.log("FormData before upload:", formData);
+
+    const response = await api.post("/upload/multi", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log("Files uploaded successfully", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error uploading files", error);
+    throw error;
+  }
+};

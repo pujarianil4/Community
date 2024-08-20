@@ -9,6 +9,8 @@ import {
   fetchCommunities,
   getPosts,
   handlePostToCommunity,
+  uploadMultipleFile,
+  uploadSingleFile,
 } from "@/services/api/api";
 // import { LocalStore } from "@/utils/helpers";
 import Image from "next/image";
@@ -20,6 +22,7 @@ import { getImageSource } from "@/utils/helpers";
 import { ErrorType, ICommunity } from "@/utils/types/types";
 import NotificationMessage from "../common/Notification";
 import CButton from "../common/Button";
+import RichTextEditor from "../common/richTextEditor";
 // import SkeltonLoader from "./skeltonLoader";
 
 interface Props {
@@ -66,7 +69,7 @@ const FileInput: React.FC<FileInputProps> = React.memo(
     const fileRef = useRef<HTMLInputElement>(null);
 
     const onPickFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files) {
+      if (event.target.files && event.target.files.length > 0) {
         onChange(event.target.files);
       }
     };
@@ -121,6 +124,54 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
       NotificationMessage("error", error?.message);
     }
   };
+
+  const handleUploadFile = async (newPics: FileList) => {
+    console.log("FILES_DATA", newPics);
+    try {
+      if (newPics.length === 0) {
+        return;
+      }
+
+      const filesArray = Array.from(newPics);
+      console.log("FILES_ARR", filesArray);
+      // const uploadedFiles = await Promise.all(
+      //   filesArray?.map((file) => uploadMultipleFile(file))
+      // );
+      const uploadedFiles = await uploadMultipleFile(filesArray);
+
+      setPics((prevPics) => [...prevPics, ...filesArray]);
+      console.log("Uploaded files:", uploadedFiles);
+    } catch (error) {
+      console.error("Error uploading files", error);
+      NotificationMessage("error", "Error uploading files");
+    }
+  };
+
+  // const handleUploadFile = async (newPics: FileList) => {
+  //   try {
+  //     if (newPics.length === 0) {
+  //       return;
+  //     }
+  //     console.log("Selected Files:", Array.from(newPics));
+
+  //     const formData = new FormData();
+  //     Array.from(newPics)?.forEach((file, index) =>
+  //       // formData.append(`file${index}`, file)
+  //       console.log("LIST", index, file)
+  //     );
+
+  //     console.log("FormData before upload:", formData);
+
+  //     const uploadedFiles = await uploadMultipleFile(formData); // Use the updated function
+
+  //     setPics((prevPics) => [...prevPics, ...Array.from(newPics)]);
+  //     console.log("Uploaded files:", uploadedFiles);
+  //   } catch (error) {
+  //     console.error("Error uploading files", error);
+  //     NotificationMessage("error", "Error uploading files");
+  //   }
+  // };
+
   if (isLoading) {
     return <div className='create_post_loader'>loading...</div>;
   }
@@ -148,7 +199,8 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
           />
-          <TestArea content={content} setContent={setContent} />
+          {/* <TestArea content={content} setContent={setContent} /> */}
+          <RichTextEditor setContent={setContent} />
           <div className='file_container'>
             {pics?.map((picFile, index) => (
               <Img
@@ -166,9 +218,10 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
         <div className='media'>
           <div className='inputs'>
             <FileInput
-              onChange={(newPics) =>
-                setPics((prevPics) => [...prevPics, ...Array.from(newPics)])
-              }
+              // onChange={(newPics) =>
+              //   setPics((prevPics) => [...prevPics, ...Array.from(newPics)])
+              // }
+              onChange={handleUploadFile}
             >
               <LuImagePlus color='var(--primary)' size={20} />
             </FileInput>

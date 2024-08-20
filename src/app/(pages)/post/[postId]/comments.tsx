@@ -1,18 +1,27 @@
 "use client";
 
 import CButton from "@/components/common/Button";
+import NotificationMessage from "@/components/common/Notification";
+import RichTextEditor from "@/components/common/richTextEditor";
 import TextArea from "@/components/common/textArea";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
-import { fetchComments, postComments } from "@/services/api/api";
+import {
+  fetchComments,
+  postComments,
+  uploadSingleFile,
+} from "@/services/api/api";
 import { getImageSource, timeAgo } from "@/utils/helpers";
 import { IComment, IPostCommentAPI, IUser } from "@/utils/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { GoComment, GoShareAndroid } from "react-icons/go";
+import { LuImagePlus } from "react-icons/lu";
+import { MdDeleteOutline } from "react-icons/md";
 import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
+import { RiText } from "react-icons/ri";
 
 interface Iprops {
   postId: number;
@@ -212,13 +221,18 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   postId,
 }) => {
   const [commentBody, setCommentBody] = useState("");
+  const [commentImg, setCommentImg] = useState(
+    "https://picsum.photos/200/300?random=4"
+  );
+  const [imgLoading, setImageLoading] = useState<boolean>(false);
+  const [showToolbar, setShowToolbar] = useState<boolean>(false);
   const userNameSelector = (state: RootState) => state?.user;
   const [{}, [user]] = useRedux([userNameSelector]);
   const handlePostComment = async () => {
     const postData: IPostCommentAPI = {
       uid: user?.uid,
       content: commentBody,
-      img: null,
+      img: commentImg,
       pid: +postId,
       pcid: parentComment?.id || null,
     };
@@ -244,15 +258,78 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     if (setIsReplying) setIsReplying(false);
   };
 
+  const handleUploadFile = async (file: any) => {
+    console.log("FILE_DATA", file[0]);
+    setImageLoading(true);
+    try {
+      const uploadedFile = await uploadSingleFile(file[0]);
+      setCommentImg(uploadedFile?.url);
+    } catch (error) {
+      console.error("Error uploading files", error);
+      NotificationMessage("error", "Error uploading files");
+    }
+    setImageLoading(false);
+  };
+
+  const handleDeleteImage = () => {
+    console.log("DELETE");
+    const wrapper = document.querySelector(".comment_image_wrapper");
+    wrapper?.classList.add("fade-out");
+
+    setTimeout(() => {
+      setCommentImg("");
+      wrapper?.classList.remove("fade-out");
+    }, 300);
+  };
+
   return (
     <div className='comment_input'>
-      <TextArea
+      {/* <TextArea
         content={commentBody}
         setContent={setCommentBody}
         placeholder='Write your comment'
-      />
-      <div>
-        <div>{/* TODO: add media icons */}</div>
+      /> */}
+      <RichTextEditor showToolbar={showToolbar} setContent={setCommentBody} />
+      {commentImg && (
+        <div className={`comment_image_wrapper `}>
+          {imgLoading ? (
+            <div className='skeleton image_loader'></div>
+          ) : (
+            <div className='image_wrapper'>
+              {/* <Image
+                src={commentImg}
+                alt='comment_img'
+                width={200}
+                height={200}
+                className='img_bg'
+              /> */}
+              <Image
+                src={commentImg}
+                alt='comment_img'
+                width={200}
+                height={200}
+                className='comment_img'
+              />
+            </div>
+          )}
+          {!imgLoading && (
+            <button className='delete_image_button' onClick={handleDeleteImage}>
+              <MdDeleteOutline color='var(--primary)' size={20} />
+            </button>
+          )}
+        </div>
+      )}
+      <div className='comment_controls'>
+        <div>
+          <FileInput onChange={handleUploadFile}>
+            <LuImagePlus color='var(--primary)' size={36} />
+          </FileInput>
+          <RiText
+            onClick={() => setShowToolbar(!showToolbar)}
+            color='var(--primary)'
+            size={36}
+          />
+        </div>
         <CButton
           className='comment_btn'
           disabled={commentBody === ""}
@@ -264,3 +341,35 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     </div>
   );
 };
+
+interface FileInputProps {
+  onChange: (files: FileList) => void;
+  children: React.ReactNode;
+}
+
+const FileInput: React.FC<FileInputProps> = React.memo(
+  ({ onChange, children }) => {
+    const fileRef = React.useRef<HTMLInputElement>(null);
+
+    const onPickFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files.length > 0) {
+        onChange(event.target.files);
+      }
+    };
+
+    return (
+      <div onClick={() => fileRef.current && fileRef.current.click()}>
+        {children}
+        <input
+          multiple
+          ref={fileRef}
+          onChange={onPickFile}
+          type='file'
+          style={{ display: "none" }}
+        />
+      </div>
+    );
+  }
+);
+
+FileInput.displayName = "FileInput";
