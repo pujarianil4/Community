@@ -150,7 +150,7 @@ export default function UserHead() {
             {
               key: "1",
               label: "Posts",
-              content: <FeedList method='byUName' />,
+              content: <FeedList method='byUName' id={userId} />,
             },
             {
               key: "2",

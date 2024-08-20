@@ -19,19 +19,20 @@ const getFunctionByMethod = {
 
 interface IFeedList {
   method: keyof typeof getFunctionByMethod;
+  id: string;
 }
 
-export default function FeedList({ method }: IFeedList) {
-  const { userId, communityId } = useParams<{
-    userId: string;
-    communityId: string;
-  }>();
+export default function FeedList({ method, id }: IFeedList) {
+  // const { userId, communityId } = useParams<{
+  //   userId: string;
+  //   communityId: string;
+  // }>();
 
   const {
     isLoading,
     data: posts,
     refetch,
-  } = useAsync(getFunctionByMethod[method], userId || communityId);
+  } = useAsync(getFunctionByMethod[method], id);
 
   const refetchRoute = (state: RootState) => state?.common.refetch.user;
   const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
