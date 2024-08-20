@@ -1,6 +1,7 @@
 "use client";
 
 import CButton from "@/components/common/Button";
+import CommentsLoader from "@/components/common/loaders/comments";
 import NotificationMessage from "@/components/common/Notification";
 import RichTextEditor from "@/components/common/richTextEditor";
 import TextArea from "@/components/common/textArea";
@@ -22,6 +23,7 @@ import { LuImagePlus } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
 import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 import { RiText } from "react-icons/ri";
+import ReactMarkdown from "react-markdown";
 
 interface Iprops {
   postId: number;
@@ -29,6 +31,7 @@ interface Iprops {
 export default function Comments({ postId }: Iprops) {
   const { isLoading, data: commentsData } = useAsync(fetchComments, postId);
   const [comments, setComments] = useState<IComment[]>();
+  const loadingArray = Array(5).fill(() => 0);
 
   function organizeComments(comments: IComment[]): IComment[] {
     const commentMap = new Map<number, IComment>();
@@ -82,7 +85,7 @@ export default function Comments({ postId }: Iprops) {
     <section className='comments'>
       <CommentInput onComment={onComment} postId={postId} />
       {isLoading ? (
-        <div>Loading...</div>
+        loadingArray.map((_: any, i: number) => <CommentsLoader key={i} />)
       ) : (
         <div className='comment_container'>
           {comments
@@ -156,7 +159,18 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
           <p className='post_time'>&bull; {timeAgo(comment?.cta)}</p>
         </div>
         <div className='content'>
-          <p>{comment?.content}</p>
+          {comment?.img && (
+            <Image
+              src={comment?.img}
+              alt='comment_img'
+              width={240}
+              height={240}
+              className='comment_img'
+            />
+          )}
+          <ReactMarkdown>{comment?.content}</ReactMarkdown>
+
+          {/* <p>{comment?.content}</p> */}
         </div>
         <div className='actions'>
           <div>
@@ -221,9 +235,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   postId,
 }) => {
   const [commentBody, setCommentBody] = useState("");
-  const [commentImg, setCommentImg] = useState(
-    "https://picsum.photos/200/300?random=4"
-  );
+  const [commentImg, setCommentImg] = useState("");
   const [imgLoading, setImageLoading] = useState<boolean>(false);
   const [showToolbar, setShowToolbar] = useState<boolean>(false);
   const userNameSelector = (state: RootState) => state?.user;
@@ -250,11 +262,13 @@ const CommentInput: React.FC<ICommentInputProps> = ({
       cta: response?.cta,
       uta: response?.uta,
       user: user as IUser,
+      img: response?.img,
       parentComment: parentComment || null,
       comments: [],
     };
     onComment(data);
     setCommentBody("");
+    setCommentImg("");
     if (setIsReplying) setIsReplying(false);
   };
 
