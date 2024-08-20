@@ -65,3 +65,11 @@ a:hover {
 main {
   width: 100%;
 }
+
+.fr-wrapper:first-child {
+  display: none;
+}
+
+.fr-placeholder {
+  margin-top: 0px;
+}

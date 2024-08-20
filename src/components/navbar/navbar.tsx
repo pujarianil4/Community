@@ -95,6 +95,10 @@ export default function Navbar() {
     setIsPostModalOpen(false);
   };
 
+  useEffect(() => {
+    console.log("userSession", userSession);
+  }, [userSession]);
+
   const userLogout = async () => {
     try {
       const logout = await handleLogOut();
@@ -114,6 +118,7 @@ export default function Navbar() {
   const handleAuth = async () => {
     try {
       const sign = await getSignMessage(msg);
+      console.log("handleAuth1");
       setMessageHash(sign);
       let response;
       if (isSignup) {
@@ -165,10 +170,11 @@ export default function Navbar() {
     if (user?.token == "" || user.token == null || user.token == undefined) {
       setUserSession(null);
     } else {
-      console.log("user", user);
-
       setUserSession(user);
     }
+  }, [user]);
+
+  useEffect(() => {
     if (
       userAccount.isConnected &&
       !messageHash &&
@@ -176,9 +182,11 @@ export default function Navbar() {
       common.walletRoute == "auth"
     ) {
       handleAuth();
+      console.log("handleAuth");
+
       hasCalledRef.current = true;
     }
-  }, [userAccount.isConnected, user]);
+  }, [userAccount.isConnected]);
 
   // fetch user details after refresh
   const fetchUser = async () => {
@@ -257,7 +265,7 @@ export default function Navbar() {
           />
         </div>
         <div className='signin'>
-          {userSession ? (
+          {userSession?.token ? (
             <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
               <CButton className='create_post' onClick={showCreatePost}>
                 <AiOutlinePlus />
