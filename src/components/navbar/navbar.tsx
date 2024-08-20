@@ -95,10 +95,6 @@ export default function Navbar() {
     setIsPostModalOpen(false);
   };
 
-  useEffect(() => {
-    console.log("userSession", userSession, user, userData);
-  }, [userSession]);
-
   const userLogout = async () => {
     try {
       const logout = await handleLogOut();
