@@ -17,9 +17,15 @@ import CTabs from "../common/Tabs";
 import FeedList from "../feedPost/feedList";
 import Followers from "./followers/Followers";
 import Followings from "./Followings/Followings";
+
+import { usePathname, useSearchParams } from "next/navigation";
 export default function UserHead() {
-  const { userId } = useParams<{ userId: string }>();
-  console.log("USERID", userId);
+  const { userId: id } = useParams<{ userId: string }>();
+
+  const pathname = usePathname();
+  const pathArray = pathname.split("/");
+  const userId = id || pathArray[pathArray.length - 1];
+  console.log("USERID", userId, pathname, id);
 
   const userNameSelector = (state: RootState) => state?.user;
   const refetchRoute = (state: RootState) => state?.common.refetch;
@@ -32,13 +38,13 @@ export default function UserHead() {
     data,
     error,
     callFunction: callBack,
-  } = useAsync(fetchUser, userId);
+  } = useAsync(fetchUser, userId || id);
   const [isSelf, setIsSelf] = useState<boolean>(user.uid === data?.id);
   const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
 
   useEffect(() => {
-    callBack(fetchUser, userId);
-    console.log("USERID useEffect", userId);
+    callBack(fetchUser, userId || id);
+    console.log("USERID useEffect", userId, pathname, id);
   }, [userId]);
 
   useEffect(() => {
