@@ -21,8 +21,11 @@ import { getImageSource } from "@/utils/helpers";
 import { ErrorType, ICommunity } from "@/utils/types/types";
 import NotificationMessage from "../common/Notification";
 import CButton from "../common/Button";
-import RichTextEditor from "../common/richTextEditor";
 // import SkeltonLoader from "./skeltonLoader";
+
+const RichTextEditor = dynamic(() => import("../common/richTextEditor"), {
+  ssr: false,
+});
 
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;

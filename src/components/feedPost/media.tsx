@@ -21,9 +21,13 @@ export default function Media({ assets }: IProps) {
     event.stopPropagation();
     setExpanded(val);
   };
-  const mediaURL = getRandomPost();
-
-  console.log("media", mediaURL);
+  const mediaURLs = [
+    getRandomPost(),
+    // getRandomPost(),
+    // getRandomPost(),
+    // getRandomPost(),
+  ];
+  console.log("media", mediaURLs);
   return (
     <>
       <div
@@ -40,18 +44,23 @@ export default function Media({ assets }: IProps) {
           fill
           sizes='(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw'
         />
-        {identifyMediaType(assets[0] || mediaURL) == "image" && (
-          // <img className='media' src={assets[0] || mediaURL} alt='post' />
-          <Image
-            loading='lazy'
-            className='media'
-            src={assets[0] || mediaURL}
-            alt='post'
-            fill
-            sizes='(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw'
-          />
-        )}
-        {identifyMediaType(mediaURL) == "video" && <CVideo src={mediaURL} />}
+        {mediaURLs?.map((asset: string) => (
+          <>
+            {identifyMediaType(asset) == "image" && (
+              // <img className='media' src={asset} alt='post' />
+              <Image
+                loading='lazy'
+                className='media'
+                src={asset}
+                alt='post'
+                fill
+                sizes='(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw'
+              />
+            )}
+            {identifyMediaType(asset) == "video" && <CVideo src={asset} />}
+          </>
+        ))}
+        {/*  */}
       </div>
       {expanded && (
         <div className='expanded_view'>
@@ -66,22 +75,24 @@ export default function Media({ assets }: IProps) {
           {/* <Image
             className='expanded_media imgbg'
             loading='lazy'
-            src={assets[0] || mediaURL}
+            src={assets[0] || mediaURLs[0]}
             alt='postbg'
             fill
             sizes='(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw'
           /> */}
 
-          {identifyMediaType(assets[0] || mediaURL) == "image" && (
+          {identifyMediaType(assets[0] || mediaURLs[0]) == "image" && (
             <Image
               className='expanded_media'
-              src={assets[0] || mediaURL}
+              src={assets[0] || mediaURLs[0]}
               alt='post'
               fill
               sizes='(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw'
             />
           )}
-          {identifyMediaType(mediaURL) == "video" && <CVideo src={mediaURL} />}
+          {identifyMediaType(mediaURLs[0]) == "video" && (
+            <CVideo src={mediaURLs[0]} />
+          )}
         </div>
       )}
     </>
