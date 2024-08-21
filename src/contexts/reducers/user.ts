@@ -20,9 +20,7 @@ const initialState: User = {
   name: userData?.name || "",
   uid: userData?.uid || 0,
   token: userData?.token || "",
-  img:
-    userData?.img ||
-    "https://i.imgur.com/Qpw6j8D_d.webp?maxwidth=760&fidelity=grand",
+  img: userData?.img,
 };
 
 export const userSlice = createSlice({

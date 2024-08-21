@@ -6,7 +6,7 @@ import React from "react";
 
 function Settings() {
   return (
-    <PageWraper>
+    <PageWraper hideRightPanel>
       <Setting />
     </PageWraper>
   );

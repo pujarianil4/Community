@@ -30,6 +30,7 @@ const CVideo: React.FC<VideoFeedProps> = ({ src, className }) => {
         playsInline
         className={`media ${className}`}
         preload='auto'
+        muted
       />
     </>
   );
