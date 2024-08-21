@@ -34,13 +34,8 @@
   }
 
   .content {
-    // p {
-    //   font-size: 17px;
-    //   text-align: left;
-    //   word-spacing: 1px;
-    //   margin: 10px 0px;
-    // }
     margin: 12px 0;
+    cursor: pointer;
     .post_image {
       position: relative;
       width: 100%;
@@ -56,29 +51,6 @@
     li {
       margin: 4px 0;
       margin-left: 16px;
-    }
-  }
-
-  .postMedia {
-    height: 400px;
-    margin: 10px 0px;
-    width: 100%;
-    border: 1px solid var(--primary-border);
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-    .imgbg {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-      filter: blur(15px);
-    }
-    .media {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
     }
   }
 
@@ -113,4 +85,72 @@
 
 .feedlist {
   padding: 10px;
+}
+
+// Media component
+.post_media {
+  height: 400px;
+  margin: 10px 0px;
+  width: 100%;
+  border: 1px solid var(--primary-border);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+
+  .imgbg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    filter: blur(15px);
+  }
+  .media {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+.expanded_view {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 30;
+
+  .expanded_media {
+    margin-top: 5%;
+    max-width: 90%;
+    max-height: 90%;
+    width: 90vw;
+    object-fit: contain;
+  }
+
+  .imgbg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    filter: blur(15px);
+  }
+
+  .close_icon {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    padding: 10px 16px;
+    top: 10px;
+    right: 10px;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    background-color: var(--secondary-bg);
+    border-radius: 40px;
+  }
 }

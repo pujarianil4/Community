@@ -3,9 +3,10 @@ import { useEffect, useRef } from "react";
 
 interface VideoFeedProps {
   src: string;
+  className?: string;
 }
 
-const CVideo: React.FC<VideoFeedProps> = ({ src }) => {
+const CVideo: React.FC<VideoFeedProps> = ({ src, className }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const isVisible = useIntersectionObserver(videoRef);
 
@@ -27,7 +28,7 @@ const CVideo: React.FC<VideoFeedProps> = ({ src }) => {
         width='100%'
         controls
         playsInline
-        className='media'
+        className={`media ${className}`}
         preload='auto'
       />
     </>

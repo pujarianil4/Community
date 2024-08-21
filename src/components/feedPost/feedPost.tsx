@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
 import { LiaArrowRightSolid } from "react-icons/lia";
@@ -7,16 +8,10 @@ import { GoComment, GoShareAndroid } from "react-icons/go";
 import Image from "next/image";
 import { patchPost } from "@/services/api/api";
 import Link from "next/link";
-// import ReactMarkdown from "react-markdown";
-import {
-  getImageSource,
-  getRandomImageLink,
-  getRandomPost,
-  identifyMediaType,
-  timeAgo,
-} from "@/utils/helpers";
-import CVideo from "../common/Video";
+import { useRouter } from "next/navigation";
+import { getImageSource, timeAgo } from "@/utils/helpers";
 import { IPost } from "@/utils/types/types";
+import Media from "./media";
 // import MarkdownRenderer from "../common/MarkDownRender";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
@@ -29,18 +24,19 @@ interface IProps {
 
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post }: IProps) {
-  const { text, up, down, time, user, community, id } = post;
+  const { text, up, down, time, img, user, community, id } = post;
+  const router = useRouter();
 
-  const handleUP = async () => {
-    await patchPost({ up: up + 1 });
+  let postAssets: string[] = [];
+  if (typeof img === "string") {
+    postAssets = [img];
+  } else if (Array.isArray(img)) {
+    postAssets = img.filter((item) => typeof item === "string");
+  }
+
+  const handleRedirectPost = () => {
+    router.push(`post/${id}`);
   };
-
-  const handleDown = async () => {
-    await patchPost({ up: down + 1 });
-  };
-  const mediaURL = getRandomPost();
-
-  console.log("media", mediaURL);
 
   return (
     <div className='postcard_container'>
@@ -78,32 +74,16 @@ export default function FeedPost({ post }: IProps) {
         <span>{timeAgo(time)}</span>
       </div>
 
-      <Link className='content' href={`post/${id}`} as={`/post/${id}`}>
-        {/* <div className='content'> */}
+      <div className='content' onClick={() => handleRedirectPost()}>
         <MarkdownRenderer markdownContent={text} />
-        <div className='postMedia'>
-          <img
-            loading='lazy'
-            className='imgbg'
-            src={getRandomImageLink()}
-            alt='postbg'
-          />
-          {identifyMediaType(mediaURL) == "image" && (
-            <img className='media' src={mediaURL} alt='post' />
-          )}
-          {identifyMediaType(mediaURL) == "video" && <CVideo src={mediaURL} />}
-        </div>
-        {/* </div> */}
-      </Link>
+        <Media assets={postAssets} />
+      </div>
+
       <div className='actions'>
         <div>
-          {/* <button onClick={() => handleUP()}> */}
           <PiArrowFatUpLight size={18} />
-          {/* </button> */}
           <span>{up}</span>
-          {/* <button onClick={() => handleDown()}> */}
           <PiArrowFatDownLight size={18} />
-          {/* </button> */}
         </div>
         <Link href={`post/${id}`} as={`/post/${id}`}>
           <GoComment size={18} />
