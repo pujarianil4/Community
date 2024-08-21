@@ -6,6 +6,7 @@ import MarkdownRenderer from "@/components/common/MarkDownRender";
 import NotificationMessage from "@/components/common/Notification";
 import RichTextEditor from "@/components/common/richTextEditor";
 import TextArea from "@/components/common/textArea";
+import { FileInput } from "@/components/createPost/CreatePost";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
@@ -355,35 +356,3 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     </div>
   );
 };
-
-interface FileInputProps {
-  onChange: (files: FileList) => void;
-  children: React.ReactNode;
-}
-
-const FileInput: React.FC<FileInputProps> = React.memo(
-  ({ onChange, children }) => {
-    const fileRef = React.useRef<HTMLInputElement>(null);
-
-    const onPickFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files && event.target.files.length > 0) {
-        onChange(event.target.files);
-      }
-    };
-
-    return (
-      <div onClick={() => fileRef.current && fileRef.current.click()}>
-        {children}
-        <input
-          multiple
-          ref={fileRef}
-          onChange={onPickFile}
-          type='file'
-          style={{ display: "none" }}
-        />
-      </div>
-    );
-  }
-);
-
-FileInput.displayName = "FileInput";
