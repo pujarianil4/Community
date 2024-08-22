@@ -57,8 +57,30 @@
   }
 }
 
+.login_modal {
+  .login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+    h4 {
+      font-size: 20px;
+      margin: 0 0 20px;
+    }
+  }
+  p {
+    width: 100%;
+    text-align: center;
+    span {
+      color: var(--primary);
+    }
+  }
+}
+
 .signUpModal {
-  .login,
   .signup {
     display: flex;
     flex-direction: column;
