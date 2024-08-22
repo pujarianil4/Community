@@ -79,3 +79,9 @@ export type ErrorType = {
   message: string;
   statusCode: number;
 };
+
+export interface IIConProps {
+  fill?: string;
+  width?: string | number;
+  height?: string | number;
+}

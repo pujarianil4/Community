@@ -15,6 +15,8 @@ import CButton from "../common/Button";
 import { FaRegBell } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 
+import { NotificationIcon, AddIcon, DropdownLowIcon } from "@/assets/icons";
+
 import useRedux from "@/hooks/useRedux";
 import {
   fetchUserById,
@@ -265,12 +267,14 @@ export default function Navbar() {
     <>
       <nav className='nav_container'>
         <div>
-          <h2>Numity</h2>
+          <Link href='#'>
+            <h2>Numity</h2>
+          </Link>
         </div>
         <div className='search_container'>
           <CInput
             prefix={<IoSearch />}
-            placeholder='Search Numity'
+            placeholder='Search Post Here'
             className='search'
           />
         </div>
@@ -278,8 +282,8 @@ export default function Navbar() {
           {userSession?.token ? (
             <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
               <CButton className='create_post' onClick={showCreatePost}>
-                <AiOutlinePlus />
-                Create
+                <AddIcon />
+                Create Post
               </CButton>
               <FaRegBell size={25} />
               <div className='user_icon'>

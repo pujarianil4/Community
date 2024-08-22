@@ -89,6 +89,7 @@
   height: 100vh;
   display: grid;
   place-content: center;
+  background-color: var(--tertiary-bg);
 }
 .loader3 {
   display: flex;
@@ -141,8 +142,11 @@
   gap: 10px;
   height: 500px;
   width: 100%;
-  border-top: 1px solid var(--primary-border);
-  padding: 10px;
+  padding: 25px 30px;
+  height: max-content;
+  border-radius: 10px;
+  background-color: var(--secondary-bg);
+  margin-top: 2rem;
   div {
     &:nth-child(1) {
       width: 200px;

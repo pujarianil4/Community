@@ -1,9 +1,9 @@
 @import "/src/styles";
 .sidebar_container {
   // position: fixed;
-  background-color: var(--body-bg);
+  background-color: var(--secondary-bg);
   z-index: 1;
-  width: 250px;
+  width: 290px;
   height: 100%;
   transition: left ease-in-out 0.2s;
   // @media (width < 700px) {
@@ -27,8 +27,10 @@
   margin: 0px 15px;
   z-index: 11;
   display: none;
+  color: var(--white);
   @include lessThan(sm) {
     display: block;
+    width: 40px;
   }
 }
 .community_item {
@@ -41,6 +43,9 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
+  }
+  .createText {
+    color: var(--primary);
   }
 }
 .create_community_container {

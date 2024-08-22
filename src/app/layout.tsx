@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@rainbow-me/rainbowkit/styles.css";
-import "./globals.css";
+import "./globals.scss";
 import "../styles/index.scss";
 import "../styles/antd.scss";
 import { Providers } from "./providers";

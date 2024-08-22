@@ -1,7 +1,12 @@
+@import "/src/styles";
 .postcard_container {
   width: 100%;
-  border-top: 1px solid var(--primary-border);
-  padding: 10px;
+  padding: 25px 30px;
+  height: max-content;
+  border-radius: $base-border-radius-md;
+  background-color: var(--secondary-bg);
+  margin-top: 2rem;
+  color: var(--white);
   .user_head {
     display: flex;
     justify-content: space-between;
@@ -63,7 +68,7 @@
     height: 400px;
     margin: 10px 0px;
     width: 100%;
-    border: 1px solid var(--primary-border);
+    // border: 1px solid var(--primary-border);
     border-radius: 10px;
     overflow: hidden;
     position: relative;
@@ -77,7 +82,7 @@
     }
     .media {
       width: 100%;
-      height: 100%;
+      // height: 100%;
       object-fit: contain;
     }
   }
@@ -112,7 +117,7 @@
 }
 
 .feedlist {
-  padding: 10px;
+  // padding: 10px;
 }
 
 .filter_list {
@@ -140,6 +145,45 @@
     justify-content: space-between;
     svg {
       margin-top: 2px;
+    }
+  }
+}
+.tabs_list {
+  display: flex;
+  justify-content: space-between;
+  color: var(--primary);
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span {
+      display: flex;
+      gap: 5px;
+      background: var(--black);
+      padding: 12px 16px;
+      margin-right: 1rem;
+      border-radius: $base-border-radius-md;
+      font-size: $font-size-xsm;
+      border: 1px solid var(--tertiary-border);
+      cursor: pointer;
+      :hover {
+        background-color: var(--primary);
+      }
+      @include lessThan(sm) {
+        padding: 10px 9px;
+        font-size: $font-size-xxsm;
+      }
+      @include lessThan(md) {
+        padding: 10px 9px;
+        font-size: $font-size-xsm;
+      }
+    }
+  }
+  .active {
+    background: var(--secondary-bg);
+    border: 2px solid var(--secondary-bg);
+    :hover {
+      background: var(--secondary-hover);
     }
   }
 }

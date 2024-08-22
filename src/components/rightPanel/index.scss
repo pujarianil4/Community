@@ -9,8 +9,108 @@
   flex: 1;
   right: 0px;
   padding: 10px;
+  padding: 10px 0px 0px 10px;
   @include lg {
     display: none;
+  }
+
+  .card_heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--devider);
+    padding: 10px 0px;
+    h2 {
+      color: var(--white);
+    }
+    span {
+      color: var(--primary);
+      font-size: $font-size-sm;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .community_bx {
+      display: flex;
+      align-items: center;
+      padding-left: 20px;
+      gap: 0.7rem;
+      img {
+        width: 50px;
+        border-radius: 50%;
+      }
+      span {
+        color: var(--white);
+        vertical-align: middle;
+        .comm_icon {
+          background-color: var(--secondary-bg);
+          padding: 5px;
+        }
+      }
+    }
+  }
+  .post_heading {
+    border-bottom: 1px solid var(--devider);
+    padding: 20px 0px;
+    h2 {
+      color: var(--white);
+    }
+    span {
+      color: var(--primary);
+      font-size: $font-size-sm;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .post_bx {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      .username {
+        font-size: $font-size-xsm;
+      }
+      .community {
+        font-size: $font-size-xxsm;
+      }
+      img {
+        width: 25px;
+        border-radius: 50%;
+      }
+      span {
+        color: var(--white);
+        vertical-align: middle;
+      }
+      .comm_icon {
+        color: var(--white);
+      }
+    }
+    .post_content_bx {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .post_inn_bx {
+        padding: 10px;
+        img {
+          width: 100px;
+          height: 80px;
+          border-radius: $base-border-radius-md;
+        }
+      }
+      p {
+        color: var(--white);
+        font-size: $font-size-xsm;
+        max-height: 100px;
+      }
+      .post_comment {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 10px;
+        span {
+          font-size: 8px;
+        }
+      }
+    }
   }
 }
 
@@ -38,7 +138,7 @@
 }
 
 .recentposts {
-  background: var(--primary-bg);
+  background: var(--secondary-bg);
   padding: 5px;
   border-radius: 10px;
   border: 1px solid var(--primary-border);

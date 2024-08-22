@@ -61,16 +61,26 @@ $light: (
   //     rgba(110, 86, 255, 0.9),
   //     rgba(108, 84, 255, 0.87),
   //     rgba(32, 13, 148, 0.83)
-  //   ),,,,,,,,,,,,,
+  //   ),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 );
 
 $dark: (
-  white: #000000,
-  black: #fafafa,
+  primary: #ebb82a,
+  primary-hover: #ebb82a,
+  primary-bg-hover: #ebb82a,
+
+  white: #ffffff,
+  black: #000,
+  secondary: #18181b,
+  secondary-bg: #18181b,
+  secondary-hover: #0b0b11,
+  tertiary: #393a3d,
+  tertiary-bg: #393a3d,
+  tertiary-border: #393a3d,
+  devider: rgba(255, 255, 255, 0.3),
+  //old
   primary-bg: #000,
-  secondary-bg: #2b3236,
   secondary-hov: #181c1f,
-  tertiary-bg: #222222,
   body-bg: #0f1113,
   // body-bg: #fff,
   primary-border: #495057,
@@ -86,9 +96,6 @@ $dark: (
   label-text: #8ba2ad,
   primary-disable-tx: rgba(172, 172, 172, 0.5),
   primary-disable: rgba(127, 127, 127, 0.5),
-  primary: #1d9bf0,
-  primary-hover: #1d84c9,
-  primary-bg-hover: #4c32f9,
   // secondary: #dee2e6,
   // secondary-dark: #c2e2e3,
   // secondary-light: #d2eded,
@@ -126,5 +133,5 @@ $dark: (
   //     rgba(110, 86, 255, 0.9),
   //     rgba(108, 84, 255, 0.87),
   //     rgba(32, 13, 148, 0.83)
-  //   ),,,,,,,,,,,,,
+  //   ),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 );

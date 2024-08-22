@@ -3,8 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MenuProps, Modal } from "antd";
 import { AiOutlinePlus } from "react-icons/ai";
-import { GoHome } from "react-icons/go";
-import { PiMegaphone } from "react-icons/pi";
+
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { Button, Menu } from "antd";
 import { FiUpload } from "react-icons/fi";
@@ -13,7 +12,7 @@ import { FcAbout } from "react-icons/fc";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import { PiGlobeStand } from "react-icons/pi";
 import { MdOutlineTopic, MdContentPaste } from "react-icons/md";
-import { RiGalleryView } from "react-icons/ri";
+
 import "./index.scss";
 import CButton from "../common/Button";
 import {
@@ -27,6 +26,14 @@ import useAsync from "@/hooks/useAsync";
 import NotificationMessage from "../common/Notification";
 import { debounce, getRandomImageLink } from "@/utils/helpers";
 import CommunityList from "../common/loaders/communityList";
+
+import {
+  AddIcon,
+  HomeIcon,
+  NotificationIcon,
+  SettingIcon,
+  StatIcon,
+} from "@/assets/icons";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -102,32 +109,37 @@ const SideBar: React.FC = () => {
   const router = useRouter();
 
   const items: MenuItem[] = [
-    { key: "", icon: <GoHome size={20} />, label: "Home" },
-    { key: "popular", icon: <PiMegaphone size={20} />, label: "Popular" },
-    { key: "all", icon: <RiGalleryView size={20} />, label: "All" },
+    { key: "", icon: <HomeIcon />, label: "Home" },
+    { key: "popular", icon: <StatIcon />, label: "Popular" },
+    {
+      key: "notifications",
+      icon: <NotificationIcon />,
+      label: "Notifications",
+    },
+    { key: "all", icon: <SettingIcon />, label: "Settings" },
     {
       type: "divider",
     },
     {
       key: "community",
-      label: "Community",
-      icon: <HiOutlineUserGroup size={20} />,
+      label: "My Community",
+
       children: [
         {
           key: "createCommunity",
           label: (
             <div className='community_item'>
-              <AiOutlinePlus size={20} />
-              <span>Create Community</span>
+              <AddIcon />
+              <span className='createText'>Create Community</span>
             </div>
           ),
         },
       ].concat(isLoading ? LodingCommunities : communityList),
     },
+
     {
       key: "categories",
       label: "Categories",
-      icon: <BiCategory size={20} />,
       children: categories,
     },
   ];
@@ -182,21 +194,22 @@ const SideBar: React.FC = () => {
   }, [data]);
   return (
     <>
-      {" "}
       <RxHamburgerMenu
         className='hamburger'
         size={30}
         onClick={() => setIsOpen(!isOpen)}
       />
       <div className={`sidebar_container ${isOpen && "open"}`}>
-        <Menu
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["community", "categories"]}
-          mode='inline'
-          theme='dark'
-          onClick={onClick}
-          items={items}
-        />
+        <div className='custom-menu'>
+          <Menu
+            defaultSelectedKeys={["1"]}
+            defaultOpenKeys={["community", "categories"]}
+            mode='inline'
+            theme='dark'
+            onClick={onClick}
+            items={items}
+          />
+        </div>
       </div>
       <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
         <CreateCommunityModal
