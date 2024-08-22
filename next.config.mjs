@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "export",
   reactStrictMode: false,
   eslint: {
     ignoreDuringBuilds: true,
@@ -22,7 +23,7 @@ const nextConfig = {
   env: {
     BASE_API_URL: process.env.BASE_API_URL,
   },
-  // output: "export",
+
   typescript: {
     ignoreBuildErrors: true,
   },

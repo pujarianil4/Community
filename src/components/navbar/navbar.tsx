@@ -14,6 +14,9 @@ import "./navbar.scss";
 import CButton from "../common/Button";
 import { FaRegBell } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
+//
+import TelegramLogin from "../telegramLogin";
+import { TelegramUser } from "@/utils/types/types";
 
 import useRedux from "@/hooks/useRedux";
 import {
@@ -198,6 +201,12 @@ export default function Navbar() {
     }
   }, [userAccount.isConnected]);
 
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem('telegramUser');
+  //   if (storedUser) {
+  //     setTgUser(JSON.parse(storedUser) as TelegramUser);
+  //   }
+  // }, []);
   // fetch user details after refresh
   const fetchUser = async () => {
     const userData1: any = getClientSideCookie("authToken");
@@ -219,7 +228,6 @@ export default function Navbar() {
   };
   useEffect(() => {
     fetchUser();
-
     console.log("fetchUser", common?.refetch?.user);
 
     if (common?.refetch?.user) {
@@ -349,6 +357,8 @@ const SignUpModal = ({
 }: ISignUpModal) => {
   const [usernameError, setUsernameError] = useState<string>("");
   const CommonSelector = (state: RootState) => state?.common;
+  const [tgUser, setTgUser] = useState<any | null>(null);
+
   const [{ dispatch, actions }, [common]] = useRedux([CommonSelector]);
   const debouncedCheckUsername = debounce(async (username: string) => {
     try {
@@ -384,6 +394,9 @@ const SignUpModal = ({
       <div className='login'>
         <h4>Log In</h4>
         <CButton onClick={() => handleAuth(false)}>Connect Wallet</CButton>
+        <button>
+          <TelegramLogin />
+        </button>
       </div>
       <Divider className='divider'>Or</Divider>
       <div className='signup'>
