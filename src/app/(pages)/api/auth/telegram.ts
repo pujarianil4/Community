@@ -9,7 +9,7 @@
 //   const authData: AuthData = req.query as unknown as AuthData;
 
 //   // Your bot token
-//   const botToken = "7280759352:AAHqOAaBc9weSxHG7o1t6tFhbxN8l3QBG_c";
+//   const botToken = "";
 
 //   // Create a secret from the bot token
 //   const secret = crypto.createHash("sha256").update(botToken).digest();
