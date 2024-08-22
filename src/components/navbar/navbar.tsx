@@ -410,6 +410,7 @@ const SignUpModal = ({
           value={signupData.name}
         />
         <CButton
+          auth={true}
           disabled={
             usernameError === "Username already exists" ||
             !signupData?.username ||
