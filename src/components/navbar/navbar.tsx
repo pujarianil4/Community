@@ -44,6 +44,8 @@ import CInput from "../common/Input";
 import Image from "next/image";
 import NotificationMessage from "../common/Notification";
 import { useRouter } from "next/navigation";
+import EvmAuthComponent from "./EvmAuth";
+import SolanaAuthComponent from "./SolanaAuth";
 
 export interface ISignupData {
   username: string;
@@ -79,6 +81,7 @@ export default function Navbar() {
   const [userSession, setUserSession] = useState<any>(user || userData);
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const hasCalledRef = useRef(false);
+  const [modalTab, setModalTab] = useState(1);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -94,6 +97,7 @@ export default function Navbar() {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    setModalTab(1);
   };
 
   const handleClosePostModal = () => {
@@ -121,62 +125,64 @@ export default function Navbar() {
     } catch (error) {}
   };
 
-  const handleAuth = async () => {
-    try {
-      const sign = await getSignMessage(msg);
-      console.log("handleAuth1");
-      setMessageHash(sign);
-      let response;
-      if (isSignup) {
-        response = await handleSignup(
-          signupData.username,
-          signupData.name,
-          sign,
-          msg
-        );
-      } else {
-        response = await handleLogIn({ sig: sign, msg });
-      }
-      const userdata = await fetchUserById(response?.uid);
-      const user = {
-        username: userdata.username,
-        name: userdata?.name || "",
-        uid: response?.uid || 0,
-        token: response?.token || "",
-        img: userdata?.img,
-      };
-      console.log("auth", user);
+  // const handleAuth = async () => {
+  //   try {
+  //     const sign = await getSignMessage(msg);
+  //     console.log("handleAuth1");
+  //     setMessageHash(sign);
+  //     let response;
+  //     if (isSignup) {
+  //       response = await handleSignup(
+  //         signupData.username,
+  //         signupData.name,
+  //         sign,
+  //         msg
+  //       );
+  //     } else {
+  //       response = await handleLogIn({ sig: sign, msg });
+  //     }
+  //     const userdata = await fetchUserById(response?.uid);
+  //     const user = {
+  //       username: userdata.username,
+  //       name: userdata?.name || "",
+  //       uid: response?.uid || 0,
+  //       token: response?.token || "",
+  //       img: userdata?.img,
+  //     };
+  //     console.log("auth", user);
 
-      setClientSideCookie("authToken", JSON.stringify(user));
-      // setToLocalStorage("userSession", user);
-      dispatch(actions.setUserData(user));
-      if (user?.token == "" || user.token == null || user.token == undefined) {
-        setUserSession(null);
-      } else {
-        setUserSession(user);
-      }
-      handleCancel();
-      setSignupData({ username: "", name: "" });
-      setTimeout(() => {
-        disconnect();
-        console.log("disconnect");
-        setMessageHash(undefined);
-        hasCalledRef.current = false;
-      }, 4000);
-    } catch (error: any) {
-      console.log({ error });
+  //     setClientSideCookie("authToken", JSON.stringify(user));
+  //     // setToLocalStorage("userSession", user);
+  //     dispatch(actions.setUserData(user));
+  //     if (user?.token == "" || user.token == null || user.token == undefined) {
+  //       setUserSession(null);
+  //     } else {
+  //       setUserSession(user);
+  //     }
+  //     handleCancel();
+  //     setSignupData({ username: "", name: "" });
+  //     setTimeout(() => {
+  //       disconnect();
+  //       console.log("disconnect");
+  //       setMessageHash(undefined);
+  //       hasCalledRef.current = false;
+  //     }, 4000);
+  //   } catch (error: any) {
+  //     console.log({ error });
 
-      NotificationMessage(
-        "error",
-        error.response.data.message || "User Not Registered !"
-      );
-      setTimeout(() => {
-        disconnect();
-        setMessageHash(undefined);
-        hasCalledRef.current = false;
-      }, 4000);
-    }
-  };
+  //     NotificationMessage(
+  //       "error",
+  //       error.response.data.message || "User Not Registered !"
+  //     );
+  //     setTimeout(() => {
+  //       disconnect();
+  //       setMessageHash(undefined);
+  //       hasCalledRef.current = false;
+  //     }, 4000);
+  //   }
+  // };
+
+  const getUserAuthData = (user: any) => {};
 
   useEffect(() => {
     if (user?.token == "" || user.token == null || user.token == undefined) {
@@ -186,19 +192,19 @@ export default function Navbar() {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (
-      userAccount.isConnected &&
-      !messageHash &&
-      !hasCalledRef.current &&
-      common.walletRoute == "auth"
-    ) {
-      handleAuth();
-      console.log("handleAuth");
+  // useEffect(() => {
+  //   if (
+  //     userAccount.isConnected &&
+  //     !messageHash &&
+  //     !hasCalledRef.current &&
+  //     common.walletRoute == "auth"
+  //   ) {
+  //     handleAuth();
+  //     console.log("handleAuth");
 
-      hasCalledRef.current = true;
-    }
-  }, [userAccount.isConnected]);
+  //     hasCalledRef.current = true;
+  //   }
+  // }, [userAccount.isConnected]);
 
   // fetch user details after refresh
   const fetchUser = async () => {
@@ -221,9 +227,6 @@ export default function Navbar() {
   };
   useEffect(() => {
     fetchUser();
-
-    console.log("fetchUser", common?.refetch?.user);
-
     if (common?.refetch?.user) {
       dispatch(actions.setRefetchUser(false));
     }
@@ -319,10 +322,10 @@ export default function Navbar() {
       </nav>
       <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
         <SignUpModal
-          openModal={openConnectModal}
-          signupData={signupData}
-          setSignupData={setSignupData}
-          setIsSignup={setIsSignup}
+          modalTab={modalTab}
+          setModalTab={setModalTab}
+          handleCancel={handleCancel}
+          isModalOpen={isModalOpen}
         />
       </Modal>
       <Modal
@@ -339,21 +342,35 @@ export default function Navbar() {
 }
 
 interface ISignUpModal {
-  openModal: (() => void) | undefined;
-  signupData: ISignupData;
-  setSignupData: React.Dispatch<React.SetStateAction<ISignupData>>;
-  setIsSignup: React.Dispatch<React.SetStateAction<boolean>>;
+  handleCancel: () => void;
+  isModalOpen: boolean;
+  modalTab: number;
+  setModalTab: (tab: number) => void;
+  // signupData: ISignupData;
+  // setSignupData: React.Dispatch<React.SetStateAction<ISignupData>>;
+  // setIsSignup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SignUpModal = ({
-  openModal,
-  signupData,
-  setSignupData,
-  setIsSignup,
+  handleCancel,
+  isModalOpen,
+  modalTab,
+  setModalTab,
 }: ISignUpModal) => {
   const [usernameError, setUsernameError] = useState<string>("");
   const CommonSelector = (state: RootState) => state?.common;
+
   const [{ dispatch, actions }, [common]] = useRedux([CommonSelector]);
+  const [signUpData, setSignUpData] = useState({ username: "", name: "" });
+  const [isSignUp, setIsSignUp] = useState(false);
+
+  useEffect(() => {
+    setModalTab(1);
+    console.log("modal", modalTab, isModalOpen);
+
+    return () => setModalTab(1);
+  }, [isModalOpen]);
+
   const debouncedCheckUsername = debounce(async (username: string) => {
     try {
       if (username === "") {
@@ -374,57 +391,110 @@ const SignUpModal = ({
   const handleAuth = (isSignup: boolean = true) => {
     console.log("IF_CALL");
     dispatch(actions.setWalletRoute("auth"));
-    openModal && openModal();
-    setIsSignup(isSignup);
+    // openModal && openModal();
+    setModalTab(3);
+    setIsSignUp(isSignup);
   };
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setSignupData({ ...signupData, username: value.trim() });
+    setSignUpData({ ...signUpData, username: value.trim() });
     debouncedCheckUsername(value);
+  };
+
+  const handleUserAuthData = (user: any) => {
+    if (user.error) {
+      setSignUpData({ username: "", name: "" });
+      setModalTab(1);
+      setIsSignUp(false);
+      handleCancel();
+    } else {
+      setClientSideCookie("authToken", JSON.stringify(user));
+      // setToLocalStorage("userSession", user);
+      dispatch(actions.setUserData(user));
+      dispatch(actions.setRefetchUser(true));
+      setSignUpData({ username: "", name: "" });
+      setModalTab(1);
+      setIsSignUp(false);
+      handleCancel();
+    }
+
+    // if (user?.token == "" || user.token == null || user.token == undefined) {
+    //   // setUserSession(null);
+    // } else {
+    //   //setUserSession(user);
+    // }
   };
 
   return (
     <div className='signUpModal'>
-      <div className='login'>
-        <h4>Log In</h4>
-        <CButton onClick={() => handleAuth(false)}>Connect Wallet</CButton>
-      </div>
-      <Divider className='divider'>Or</Divider>
-      <div className='signup'>
-        <h4>SignUp</h4>
-        <CInput
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
-          type='text'
-          placeholder='UserName'
-          value={signupData.username}
-        />
-        <p
-          className={`${
-            usernameError == "Username is available" ? "success" : "error"
-          }`}
-        >
-          {usernameError}
-        </p>
-        <CInput
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setSignupData({ ...signupData, name: e.target.value.trim() })
-          }
-          type='text'
-          placeholder='Name (Optional)'
-          value={signupData.name}
-        />
-        <CButton
-          disabled={
-            usernameError === "Username already exists" ||
-            !signupData?.username ||
-            !signupData?.name
-          }
-          onClick={() => handleAuth()}
-          size={18}
-        >
-          Sign Up
-        </CButton>
-      </div>
+      {modalTab === 1 && (
+        <div className='login'>
+          <h4>Log In</h4>
+          <CButton auth={true} onClick={() => handleAuth(false)}>
+            Connect Wallet
+          </CButton>
+          <p>
+            Don't have account?{" "}
+            <span onClick={() => setModalTab(2)}>SignUp</span>
+          </p>
+        </div>
+      )}
+
+      {modalTab === 2 && (
+        <div className='signup'>
+          <h4>SignUp</h4>
+          <CInput
+            onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
+            type='text'
+            placeholder='UserName'
+            value={signUpData.username}
+          />
+          <p
+            className={`${
+              usernameError == "Username is available" ? "success" : "error"
+            }`}
+          >
+            {usernameError}
+          </p>
+          <CInput
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setSignUpData({ ...signUpData, name: e.target.value.trim() })
+            }
+            type='text'
+            placeholder='Name (Optional)'
+            value={signUpData.name}
+          />
+          <CButton
+            auth={true}
+            disabled={
+              usernameError === "Username already exists" ||
+              !signUpData?.username ||
+              !signUpData?.name
+            }
+            onClick={() => handleAuth()}
+            size={18}
+          >
+            Sign Up
+          </CButton>
+          <p>
+            have account? <span onClick={() => setModalTab(1)}>LogIn</span>
+          </p>
+        </div>
+      )}
+      {modalTab == 3 && (
+        <div className='wallet_modal'>
+          <EvmAuthComponent
+            isSignUp={isSignUp}
+            signUpData={signUpData}
+            setUserAuthData={handleUserAuthData}
+          />
+          <SolanaAuthComponent
+            isSignUp={isSignUp}
+            signUpData={signUpData}
+            setUserAuthData={handleUserAuthData}
+          />
+        </div>
+      )}
     </div>
   );
 };
