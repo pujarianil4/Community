@@ -80,12 +80,36 @@ export type ErrorType = {
   statusCode: number;
 };
 
-export interface TelegramUser {
+//types for telegram auth
+export interface TelegramAuthData {
   id: number;
   first_name: string;
-  last_name?: string;
-  username?: string;
-  photo_url?: string;
-  auth_date: string;
+  auth_date: number;
   hash: string;
+  last_name?: string;
+  photo_url?: string;
+  username?: string;
+}
+
+export interface LoginButtonProps {
+  /**
+   * The URL where the auth data from Telegram will be sent.
+   */
+  authCallbackUrl?: string;
+  botUsername: string;
+  buttonSize?: "large" | "medium" | "small";
+  cornerRadius?: number;
+  lang?: string;
+
+  onAuthCallback?: (data: TelegramAuthData) => void;
+  requestAccess?: "write";
+  showAvatar?: boolean;
+  widgetVersion?: number | string;
+}
+
+export type TTelegramAuthLogin = Pick<LoginButtonProps, "onAuthCallback">;
+declare global {
+  interface Window {
+    TelegramAuthLogin: TTelegramAuthLogin;
+  }
 }
