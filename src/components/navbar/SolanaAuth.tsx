@@ -42,6 +42,7 @@ const SolanaAuthComponent = ({
     try {
       const message = new TextEncoder().encode(sigMsg);
       const hashSign = await signMessage?.(message);
+      console.log("sign message", signMessage);
       const signedMessage = Buffer.from(hashSign || "").toString("hex");
       console.log("signedMessage", signedMessage);
 
