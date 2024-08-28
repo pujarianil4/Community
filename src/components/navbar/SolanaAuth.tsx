@@ -56,7 +56,11 @@ const SolanaAuthComponent = ({
           sigMsg
         );
       } else {
-        response = await handleLogIn({ sig: signedMessage, msg: sigMsg });
+        response = await handleLogIn({
+          sig: signedMessage,
+          msg: sigMsg,
+          pubKey: publicKey,
+        });
       }
       const userdata = await fetchUserById(response?.uid);
       const user = {

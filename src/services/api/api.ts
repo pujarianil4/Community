@@ -1,5 +1,5 @@
-import { removeFromLocalStorage } from "./../../utils/helpers/index";
-import { setToLocalStorage } from "@/utils/helpers";
+import { PublicKey } from "@solana/web3.js";
+
 import axios, { AxiosInstance } from "axios";
 import { store } from "@contexts/store";
 import {
@@ -39,6 +39,7 @@ store.subscribe(updateAuthorizationHeader);
 export const handleLogIn = async (payload: {
   sig: `0x${string}` | string | undefined;
   msg: string;
+  pubKey: PublicKey | string | null;
 }) => {
   const response = await api.post("/auth/login", payload);
 
