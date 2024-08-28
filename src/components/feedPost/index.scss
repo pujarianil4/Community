@@ -65,9 +65,10 @@
   }
 
   .postMedia {
-    height: 400px;
     margin: 10px 0px;
     width: 100%;
+    height: 400px;
+    // aspect-ratio: 3/2;
     // border: 1px solid var(--primary-border);
     border-radius: 10px;
     overflow: hidden;

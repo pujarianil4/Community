@@ -46,7 +46,7 @@ export default function Post() {
           </p>
           <div className='post_comment'>
             <span>
-              <DropdownUpIcon width={15} height={15} /> 625
+              <DropdownUpIcon width={12} height={12} /> 625
             </span>
             <span>
               <MessageIcon width={15} height={15} /> 65 Comments

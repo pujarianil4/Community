@@ -102,6 +102,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   const { isLoading, data: communityList } = useAsync(fetchCommunities);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
   const [pics, setPics] = useState<File[]>([]);
+  const [uplodedImg, setUploadedImg] = useState<File[]>([]);
   const [content, setContent] = useState<string>("");
   const [selectedOption, setSelectedOption] = useState<ICommunity | null>();
   const [searchTerm, setSearchTerm] = useState("");
@@ -112,6 +113,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
       const data = {
         cid: selectedOption?.id,
         text: content,
+        images: uplodedImg,
       };
       await handlePostToCommunity(data);
       setIsLoadingPost(false);
@@ -179,6 +181,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
     setPics([file[0]]);
     try {
       const uploadedFile = await uploadSingleFile(file[0]);
+      setUploadedImg([uploadedFile]);
     } catch (error) {
       console.error("Error uploading files", error);
       NotificationMessage("error", "Error uploading files");

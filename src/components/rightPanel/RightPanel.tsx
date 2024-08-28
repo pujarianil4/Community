@@ -1,4 +1,3 @@
-import { getRandomImageLink } from "@/utils/helpers";
 import React from "react";
 import "./index.scss";
 import Post from "./post";
@@ -24,7 +23,7 @@ export default function RightPanel() {
             <img src='https://testcommunity.s3.amazonaws.com/0125f211-bf33-4610-8e73-6fc864787743-metamaskicon.png' />
             <span> anilcommunity</span>
           </div>
-          <div>
+          <div className='community_join'>
             <span className='comm_icon'>Join</span>
           </div>
         </div>
@@ -33,9 +32,10 @@ export default function RightPanel() {
             <img src='https://testcommunity.s3.amazonaws.com/0125f211-bf33-4610-8e73-6fc864787743-metamaskicon.png' />
             <span> anilcommunity</span>
           </div>
-          <div>
+          <div className='community_join'>
             <span className='comm_icon'>
-              <AddIcon fill='#ffffff' />
+              Join
+              {/* <AddIcon fill='#ffffff' /> */}
             </span>
           </div>
         </div>
@@ -44,9 +44,10 @@ export default function RightPanel() {
             <img src='https://testcommunity.s3.amazonaws.com/0125f211-bf33-4610-8e73-6fc864787743-metamaskicon.png' />
             <span> anilcommunity</span>
           </div>
-          <div>
+          <div className='community_join'>
             <span className='comm_icon'>
-              <AddIcon fill='#ffffff' />
+              Join
+              {/* <AddIcon fill='#ffffff' /> */}
             </span>
           </div>
         </div>

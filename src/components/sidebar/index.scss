@@ -10,7 +10,7 @@
   //   width: 200px;
   //   left: 0px;
   // }
-  @include lessThan(sm) {
+  @include lessThan(lg) {
     position: absolute;
     left: -300px;
     width: 250px;
@@ -27,10 +27,11 @@
   margin: 0px 15px;
   z-index: 11;
   display: none;
-  color: var(--white);
-  @include lessThan(sm) {
+  color: var(--primary);
+  @include lessThan(lg) {
     display: block;
     width: 40px;
+    cursor: pointer;
   }
 }
 .community_item {

@@ -18,6 +18,10 @@
         margin: 10px;
         text-decoration: none;
         cursor: pointer;
+
+        @include lessThan(lg) {
+          margin-left: 40px;
+        }
       }
     }
   }
