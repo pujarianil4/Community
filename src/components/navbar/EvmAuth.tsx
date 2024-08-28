@@ -20,45 +20,45 @@ export default function EvmAuthComponent({
   signUpData,
   setUserAuthData,
 }: IEvmAuthComponent) {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
   const { connect, connectors } = useConnect();
   const { openConnectModal } = useConnectModal();
   const [signature, setSignature] = useState<string | null>(null);
 
   const signUserMessage = useCallback(async () => {
-    if (!isConnected) throw new Error("Not connected");
-    console.log("signedMessage", "tiger");
-    try {
-      const signedMessage = await getSignMessage(sigMsg);
-      console.log("signedMessage", signedMessage);
-
-      setSignature(signedMessage || "");
-
-      disconnect();
-      let response;
-      if (isSignUp) {
-        response = await handleSignup(
-          signUpData.username,
-          signUpData.name,
-          signedMessage,
-          sigMsg
-        );
-      } else {
-        response = await handleLogIn({ sig: signedMessage, msg: sigMsg });
+    console.log("signedMessage", "tiger", isConnected);
+    if (isConnected) {
+      try {
+        const signedMessage = await getSignMessage(sigMsg);
+        console.log("signedMessage", signedMessage);
+        setSignature(signedMessage || "");
+        let response;
+        if (isSignUp) {
+          response = await handleSignup(
+            signUpData.username,
+            signUpData.name,
+            signedMessage,
+            sigMsg
+          );
+        } else {
+          response = await handleLogIn({ sig: signedMessage, msg: sigMsg });
+        }
+        const userdata = await fetchUserById(response?.uid);
+        const user = {
+          username: userdata.username,
+          name: userdata?.name || "",
+          uid: response?.uid || 0,
+          token: response?.token || "",
+          img: userdata?.img,
+        };
+        console.log("auth", user);
+        setUserAuthData(user);
+        disconnect();
+      } catch (error) {
+        disconnect();
+        console.error("Error signing the message:", error);
       }
-      const userdata = await fetchUserById(response?.uid);
-      const user = {
-        username: userdata.username,
-        name: userdata?.name || "",
-        uid: response?.uid || 0,
-        token: response?.token || "",
-        img: userdata?.img,
-      };
-      console.log("auth", user);
-      setUserAuthData(user);
-    } catch (error) {
-      console.error("Error signing the message:", error);
     }
   }, [isConnected]);
 
