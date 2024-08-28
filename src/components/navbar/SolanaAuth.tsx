@@ -42,8 +42,9 @@ const SolanaAuthComponent = ({
     try {
       const message = new TextEncoder().encode(sigMsg);
       const hashSign = await signMessage?.(message);
+      const PUBLICKEY = publicKey.toBase58();
       const signedMessage = Buffer.from(hashSign || "").toString("hex");
-      console.log("signedMessage", signedMessage);
+      console.log("signedMessage", signedMessage, sigMsg, PUBLICKEY);
 
       setSignature(signedMessage);
       disconnect();
@@ -53,13 +54,14 @@ const SolanaAuthComponent = ({
           signUpData.username,
           signUpData.name,
           signedMessage,
-          sigMsg
+          sigMsg,
+          PUBLICKEY
         );
       } else {
         response = await handleLogIn({
           sig: signedMessage,
           msg: sigMsg,
-          pubKey: publicKey,
+          pubKey: PUBLICKEY,
         });
       }
       const userdata = await fetchUserById(response?.uid);

@@ -20,7 +20,7 @@ export default function EvmAuthComponent({
   signUpData,
   setUserAuthData,
 }: IEvmAuthComponent) {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
   const { connect, connectors } = useConnect();
   const { openConnectModal } = useConnectModal();
@@ -35,7 +35,6 @@ export default function EvmAuthComponent({
 
       setSignature(signedMessage || "");
 
-      disconnect();
       let response;
       if (isSignUp) {
         response = await handleSignup(
@@ -57,10 +56,11 @@ export default function EvmAuthComponent({
       };
       console.log("auth", user);
       setUserAuthData(user);
+      // disconnect();
     } catch (error) {
       console.error("Error signing the message:", error);
     }
-  }, [isConnected]);
+  }, []);
 
   React.useEffect(() => {
     if (isConnected) {
