@@ -92,8 +92,6 @@ const SolanaAuthComponent = ({
 
   // Effect to sign the message when the wallet connects
   React.useEffect(() => {
-    console.log(connected);
-
     if (connected) {
       signUserMessage();
     }
@@ -103,8 +101,9 @@ const SolanaAuthComponent = ({
     <div className='solana_wallets'>
       <h2>Solana Wallets</h2>
       {/* <button>Solana Wallets</button> */}
-      {wallets?.map((wallet) => (
+      {wallets?.map((wallet, i) => (
         <div
+          key={i}
           className='wallet'
           onClick={() => handleWalletClick(wallet.adapter.name)}
         >
