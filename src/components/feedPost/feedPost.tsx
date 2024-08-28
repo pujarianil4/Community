@@ -1,18 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
 import { LiaArrowRightSolid } from "react-icons/lia";
 import { PiArrowFatUpLight, PiArrowFatDownLight } from "react-icons/pi";
 import { GoComment, GoShareAndroid } from "react-icons/go";
 import Image from "next/image";
-import { patchPost } from "@/services/api/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getImageSource, timeAgo } from "@/utils/helpers";
 import { IPost } from "@/utils/types/types";
-import Media from "./media";
-// import MarkdownRenderer from "../common/MarkDownRender";
+import SwipeCarousel from "../common/carousel";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -26,6 +24,16 @@ const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post }: IProps) {
   const { text, up, down, time, img, user, community, id } = post;
   const router = useRouter();
+
+  // TODO repleace these with actual data
+  const dummyImgs: any[] = [
+    "https://picsum.photos/300/300?random=1",
+    "https://picsum.photos/200/300?random=2",
+    "https://picsum.photos/300/300?random=3",
+    "https://picsum.photos/200/300?random=4",
+    "https://picsum.photos/300/300?random=5",
+    "https://www.w3schools.com/html/mov_bbb.mp4",
+  ];
 
   let postAssets: string[] = [];
   if (typeof img === "string") {
@@ -61,8 +69,7 @@ export default function FeedPost({ post }: IProps) {
           >
             <div className='head'>
               <Image
-                // src={community?.logo ?? imgLink}
-                src={community.logo || imgLink}
+                src={community?.logo || imgLink}
                 alt='community'
                 width={24}
                 height={24}
@@ -74,9 +81,15 @@ export default function FeedPost({ post }: IProps) {
         <span>{timeAgo(time)}</span>
       </div>
 
-      <div className='content' onClick={() => handleRedirectPost()}>
+      <div
+        className='content'
+        onClick={(event) => {
+          handleRedirectPost();
+          event.stopPropagation();
+        }}
+      >
         <MarkdownRenderer markdownContent={text} />
-        <Media assets={postAssets} />
+        {dummyImgs.length > 0 && <SwipeCarousel assets={dummyImgs} />}
       </div>
 
       <div className='actions'>

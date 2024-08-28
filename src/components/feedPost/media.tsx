@@ -1,68 +1,55 @@
-"use client";
-import {
-  getRandomImageLink,
-  getRandomPost,
-  identifyMediaType,
-} from "@/utils/helpers";
-import React, { useState } from "react";
+import React from "react";
+import { identifyMediaType } from "@/utils/helpers";
 import CVideo from "../common/Video";
 import Image from "next/image";
 
 interface IProps {
-  assets: string[];
+  asset: string;
+  totalAssets?: number;
+  className?: string;
 }
 
-export default function Media({ assets }: IProps) {
-  const [expanded, setExpanded] = useState(false);
-  const handleExpand = (
-    val: boolean,
-    event: React.MouseEvent<HTMLImageElement>
-  ) => {
-    event.stopPropagation();
-    setExpanded(val);
-  };
-  const mediaURLs = [
-    getRandomPost(),
-    // getRandomPost(),
-    // getRandomPost(),
-    // getRandomPost(),
-  ];
-  console.log("media", mediaURLs);
+export default function Media({ asset, totalAssets, className }: IProps) {
+  // const [expanded, setExpanded] = useState(false);
+  // const handleExpand = (
+  //   val: boolean,
+  //   event: React.MouseEvent<HTMLImageElement>
+  // ) => {
+  //   event.stopPropagation();
+  //   setExpanded(val);
+  // };
+
   return (
     <>
       <div
-        className='post_media'
-        onClick={(event: React.MouseEvent<HTMLImageElement>) =>
-          handleExpand(true, event)
-        }
+        className={`post_media ${className}`}
+        // onClick={(event: React.MouseEvent<HTMLImageElement>) =>
+        //   handleExpand(true, event)
+        // }
       >
         <Image
           loading='lazy'
           className='imgbg'
-          src={getRandomImageLink()}
+          src={asset}
           alt='postbg'
-          fill
-          sizes='(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          layout='fill'
+          objectFit='cover'
+          objectPosition='center'
         />
-        {mediaURLs?.map((asset: string) => (
-          <>
-            {identifyMediaType(asset) == "image" && (
-              // <img className='media' src={asset} alt='post' />
-              <Image
-                loading='lazy'
-                className='media'
-                src={asset}
-                alt='post'
-                fill
-                sizes='(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw'
-              />
-            )}
-            {identifyMediaType(asset) == "video" && <CVideo src={asset} />}
-          </>
-        ))}
-        {/*  */}
+        {identifyMediaType(asset) === "image" && (
+          <Image
+            loading='lazy'
+            className={`media ${className}`}
+            // style={{ maxWidth: `calc(90% / ${totalAssets})` }}
+            src={asset}
+            alt='post'
+            layout='fill'
+            objectFit='contain'
+          />
+        )}
+        {identifyMediaType(asset) === "video" && <CVideo src={asset} />}
       </div>
-      {expanded && (
+      {/* {expanded && (
         <div className='expanded_view'>
           <span
             className='close_icon'
@@ -72,29 +59,18 @@ export default function Media({ assets }: IProps) {
           >
             &#x2715;
           </span>
-          {/* <Image
-            className='expanded_media imgbg'
-            loading='lazy'
-            src={assets[0] || mediaURLs[0]}
-            alt='postbg'
-            fill
-            sizes='(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw'
-          /> */}
-
-          {identifyMediaType(assets[0] || mediaURLs[0]) == "image" && (
+          {identifyMediaType(asset) === "image" && (
             <Image
               className='expanded_media'
-              src={assets[0] || mediaURLs[0]}
+              src={asset}
               alt='post'
-              fill
-              sizes='(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw'
+              layout='fill'
+              objectFit='contain'
             />
           )}
-          {identifyMediaType(mediaURLs[0]) == "video" && (
-            <CVideo src={mediaURLs[0]} />
-          )}
+          {identifyMediaType(asset) === "video" && <CVideo src={asset} />}
         </div>
-      )}
+      )} */}
     </>
   );
 }
