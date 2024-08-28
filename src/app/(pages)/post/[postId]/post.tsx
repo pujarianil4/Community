@@ -9,9 +9,10 @@ import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 import { GoComment, GoShareAndroid } from "react-icons/go";
 // import { getPostsByPostId } from "@/services/api/api";
 // import useAsync from "@/hooks/useAsync";
-import ReactMarkdown from "react-markdown";
+// import ReactMarkdown from "react-markdown";
 // import PostPageLoader from "@/components/common/loaders/postPage";
 import { IPost } from "@/utils/types/types";
+import MarkdownRenderer from "@/components/common/MarkDownRender";
 
 interface Iprops {
   post: IPost;
@@ -76,7 +77,8 @@ export default function Post({ post }: Iprops) {
       />
     </div> */}
         {/* <p>{post?.text}</p> */}
-        <ReactMarkdown>{post?.text}</ReactMarkdown>
+        {/* <ReactMarkdown>{post?.text}</ReactMarkdown> */}
+        <MarkdownRenderer markdownContent={post?.text} />
       </div>
       <div className='actions'>
         <div>

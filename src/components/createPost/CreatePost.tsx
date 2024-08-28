@@ -7,7 +7,6 @@ import { LuImagePlus } from "react-icons/lu";
 import { MdDeleteOutline, MdOutlineGifBox } from "react-icons/md";
 import {
   fetchCommunities,
-  getPosts,
   handlePostToCommunity,
   uploadMultipleFile,
   uploadSingleFile,
@@ -22,7 +21,6 @@ import { getImageSource } from "@/utils/helpers";
 import { ErrorType, ICommunity } from "@/utils/types/types";
 import NotificationMessage from "../common/Notification";
 import CButton from "../common/Button";
-// import RichTextEditor from "../common/richTextEditor";
 // import SkeltonLoader from "./skeltonLoader";
 
 const RichTextEditor = dynamic(() => import("../common/richTextEditor"), {
@@ -68,7 +66,7 @@ interface FileInputProps {
   children: React.ReactNode;
 }
 
-const FileInput: React.FC<FileInputProps> = React.memo(
+export const FileInput: React.FC<FileInputProps> = React.memo(
   ({ onChange, children }) => {
     const fileRef = useRef<HTMLInputElement>(null);
 
@@ -101,6 +99,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
   const { isLoading, data: communityList } = useAsync(fetchCommunities);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
+  const [isDisabled, setISDisabled] = useState(false);
   const [pics, setPics] = useState<File[]>([]);
   const [content, setContent] = useState<string>("");
   const [selectedOption, setSelectedOption] = useState<ICommunity | null>();
@@ -131,43 +130,18 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   // const handleUploadFile = async (newPics: FileList) => {
   //   console.log("FILES_DATA", newPics);
   //   try {
-  //     if (newPics.length === 0) {
-  //       return;
-  //     }
+  //     // if (newPics.length === 0) {
+  //     //   return;
+  //     // }
 
   //     const filesArray = Array.from(newPics);
-  //     console.log("FILES_ARR", filesArray);
+  //     // console.log("FILES_ARR", filesArray);
   //     // const uploadedFiles = await Promise.all(
   //     //   filesArray?.map((file) => uploadMultipleFile(file))
   //     // );
-  //     const uploadedFiles = await uploadMultipleFile(filesArray);
+  //     const uploadedFiles = await uploadMultipleFile(newPics);
 
   //     setPics((prevPics) => [...prevPics, ...filesArray]);
-  //     console.log("Uploaded files:", uploadedFiles);
-  //   } catch (error) {
-  //     console.error("Error uploading files", error);
-  //     NotificationMessage("error", "Error uploading files");
-  //   }
-  // };
-
-  // const handleUploadFile = async (newPics: FileList) => {
-  //   try {
-  //     if (newPics.length === 0) {
-  //       return;
-  //     }
-  //     console.log("Selected Files:", Array.from(newPics));
-
-  //     const formData = new FormData();
-  //     Array.from(newPics)?.forEach((file, index) =>
-  //       // formData.append(`file${index}`, file)
-  //       console.log("LIST", index, file)
-  //     );
-
-  //     console.log("FormData before upload:", formData);
-
-  //     const uploadedFiles = await uploadMultipleFile(formData); // Use the updated function
-
-  //     setPics((prevPics) => [...prevPics, ...Array.from(newPics)]);
   //     console.log("Uploaded files:", uploadedFiles);
   //   } catch (error) {
   //     console.error("Error uploading files", error);
@@ -179,11 +153,17 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
     setPics([file[0]]);
     try {
       const uploadedFile = await uploadSingleFile(file[0]);
+      console.log("UPLOADED_FILE", uploadedFile);
     } catch (error) {
       console.error("Error uploading files", error);
       NotificationMessage("error", "Error uploading files");
     }
   };
+
+  useEffect(() => {
+    setISDisabled(!content || !selectedOption);
+    console.log("DIS", !content || !selectedOption);
+  }, [content, selectedOption]);
 
   if (isLoading) {
     return <div className='create_post_loader'>loading...</div>;
@@ -232,12 +212,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
         <hr />
         <div className='media'>
           <div className='inputs'>
-            <FileInput
-              // onChange={(newPics) =>
-              //   setPics((prevPics) => [...prevPics, ...Array.from(newPics)])
-              // }
-              onChange={handleUploadFile}
-            >
+            <FileInput onChange={handleUploadFile}>
               <LuImagePlus color='var(--primary)' size={20} />
             </FileInput>
             <MdOutlineGifBox color='var(--primary)' size={20} />
@@ -246,7 +221,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
           {/* <div className='postbtn'> */}
           <CButton
             loading={isLoadingPost}
-            disabled={content === "" || selectedOption === null}
+            disabled={isDisabled}
             onClick={handlePost}
           >
             Post
