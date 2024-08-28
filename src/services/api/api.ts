@@ -37,7 +37,7 @@ updateAuthorizationHeader();
 store.subscribe(updateAuthorizationHeader);
 
 export const handleLogIn = async (payload: {
-  sig: `0x${string}` | undefined;
+  sig: `0x${string}` | string | undefined;
   msg: string;
 }) => {
   const response = await api.post("/auth/login", payload);
