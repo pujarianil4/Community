@@ -55,6 +55,8 @@ export function useEthersSigner({ chainId }: { chainId?: number } = {}) {
 }
 
 export const getSignMessage = async (msg: string) => {
+  console.log("callSigner", msg);
+
   try {
     const result = await signMessage(wagmiConfig, {
       message: msg,

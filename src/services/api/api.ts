@@ -1,5 +1,5 @@
-import { removeFromLocalStorage } from "./../../utils/helpers/index";
-import { setToLocalStorage } from "@/utils/helpers";
+import { PublicKey } from "@solana/web3.js";
+
 import axios, { AxiosInstance } from "axios";
 import { store } from "@contexts/store";
 import {
@@ -39,6 +39,7 @@ store.subscribe(updateAuthorizationHeader);
 export const handleLogIn = async (payload: {
   sig: `0x${string}` | string | undefined;
   msg: string;
+  pubKey?: PublicKey | string | null;
 }) => {
   const response = await api.post("/auth/login", payload);
 
@@ -62,7 +63,8 @@ export const handleSignup = async (
   username: string,
   name: string,
   sig: string | undefined,
-  msg: string
+  msg: string,
+  pubKey?: PublicKey | string | null
 ) => {
   try {
     const response = await api.post("/auth/signup", {
@@ -70,6 +72,7 @@ export const handleSignup = async (
       name,
       sig,
       msg,
+      pubKey,
     });
     console.log("==============userSignUp=================", response);
     // setToLocalStorage("userSession", response.data);
@@ -373,6 +376,29 @@ export const uploadSingleFile = async (file: File) => {
   }
 };
 
+export const uploadMultipleFile = async (files: FileList) => {
+  try {
+    const formData = new FormData();
+
+    Array.from(files).forEach((file, index) => {
+      formData.append(`files${index}`, file);
+    });
+
+    console.log("This is my form data!", formData);
+
+    // Send a POST request with the form data and Bearer token
+    const response = await api.post("/upload/multi", files, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log("Upload successful:", response.data);
+  } catch (error) {
+    console.error("Upload failed:", error);
+  }
+};
+
 // export const uploadMultipleFile = async (files: FileList) => {
 //   try {
 //     console.log("BEFORE", files);
@@ -403,28 +429,28 @@ export const uploadSingleFile = async (file: File) => {
 //   }
 // };
 
-export const uploadMultipleFile = async (files: FileList) => {
-  try {
-    console.log("Selected Files:", files);
+// export const uploadMultipleFile = async (files: FileList) => {
+//   try {
+//     console.log("Selected Files:", files);
 
-    const formData = new FormData();
+//     const formData = new FormData();
 
-    for (let i = 0; i < files.length; i++) {
-      formData.append("files[]", files[i]);
-    }
+//     for (let i = 0; i < files.length; i++) {
+//       formData.append(`files${i}`, fs.createReadStream(files[i]));
+//     }
 
-    console.log("FormData before upload:", formData);
+//     console.log("FormData before upload:", formData);
 
-    const response = await api.post("/upload/multi", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+//     const response = await api.post("/upload/multi", formData, {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     });
 
-    console.log("Files uploaded successfully", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Error uploading files", error);
-    throw error;
-  }
-};
+//     console.log("Files uploaded successfully", response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error uploading files", error);
+//     throw error;
+//   }
+// };

@@ -42,8 +42,9 @@ const SolanaAuthComponent = ({
     try {
       const message = new TextEncoder().encode(sigMsg);
       const hashSign = await signMessage?.(message);
+      const PUBLICKEY = publicKey.toBase58();
       const signedMessage = Buffer.from(hashSign || "").toString("hex");
-      console.log("signedMessage", signedMessage);
+      console.log("signedMessage", signedMessage, sigMsg, PUBLICKEY);
 
       setSignature(signedMessage);
       disconnect();
@@ -53,10 +54,15 @@ const SolanaAuthComponent = ({
           signUpData.username,
           signUpData.name,
           signedMessage,
-          sigMsg
+          sigMsg,
+          PUBLICKEY
         );
       } else {
-        response = await handleLogIn({ sig: signedMessage, msg: sigMsg });
+        response = await handleLogIn({
+          sig: signedMessage,
+          msg: sigMsg,
+          pubKey: PUBLICKEY,
+        });
       }
       const userdata = await fetchUserById(response?.uid);
       const user = {
@@ -86,8 +92,6 @@ const SolanaAuthComponent = ({
 
   // Effect to sign the message when the wallet connects
   React.useEffect(() => {
-    console.log(connected);
-
     if (connected) {
       signUserMessage();
     }
@@ -97,8 +101,9 @@ const SolanaAuthComponent = ({
     <div className='solana_wallets'>
       <h2>Solana Wallets</h2>
       {/* <button>Solana Wallets</button> */}
-      {wallets?.map((wallet) => (
+      {wallets?.map((wallet, i) => (
         <div
+          key={i}
           className='wallet'
           onClick={() => handleWalletClick(wallet.adapter.name)}
         >

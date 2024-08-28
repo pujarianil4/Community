@@ -34,7 +34,8 @@ export interface IPost {
   ccount: number;
   time: string;
   user: IUser;
-  img?: string;
+  img?: string[];
+  // img?: string;
   community: ICommunity;
 }
 

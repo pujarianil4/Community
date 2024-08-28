@@ -125,65 +125,6 @@ export default function Navbar() {
     } catch (error) {}
   };
 
-  // const handleAuth = async () => {
-  //   try {
-  //     const sign = await getSignMessage(msg);
-  //     console.log("handleAuth1");
-  //     setMessageHash(sign);
-  //     let response;
-  //     if (isSignup) {
-  //       response = await handleSignup(
-  //         signupData.username,
-  //         signupData.name,
-  //         sign,
-  //         msg
-  //       );
-  //     } else {
-  //       response = await handleLogIn({ sig: sign, msg });
-  //     }
-  //     const userdata = await fetchUserById(response?.uid);
-  //     const user = {
-  //       username: userdata.username,
-  //       name: userdata?.name || "",
-  //       uid: response?.uid || 0,
-  //       token: response?.token || "",
-  //       img: userdata?.img,
-  //     };
-  //     console.log("auth", user);
-
-  //     setClientSideCookie("authToken", JSON.stringify(user));
-  //     // setToLocalStorage("userSession", user);
-  //     dispatch(actions.setUserData(user));
-  //     if (user?.token == "" || user.token == null || user.token == undefined) {
-  //       setUserSession(null);
-  //     } else {
-  //       setUserSession(user);
-  //     }
-  //     handleCancel();
-  //     setSignupData({ username: "", name: "" });
-  //     setTimeout(() => {
-  //       disconnect();
-  //       console.log("disconnect");
-  //       setMessageHash(undefined);
-  //       hasCalledRef.current = false;
-  //     }, 4000);
-  //   } catch (error: any) {
-  //     console.log({ error });
-
-  //     NotificationMessage(
-  //       "error",
-  //       error.response.data.message || "User Not Registered !"
-  //     );
-  //     setTimeout(() => {
-  //       disconnect();
-  //       setMessageHash(undefined);
-  //       hasCalledRef.current = false;
-  //     }, 4000);
-  //   }
-  // };
-
-  const getUserAuthData = (user: any) => {};
-
   useEffect(() => {
     if (user?.token == "" || user.token == null || user.token == undefined) {
       setUserSession(null);
@@ -191,20 +132,6 @@ export default function Navbar() {
       setUserSession(user);
     }
   }, [user]);
-
-  // useEffect(() => {
-  //   if (
-  //     userAccount.isConnected &&
-  //     !messageHash &&
-  //     !hasCalledRef.current &&
-  //     common.walletRoute == "auth"
-  //   ) {
-  //     handleAuth();
-  //     console.log("handleAuth");
-
-  //     hasCalledRef.current = true;
-  //   }
-  // }, [userAccount.isConnected]);
 
   // fetch user details after refresh
   const fetchUser = async () => {

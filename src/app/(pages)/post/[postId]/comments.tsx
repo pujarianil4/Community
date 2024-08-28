@@ -2,9 +2,11 @@
 
 import CButton from "@/components/common/Button";
 import CommentsLoader from "@/components/common/loaders/comments";
+import MarkdownRenderer from "@/components/common/MarkDownRender";
 import NotificationMessage from "@/components/common/Notification";
 import RichTextEditor from "@/components/common/richTextEditor";
 import TextArea from "@/components/common/textArea";
+import { FileInput } from "@/components/createPost/CreatePost";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
@@ -23,7 +25,7 @@ import { LuImagePlus } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
 import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 import { RiText } from "react-icons/ri";
-import ReactMarkdown from "react-markdown";
+// import ReactMarkdown from "react-markdown";
 
 interface Iprops {
   postId: number;
@@ -168,8 +170,8 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
               className='comment_img'
             />
           )}
-          <ReactMarkdown>{comment?.content}</ReactMarkdown>
-
+          {/* <ReactMarkdown>{comment?.content}</ReactMarkdown> */}
+          <MarkdownRenderer markdownContent={comment?.content} />
           {/* <p>{comment?.content}</p> */}
         </div>
         <div className='actions'>
@@ -286,7 +288,6 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   };
 
   const handleDeleteImage = () => {
-    console.log("DELETE");
     const wrapper = document.querySelector(".comment_image_wrapper");
     wrapper?.classList.add("fade-out");
 
@@ -355,35 +356,3 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     </div>
   );
 };
-
-interface FileInputProps {
-  onChange: (files: FileList) => void;
-  children: React.ReactNode;
-}
-
-const FileInput: React.FC<FileInputProps> = React.memo(
-  ({ onChange, children }) => {
-    const fileRef = React.useRef<HTMLInputElement>(null);
-
-    const onPickFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files && event.target.files.length > 0) {
-        onChange(event.target.files);
-      }
-    };
-
-    return (
-      <div onClick={() => fileRef.current && fileRef.current.click()}>
-        {children}
-        <input
-          multiple
-          ref={fileRef}
-          onChange={onPickFile}
-          type='file'
-          style={{ display: "none" }}
-        />
-      </div>
-    );
-  }
-);
-
-FileInput.displayName = "FileInput";

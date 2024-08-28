@@ -76,6 +76,16 @@
 .ant-notification-notice {
   height: fit-content;
 }
+
+.markdown_container {
+  a {
+    color: var(--link-color) !important;
+
+    &:hover {
+      color: var(--link-hover-color) !important;
+    }
+  }
+}
 .ant-notification-notice-close {
   color: var(--primary-text) !important;
 }
