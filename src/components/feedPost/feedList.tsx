@@ -37,7 +37,6 @@ export default function FeedList({ method, id }: IFeedList) {
     refetch,
     callFunction,
   } = useAsync(getFunctionByMethod[method], id);
-  console.log("POST", posts);
   const refetchRoute = (state: RootState) => state?.common.refetch.user;
   const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
   const loadingArray = Array(5).fill(() => 0);

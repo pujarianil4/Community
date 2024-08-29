@@ -13,6 +13,7 @@ import { GoComment, GoShareAndroid } from "react-icons/go";
 // import PostPageLoader from "@/components/common/loaders/postPage";
 import { IPost } from "@/utils/types/types";
 import MarkdownRenderer from "@/components/common/MarkDownRender";
+import SwipeCarousel from "@/components/common/carousel";
 
 interface Iprops {
   post: IPost;
@@ -44,18 +45,18 @@ export default function Post({ post }: Iprops) {
         </Link>
         <div className='names'>
           <Link
-            href={`c/${post?.community.username}`}
-            as={`/c/${post?.community.username}`}
-            className='community_name'
-          >
-            {post?.community.username}
-          </Link>
-          <Link
             href={`c/${post?.user.username}`}
             as={`/c/${post?.user.username}`}
             className='user_name'
           >
             {post?.user.username}
+          </Link>
+          <Link
+            href={`c/${post?.community.username}`}
+            as={`/c/${post?.community.username}`}
+            className='community_name'
+          >
+            {post?.community.username}
           </Link>
         </div>
         <p className='post_time'>
@@ -68,17 +69,8 @@ export default function Post({ post }: Iprops) {
       </div>
       {/* Content */}
       <div className='content'>
-        {/* <div className='post-image'>
-      <Image
-        src='https://i.imgur.com/Qpw6j8D_d.webp?maxwidth=760&fidelity=grand'
-        loading='lazy'
-        alt='blog'
-        fill
-      />
-    </div> */}
-        {/* <p>{post?.text}</p> */}
-        {/* <ReactMarkdown>{post?.text}</ReactMarkdown> */}
         <MarkdownRenderer markdownContent={post?.text} />
+        {post?.images && <SwipeCarousel assets={post?.images} />}
       </div>
       <div className='actions'>
         <div>

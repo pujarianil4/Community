@@ -7,39 +7,89 @@
   background-color: var(--secondary-bg);
   margin-top: 2rem;
   color: var(--white);
+  // .user_head {
+  //   display: flex;
+  //   justify-content: space-between;
+  //   align-items: center;
+  //   margin-bottom: 8px;
+  //   div {
+  //     display: flex;
+  //     gap: 10px;
+  //     align-items: center;
+
+  //     .head {
+  //       cursor: pointer;
+  //       gap: 5px;
+  //     }
+  //     img {
+  //       width: 25px;
+  //       height: 25px;
+  //       border-radius: 50%;
+  //       background-color: beige;
+  //     }
+  //     span {
+  //       font-size: 12px;
+  //       color: var(--primary-text);
+  //     }
+  //   }
+  //   span {
+  //     font-size: 10px;
+  //     color: var(--label-text);
+  //   }
+  // }
+
   .user_head {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 8px;
+    flex-direction: row;
     margin-bottom: 8px;
-    div {
-      display: flex;
-      gap: 10px;
-      align-items: center;
+    img {
+      border-radius: 50%;
+    }
+    a {
+      color: var(--primary-text) !important;
+      transition: color 0.3s ease;
+      &:hover {
+        color: var(--primary);
+      }
+    }
+    a,
+    p {
+      font-size: 15px;
+    }
 
-      .head {
-        cursor: pointer;
-        gap: 5px;
+    .names {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .user_name {
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--primary-text);
       }
-      img {
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-        background-color: beige;
-      }
-      span {
-        font-size: 12px;
+
+      .community_name {
         color: var(--primary-text);
       }
     }
-    span {
-      font-size: 10px;
+    .post_time {
+      margin-bottom: auto;
+      margin-top: 8px;
       color: var(--label-text);
+    }
+    .more {
+      margin-left: auto;
+      cursor: pointer;
+      svg {
+        fill: var(--label-text);
+      }
     }
   }
 
   .content {
-    margin: 12px 0;
+    margin: 12px 0 12px 52px;
     cursor: pointer;
     .post_image {
       position: relative;
@@ -62,7 +112,7 @@
   .actions {
     display: flex;
     gap: 15px;
-    margin-top: 8px;
+    margin: 8px 0 0 52px;
     div,
     a {
       background-color: var(--secondary-bg);

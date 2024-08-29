@@ -215,7 +215,7 @@ export default function Navbar() {
                 <AddIcon />
                 Create Post
               </CButton>
-              <FaRegBell size={25} />
+              <FaRegBell className='notification' size={25} />
               <div className='user_icon'>
                 <Popover
                   placement='bottomRight'
@@ -361,7 +361,7 @@ const SignUpModal = ({
             Connect Wallet
           </CButton>
           <p>
-            Don't have account?{" "}
+            Don&apos;t have account?
             <span onClick={() => setModalTab(2)}>SignUp</span>
           </p>
         </div>

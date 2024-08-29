@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import "./index.scss";
 import Media from "@/components/feedPost/media";
