@@ -361,12 +361,12 @@ const SignUpModal = ({
           <CButton auth={true} onClick={() => handleAuth(false)}>
             Connect Wallet
           </CButton>
-          <button>
+          {/* <button>
             <TelegramLogin
               botUsername={"communitysetupbot"}
               onAuthCallback={handleTelegramAuth}
             />
-          </button>
+          </button> */}
           <p>
             Don't have account?{" "}
             <span onClick={() => setModalTab(2)}>SignUp</span>
