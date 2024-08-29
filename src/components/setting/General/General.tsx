@@ -4,7 +4,11 @@ import { getSignMessage } from "@/config/ethers";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
-import { getAddressesByUserId, linkAddress } from "@/services/api/api";
+import {
+  getAddressesByUserId,
+  linkAddress,
+  updateUser,
+} from "@/services/api/api";
 import { sigMsg } from "@/utils/constants";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import React, { useEffect, useRef, useState } from "react";
@@ -12,6 +16,7 @@ import { useAccount, useDisconnect } from "wagmi";
 import TelegramLogin from "@/components/common/auth/telegramAuth";
 import CButton from "@/components/common/Button";
 import { TelegramAuthData } from "@/utils/types/types";
+import NotificationMessage from "@/components/common/Notification";
 
 export default function General() {
   const { openConnectModal } = useConnectModal();
@@ -78,8 +83,19 @@ export default function General() {
     }
   }, [userAccount.isConnected, user]);
 
-  const handleTelegramAuth = (user: TelegramAuthData) => {
-    console.log("User authenticated:", user);
+  const handleTelegramAuth = async (user: TelegramAuthData) => {
+    try {
+      console.log("User authenticated:", user);
+      updateUser({ tid: String(user.id) })
+        .then((res) => {
+          NotificationMessage("success", "Telegram Profile linked.");
+        })
+        .catch((err) => {
+          throw err;
+        });
+    } catch (error) {
+      console.error("Error authenticating user:", error);
+    }
   };
 
   return (

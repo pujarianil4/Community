@@ -7,6 +7,7 @@ export interface IUser {
   cta?: string;
   uta?: string;
   desc?: string;
+  tid?: string;
 }
 
 export interface ICommunity {
