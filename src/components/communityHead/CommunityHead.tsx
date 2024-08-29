@@ -17,8 +17,14 @@ import useRedux from "@/hooks/useRedux";
 import Followers from "../userHead/followers/Followers";
 import Followings from "../userHead/Followings/Followings";
 import { getImageSource, getRandomImageLink } from "@/utils/helpers";
-import { DiscordIcon, TelegramIcon, TwitterIcon } from "@/assets/icons";
+import {
+  AddIcon,
+  DiscordIcon,
+  TelegramIcon,
+  TwitterIcon,
+} from "@/assets/icons";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
@@ -77,6 +83,11 @@ export default function CommunityHead() {
     } catch (error) {}
   };
 
+  const handleCreatePost = () => {
+    // TODO: Show create post with current community
+    console.log("CREATE_POST");
+  };
+
   useEffect(() => {
     setIsFollowed(data?.isFollowed);
     console.log("User", data);
@@ -86,7 +97,7 @@ export default function CommunityHead() {
       {!data ? (
         <UandCHeadLoader />
       ) : (
-        <div>
+        <div className='user_container'>
           {/* <div className='userhead_cotainer'>
             <div className='info'>
               <img
@@ -193,6 +204,14 @@ export default function CommunityHead() {
                 <TwitterIcon />
               </div>
             </div>
+          </div>
+          <div className='more_btns'>
+            <Link href={`p`} as={`/p`}>
+              <CButton className='btn'>Proposal</CButton>
+            </Link>
+            <CButton onClick={handleCreatePost} className='btn'>
+              <AddIcon /> Create Post
+            </CButton>
           </div>
           <CTabs
             items={[

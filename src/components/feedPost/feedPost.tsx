@@ -2,7 +2,6 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
-import { LiaArrowRightSolid } from "react-icons/lia";
 import { PiArrowFatUpLight, PiArrowFatDownLight } from "react-icons/pi";
 import { GoComment, GoShareAndroid } from "react-icons/go";
 import Image from "next/image";
@@ -25,23 +24,6 @@ const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post }: IProps) {
   const { text, up, down, time, images, user, community, id } = post;
   const router = useRouter();
-
-  // TODO repleace these with actual data
-  const dummyImgs: any[] = [
-    "https://picsum.photos/300/300?random=1",
-    "https://picsum.photos/200/300?random=2",
-    "https://picsum.photos/300/300?random=3",
-    "https://picsum.photos/200/300?random=4",
-    "https://picsum.photos/300/300?random=5",
-    "https://www.w3schools.com/html/mov_bbb.mp4",
-  ];
-
-  // let postAssets: string[] = [];
-  // if (typeof img === "string") {
-  //   postAssets = [img];
-  // } else if (Array.isArray(img)) {
-  //   postAssets = img.filter((item) => typeof item === "string");
-  // }
 
   const handleRedirectPost = () => {
     router.push(`/post/${id}`);
