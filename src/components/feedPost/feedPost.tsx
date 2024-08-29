@@ -44,7 +44,7 @@ export default function FeedPost({ post }: IProps) {
   // }
 
   const handleRedirectPost = () => {
-    router.push(`post/${id}`);
+    router.push(`/post/${id}`);
   };
 
   return (
@@ -96,8 +96,8 @@ export default function FeedPost({ post }: IProps) {
         </Link>
         <div className='names'>
           <Link
-            href={`c/${post?.user.username}`}
-            as={`/c/${post?.user.username}`}
+            href={`u/${post?.user.username}`}
+            as={`/u/${post?.user.username}`}
             className='user_name'
           >
             {post?.user.username}
