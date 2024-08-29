@@ -44,7 +44,8 @@ import NotificationMessage from "../common/Notification";
 import { useRouter } from "next/navigation";
 import EvmAuthComponent from "./EvmAuth";
 import SolanaAuthComponent from "./SolanaAuth";
-
+import TelegramLogin from "./telegramAuth";
+import { TelegramAuthData } from "@/utils/types/types";
 export interface ISignupData {
   username: string;
   name: string;
@@ -55,6 +56,7 @@ const msg = sigMsg;
 const commonSelector = (state: RootState) => state?.common;
 const userNameSelector = (state: RootState) => state?.user;
 
+const tgBotName = process.env.TG_BOT_NAME;
 export default function Navbar() {
   const userAccount = useAccount();
 
@@ -347,6 +349,9 @@ const SignUpModal = ({
     //   //setUserSession(user);
     // }
   };
+  const handleTelegramAuth = (user: TelegramAuthData) => {
+    console.log("User authenticated:", user);
+  };
 
   return (
     <div className='signUpModal'>
@@ -356,6 +361,12 @@ const SignUpModal = ({
           <CButton auth={true} onClick={() => handleAuth(false)}>
             Connect Wallet
           </CButton>
+          <button>
+            <TelegramLogin
+              botUsername={tgBotName ?? ""}
+              onAuthCallback={handleTelegramAuth}
+            />
+          </button>
           <p>
             Don't have account?{" "}
             <span onClick={() => setModalTab(2)}>SignUp</span>

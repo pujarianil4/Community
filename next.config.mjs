@@ -21,6 +21,7 @@ const nextConfig = {
   },
   env: {
     BASE_API_URL: process.env.BASE_API_URL,
+    TG_BOT_NAME: "communitysetupbot",
   },
   // output: "export",
   typescript: {
