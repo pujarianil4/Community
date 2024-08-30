@@ -45,7 +45,6 @@ export default function Media({ asset, totalAssets, className }: IProps) {
             alt='postbg'
             width={100}
             height={100}
-
             // objectPosition='center'
             // priority
           />
