@@ -46,7 +46,8 @@
     border-radius: 50%;
   }
   .createText {
-    color: var(--primary);
+    color: var(--primary) !important;
+    background: transparent !important;
   }
 }
 .create_community_container {

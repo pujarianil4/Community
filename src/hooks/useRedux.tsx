@@ -44,13 +44,13 @@ export default function useRedux<T>(selectors?: any): [UseReduxHook, any] {
   //   selectors?.map((selector: any) => selector(store.getState())) || [];
 
   const [selectedStates, setSelectedStates] = useState<T[]>(
-    selectors.map((selector: any) => selector(store.getState()))
+    selectors?.map((selector: any) => selector(store.getState()))
   );
 
   useEffect(() => {
     const handleChange = () => {
       setSelectedStates(
-        selectors.map((selector: any) => selector(store.getState()))
+        selectors?.map((selector: any) => selector(store.getState()))
       );
     };
 

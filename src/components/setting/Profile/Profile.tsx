@@ -139,7 +139,7 @@ export default function Profile() {
         const file = event.target.files[0];
         const imgURL = await uploadSingleFile(file);
         console.log("IMGURL", imgURL);
-        setUser({ ...user, img: imgURL?.url });
+        setUser({ ...user, img: imgURL });
         setIsUploading(false);
       } catch (error) {
         setIsUploading(false);
