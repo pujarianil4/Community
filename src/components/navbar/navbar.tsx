@@ -34,7 +34,9 @@ import {
   setClientSideCookie,
 } from "@/utils/helpers";
 import Link from "next/link";
-import fetchDiscordData from "./fetchDiscord";
+
+//import Discord Authentication
+import fetchDiscordData from "@/services/api/fetchDiscord";
 
 import { sigMsg } from "@/utils/constants";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -109,6 +111,7 @@ export default function Navbar() {
     console.log("userSession", userSession);
   }, [userSession]);
 
+  // Discord Data Load
   useEffect(() => {
     const fetchData = async () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -127,6 +130,7 @@ export default function Navbar() {
 
     fetchData();
   }, []);
+
   const userLogout = async () => {
     try {
       const logout = await handleLogOut();
