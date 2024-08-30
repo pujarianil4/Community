@@ -12,6 +12,7 @@ import { FaAngleDown } from "react-icons/fa6";
 import "./index.scss";
 import FeedPostLoader from "../common/loaders/Feedpost";
 import { Popover } from "antd";
+import { AddIcon } from "@/assets/icons";
 
 const getFunctionByMethod = {
   allPosts: getPosts,
@@ -36,12 +37,12 @@ export default function FeedList({ method, id }: IFeedList) {
     refetch,
     callFunction,
   } = useAsync(getFunctionByMethod[method], id);
-
   const refetchRoute = (state: RootState) => state?.common.refetch.user;
   const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
   const loadingArray = Array(5).fill(() => 0);
   const [filterBy, setFilterBy] = useState("time");
   const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("ccount");
 
   const lable: any = {
     time: "New",
@@ -52,6 +53,7 @@ export default function FeedList({ method, id }: IFeedList) {
     callFunction(getFunctionByMethod[method], filter);
     setFilterBy(filter);
     handlePopover(false);
+    setActiveTab(filter);
   };
 
   useEffect(() => {
@@ -66,9 +68,19 @@ export default function FeedList({ method, id }: IFeedList) {
   }, [refetchData]);
 
   const list = (
-    <div className='filter_list'>
-      <p onClick={() => handleFilter("ccount")}>Hot</p>
-      <p onClick={() => handleFilter("time")}>New</p>
+    <div>
+      <span
+        className={activeTab === "ccount" ? "active" : ""}
+        onClick={() => handleFilter("ccount")}
+      >
+        Trending(Hot)
+      </span>
+      <span
+        className={activeTab === "time" ? "active" : ""}
+        onClick={() => handleFilter("time")}
+      >
+        Most Liked (New)
+      </span>
     </div>
   );
 
@@ -79,18 +91,14 @@ export default function FeedList({ method, id }: IFeedList) {
   return (
     <>
       {method == "allPosts" && (
-        <div className='filter'>
-          <Popover
-            placement='bottomRight'
-            content={list}
-            trigger='click'
-            open={isOpen}
-          >
-            <div onClick={() => handlePopover(true)}>
-              <span>{lable[filterBy]}</span>
-              <FaAngleDown />
-            </div>
-          </Popover>
+        <div className='tabs_list'>
+          {list}
+          <div>
+            <span>
+              <AddIcon width={14} height={14} />
+              Create Post
+            </span>
+          </div>
         </div>
       )}
 

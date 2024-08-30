@@ -17,6 +17,14 @@ import useRedux from "@/hooks/useRedux";
 import Followers from "../userHead/followers/Followers";
 import Followings from "../userHead/Followings/Followings";
 import { getImageSource, getRandomImageLink } from "@/utils/helpers";
+import {
+  AddIcon,
+  DiscordIcon,
+  TelegramIcon,
+  TwitterIcon,
+} from "@/assets/icons";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
@@ -75,6 +83,11 @@ export default function CommunityHead() {
     } catch (error) {}
   };
 
+  const handleCreatePost = () => {
+    // TODO: Show create post with current community
+    console.log("CREATE_POST");
+  };
+
   useEffect(() => {
     setIsFollowed(data?.isFollowed);
     console.log("User", data);
@@ -84,8 +97,8 @@ export default function CommunityHead() {
       {!data ? (
         <UandCHeadLoader />
       ) : (
-        <div>
-          <div className='userhead_cotainer'>
+        <div className='user_container'>
+          {/* <div className='userhead_cotainer'>
             <div className='info'>
               <img
                 src={data?.logo ? data?.logo : getImageSource(data?.logo)}
@@ -125,6 +138,80 @@ export default function CommunityHead() {
                 <p>{data?.metadata}</p>
               </div>
             </div>
+          </div> */}
+          <div className='userhead_cotainer'>
+            <div className='cover_photo'>
+              <Image
+                loading='lazy'
+                className='imgbg'
+                src='https://picsum.photos/700/220?random=1'
+                alt='coverbg'
+                fill
+                objectFit='cover'
+                // objectPosition='center'
+                // priority
+              />
+              <Image
+                src='https://picsum.photos/700/220?random=1'
+                alt='cover_photo'
+                layout='fill'
+                loading='lazy'
+                objectFit='contain'
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+              />
+            </div>
+            <div className='details'>
+              <div className='detailed_data'>
+                <div className='box user'>
+                  <div className='avatar'>
+                    <Image
+                      src={
+                        data?.logo
+                          ? data?.logo
+                          : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                      }
+                      alt='user'
+                      fill
+                    />
+                  </div>
+                  <div className='names'>
+                    <h4>{data?.name}</h4>
+                    <span className='username'>@{data?.username}</span>
+                  </div>
+                </div>
+                <div className='stats box'>
+                  <p>Followers</p>
+                  <h4>1,111</h4>
+                </div>
+                <div className='stats box'>
+                  <p>Following</p>
+                  <h4>111</h4>
+                </div>
+                <div className='stats box'>
+                  <p>Posts</p>
+                  <h4>5</h4>
+                </div>
+              </div>
+              <div className='activity'>
+                <p className='about'>{data?.metadata}</p>
+                <CButton className='follow_btn'>
+                  {isFollowed ? "Unfollow" : "Follow"}
+                </CButton>
+              </div>
+              <div className='socials'>
+                <DiscordIcon />
+                <TelegramIcon />
+                <TwitterIcon />
+              </div>
+            </div>
+          </div>
+          <div className='more_btns'>
+            <Link href={`p`} as={`/p`}>
+              <CButton className='btn'>Proposal</CButton>
+            </Link>
+            <CButton onClick={handleCreatePost} className='btn'>
+              <AddIcon /> Create Post
+            </CButton>
           </div>
           <CTabs
             items={[

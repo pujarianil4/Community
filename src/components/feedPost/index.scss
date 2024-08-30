@@ -1,41 +1,95 @@
 @import "/src/styles";
 .postcard_container {
   width: 100%;
-  border-top: 1px solid var(--primary-border);
-  padding: 10px;
+  padding: 25px 30px;
+  height: max-content;
+  border-radius: $base-border-radius-md;
+  background-color: var(--secondary-bg);
+  margin-top: 2rem;
+  color: var(--white);
+  // .user_head {
+  //   display: flex;
+  //   justify-content: space-between;
+  //   align-items: center;
+  //   margin-bottom: 8px;
+  //   div {
+  //     display: flex;
+  //     gap: 10px;
+  //     align-items: center;
+
+  //     .head {
+  //       cursor: pointer;
+  //       gap: 5px;
+  //     }
+  //     img {
+  //       width: 25px;
+  //       height: 25px;
+  //       border-radius: 50%;
+  //       background-color: beige;
+  //     }
+  //     span {
+  //       font-size: 12px;
+  //       color: var(--primary-text);
+  //     }
+  //   }
+  //   span {
+  //     font-size: 10px;
+  //     color: var(--label-text);
+  //   }
+  // }
+
   .user_head {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 8px;
+    flex-direction: row;
     margin-bottom: 8px;
-    div {
-      display: flex;
-      gap: 10px;
-      align-items: center;
+    img {
+      border-radius: 50%;
+    }
+    a {
+      color: var(--primary-text) !important;
+      transition: color 0.3s ease;
+      &:hover {
+        color: var(--primary);
+      }
+    }
+    a,
+    p {
+      font-size: 15px;
+    }
 
-      .head {
-        cursor: pointer;
-        gap: 5px;
+    .names {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .user_name {
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--primary-text);
       }
-      img {
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-        background-color: beige;
-      }
-      span {
-        font-size: 12px;
+
+      .community_name {
         color: var(--primary-text);
       }
     }
-    span {
-      font-size: 10px;
+    .post_time {
+      margin-bottom: auto;
+      margin-top: 8px;
       color: var(--label-text);
+    }
+    .more {
+      margin-left: auto;
+      cursor: pointer;
+      svg {
+        fill: var(--label-text);
+      }
     }
   }
 
   .content {
-    margin: 12px 0;
+    margin: 12px 0 12px 52px;
     cursor: pointer;
     .post_image {
       position: relative;
@@ -58,7 +112,7 @@
   .actions {
     display: flex;
     gap: 15px;
-    margin-top: 8px;
+    margin: 8px 0 0 52px;
     div,
     a {
       background-color: var(--secondary-bg);
@@ -89,7 +143,7 @@
 }
 
 .feedlist {
-  padding: 10px;
+  // padding: 10px;
 }
 
 // Media component
@@ -200,6 +254,45 @@
     justify-content: space-between;
     svg {
       margin-top: 2px;
+    }
+  }
+}
+.tabs_list {
+  display: flex;
+  justify-content: space-between;
+  color: var(--primary);
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span {
+      display: flex;
+      gap: 5px;
+      background: var(--black);
+      padding: 12px 16px;
+      margin-right: 1rem;
+      border-radius: $base-border-radius-md;
+      font-size: $font-size-xsm;
+      border: 1px solid var(--tertiary-border);
+      cursor: pointer;
+      :hover {
+        background-color: var(--primary);
+      }
+      @include lessThan(sm) {
+        padding: 10px 9px;
+        font-size: $font-size-xxsm;
+      }
+      @include lessThan(md) {
+        padding: 10px 9px;
+        font-size: $font-size-xsm;
+      }
+    }
+  }
+  .active {
+    background: var(--secondary-bg);
+    border: 2px solid var(--secondary-bg);
+    :hover {
+      background: var(--secondary-hover);
     }
   }
 }

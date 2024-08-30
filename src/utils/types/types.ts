@@ -34,7 +34,7 @@ export interface IPost {
   ccount: number;
   time: string;
   user: IUser;
-  img?: string[];
+  images?: string[];
   // img?: string;
   community: ICommunity;
 }
@@ -81,6 +81,11 @@ export type ErrorType = {
   statusCode: number;
 };
 
+export interface IIConProps {
+  fill?: string;
+  width?: string | number;
+  height?: string | number;
+}
 //types for telegram auth
 export interface TelegramAuthData {
   id: number;

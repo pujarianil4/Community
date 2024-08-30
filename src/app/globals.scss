@@ -1,3 +1,4 @@
+@import "/src/styles";
 * {
   box-sizing: border-box;
   margin: 0;
@@ -5,8 +6,6 @@
 }
 body {
   margin: auto;
-  background-color: var(--body-bg);
-  color: var(--primary-text);
 }
 
 a {
@@ -73,3 +72,11 @@ main {
 .fr-placeholder {
   margin-top: 0px !important;
 } */
+
+.card {
+  width: 394px;
+  height: max-content;
+  background-color: var(--secondary-bg);
+  border-radius: $base-border-radius-md;
+  padding: 12px 25px;
+}

@@ -15,7 +15,7 @@
       border-radius: 50%;
     }
     a {
-      color: var(--primary-text);
+      color: var(--primary-text) !important;
       transition: color 0.3s ease;
       &:hover {
         color: var(--primary);
@@ -25,9 +25,21 @@
     p {
       font-size: 15px;
     }
+
     .names {
       display: flex;
       flex-direction: column;
+      gap: 4px;
+
+      .user_name {
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--primary-text);
+      }
+
+      .community_name {
+        color: var(--primary-text);
+      }
     }
     .post_time {
       margin-bottom: auto;
@@ -36,6 +48,9 @@
     .more {
       margin-left: auto;
       cursor: pointer;
+      svg {
+        fill: var(--label-text);
+      }
     }
   }
 
@@ -52,10 +67,12 @@
       word-spacing: 1px;
       line-height: 1.2;
       margin-bottom: 4px;
+      color: var(--primary-text);
     }
     li {
       margin: 4px 0;
       margin-left: 16px;
+      color: var(--primary-text);
     }
   }
 

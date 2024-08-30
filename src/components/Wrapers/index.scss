@@ -1,9 +1,9 @@
 @import "/src/styles";
 .main_panel_container {
   flex: 2;
-  max-width: 700px;
+  max-width: 900px;
   overflow-y: scroll;
-  min-width: 410px;
+  min-width: 370px;
   padding: 20px;
   // @media (width < 700px) {
   //   margin-left: 200px;
@@ -13,6 +13,7 @@
   }
 }
 .wraper {
+  background-color: var(--black);
   width: 100%;
   margin: auto;
   display: flex;

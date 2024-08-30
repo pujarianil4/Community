@@ -368,8 +368,8 @@ export const uploadSingleFile = async (file: File) => {
       },
     });
 
-    console.log("File uploaded successfully", response.data);
-    return response.data;
+    console.log("File uploaded successfully", response.data.url);
+    return response.data.url;
   } catch (error) {
     console.error("Error uploading file", error);
     throw error;

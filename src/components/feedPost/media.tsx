@@ -32,9 +32,10 @@ export default function Media({ asset, totalAssets, className }: IProps) {
           className='imgbg'
           src={asset}
           alt='postbg'
-          layout='fill'
+          fill
           objectFit='cover'
-          objectPosition='center'
+          // objectPosition='center'
+          // priority
         />
         {identifyMediaType(asset) === "image" && (
           <Image
