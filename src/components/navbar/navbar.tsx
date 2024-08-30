@@ -44,9 +44,9 @@ import CInput from "../common/Input";
 import Image from "next/image";
 import NotificationMessage from "../common/Notification";
 import { useRouter } from "next/navigation";
-import EvmAuthComponent from "./EvmAuth";
-import SolanaAuthComponent from "./SolanaAuth";
-import TelegramLogin from "./telegramAuth";
+import EvmAuthComponent from "../common/auth/EvmAuth";
+import SolanaAuthComponent from "../common/auth/SolanaAuth";
+import TelegramLogin from "../common/auth/telegramAuth";
 import { TelegramAuthData } from "@/utils/types/types";
 export interface ISignupData {
   username: string;
@@ -365,12 +365,12 @@ const SignUpModal = ({
           <CButton auth={true} onClick={() => handleAuth(false)}>
             Connect Wallet
           </CButton>
-          <button>
+          {/* <button>
             <TelegramLogin
-              botUsername={tgBotName ?? ""}
+              botUsername={"communitysetupbot"}
               onAuthCallback={handleTelegramAuth}
             />
-          </button>
+          </button> */}
           <p>
             Don&apos;t have account?
             <span onClick={() => setModalTab(2)}>SignUp</span>
