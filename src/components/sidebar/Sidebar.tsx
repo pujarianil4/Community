@@ -24,7 +24,11 @@ import {
 import { RxHamburgerMenu } from "react-icons/rx";
 import useAsync from "@/hooks/useAsync";
 import NotificationMessage from "../common/Notification";
-import { debounce, getRandomImageLink } from "@/utils/helpers";
+import {
+  debounce,
+  getClientSideCookie,
+  getRandomImageLink,
+} from "@/utils/helpers";
 import CommunityList from "../common/loaders/communityList";
 
 import {
@@ -129,8 +133,9 @@ const SideBar: React.FC = () => {
           key: "createCommunity",
           label: (
             <div className='community_item'>
-              <AddIcon />
-              <span className='createText'>Create Community</span>
+              <CButton icon={<AddIcon />} className='createText'>
+                Create Community
+              </CButton>
             </div>
           ),
         },
@@ -158,7 +163,11 @@ const SideBar: React.FC = () => {
 
   const onClick: MenuProps["onClick"] = (e) => {
     if (e.key == "createCommunity") {
-      showModal();
+      const user = getClientSideCookie("authToken");
+      if (user) {
+        showModal();
+      } else {
+      }
     } else if (!["popular"].includes(e.key)) {
       router.push(`/${e.key}`);
     }

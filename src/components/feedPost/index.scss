@@ -89,7 +89,7 @@
   }
 
   .content {
-    margin: 12px 0 12px 52px;
+    margin: 12px 0 12px 0px;
     cursor: pointer;
     .post_image {
       position: relative;
@@ -112,7 +112,9 @@
   .actions {
     display: flex;
     gap: 15px;
-    margin: 8px 0 0 52px;
+    margin: 15px 0 0 0px;
+    padding-top: 10px;
+    border-top: 1px solid var(--primary-border);
     div,
     a {
       background-color: var(--secondary-bg);

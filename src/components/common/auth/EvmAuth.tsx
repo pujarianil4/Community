@@ -1,9 +1,18 @@
 import { getSignMessage } from "@/config/ethers";
-import { fetchUserById, handleLogIn, handleSignup } from "@/services/api/api";
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
+import {
+  fetchUserById,
+  handleLogIn,
+  handleSignup,
+  linkAddress,
+} from "@/services/api/api";
 import { sigMsg } from "@/utils/constants";
+import { setClientSideCookie } from "@/utils/helpers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import React, { useCallback, useState } from "react";
+import { useSelector } from "react-redux";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 export interface ISignupData {
   username: string;
@@ -11,7 +20,7 @@ export interface ISignupData {
 }
 interface IEvmAuthComponent {
   isSignUp: boolean;
-  signUpData: ISignupData;
+  signUpData: ISignupData | null;
   setUserAuthData: (user: any) => void;
 }
 
@@ -22,7 +31,10 @@ export default function EvmAuthComponent({
 }: IEvmAuthComponent) {
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
-  const { connect, connectors } = useConnect();
+  const [{ dispatch, actions }] = useRedux();
+  const walletRoute = useSelector(
+    (state: RootState) => state.common.walletRoute
+  );
   const { openConnectModal } = useConnectModal();
   const [signature, setSignature] = useState<string | null>(null);
 
@@ -34,26 +46,47 @@ export default function EvmAuthComponent({
         console.log("signedMessage", signedMessage);
         setSignature(signedMessage || "");
         let response;
-        if (isSignUp) {
+        if (walletRoute == "auth" && isSignUp) {
           response = await handleSignup(
-            signUpData.username,
-            signUpData.name,
+            signUpData?.username,
+            signUpData?.name,
             signedMessage,
             sigMsg
           );
-        } else {
+          const userdata = await fetchUserById(response?.uid);
+          const user = {
+            username: userdata.username,
+            name: userdata?.name || "",
+            uid: response?.uid || 0,
+            token: response?.token || "",
+            img: userdata?.img,
+          };
+          setClientSideCookie("authToken", JSON.stringify(user));
+          dispatch(actions.setUserData(user));
+          dispatch(actions.setRefetchUser(true));
+          setUserAuthData(user);
+        } else if (walletRoute == "auth" && !isSignUp) {
           response = await handleLogIn({ sig: signedMessage, msg: sigMsg });
+          const userdata = await fetchUserById(response?.uid);
+          const user = {
+            username: userdata.username,
+            name: userdata?.name || "",
+            uid: response?.uid || 0,
+            token: response?.token || "",
+            img: userdata?.img,
+          };
+          setClientSideCookie("authToken", JSON.stringify(user));
+          dispatch(actions.setUserData(user));
+          dispatch(actions.setRefetchUser(true));
+          setUserAuthData(user);
+        } else if (walletRoute == "linkWallet") {
+          const response = await linkAddress({
+            sig: signedMessage,
+            msg: sigMsg,
+          });
+          setUserAuthData(response);
         }
-        const userdata = await fetchUserById(response?.uid);
-        const user = {
-          username: userdata.username,
-          name: userdata?.name || "",
-          uid: response?.uid || 0,
-          token: response?.token || "",
-          img: userdata?.img,
-        };
-        console.log("auth", user);
-        setUserAuthData(user);
+
         disconnect();
       } catch (error) {
         disconnect();

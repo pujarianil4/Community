@@ -3,7 +3,8 @@ import useRedux from "@/hooks/useRedux";
 import { getClientSideCookie } from "@/utils/helpers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Button } from "antd";
-import React from "react";
+import React, { useState } from "react";
+import AuthModal from "./auth/AuthModal";
 import "./index.scss";
 
 interface ICButton {
@@ -14,7 +15,8 @@ interface ICButton {
   size?: number | string;
   loading?: boolean;
   disabled?: boolean;
-  auth?: boolean;
+  auth?: "auth" | "linkAddress";
+  icon?: any;
 }
 
 export default function CButton({
@@ -24,34 +26,56 @@ export default function CButton({
   className,
   loading,
   disabled,
-  auth = false,
+  auth,
+  icon,
 }: ICButton) {
-  const { openConnectModal } = useConnectModal();
   const commonSelector = (state: RootState) => state?.common;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [{ dispatch, actions }] = useRedux();
   const [{}, [common]] = useRedux([commonSelector]);
   const handleAction = () => {
     const user = getClientSideCookie("authToken");
 
-    if (auth) {
+    if (auth == "auth") {
       onClick?.();
       return;
     }
+    // else if (user && auth == "linkAddress") {
+    //   dispatch(actions.setWalletRoute("linkWallet"));
+    //   setIsModalOpen(true);
+    //   return;
+    // }
+    // console.log("usere", user);
+
     if (!user) {
-      openConnectModal?.();
+      setIsModalOpen(true);
     } else {
       onClick?.();
     }
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+    onClick?.();
+  };
+
   return (
-    <Button
-      loading={loading}
-      disabled={disabled}
-      style={{ fontSize: `${size}px` }}
-      onClick={handleAction}
-      className={`CButton ${className}`}
-    >
-      {children}
-    </Button>
+    <>
+      <Button
+        loading={loading}
+        icon={icon}
+        disabled={disabled}
+        style={{ fontSize: `${size}px` }}
+        onClick={handleAction}
+        className={`CButton ${className}`}
+      >
+        {children}
+      </Button>
+      <AuthModal
+        visible={isModalOpen}
+        setVisible={setIsModalOpen}
+        callBack={closeModal}
+      />
+    </>
   );
 }
