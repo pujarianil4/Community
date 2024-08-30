@@ -192,25 +192,32 @@ export default function UserHead() {
                 </div>
                 <div className='stats box'>
                   <p>Followers</p>
-                  <h4>1,111</h4>
+                  <h4>0</h4>
                 </div>
                 <div className='stats box'>
                   <p>Following</p>
-                  <h4>111</h4>
+                  <h4>0</h4>
                 </div>
                 <div className='stats box'>
                   <p>Posts</p>
-                  <h4>5</h4>
+                  <h4>{data.pcount}</h4>
                 </div>
               </div>
               <div className='activity'>
                 {/* TODO: check metadata here */}
-                <p className='about'>
-                  {data?.metadata || "Hello this is my official account"}
-                </p>
-                <CButton className='follow_btn'>
+                <p className='about'>{data.desc}</p>
+                {!isSelf && (
+                  <CButton
+                    loading={isLoadingFollow}
+                    onClick={handleFollow}
+                    className={`${isFollowed && "follow_btn"}`}
+                  >
+                    {isFollowed ? "Unfollow" : "Follow"}
+                  </CButton>
+                )}
+                {/* <CButton className='follow_btn'>
                   {isFollowed ? "Unfollow" : "Follow"}
-                </CButton>
+                </CButton> */}
               </div>
               <div className='socials'>
                 <DiscordIcon />

@@ -181,20 +181,24 @@ export default function CommunityHead() {
                 </div>
                 <div className='stats box'>
                   <p>Followers</p>
-                  <h4>1,111</h4>
+                  <h4>{data?.followers}</h4>
                 </div>
                 <div className='stats box'>
                   <p>Following</p>
-                  <h4>111</h4>
+                  <h4>0</h4>
                 </div>
                 <div className='stats box'>
                   <p>Posts</p>
-                  <h4>5</h4>
+                  <h4>{data?.pCount}</h4>
                 </div>
               </div>
               <div className='activity'>
                 <p className='about'>{data?.metadata}</p>
-                <CButton className='follow_btn'>
+                <CButton
+                  loading={isLoadingFollow}
+                  onClick={handleFollow}
+                  className={`${isFollowed && "followed"}`}
+                >
                   {isFollowed ? "Unfollow" : "Follow"}
                 </CButton>
               </div>
