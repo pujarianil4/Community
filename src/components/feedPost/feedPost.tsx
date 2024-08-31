@@ -2,8 +2,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
-import { PiArrowFatUpLight, PiArrowFatDownLight } from "react-icons/pi";
-import { GoComment, GoShareAndroid } from "react-icons/go";
+import { GoComment } from "react-icons/go";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,6 +10,7 @@ import { getImageSource, timeAgo } from "@/utils/helpers";
 import { IPost } from "@/utils/types/types";
 import SwipeCarousel from "../common/carousel";
 import { IoIosMore } from "react-icons/io";
+import { DropdownLowIcon, DropdownUpIcon, ShareIcon } from "@/assets/icons";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -106,21 +106,21 @@ export default function FeedPost({ post }: IProps) {
         }}
       >
         <MarkdownRenderer markdownContent={text} />
-        {images && <SwipeCarousel assets={images} />}
+        {images && images?.length > 0 && <SwipeCarousel assets={images} />}
       </div>
 
       <div className='actions'>
-        <div>
-          <PiArrowFatUpLight size={18} />
+        <div className='up_down'>
+          <DropdownUpIcon width={18} />
           <span>{up}</span>
-          <PiArrowFatDownLight size={18} />
+          <DropdownLowIcon width={18} />
         </div>
         <Link href={`post/${id}`} as={`/post/${id}`}>
           <GoComment size={18} />
           <span>Comments</span>
         </Link>
         <div>
-          <GoShareAndroid size={18} />
+          <ShareIcon width={18} />
           <span>Share</span>
         </div>
       </div>

@@ -85,6 +85,21 @@
       color: var(--link-hover-color) !important;
     }
   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  li {
+    margin: 8px 0;
+  }
+  p {
+    margin: 4px 0;
+  }
+  li {
+    margin-left: 16px;
+  }
 }
 .ant-notification-notice-close {
   color: var(--primary-text) !important;

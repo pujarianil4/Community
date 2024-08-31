@@ -268,7 +268,7 @@ export function EyeIcon({
 }
 
 export function DropdownUpIcon({
-  fill = "#000000",
+  fill = "#ffffff",
   width = 22,
   height = 13,
 }: IIConProps) {
@@ -282,7 +282,7 @@ export function DropdownUpIcon({
     >
       <path
         d='M19.6206 10.8103L10.8103 2L2 10.8103'
-        stroke='white'
+        stroke={fill}
         strokeWidth='2.93677'
         strokeLinecap='round'
         strokeLinejoin='round'
@@ -291,7 +291,7 @@ export function DropdownUpIcon({
   );
 }
 export function DropdownLowIcon({
-  fill = "#000000",
+  fill = "#ffffff",
   width = 21,
   height = 13,
 }: IIConProps) {
@@ -305,7 +305,7 @@ export function DropdownLowIcon({
     >
       <path
         d='M1.76122 2.00024L10.5715 10.8105L19.3818 2.00024'
-        stroke='white'
+        stroke={fill}
         strokeWidth='2.93677'
         strokeLinecap='round'
         strokeLinejoin='round'
@@ -448,6 +448,41 @@ export function TwitterIcon({
       <path
         d='M9.82476 7.57828L15.5029 0.838989H14.1574L9.22702 6.69063L5.28917 0.838989H0.747314L6.70212 9.68769L0.747314 16.7549H2.09294L7.29953 10.5754L11.4582 16.7549H16L9.82441 7.57828H9.82476ZM2.57777 1.87328H4.64456L14.158 15.7676H12.0912L2.57777 1.87328Z'
         fill={fill}
+      />
+    </svg>
+  );
+}
+
+export function ShareIcon({
+  fill = "#808B8F",
+  width = 18,
+  height = 16,
+}: IIConProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox='0 0 18 16'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <path
+        d='M2.9743 6.92285V12.8714C2.9743 13.2658 3.13098 13.6441 3.40988 13.923C3.68877 14.2019 4.06703 14.3585 4.46144 14.3585H13.3843C13.7787 14.3585 14.157 14.2019 14.4358 13.923C14.7147 13.6441 14.8714 13.2658 14.8714 12.8714V6.92285'
+        stroke={fill}
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M11.8971 3.97428L8.92283 1L5.94855 3.97428'
+        stroke={fill}
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M8.92282 1V10.6664'
+        stroke={fill}
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
     </svg>
   );

@@ -204,9 +204,8 @@ export default function UserHead() {
                 </div>
               </div>
               <div className='activity'>
-                {/* TODO: check metadata here */}
                 <p className='about'>
-                  {data?.metadata || "Hello this is my official account"}
+                  {data?.desc || "Hello this is my official account"}
                 </p>
                 <CButton className='follow_btn'>
                   {isFollowed ? "Unfollow" : "Follow"}

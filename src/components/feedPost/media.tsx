@@ -44,7 +44,7 @@ export default function Media({ asset, totalAssets, className }: IProps) {
             // style={{ maxWidth: `calc(90% / ${totalAssets})` }}
             src={asset}
             alt='post'
-            layout='fill'
+            fill
             objectFit='contain'
           />
         )}

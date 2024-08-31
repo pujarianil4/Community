@@ -1,8 +1,21 @@
+"use client";
 import React from "react";
 import "./index.scss";
 import Post from "./post";
 import { AddIcon, RightUpIcon } from "@/assets/icons";
+import VoteSection from "./voteSection";
+import { usePathname } from "next/navigation";
 export default function RightPanel() {
+  const pathName = usePathname();
+  const isProposalPage = pathName.split("/")[1] == "p" ? true : false;
+
+  if (isProposalPage) {
+    return (
+      <div className='rightpanel_container'>
+        <VoteSection />
+      </div>
+    );
+  }
   return (
     <div className='rightpanel_container'>
       {/* <div className='createCommunity'>

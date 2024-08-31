@@ -25,6 +25,7 @@ import {
 } from "@/assets/icons";
 import Image from "next/image";
 import Link from "next/link";
+import Proposals from "../proposals";
 
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
@@ -206,9 +207,9 @@ export default function CommunityHead() {
             </div>
           </div>
           <div className='more_btns'>
-            <Link href={`p`} as={`/p`}>
+            {/* <Link href={`p`} as={`/p`}>
               <CButton className='btn'>Proposal</CButton>
-            </Link>
+            </Link> */}
             <CButton onClick={handleCreatePost} className='btn'>
               <AddIcon /> Create Post
             </CButton>
@@ -229,6 +230,11 @@ export default function CommunityHead() {
                 key: "3",
                 label: "Voters",
                 content: <Followings uid={data.id} />,
+              },
+              {
+                key: "4",
+                label: "Proposals",
+                content: <Proposals />,
               },
             ]}
           />

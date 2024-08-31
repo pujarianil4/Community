@@ -78,7 +78,7 @@
       margin-left: 0.8rem;
       flex: none !important;
       font-size: $font-size-sm;
-      color: var(--white);
+      color: var(--primary-text);
       font-weight: $font-weight-semi-bold;
     }
     svg {
@@ -89,7 +89,7 @@
     .ant-menu-submenu-title {
       .ant-menu-title-content {
         font-size: 20px;
-        color: var(--white);
+        color: var(--primary-text);
         font-weight: $font-weight-semi-bold;
       }
     }

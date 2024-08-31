@@ -1,12 +1,12 @@
 @import "/src/styles";
 .postcard_container {
   width: 100%;
-  padding: 25px 30px;
+  padding: 24px 20px;
   height: max-content;
   border-radius: $base-border-radius-md;
   background-color: var(--secondary-bg);
   margin-top: 2rem;
-  color: var(--white);
+  color: var(--primary-text);
   // .user_head {
   //   display: flex;
   //   justify-content: space-between;
@@ -46,6 +46,8 @@
     margin-bottom: 8px;
     img {
       border-radius: 50%;
+      width: 48px;
+      height: 48px;
     }
     a {
       color: var(--primary-text) !important;
@@ -62,8 +64,6 @@
     .names {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-
       .user_name {
         font-size: 20px;
         font-weight: 500;
@@ -89,7 +89,7 @@
   }
 
   .content {
-    margin: 12px 0 12px 52px;
+    margin: 12px 0 12px 56px;
     cursor: pointer;
     .post_image {
       position: relative;
@@ -111,32 +111,56 @@
 
   .actions {
     display: flex;
-    gap: 15px;
+    gap: 24px;
     margin: 8px 0 0 52px;
+
     div,
     a {
-      background-color: var(--secondary-bg);
       min-width: 50px;
-      // height: 25px;
-      border-radius: 10px;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 5px 20px;
-      text-decoration: none;
+      gap: 8px;
+
       span {
         font-size: 12px;
       }
+      svg {
+        path {
+          stroke: var(--black);
+        }
+      }
       color: var(--primary-text);
       cursor: pointer;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: var(--tertiary-bg);
-      }
+      transition: color 0.3s ease;
 
-      @include lessThan(sm) {
-        padding: 5px 8px;
+      &:hover {
+        color: var(--primary) !important;
+        svg {
+          path {
+            stroke: var(--primary);
+          }
+        }
+      }
+    }
+
+    .up_down {
+      &:hover {
+        svg {
+          path {
+            stroke: var(--black);
+          }
+        }
+      }
+      svg {
+        width: 18px;
+        height: 14px;
+        padding: 2px;
+        path {
+          &:hover {
+            stroke: var(--primary);
+          }
+        }
       }
     }
   }
@@ -268,7 +292,7 @@
     span {
       display: flex;
       gap: 5px;
-      background: var(--black);
+      background: var(--white);
       padding: 12px 16px;
       margin-right: 1rem;
       border-radius: $base-border-radius-md;
