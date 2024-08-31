@@ -7,14 +7,23 @@ import {
 } from "@/config/solanaWallet/SolanaProvider";
 import Image from "next/image";
 import { sigMsg } from "@/utils/constants";
-import { fetchUserById, handleLogIn, handleSignup } from "@/services/api/api";
+import {
+  fetchUserById,
+  handleLogIn,
+  handleSignup,
+  linkAddress,
+} from "@/services/api/api";
+import { useSelector } from "react-redux";
+import { RootState } from "@/contexts/store";
+import { setClientSideCookie } from "@/utils/helpers";
+import useRedux from "@/hooks/useRedux";
 interface ISignupData {
   username: string;
   name: string;
 }
 interface ISolanaAuthComponent {
   isSignUp: boolean;
-  signUpData: ISignupData;
+  signUpData: ISignupData | null;
   setUserAuthData: (user: any) => void;
 }
 
@@ -33,7 +42,11 @@ const SolanaAuthComponent = ({
     select,
   } = useWallet();
   const [signature, setSignature] = useState<string | null>(null);
-  const buttonRef = useRef(null);
+
+  const [{ dispatch, actions }] = useRedux();
+  const walletRoute = useSelector(
+    (state: RootState) => state.common.walletRoute
+  );
 
   // Function to sign a message
   const signUserMessage = useCallback(async () => {
@@ -49,31 +62,53 @@ const SolanaAuthComponent = ({
       setSignature(signedMessage);
       disconnect();
       let response;
-      if (isSignUp) {
+      if (walletRoute == "auth" && isSignUp) {
         response = await handleSignup(
-          signUpData.username,
-          signUpData.name,
+          signUpData?.username,
+          signUpData?.name,
           signedMessage,
           sigMsg,
           PUBLICKEY
         );
-      } else {
+        const userdata = await fetchUserById(response?.uid);
+        const user = {
+          username: userdata.username,
+          name: userdata?.name || "",
+          uid: response?.uid || 0,
+          token: response?.token || "",
+          img: userdata?.img,
+        };
+
+        setClientSideCookie("authToken", JSON.stringify(user));
+        dispatch(actions.setUserData(user));
+        dispatch(actions.setRefetchUser(true));
+        setUserAuthData(user);
+      } else if (walletRoute == "auth" && !isSignUp) {
         response = await handleLogIn({
           sig: signedMessage,
           msg: sigMsg,
           pubKey: PUBLICKEY,
         });
+        const userdata = await fetchUserById(response?.uid);
+        const user = {
+          username: userdata.username,
+          name: userdata?.name || "",
+          uid: response?.uid || 0,
+          token: response?.token || "",
+          img: userdata?.img,
+        };
+        setClientSideCookie("authToken", JSON.stringify(user));
+        dispatch(actions.setUserData(user));
+        dispatch(actions.setRefetchUser(true));
+        setUserAuthData(user);
+      } else if (walletRoute == "linkWallet") {
+        const response = await linkAddress({
+          sig: signedMessage,
+          msg: sigMsg,
+          pubKey: PUBLICKEY,
+        });
+        setUserAuthData(response);
       }
-      const userdata = await fetchUserById(response?.uid);
-      const user = {
-        username: userdata.username,
-        name: userdata?.name || "",
-        uid: response?.uid || 0,
-        token: response?.token || "",
-        img: userdata?.img,
-      };
-      console.log("auth", user);
-      setUserAuthData(user);
     } catch (error) {
       disconnect();
       setUserAuthData({ error: true });

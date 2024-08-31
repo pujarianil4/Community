@@ -44,9 +44,9 @@ import CInput from "../common/Input";
 import Image from "next/image";
 import NotificationMessage from "../common/Notification";
 import { useRouter } from "next/navigation";
-import EvmAuthComponent from "./EvmAuth";
-import SolanaAuthComponent from "./SolanaAuth";
-import TelegramLogin from "./telegramAuth";
+import EvmAuthComponent from "../common/auth/EvmAuth";
+import SolanaAuthComponent from "../common/auth/SolanaAuth";
+import TelegramLogin from "../common/auth/telegramAuth";
 import { TelegramAuthData } from "@/utils/types/types";
 export interface ISignupData {
   username: string;
@@ -159,7 +159,7 @@ export default function Navbar() {
     if (common?.refetch?.user) {
       dispatch(actions.setRefetchUser(false));
     }
-  }, [common]);
+  }, [common?.refetch?.user]);
 
   const content = (
     <div className='user_popover'>
@@ -211,7 +211,7 @@ export default function Navbar() {
           />
         </div>
         <div className='signin'>
-          {userSession?.token ? (
+          {userSession?.token || userData ? (
             <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
               <CButton className='create_post' onClick={showCreatePost}>
                 <AddIcon />
@@ -243,7 +243,7 @@ export default function Navbar() {
               </div>
             </div>
           ) : (
-            <CButton auth={true} onClick={showModal}>
+            <CButton auth='auth' onClick={showModal}>
               LogIn
             </CButton>
           )}
@@ -362,15 +362,15 @@ const SignUpModal = ({
       {modalTab === 1 && (
         <div className='login'>
           <h4>Log In</h4>
-          <CButton auth={true} onClick={() => handleAuth(false)}>
+          <CButton auth='auth' onClick={() => handleAuth(false)}>
             Connect Wallet
           </CButton>
-          <button>
+          {/* <button>
             <TelegramLogin
-              botUsername={tgBotName ?? ""}
+              botUsername={"communitysetupbot"}
               onAuthCallback={handleTelegramAuth}
             />
-          </button>
+          </button> */}
           <p>
             Don&apos;t have account?
             <span onClick={() => setModalTab(2)}>SignUp</span>
@@ -403,7 +403,7 @@ const SignUpModal = ({
             value={signUpData.name}
           />
           <CButton
-            auth={true}
+            auth='auth'
             disabled={
               usernameError === "Username already exists" ||
               !signUpData?.username ||

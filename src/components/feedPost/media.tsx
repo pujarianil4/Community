@@ -40,13 +40,26 @@ export default function Media({ asset, totalAssets, className }: IProps) {
         {identifyMediaType(asset) === "image" && (
           <Image
             loading='lazy'
-            className={`media ${className}`}
-            // style={{ maxWidth: `calc(90% / ${totalAssets})` }}
             src={asset}
-            alt='post'
+            alt='postbg'
+            // className='media'
+            // width={100}
+            // height={100}
             fill
             objectFit='contain'
+
+            // objectPosition='center'
+            // priority
           />
+          // <Image
+          //   loading='lazy'
+          //   className={`media ${className}`}
+          //   // style={{ maxWidth: `calc(90% / ${totalAssets})` }}
+          //   src={asset}
+          //   alt='post'
+          //   layout='fill'
+          //   objectFit='contain'
+          // />
         )}
         {identifyMediaType(asset) === "video" && <CVideo src={asset} />}
       </div>

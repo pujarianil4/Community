@@ -60,8 +60,8 @@ export const handleLogOut = async () => {
 };
 
 export const handleSignup = async (
-  username: string,
-  name: string,
+  username: string | undefined,
+  name: string | undefined,
   sig: string | undefined,
   msg: string,
   pubKey?: PublicKey | string | null
@@ -299,8 +299,9 @@ export const postComments = async (data: IPostCommentAPI) => {
   }
 };
 export const linkAddress = async (payload: {
-  sig: `0x${string}` | undefined;
+  sig: `0x${string}` | string | undefined;
   msg: string;
+  pubKey?: PublicKey | string;
 }) => {
   const response = await api.post("/users/address", payload);
 

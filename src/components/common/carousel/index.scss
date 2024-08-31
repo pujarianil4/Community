@@ -13,6 +13,7 @@
 .carousel {
   display: flex;
   transition: transform 0.3s ease;
+  width: 100%;
 }
 
 .carousel_image {
@@ -137,10 +138,12 @@
     flex: 0 0 100%;
     max-width: 100%;
     overflow: hidden;
+
     img {
       width: 100%;
       height: auto;
       object-fit: contain;
+      position: relative;
     }
   }
 
