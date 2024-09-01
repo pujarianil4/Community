@@ -43,19 +43,30 @@ export default function Profile() {
 
   const debouncedCheckUsername = debounce(async (username: string) => {
     try {
-      if (username == "" || data?.username === username) {
+      if (username === "" || data?.username === username) {
         setUsernameError("");
         return;
       }
-      const userData = await fetchUserByUserName(username);
-      const isAvailable = userData?.username === username;
-      if (isAvailable) {
-        setUsernameError("Username already exists");
-      } else {
-        setUsernameError("Username is available");
+      const user = await fetchUserByUserName(username);
+      if (user?.username) {
+        const isAvailable = user?.username === username;
+
+        if (isAvailable) {
+          setUsernameError("Username already exists");
+        } else {
+          setUsernameError("Username is available");
+        }
       }
-    } catch (error) {
-      setUsernameError("Error checking username availability");
+    } catch (error: any) {
+      if (
+        data?.username !== username &&
+        username &&
+        error == "Error: user not available"
+      ) {
+        setUsernameError("Username is available");
+      } else {
+        setUsernameError("");
+      }
     }
   }, 500);
 
@@ -115,7 +126,9 @@ export default function Profile() {
             img: response?.img,
           };
 
-          setClientSideCookie("authToken", JSON.stringify(user), true);
+          console.log("updatedUser", updatedUser, userData);
+
+          setClientSideCookie("authToken", JSON.stringify(updatedUser), true);
 
           dispatch(actions.setUserData(updatedUser));
           setIsLoadingUpdate(false);

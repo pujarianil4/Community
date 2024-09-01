@@ -73,13 +73,13 @@ export default function FeedList({ method, id }: IFeedList) {
         className={activeTab === "ccount" ? "active" : ""}
         onClick={() => handleFilter("ccount")}
       >
-        Trending(Hot)
+        Trending
       </span>
       <span
         className={activeTab === "time" ? "active" : ""}
         onClick={() => handleFilter("time")}
       >
-        Most Liked (New)
+        Latest
       </span>
     </div>
   );

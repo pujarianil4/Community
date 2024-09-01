@@ -6,6 +6,7 @@ export function setClientSideCookie(
   force: boolean = false
 ) {
   if (force) {
+    console.log("setClientSideCookie", name, value);
     setCookie(null, name, value);
   } else {
     const user = getClientSideCookie(name);

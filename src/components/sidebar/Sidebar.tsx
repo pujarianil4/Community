@@ -425,6 +425,7 @@ const CreateCommunityModal = ({
             onChange={onPickFile}
             type='file'
             name='file'
+            accept='image/*'
             style={{ visibility: "hidden" }}
           />
         </div>
