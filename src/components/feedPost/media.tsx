@@ -41,10 +41,12 @@ export default function Media({ asset, totalAssets, className }: IProps) {
           <Image
             loading='lazy'
             src={asset}
-            className='media'
             alt='postbg'
-            width={100}
-            height={100}
+            // className='media'
+            // width={100}
+            // height={100}
+            fill
+            objectFit='contain'
 
             // objectPosition='center'
             // priority

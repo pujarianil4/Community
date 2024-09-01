@@ -12,11 +12,13 @@ import TurndownService from "turndown";
 interface IProps {
   setContent: (content: string) => void;
   showToolbar?: boolean;
+  placeHolder?: string;
 }
 
 const RichTextEditor: React.FC<IProps> = ({
   showToolbar = true,
   setContent,
+  placeHolder = "Write your post here...",
 }) => {
   const editorRef = useRef<FroalaEditorComponent>(null);
   const turndownService = new TurndownService();
@@ -30,7 +32,7 @@ const RichTextEditor: React.FC<IProps> = ({
     <div className={`${!showToolbar ? "hide_toolbar" : ""} rich_text_editor`}>
       <FroalaEditorComponent
         config={{
-          placeholderText: "Write your post here...",
+          placeholderText: placeHolder,
           charCounterCount: false,
           toolbarButtons: {
             moreText: {

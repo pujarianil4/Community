@@ -5,28 +5,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { IoIosMore } from "react-icons/io";
 import { getImageSource, timeAgo } from "@/utils/helpers";
-import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
-import { GoComment, GoShareAndroid } from "react-icons/go";
-// import { getPostsByPostId } from "@/services/api/api";
-// import useAsync from "@/hooks/useAsync";
-// import ReactMarkdown from "react-markdown";
-// import PostPageLoader from "@/components/common/loaders/postPage";
+import { GoComment } from "react-icons/go";
 import { IPost } from "@/utils/types/types";
 import MarkdownRenderer from "@/components/common/MarkDownRender";
 import SwipeCarousel from "@/components/common/carousel";
+import { DropdownLowIcon, DropdownUpIcon, ShareIcon } from "@/assets/icons";
+import PostPageLoader from "@/components/common/loaders/postPage";
+// import { getPostsByPostId } from "@/services/api/api";
 
 interface Iprops {
   post: IPost;
+  // postId: string;
 }
 
-export default function Post({ post }: Iprops) {
+export default async function Post({ post }: Iprops) {
   // TODO use below code to get data after fixing local storage problem
   // const posts = await getPostsByPostId(postId);
   // const { isLoading, data: post } = useAsync(getPostsByPostId, postId);
-
+  // const post = await getPostsByPostId(postId);
+  console.log("POST", post);
   // if (isLoading) {
-  //   return <PostPageLoader />;
-  // }
+  if (!post) {
+    return <PostPageLoader />;
+  }
 
   return (
     <section className='post_container'>
@@ -70,20 +71,22 @@ export default function Post({ post }: Iprops) {
       {/* Content */}
       <div className='content'>
         <MarkdownRenderer markdownContent={post?.text} />
-        {post?.images && <SwipeCarousel assets={post?.images} />}
+        {post?.images && post?.images.length > 0 && (
+          <SwipeCarousel assets={post?.images} />
+        )}
       </div>
       <div className='actions'>
-        <div>
-          <PiArrowFatUpLight size={18} />
+        <div className='up_down'>
+          <DropdownUpIcon width={18} />
           <span>{post?.up}</span>
-          <PiArrowFatDownLight size={18} />
+          <DropdownLowIcon width={18} />
         </div>
         <div>
           <GoComment size={18} />
           <span>{post?.ccount > 0 ? post.ccount : "comments"}</span>
         </div>
         <div>
-          <GoShareAndroid size={18} />
+          <ShareIcon width={18} />
           <span>Share</span>
         </div>
       </div>

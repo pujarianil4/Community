@@ -1,0 +1,244 @@
+@import "/src/styles";
+.proposal_container {
+  padding: 8px 20px;
+  box-sizing: border-box;
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    .search_container {
+      width: 40%;
+      background: var(--tertiary-bg);
+      border-radius: 8px;
+      min-width: 240px;
+
+      .search {
+        padding: 8px 12px;
+        width: 100%;
+        font-size: $font-size-sm !important;
+        font-weight: $font-weight-bold;
+        border: none !important;
+        @include lessThan(md) {
+          font-size: $font-size-xxsm !important;
+          padding: 8px 8px;
+        }
+        svg {
+          color: rgba(255, 255, 255, 0.6);
+        }
+      }
+    }
+    button {
+      height: 36px;
+      padding: 8px !important;
+      background: var(--tertiary-bg) !important;
+      color: var(--primary) !important;
+      font-size: 14px !important;
+      cursor: pointer;
+    }
+  }
+}
+
+// proposal_Item
+.proposal_Item {
+  background-color: var(--secondary-bg);
+  padding: 16px;
+  border-radius: 0.75rem;
+  margin: 20px auto;
+  box-sizing: border-box;
+  .user_head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-direction: row;
+    margin-bottom: 8px;
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    a {
+      color: var(--primary-text) !important;
+      transition: color 0.3s ease;
+      &:hover {
+        color: var(--primary);
+      }
+    }
+    p {
+      font-size: 15px;
+    }
+
+    .names {
+      display: flex;
+      flex-direction: column;
+
+      .user_name {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--primary-text);
+      }
+
+      .community_name {
+        color: var(--primary-text);
+        font-size: 12px;
+      }
+    }
+    .post_time {
+      margin-bottom: auto;
+      margin-top: 5px;
+      color: var(--label-text);
+      font-size: 12px;
+    }
+    button {
+      padding: 8px !important;
+      background: var(--tertiary-bg) !important;
+      color: var(--primary) !important;
+      font-size: 14px !important;
+      cursor: pointer;
+      margin-left: auto;
+    }
+  }
+  .proposal_data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0 0 48px;
+    gap: 8px;
+    .content {
+      flex: 0.74;
+
+      .stats {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 16px;
+        margin-top: 8px;
+        p {
+          font-size: 12px;
+          color: var(--light-tx);
+        }
+      }
+    }
+
+    .votes {
+      flex: 0.26;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      .range_bar_data {
+        .range_data {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin: 2px 12px;
+
+          p {
+            font-size: 12px;
+          }
+
+          .yes {
+            color: var(--success);
+          }
+
+          .no {
+            color: var(--error);
+          }
+        }
+        .rangebar {
+          width: 96%;
+          height: 5px;
+          background-color: var(--primary-text);
+          border: none;
+          overflow: hidden;
+          border-radius: 2px;
+        }
+
+        .progress {
+          height: 100%;
+          background-color: var(--secondary-hover);
+        }
+      }
+    }
+  }
+}
+
+.create_proposal_modal {
+  width: 540px;
+  height: 620px;
+  .create_proposal_container {
+    padding: 16px 16px 0;
+
+    label {
+      font-size: 15px;
+    }
+
+    .input_container {
+      margin: 4px 0 24px;
+      border: 1px solid var(--primary-border);
+      border-radius: 0.5rem;
+      height: 48px;
+      font-size: 15px;
+
+      &::placeholder {
+        font-size: 15px;
+      }
+
+      .rich_text_editor {
+        margin-top: -16px;
+      }
+    }
+
+    .description {
+      min-height: 240px;
+    }
+
+    .address_container {
+      margin: 4px 0 24px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--primary-border);
+      border-radius: 8px;
+      input {
+        border: none !important;
+        margin: 0;
+      }
+
+      .dropdown {
+        max-width: 124px;
+        width: fit-content;
+        height: 32px;
+        padding: 0 8px;
+        border: 1px solid var(--primary-border);
+        border-radius: 8px;
+        margin-right: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+
+        img {
+          border-radius: 50%;
+        }
+        p {
+          margin-right: 8px;
+          font-size: 12px;
+        }
+      }
+    }
+    .proposal_btn {
+      margin-left: calc(100% - 48px);
+      padding: 8px !important;
+      background: var(--tertiary-bg) !important;
+      color: var(--primary) !important;
+      font-size: 14px !important;
+      cursor: pointer;
+    }
+  }
+}
+
+.fr-element {
+  max-height: 172px !important;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}

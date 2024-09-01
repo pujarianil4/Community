@@ -42,6 +42,7 @@
       }
     }
     .post_time {
+      margin-top: 5px;
       margin-bottom: auto;
       color: var(--label-text);
     }
@@ -78,41 +79,53 @@
 
   .actions {
     display: flex;
-    gap: 16px;
+    gap: 24px;
     margin: 16px 0px 0 40px;
-    div,
-    a {
-      background-color: var(--secondary-bg);
-      height: 36px;
-      border-radius: 16px;
+    div {
+      min-width: 50px;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 0px 12px;
-      text-decoration: none;
+      gap: 8px;
+
       span {
         font-size: 12px;
       }
+      svg {
+        path {
+          stroke: var(--black);
+        }
+      }
       color: var(--primary-text);
       cursor: pointer;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: var(--tertiary-bg);
-      }
+      transition: color 0.3s ease;
 
-      &:nth-child(1) {
+      &:hover {
+        color: var(--primary) !important;
         svg {
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          padding: 8px;
-          &:hover {
-            background-color: var(--tertiary-bg);
+          path {
+            stroke: var(--primary);
           }
         }
-        &:hover {
-          background-color: var(--secondary-bg);
+      }
+    }
+
+    .up_down {
+      &:hover {
+        svg {
+          path {
+            stroke: var(--black);
+          }
+        }
+      }
+      svg {
+        width: 18px;
+        height: 14px;
+        padding: 2px;
+        path {
+          &:hover {
+            stroke: var(--primary);
+          }
         }
       }
     }
