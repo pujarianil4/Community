@@ -207,7 +207,7 @@ export default function UserHead() {
                 <p className='about'>
                   {data?.desc || "Hello this is my official account"}
                 </p>
-                <CButton className='follow_btn'>
+                <CButton onClick={handleFollow} className='follow_btn'>
                   {isFollowed ? "Unfollow" : "Follow"}
                 </CButton>
               </div>

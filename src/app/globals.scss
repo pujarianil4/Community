@@ -80,3 +80,7 @@ main {
   border-radius: $base-border-radius-md;
   padding: 12px 25px;
 }
+
+.dark {
+  background-color: var(--primary-bg);
+}

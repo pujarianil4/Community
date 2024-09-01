@@ -61,12 +61,6 @@ export const SignUpModal = ({
           setUsernameError("Username is available");
         }
       }
-
-      // if (isAvailable) {
-      //   setUsernameError("Username already exists");
-      // } else {
-      //   setUsernameError("Username is available");
-      // }
     } catch (error: any) {
       if (username && error == "Error: user not available") {
         setUsernameError("Username is available");

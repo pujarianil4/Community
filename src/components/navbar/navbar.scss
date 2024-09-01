@@ -11,40 +11,48 @@
   top: 0;
   justify-content: space-between;
   align-items: center;
-  div {
-    a {
-      h2 {
-        color: var(--primary);
-        margin: 10px;
-        text-decoration: none;
-        cursor: pointer;
+  .first_child {
+    display: flex;
+    width: 60%;
+    justify-content: space-between;
+    div {
+      a {
+        h2 {
+          color: var(--primary);
+          margin: 10px;
+          text-decoration: none;
+          cursor: pointer;
 
-        @include lessThan(lg) {
-          margin-left: 40px;
+          @include lessThan(lg) {
+            margin-left: 40px;
+          }
+        }
+      }
+    }
+
+    .search_container {
+      width: 60%;
+      background: var(--tertiary-bg);
+      border: none;
+      border-radius: 8px;
+
+      .search {
+        padding: 10px 15px;
+        height: 100%;
+        width: 100%;
+        font-size: $font-size-sm !important;
+        font-weight: $font-weight-bold;
+        @include lessThan(md) {
+          font-size: $font-size-xxsm !important;
+          padding: 8px 8px;
+        }
+        svg {
+          color: rgba(255, 255, 255, 0.6);
         }
       }
     }
   }
-  .search_container {
-    width: 40%;
-    background: var(--tertiary-bg);
-    border: none;
-    border-radius: 8px;
 
-    .search {
-      padding: 10px 15px;
-      width: 100%;
-      font-size: $font-size-sm !important;
-      font-weight: $font-weight-bold;
-      @include lessThan(md) {
-        font-size: $font-size-xxsm !important;
-        padding: 8px 8px;
-      }
-      svg {
-        color: rgba(255, 255, 255, 0.6);
-      }
-    }
-  }
   .signin {
     margin-inline: 20px;
     .create_post {
@@ -71,6 +79,7 @@
       .avatar {
         border-radius: 50%;
         border: 1px solid var(--primary-text);
+        object-fit: cover;
       }
       svg {
         cursor: pointer;

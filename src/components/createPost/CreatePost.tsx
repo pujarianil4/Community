@@ -83,6 +83,7 @@ export const FileInput: React.FC<FileInputProps> = React.memo(
           multiple
           ref={fileRef}
           onChange={onPickFile}
+          accept='image/*,video/*'
           type='file'
           style={{ display: "none" }}
         />
@@ -95,9 +96,18 @@ export const FileInput: React.FC<FileInputProps> = React.memo(
 FileInput.displayName = "FileInput";
 
 const userNameSelector = (state: RootState) => state?.user;
+const refetchCommunitySelector = (state: RootState) =>
+  state.common.refetch.community;
 const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
-  const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
-  const { isLoading, data: communityList } = useAsync(fetchCommunities);
+  const [{ dispatch, actions }, [user, comminityRefetch]] = useRedux([
+    userNameSelector,
+    refetchCommunitySelector,
+  ]);
+  const {
+    isLoading,
+    data: communityList,
+    refetch,
+  } = useAsync(fetchCommunities);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
   const [isDisabled, setISDisabled] = useState(false);
   const [pics, setPics] = useState<File[]>([]);
@@ -164,13 +174,20 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   };
 
   useEffect(() => {
+    if (comminityRefetch) {
+      refetch();
+      dispatch(actions.setRefetchCommunity(false));
+    }
+  }, [comminityRefetch]);
+
+  useEffect(() => {
     setISDisabled(!content || !selectedOption);
     console.log("DIS", !content || !selectedOption);
   }, [content, selectedOption]);
 
-  if (isLoading) {
-    return <div className='create_post_loader'>loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div className='create_post_loader'>loading...</div>;
+  // }
 
   return (
     <main className='create_post_container'>
@@ -218,8 +235,8 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
             <FileInput onChange={handleUploadFile}>
               <LuImagePlus color='var(--primary)' size={20} />
             </FileInput>
-            <MdOutlineGifBox color='var(--primary)' size={20} />
-            <LuImagePlus color='var(--primary)' size={20} />
+            {/* <MdOutlineGifBox color='var(--primary)' size={20} />
+            <LuImagePlus color='var(--primary)' size={20} /> */}
           </div>
           {/* <div className='postbtn'> */}
           <CButton

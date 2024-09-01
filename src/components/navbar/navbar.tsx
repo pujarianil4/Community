@@ -113,6 +113,7 @@ export default function Navbar() {
 
   const userLogout = async () => {
     try {
+      deleteClientSideCookie("authToken");
       const logout = await handleLogOut();
       deleteClientSideCookie("authToken");
       setUserSession(null);
@@ -125,7 +126,19 @@ export default function Navbar() {
       };
       router.push("/");
       dispatch(actions.setUserData(initialState));
-    } catch (error) {}
+    } catch (error) {
+      deleteClientSideCookie("authToken");
+      setUserSession(null);
+      const initialState: any = {
+        username: "",
+        name: "",
+        uid: 0,
+        token: "",
+        img: "",
+      };
+      router.push("/");
+      dispatch(actions.setUserData(initialState));
+    }
   };
 
   useEffect(() => {
@@ -142,17 +155,17 @@ export default function Navbar() {
     console.log("userFetc", userData1);
 
     if (userData?.uid) {
-      const response = await fetchUserById(userData?.uid);
-      const user = {
-        username: response?.username,
-        name: response?.name,
-        uid: response?.id,
-        token: userData1?.token,
-        img: response?.img,
-      };
-      setUserSession(user);
+      // const response = await fetchUserById(userData?.uid);
+      // const user = {
+      //   username: response?.username,
+      //   name: response?.name,
+      //   uid: response?.id,
+      //   token: userData1?.token,
+      //   img: response?.img,
+      // };
+      setUserSession(userData);
       // setClientSideCookie("authToken", JSON.stringify(user));
-      dispatch(actions.setUserData(user));
+      dispatch(actions.setUserData(userData));
     }
   };
   useEffect(() => {
@@ -199,20 +212,23 @@ export default function Navbar() {
   return (
     <>
       <nav className='nav_container'>
-        <div>
-          <Link href='#'>
-            <h2>Numity</h2>
-          </Link>
+        <div className='first_child'>
+          <div>
+            <Link href='#'>
+              <h2>Numity</h2>
+            </Link>
+          </div>
+          <div className='search_container'>
+            <CInput
+              prefix={<IoSearch />}
+              placeholder='Search Post Here'
+              className='search'
+            />
+          </div>
         </div>
-        <div className='search_container'>
-          <CInput
-            prefix={<IoSearch />}
-            placeholder='Search Post Here'
-            className='search'
-          />
-        </div>
+
         <div className='signin'>
-          {userSession?.token || userData ? (
+          {userSession?.token ? (
             <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
               <CButton className='create_post' onClick={showCreatePost}>
                 <AddIcon />
@@ -243,10 +259,12 @@ export default function Navbar() {
                 </Popover>
               </div>
             </div>
-          ) : (
+          ) : userSession == null ? (
             <CButton auth='auth' onClick={showModal}>
               LogIn
             </CButton>
+          ) : (
+            <div></div>
           )}
         </div>
       </nav>

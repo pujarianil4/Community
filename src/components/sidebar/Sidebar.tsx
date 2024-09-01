@@ -38,6 +38,8 @@ import {
   SettingIcon,
   StatIcon,
 } from "@/assets/icons";
+import useRedux from "@/hooks/useRedux";
+import { RootState } from "@/contexts/store";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -108,6 +110,11 @@ const SideBar: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [communityList, SetCommunityList] = useState<Array<any>>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const refetchCommunitySelector = (state: RootState) =>
+    state.common.refetch.community;
+  const [{ dispatch, actions }, [comminityRefetch]] = useRedux([
+    refetchCommunitySelector,
+  ]);
   const { isLoading, callFunction, data, refetch } = useAsync(fetchCommunities);
 
   const router = useRouter();
@@ -198,6 +205,17 @@ const SideBar: React.FC = () => {
     SetCommunityList(inFormat);
   };
 
+  const handleCallback = () => {
+    refetch();
+    dispatch(actions.setRefetchCommunity(true));
+  };
+
+  useEffect(() => {
+    if (comminityRefetch) {
+      dispatch(actions.setRefetchCommunity(false));
+    }
+  }, [comminityRefetch]);
+
   useEffect(() => {
     if (data) getCommunities(data);
   }, [data]);
@@ -223,7 +241,7 @@ const SideBar: React.FC = () => {
       <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
         <CreateCommunityModal
           onClose={handleCancel}
-          refetchCommunities={refetch}
+          refetchCommunities={handleCallback}
         />
       </Modal>
     </>
@@ -271,8 +289,8 @@ const CreateCommunityModal = ({
         const imgURL = await uploadSingleFile(file);
         console.log("IMGURL", imgURL);
 
-        setImgSrc(imgURL.url);
-        setForm({ ...form, logo: imgURL?.url });
+        setImgSrc(imgURL);
+        setForm({ ...form, logo: imgURL });
         setIsUploading(false);
       } catch (error) {
         NotificationMessage("error", "Uploading failed");
