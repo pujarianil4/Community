@@ -211,7 +211,7 @@ export default function UserHead() {
                 </div>
                 <div className='stats box'>
                   <p>Posts</p>
-                  <h4>{data?.pcount}</h4>
+                  <h4>{numberWithCommas(data?.pcount) || "0"}</h4>
                 </div>
               </div>
               <div className='activity'>
