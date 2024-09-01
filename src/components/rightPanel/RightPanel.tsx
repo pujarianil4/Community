@@ -1,13 +1,33 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./index.scss";
-import Post from "./post";
-import { AddIcon, RightUpIcon } from "@/assets/icons";
+import Post, { PostLoader } from "./post";
+import { RightUpIcon } from "@/assets/icons";
 import VoteSection from "./voteSection";
 import { usePathname } from "next/navigation";
+import useAsync from "@/hooks/useAsync";
+import { fetchCommunities, getPosts } from "@/services/api/api";
+import { ICommunity, IPost } from "@/utils/types/types";
+import Community from "./community";
 export default function RightPanel() {
   const pathName = usePathname();
   const isProposalPage = pathName.split("/")[1] == "p" ? true : false;
+
+  const { isLoading: isPostLoading, data: postByComments } = useAsync(
+    getPosts,
+    "pCount"
+  );
+  const { isLoading, data: communities } = useAsync(fetchCommunities, "pCount");
+
+  const [topPosts, setTopPosts] = useState<IPost[]>([]);
+  const [topCommunities, setTopCommunities] = useState<ICommunity[]>([]);
+
+  useEffect(() => {
+    const topPost = postByComments?.slice(0, 3);
+    const topCommunity = communities?.slice(0, 3);
+    setTopPosts(topPost);
+    setTopCommunities(topCommunity);
+  }, [postByComments, communities]);
 
   if (isProposalPage) {
     return (
@@ -31,48 +51,28 @@ export default function RightPanel() {
             </span>
           </div>
         </div>
-        <div className='card_heading'>
-          <div className='community_bx'>
-            <img src='https://testcommunity.s3.amazonaws.com/0125f211-bf33-4610-8e73-6fc864787743-metamaskicon.png' />
-            <span> anilcommunity</span>
-          </div>
-          <div className='community_join'>
-            <span className='comm_icon'>Join</span>
-          </div>
-        </div>
-        <div className='card_heading'>
-          <div className='community_bx'>
-            <img src='https://testcommunity.s3.amazonaws.com/0125f211-bf33-4610-8e73-6fc864787743-metamaskicon.png' />
-            <span> anilcommunity</span>
-          </div>
-          <div className='community_join'>
-            <span className='comm_icon'>
-              Join
-              {/* <AddIcon fill='#ffffff' /> */}
-            </span>
-          </div>
-        </div>
-        <div className='card_heading'>
-          <div className='community_bx'>
-            <img src='https://testcommunity.s3.amazonaws.com/0125f211-bf33-4610-8e73-6fc864787743-metamaskicon.png' />
-            <span> anilcommunity</span>
-          </div>
-          <div className='community_join'>
-            <span className='comm_icon'>
-              Join
-              {/* <AddIcon fill='#ffffff' /> */}
-            </span>
-          </div>
-        </div>
+        {isLoading ? (
+          <>
+            {Array(3)
+              .fill(() => 0)
+              .map((_, i: number) => (
+                <div key={i} className='card_heading'>
+                  <div
+                    style={{ width: "180px", height: "50px" }}
+                    className='community_bx skeleton'
+                  ></div>
+                  <div className='community_join skeleton'></div>
+                </div>
+              ))}
+          </>
+        ) : (
+          <>
+            {topCommunities?.map((community: ICommunity) => (
+              <Community key={community?.id} community={community} />
+            ))}
+          </>
+        )}
       </div>
-      {/* <div className='recentposts'>
-        <span className='title'>Recent Posts</span>
-        {Array(3)
-          .fill(() => 0)
-          .map((_, i: number) => (
-            <Post key={i} />
-          ))}
-      </div> */}
 
       <div className='card'>
         <div className='card_heading'>
@@ -83,12 +83,21 @@ export default function RightPanel() {
             </span>
           </div>
         </div>
-
-        {Array(2)
-          .fill(() => 0)
-          .map((_, i: number) => (
-            <Post key={i} />
-          ))}
+        {isPostLoading ? (
+          <>
+            {Array(3)
+              .fill(() => 0)
+              .map((_, i: number) => (
+                <PostLoader key={i} />
+              ))}
+          </>
+        ) : (
+          <>
+            {topPosts?.map((post: IPost) => (
+              <Post key={post?.id} post={post} />
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

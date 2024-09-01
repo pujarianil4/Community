@@ -36,13 +36,13 @@ export default async function Post({ post }: Iprops) {
     <section className='post_container'>
       <div className='user_head'>
         <Link
-          href={`c/${post?.community.username}`}
-          as={`/c/${post?.community.username}`}
+          href={`u/${post?.user.username}`}
+          as={`/u/${post?.user.username}`}
           className='community_logo'
         >
           <Image
-            src={getImageSource(post?.community.logo)}
-            alt={post?.community.username || "community"}
+            src={getImageSource(post?.user.img)}
+            alt={post?.user.username || "user"}
             width={32}
             height={32}
           />

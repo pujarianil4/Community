@@ -6,7 +6,7 @@ import { GoComment } from "react-icons/go";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getImageSource, timeAgo } from "@/utils/helpers";
+import { getImageSource, numberWithCommas, timeAgo } from "@/utils/helpers";
 import { IPost } from "@/utils/types/types";
 import SwipeCarousel from "../common/carousel";
 import { IoIosMore } from "react-icons/io";
@@ -27,7 +27,7 @@ interface IProps {
 
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post }: IProps) {
-  const { text, up, down, time, images, user, community, id } = post;
+  const { text, up, down, time, images, user, community, id, ccount } = post;
   const router = useRouter();
 
   const handleRedirectPost = () => {
@@ -70,13 +70,13 @@ export default function FeedPost({ post }: IProps) {
       </div> */}
       <div className='user_head'>
         <Link
-          href={`c/${post?.community.username}`}
-          as={`/c/${post?.community.username}`}
-          className='community_logo'
+          href={`u/${post?.user.username}`}
+          as={`/u/${post?.user.username}`}
+          className='user_avatar'
         >
           <Image
-            src={getImageSource(post?.community.logo)}
-            alt={post?.community.username || "community"}
+            src={getImageSource(post?.user.img)}
+            alt={post?.user.username || "user"}
             width={52}
             height={52}
           />
@@ -122,7 +122,7 @@ export default function FeedPost({ post }: IProps) {
         </div>
         <Link href={`post/${id}`} as={`/post/${id}`}>
           <GoComment size={18} />
-          <span>Comments</span>
+          <span>{numberWithCommas(ccount) || "comments"}</span>
         </Link>
         <div>
           <ShareIcon width={18} />
