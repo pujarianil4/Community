@@ -80,6 +80,8 @@
   .actions {
     display: flex;
     gap: 24px;
+    max-width: 560px;
+    justify-content: space-between;
     margin: 16px 0px 0 40px;
     div {
       min-width: 50px;

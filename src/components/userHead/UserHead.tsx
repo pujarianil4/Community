@@ -200,16 +200,18 @@ export default function UserHead() {
                 </div>
                 <div className='stats box'>
                   <p>Posts</p>
-                  <h4>5</h4>
+                  <h4>{data.pcount}</h4>
                 </div>
               </div>
               <div className='activity'>
                 <p className='about'>
                   {data?.desc || "Hello this is my official account"}
                 </p>
-                <CButton className='follow_btn'>
-                  {isFollowed ? "Unfollow" : "Follow"}
-                </CButton>
+                {!isSelf && (
+                  <CButton className='follow_btn'>
+                    {isFollowed ? "Unfollow" : "Follow"}
+                  </CButton>
+                )}
               </div>
               <div className='socials'>
                 <DiscordIcon />

@@ -10,7 +10,12 @@ import { getImageSource, timeAgo } from "@/utils/helpers";
 import { IPost } from "@/utils/types/types";
 import SwipeCarousel from "../common/carousel";
 import { IoIosMore } from "react-icons/io";
-import { DropdownLowIcon, DropdownUpIcon, ShareIcon } from "@/assets/icons";
+import {
+  DropdownLowIcon,
+  DropdownUpIcon,
+  SaveIcon,
+  ShareIcon,
+} from "@/assets/icons";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -122,6 +127,10 @@ export default function FeedPost({ post }: IProps) {
         <div>
           <ShareIcon width={18} />
           <span>Share</span>
+        </div>
+        <div>
+          <SaveIcon width={16} height={16} />
+          <span>Save</span>
         </div>
       </div>
     </div>

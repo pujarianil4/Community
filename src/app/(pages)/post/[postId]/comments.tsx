@@ -279,7 +279,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     setImageLoading(true);
     try {
       const uploadedFile = await uploadSingleFile(file[0]);
-      setCommentImg(uploadedFile?.url);
+      setCommentImg(uploadedFile);
     } catch (error) {
       console.error("Error uploading files", error);
       NotificationMessage("error", "Error uploading files");

@@ -487,3 +487,27 @@ export function ShareIcon({
     </svg>
   );
 }
+
+export function SaveIcon({
+  fill = "#ffffff",
+  width = 19,
+  height = 23,
+}: IIConProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox='0 0 19 23'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <path
+        d='M17.1386 21.4843L9.57075 16.0787L2.00293 21.4843V4.18641C2.00293 3.61295 2.23074 3.06297 2.63623 2.65747C3.04173 2.25198 3.5917 2.02417 4.16517 2.02417H14.9763C15.5498 2.02417 16.0998 2.25198 16.5053 2.65747C16.9108 3.06297 17.1386 3.61295 17.1386 4.18641V21.4843Z'
+        stroke={fill}
+        stroke-width='2.16224'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+      />
+    </svg>
+  );
+}

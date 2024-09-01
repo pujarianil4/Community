@@ -9,13 +9,16 @@ import { GoComment } from "react-icons/go";
 import { IPost } from "@/utils/types/types";
 import MarkdownRenderer from "@/components/common/MarkDownRender";
 import SwipeCarousel from "@/components/common/carousel";
-import { DropdownLowIcon, DropdownUpIcon, ShareIcon } from "@/assets/icons";
+import {
+  DropdownLowIcon,
+  DropdownUpIcon,
+  SaveIcon,
+  ShareIcon,
+} from "@/assets/icons";
 import PostPageLoader from "@/components/common/loaders/postPage";
-// import { getPostsByPostId } from "@/services/api/api";
 
 interface Iprops {
   post: IPost;
-  // postId: string;
 }
 
 export default async function Post({ post }: Iprops) {
@@ -88,6 +91,10 @@ export default async function Post({ post }: Iprops) {
         <div>
           <ShareIcon width={18} />
           <span>Share</span>
+        </div>
+        <div>
+          <SaveIcon width={16} height={16} />
+          <span>Save</span>
         </div>
       </div>
     </section>
