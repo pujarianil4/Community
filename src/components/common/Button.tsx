@@ -5,6 +5,7 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Button } from "antd";
 import React, { useState } from "react";
 import AuthModal from "./auth/AuthModal";
+import { SignUpModal } from "./auth/signUpModal";
 import "./index.scss";
 
 interface ICButton {
@@ -31,8 +32,9 @@ export default function CButton({
 }: ICButton) {
   const commonSelector = (state: RootState) => state?.common;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [{ dispatch, actions }] = useRedux();
-  const [{}, [common]] = useRedux([commonSelector]);
+  // const [{ dispatch, actions }] = useRedux();
+  const [modalTab, setModalTab] = useState(1);
+  // const [{}, [common]] = useRedux([commonSelector]);
   const handleAction = () => {
     const user = getClientSideCookie("authToken");
 
@@ -71,10 +73,11 @@ export default function CButton({
       >
         {children}
       </Button>
-      <AuthModal
-        visible={isModalOpen}
-        setVisible={setIsModalOpen}
-        callBack={closeModal}
+      <SignUpModal
+        modalTab={modalTab}
+        setModalTab={setModalTab}
+        handleCancel={closeModal}
+        isModalOpen={isModalOpen}
       />
     </>
   );

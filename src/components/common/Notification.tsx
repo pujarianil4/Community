@@ -10,8 +10,8 @@ export default function NotificationMessage(result: any, msg: string) {
     description: msg,
     onClick: () => {},
     className: "notification_class",
-    closeIcon: <CloseCircleOutlined style={{ color: "white", fontSize: 35 }} />,
-    duration: 1000,
+    closeIcon: <CloseCircleOutlined style={{ color: "white", fontSize: 25 }} />,
+    duration: 10,
     icon:
       result == "success" ? (
         <CheckCircleOutlined style={{ color: "green" }} />

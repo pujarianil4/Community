@@ -144,10 +144,12 @@
 
     .error {
       color: var(--error);
+      text-align: start;
     }
 
     .success {
       color: var(--success);
+      text-align: start;
     }
   }
 

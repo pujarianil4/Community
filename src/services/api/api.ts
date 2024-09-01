@@ -86,10 +86,14 @@ export const handleSignup = async (
 export const fetchUserByUserName = async (username: string) => {
   try {
     const response = await api.get(`/users/uname/${username}`);
-
-    return response.data;
+    console.log("response", response.data);
+    if (response.data) {
+      return response.data;
+    }
+    throw new Error("user not available");
   } catch (error) {
     console.error("FETCH_BY_NAME_ERROR", error);
+    throw error;
   }
 };
 
