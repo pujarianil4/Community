@@ -7,7 +7,7 @@ import {
   followApi,
   UnFollowAPI,
 } from "@/services/api/api";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CButton from "../common/Button";
 import "./userhead.scss";
 import UandCHeadLoader from "../common/loaders/UandCHead";
@@ -26,9 +26,10 @@ import {
   TelegramIcon,
   TwitterIcon,
 } from "@/assets/icons";
+import { numberWithCommas } from "@/utils/helpers";
 export default function UserHead() {
   const { userId: id } = useParams<{ userId: string }>();
-
+  const router = useRouter();
   const pathname = usePathname();
   const pathArray = pathname.split("/");
   const userId = id || pathArray[pathArray.length - 1];
@@ -72,6 +73,10 @@ export default function UserHead() {
     data: followResponse,
     callFunction,
   } = useAsync();
+
+  const handleEdit = () => {
+    router.push(`/settings`);
+  };
 
   const handleFollow = async () => {
     try {
@@ -156,8 +161,10 @@ export default function UserHead() {
                 className='imgbg'
                 src='https://picsum.photos/700/220?random=1'
                 alt='coverbg'
-                fill
-                objectFit='cover'
+                width={768}
+                height={220}
+                // fill
+                // objectFit='cover'
                 // objectPosition='center'
                 // priority
               />
@@ -166,9 +173,12 @@ export default function UserHead() {
                 alt='cover_photo'
                 loading='lazy'
                 // layout='fill'
-                fill
-                objectFit='contain'
-                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                // fill
+                // objectFit='contain'
+                width={768}
+                height={220}
+                className='cover_img'
+                // sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
               />
             </div>
             <div className='details'>
@@ -182,7 +192,8 @@ export default function UserHead() {
                           : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
                       }
                       alt='user'
-                      fill
+                      width={72}
+                      height={72}
                     />
                   </div>
                   <div className='names'>
@@ -192,31 +203,46 @@ export default function UserHead() {
                 </div>
                 <div className='stats box'>
                   <p>Followers</p>
-                  <h4>1,111</h4>
+                  <h4>{numberWithCommas(data?.followers) || "0"}</h4>
                 </div>
                 <div className='stats box'>
                   <p>Following</p>
-                  <h4>111</h4>
+                  <h4>{numberWithCommas(data?.following) || "0"}</h4>
                 </div>
                 <div className='stats box'>
                   <p>Posts</p>
-                  <h4>{data.pcount}</h4>
+                  <h4>{data?.pcount}</h4>
                 </div>
               </div>
               <div className='activity'>
                 <p className='about'>
                   {data?.desc || "Hello this is my official account"}
                 </p>
-                {!isSelf && (
-                  <CButton className='follow_btn'>
+                {isSelf ? (
+                  <CButton onClick={handleEdit} className='follow_btn'>
+                    Edit
+                  </CButton>
+                ) : (
+                  <CButton
+                    loading={isLoadingFollow}
+                    onClick={handleFollow}
+                    className='follow_btn'
+                  >
                     {isFollowed ? "Unfollow" : "Follow"}
                   </CButton>
                 )}
               </div>
+              {/* TODO: add disabled class as per social link availablity */}
               <div className='socials'>
-                <DiscordIcon />
-                <TelegramIcon />
-                <TwitterIcon />
+                <div className='disabled'>
+                  <DiscordIcon />
+                </div>
+                <div className='disabled'>
+                  <TelegramIcon />
+                </div>
+                <div className='disabled'>
+                  <TwitterIcon />
+                </div>
               </div>
             </div>
           </div>
