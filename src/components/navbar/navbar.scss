@@ -55,11 +55,17 @@
 
   .signin {
     margin-inline: 20px;
+
+    .user_actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
     .create_post {
       background-color: transparent !important;
       outline: none;
       height: 40px;
-      padding: 8px 12px;
+      padding: 8px 10px;
 
       svg {
         width: 20px;
@@ -67,12 +73,18 @@
       }
 
       &:hover {
-        background-color: var(--secondary-bg) !important;
+        background-color: var(--tertiary-bg) !important;
       }
     }
 
     .notification {
       color: var(--primary-text);
+
+      border-radius: 5px;
+      cursor: pointer;
+      &:hover {
+        color: var(--tertiary-bg) !important;
+      }
     }
 
     .user_icon {
@@ -80,6 +92,7 @@
         border-radius: 50%;
         border: 1px solid var(--primary-text);
         object-fit: cover;
+        cursor: pointer;
       }
       svg {
         cursor: pointer;
@@ -242,7 +255,7 @@
       }
     }
     &:hover {
-      background-color: var(--secondary-hov);
+      background-color: var(--tertiary-bg);
     }
   }
 }

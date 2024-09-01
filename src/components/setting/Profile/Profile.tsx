@@ -115,7 +115,7 @@ export default function Profile() {
             img: response?.img,
           };
 
-          // setClientSideCookie("authToken", JSON.stringify(user));
+          setClientSideCookie("authToken", JSON.stringify(user), true);
 
           dispatch(actions.setUserData(updatedUser));
           setIsLoadingUpdate(false);

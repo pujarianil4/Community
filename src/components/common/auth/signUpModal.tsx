@@ -94,10 +94,10 @@ export const SignUpModal = ({
       setIsSignUp(false);
       handleCancel();
     } else {
-      setClientSideCookie("authToken", JSON.stringify(user));
+      //setClientSideCookie("authToken", JSON.stringify(user));
       // setToLocalStorage("userSession", user);
-      dispatch(actions.setUserData(user));
-      dispatch(actions.setRefetchUser(true));
+      // dispatch(actions.setUserData(user));
+      // dispatch(actions.setRefetchUser(true));
       setSignUpData({ username: "", name: "" });
       setModalTab(1);
       setIsSignUp(false);

@@ -149,28 +149,38 @@ export default function Navbar() {
     }
   }, [user]);
 
+  const fetchFromCookies = () => {
+    const userData1: any = getClientSideCookie("authToken");
+    console.log("userFetc", userData1);
+    if (userData?.uid) {
+      setUserSession(userData);
+      dispatch(actions.setUserData(userData));
+    }
+  };
+
   // fetch user details after refresh
   const fetchUser = async () => {
     const userData1: any = getClientSideCookie("authToken");
     console.log("userFetc", userData1);
 
     if (userData?.uid) {
-      // const response = await fetchUserById(userData?.uid);
-      // const user = {
-      //   username: response?.username,
-      //   name: response?.name,
-      //   uid: response?.id,
-      //   token: userData1?.token,
-      //   img: response?.img,
-      // };
-      setUserSession(userData);
-      // setClientSideCookie("authToken", JSON.stringify(user));
+      const response = await fetchUserById(userData?.uid);
+      const user = {
+        username: response?.username,
+        name: response?.name,
+        uid: response?.id,
+        token: userData1?.token,
+        img: response?.img,
+      };
+      setUserSession(user);
+      setClientSideCookie("authToken", JSON.stringify(user));
       dispatch(actions.setUserData(userData));
     }
   };
   useEffect(() => {
-    fetchUser();
+    fetchFromCookies();
     if (common?.refetch?.user) {
+      fetchUser();
       dispatch(actions.setRefetchUser(false));
     }
   }, [common?.refetch?.user]);
@@ -229,7 +239,7 @@ export default function Navbar() {
 
         <div className='signin'>
           {userSession?.token ? (
-            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <div className='user_actions'>
               <CButton className='create_post' onClick={showCreatePost}>
                 <AddIcon />
                 Create Post

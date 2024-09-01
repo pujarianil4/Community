@@ -93,12 +93,12 @@ export default function FeedList({ method, id }: IFeedList) {
       {method == "allPosts" && (
         <div className='tabs_list'>
           {list}
-          <div>
+          {/* <div>
             <span>
               <AddIcon width={14} height={14} />
               Create Post
             </span>
-          </div>
+          </div> */}
         </div>
       )}
 

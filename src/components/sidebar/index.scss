@@ -40,10 +40,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  .img,
   img {
     width: 30px;
     height: 30px;
     border-radius: 50%;
+  }
+  .content {
+    width: 100px;
   }
   .createText {
     color: var(--primary) !important;
@@ -52,6 +56,7 @@
   }
 }
 .create_community_container {
+  padding: 10px;
   .avatar {
     display: flex;
     flex-direction: column;

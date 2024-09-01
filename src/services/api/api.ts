@@ -178,17 +178,20 @@ export const fetchCommunityByCname = async (cName: string) => {
     const response = await api.get(`/community/cname/${cName}`);
     let isFollowed = false;
 
-    if (response?.data?.id) {
-      isFollowed = await isUserFollowed({
-        fwid: response?.data?.id,
-        type: "c",
-      });
+    if (response.data) {
+      if (response?.data?.id) {
+        isFollowed = await isUserFollowed({
+          fwid: response?.data?.id,
+          type: "c",
+        });
+      }
+      return {
+        ...response.data,
+        isFollowed,
+      };
+    } else {
+      throw new Error("user not available");
     }
-    return {
-      ...response.data,
-      isFollowed,
-    };
-    return response.data;
   } catch (error) {
     console.error("Fetch Communities ", error);
     throw error;
