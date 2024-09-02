@@ -232,15 +232,6 @@ export default function Profile() {
         </div>
         {isUploadingAvatar && <span className='msg'>uploading...</span>}
       </div>
-      <div className='info'>
-        <span className='label'>Name</span>
-        <input
-          type='text'
-          onChange={handleChange}
-          defaultValue={user.name}
-          name='name'
-        />
-      </div>
 
       <div className='info'>
         <span className='label'>Name</span>
