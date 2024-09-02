@@ -198,7 +198,7 @@ export default function Navbar() {
   return (
     <>
       <nav className='nav_container'>
-        <div>
+        <div className='logo'>
           <Link href='#'>
             <h2>Numity</h2>
           </Link>
