@@ -59,6 +59,12 @@
     }
   }
 
+  .post_content {
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--primary-border);
+    margin-bottom: 12px;
+  }
+
   .content {
     margin: 12px 0 0 40px;
     .post_image {
@@ -84,9 +90,9 @@
   .actions {
     display: flex;
     gap: 24px;
-    max-width: 560px;
+    max-width: 400px;
     justify-content: space-between;
-    margin: 32px 0px 0 40px;
+    margin: 16px 0px 0 40px;
     div {
       min-width: 50px;
       display: flex;

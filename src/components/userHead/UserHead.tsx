@@ -26,7 +26,7 @@ import {
   TelegramIcon,
   TwitterIcon,
 } from "@/assets/icons";
-import { numberWithCommas } from "@/utils/helpers";
+import { getImageSource, numberWithCommas } from "@/utils/helpers";
 export default function UserHead() {
   const { userId: id } = useParams<{ userId: string }>();
   const router = useRouter();
@@ -156,29 +156,21 @@ export default function UserHead() {
           // </div>
           <div className='userhead_cotainer'>
             <div className='cover_photo'>
-              <Image
+              {/* <Image
                 loading='lazy'
                 className='imgbg'
                 src='https://picsum.photos/700/220?random=1'
                 alt='coverbg'
                 width={768}
                 height={220}
-                // fill
-                // objectFit='cover'
-                // objectPosition='center'
-                // priority
-              />
+              /> */}
               <Image
                 src='https://picsum.photos/700/220?random=1'
                 alt='cover_photo'
                 loading='lazy'
-                // layout='fill'
-                // fill
-                // objectFit='contain'
                 width={768}
                 height={220}
                 className='cover_img'
-                // sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
               />
             </div>
             <div className='details'>
@@ -186,11 +178,7 @@ export default function UserHead() {
                 <div className='box user'>
                   <div className='avatar'>
                     <Image
-                      src={
-                        data?.img
-                          ? data?.img
-                          : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                      }
+                      src={getImageSource(data?.img, "u")}
                       alt='user'
                       width={72}
                       height={72}
@@ -262,7 +250,12 @@ export default function UserHead() {
             {
               key: "3",
               label: "Followings",
-              content: <Followings uid={data?.id} />,
+              content: <Followings uid={data?.id} entityType='u' />,
+            },
+            {
+              key: "4",
+              label: "Community",
+              content: <Followings uid={data?.id} entityType='c' />,
             },
           ]}
         />

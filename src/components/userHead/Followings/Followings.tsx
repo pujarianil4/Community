@@ -8,17 +8,22 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import "./index.scss";
+import { getImageSource } from "@/utils/helpers";
 
 interface IFollowings {
   uid: string;
+  entityType: "u" | "c";
 }
 
-export default function Followings({ uid }: IFollowings) {
+export default function Followings({ uid, entityType }: IFollowings) {
   // const userNameSelector = (state: RootState) => state?.user;
 
   // const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
 
-  const { isLoading, data, refetch } = useAsync(getFollowinsByUserId, uid);
+  const { isLoading, data, refetch } = useAsync(getFollowinsByUserId, {
+    userId: uid,
+    type: entityType,
+  });
 
   const refetchRoute = (state: RootState) => state?.common.refetch.user;
   const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
@@ -34,9 +39,9 @@ export default function Followings({ uid }: IFollowings) {
 
   const returnFollow = (data: any) => {
     if (data.followedUser == null) {
-      return { ...data.followedCommunity, type: "c" };
+      return { ...data.followedCommunity };
     } else {
-      return { ...data.followedUser, type: "u" };
+      return { ...data.followedUser };
     }
   };
 
@@ -47,18 +52,18 @@ export default function Followings({ uid }: IFollowings) {
           return (
             <Link
               key={i}
-              href={`/${returnFollow(follow).type}/${
-                returnFollow(follow)?.username
-              }`}
-              as={`/${returnFollow(follow).type}/${
-                returnFollow(follow)?.username
-              }`}
+              href={`/${entityType}/${returnFollow(follow)?.username}`}
+              as={`/${entityType}/${returnFollow(follow)?.username}`}
             >
               <div className='user'>
                 <Image
                   width={40}
                   height={40}
-                  src={"https://picsum.photos/300/300"}
+                  src={getImageSource(
+                    entityType === "u"
+                      ? (returnFollow(follow)?.img, "u")
+                      : (returnFollow(follow)?.logo, "c")
+                  )}
                   alt='avatar'
                 />
                 <span className='name'>{returnFollow(follow).name}</span>

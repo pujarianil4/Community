@@ -177,7 +177,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
       <section className='user_data'>
         <Image
           loading='lazy'
-          src={getImageSource(user?.img)}
+          src={getImageSource(user?.img, "u")}
           alt='user_img'
           width={48}
           height={48}

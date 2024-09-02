@@ -135,7 +135,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
             // className='community_logo'
           >
             <Image
-              src={getImageSource(comment?.user.img)}
+              src={getImageSource(comment?.user.img, "u")}
               alt={comment?.user.username}
               width={32}
               height={32}

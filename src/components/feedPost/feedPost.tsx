@@ -75,7 +75,7 @@ export default function FeedPost({ post }: IProps) {
           className='user_avatar'
         >
           <Image
-            src={getImageSource(post?.user.img)}
+            src={getImageSource(post?.user.img, "u")}
             alt={post?.user.username || "user"}
             width={52}
             height={52}

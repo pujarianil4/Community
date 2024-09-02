@@ -82,7 +82,7 @@ export default function Profile() {
       const userData = {
         username: data.username,
         name: data.name,
-        img: getImageSource(data.img),
+        img: getImageSource(data.img, "u"),
         desc: data?.desc,
       };
       setUser(userData);

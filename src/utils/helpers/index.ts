@@ -60,7 +60,12 @@ export const debounce = (func: (...args: any[]) => void, delay: number) => {
   };
 };
 
-export const getImageSource = (logo: string | null, user: boolean = false) => {
+export const getImageSource = (
+  logo: string | null,
+  type: "u" | "c" | "other" = "other"
+  // user: boolean = false,
+  // community: boolean = false
+) => {
   if (
     logo &&
     (logo.startsWith("http://") ||
@@ -69,8 +74,15 @@ export const getImageSource = (logo: string | null, user: boolean = false) => {
   ) {
     return logo;
   } else {
-    if (user) return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-    return getRandomImageLink();
+    if (type === "u") {
+      return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    } else if (type === "c") {
+      // TODO: change default Community logo
+      return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    } else {
+      // TODO: Update Random Image if required
+      return getRandomImageLink();
+    }
   }
 };
 
