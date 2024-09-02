@@ -18,6 +18,7 @@ import { IoSearch } from "react-icons/io5";
 
 import { NotificationIcon, AddIcon, DropdownLowIcon } from "@/assets/icons";
 
+import axios from "axios";
 import useRedux from "@/hooks/useRedux";
 import {
   fetchUserById,
@@ -49,6 +50,7 @@ import EvmAuthComponent from "../common/auth/EvmAuth";
 import SolanaAuthComponent from "../common/auth/SolanaAuth";
 import TelegramLogin from "../common/auth/telegramAuth";
 import { TelegramAuthData } from "@/utils/types/types";
+import { handleDiscordLogin } from "./discordLogin";
 import { SignUpModal } from "../common/auth/signUpModal";
 export interface ISignupData {
   username: string;
@@ -62,6 +64,8 @@ const userNameSelector = (state: RootState) => state?.user;
 
 const tgBotName = process.env.TG_BOT_NAME;
 export default function Navbar() {
+  const secretCode = process.env.NEXT_PUBLIC_DISCORD_ID;
+  console.log("env code", secretCode);
   const userAccount = useAccount();
 
   const [{ dispatch, actions }, [user, common]] = useRedux([
@@ -86,7 +90,7 @@ export default function Navbar() {
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const hasCalledRef = useRef(false);
   const [modalTab, setModalTab] = useState(1);
-
+  const [discordUser, setDiscordUser] = useState(null);
   const showModal = () => {
     setIsModalOpen(true);
   };

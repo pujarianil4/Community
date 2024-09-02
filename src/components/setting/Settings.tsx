@@ -3,7 +3,7 @@ import CTabs from "../common/Tabs";
 import PrivateRoute from "../Wrapers/PrivateRoute";
 import General from "./General/General";
 import Profile from "./Profile/Profile";
-
+import "./index.scss";
 function Setting() {
   const tabsList = [
     {

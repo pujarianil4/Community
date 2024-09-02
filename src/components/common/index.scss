@@ -104,3 +104,28 @@
 .ant-notification-notice-close {
   color: var(--primary-text) !important;
 }
+
+.ant-tabs {
+  .ant-tabs-nav {
+    .ant-tabs-nav-wrap:before {
+      position: relative;
+    }
+    .ant-tabs-nav-list {
+      .ant-tabs-tab {
+        color: var(--primary);
+        background: var(--white);
+        padding: 7px 19px;
+        margin-right: 1rem;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        border: 1px solid var(--tertiary-border);
+        cursor: pointer;
+      }
+      .ant-tabs-tab-active {
+        background: var(--secondary-bg);
+        border: 2px solid var(--secondary-bg);
+      }
+    }
+  }
+}
