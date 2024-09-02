@@ -88,7 +88,7 @@ export default function ProposalPage() {
                   as={`/c/${community?.username}`}
                 >
                   <Image
-                    src={getImageSource(community?.logo)}
+                    src={getImageSource(community?.logo, "c")}
                     alt={community.name || "community"}
                     width={24}
                     height={24}
@@ -98,7 +98,7 @@ export default function ProposalPage() {
                 </Link>
                 <Link href={`u/${user?.username}`} as={`/u/${user?.username}`}>
                   <Image
-                    src={getImageSource(user?.img)}
+                    src={getImageSource(user?.img, "u")}
                     alt={user.name || "user"}
                     width={24}
                     height={24}

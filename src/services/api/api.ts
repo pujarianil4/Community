@@ -258,9 +258,9 @@ export const patchPost = async (data: any) => {
   }
 };
 
-export const getFollowinsByUserId = async (userId: string) => {
+export const getFollowinsByUserId = async ({ userId, type }: any) => {
   try {
-    const response = await api.get(`/followers/fwng/${userId}`);
+    const response = await api.get(`/followers/fwng/${userId}?typ=${type}`);
     return response.data;
   } catch (error) {
     console.error("getFollowinsByUserId", error);
@@ -269,8 +269,6 @@ export const getFollowinsByUserId = async (userId: string) => {
 };
 
 export const getFollowersByUserId = async ({ userId, type }: IFollowersAPI) => {
-  console.log(userId, type);
-
   try {
     const response = await api.get(`/followers/fwrs/${userId}?typ=${type}`);
     return response.data;

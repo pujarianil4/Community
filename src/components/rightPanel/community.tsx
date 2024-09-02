@@ -78,7 +78,7 @@ export default function Community({ community }: IProps) {
         className='community_bx'
       >
         <Image
-          src={getImageSource(community?.logo)}
+          src={getImageSource(community?.logo, "c")}
           alt={community?.name}
           width={50}
           height={50}

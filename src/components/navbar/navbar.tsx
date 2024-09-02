@@ -12,6 +12,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { IoLogOutOutline } from "react-icons/io5";
 import "./navbar.scss";
 import CButton from "../common/Button";
+import { GoChevronDown } from "react-icons/go";
 import { FaRegBell } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 
@@ -253,8 +254,8 @@ export default function Navbar() {
                 >
                   {userSession?.img ? (
                     <Image
-                      width={40}
-                      height={40}
+                      width={50}
+                      height={50}
                       loading='lazy'
                       className='avatar'
                       src={userSession?.img}
@@ -266,6 +267,7 @@ export default function Navbar() {
                       size={40}
                     />
                   )}
+                  {/* <GoChevronDown className='downarrow' size={20} /> */}
                 </Popover>
               </div>
             </div>
