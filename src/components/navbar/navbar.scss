@@ -58,14 +58,17 @@
 
     .user_actions {
       display: flex;
-      gap: 10px;
+      gap: 15px;
       align-items: center;
     }
     .create_post {
-      background-color: transparent !important;
+      // background-color: transparent !important;
+      background-color: var(--tertiary-bg) !important;
+      color: var(--primary) !important;
       outline: none;
       height: 40px;
       padding: 8px 10px;
+      cursor: pointer;
 
       svg {
         width: 20px;
@@ -73,7 +76,7 @@
       }
 
       &:hover {
-        background-color: var(--tertiary-bg) !important;
+        opacity: 0.8;
       }
     }
 

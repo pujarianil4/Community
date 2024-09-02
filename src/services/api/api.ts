@@ -391,19 +391,20 @@ export const uploadMultipleFile = async (files: FileList) => {
     const formData = new FormData();
 
     Array.from(files).forEach((file, index) => {
-      formData.append(`files${index}`, file);
+      formData.append(`files`, file);
     });
 
     console.log("This is my form data!", formData);
 
     // Send a POST request with the form data and Bearer token
-    const response = await api.post("/upload/multi", files, {
+    const response = await api.post("/upload/multi", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
 
     console.log("Upload successful:", response.data);
+    return response.data;
   } catch (error) {
     console.error("Upload failed:", error);
   }

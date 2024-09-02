@@ -3,20 +3,20 @@
   background-color: var(--primary) !important;
   border: 0px !important;
   border-radius: 5px !important;
-  color: var(--primary-text) !important;
+  color: var(--white) !important;
   font-weight: 500 !important;
   font-size: 15px !important;
-  cursor: pointer;
+  cursor: pointer !important;
   transition: background-color 0.3s ease;
   &:hover {
     background-color: var(--primary-hover) !important;
-    color: var(--primary-text) !important;
+    // color: var(--primary-text) !important;
   }
   &:disabled {
-    background-color: var(--primary) !important;
-    color: var(--primary-text) !important;
+    background-color: var(--primary-disable) !important;
+    color: var(--label-text) !important;
     opacity: 0.9;
-    cursor: not-allowed;
+    cursor: not-allowed !important;
   }
 }
 

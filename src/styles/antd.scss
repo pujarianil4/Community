@@ -3,9 +3,12 @@
   background-color: var(--secondary-bg) !important;
   color: var(--primary-text) !important;
   padding: 10px !important;
-  button {
+  .ant-modal-close {
     color: var(--black) !important;
   }
+  // button {
+  //   color: var(--black) !important;
+  // }
 }
 
 .ant-divider {
