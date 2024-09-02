@@ -145,9 +145,11 @@ export const updateUser = async (payload: Partial<IUser>) => {
   }
 };
 
-export const fetchCommunities = async () => {
+export const fetchCommunities = async (sortby: string) => {
   try {
-    const response = await api.get("/community?page=1&limit=20");
+    const response = await api.get(
+      `/community?sortBy=${sortby}&order=desc&page=1&limit=20`
+    );
 
     return response.data;
   } catch (error) {

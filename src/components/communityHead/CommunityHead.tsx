@@ -16,7 +16,11 @@ import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import Followers from "../userHead/followers/Followers";
 import Followings from "../userHead/Followings/Followings";
-import { getImageSource, getRandomImageLink } from "@/utils/helpers";
+import {
+  getImageSource,
+  getRandomImageLink,
+  numberWithCommas,
+} from "@/utils/helpers";
 import {
   AddIcon,
   DiscordIcon,
@@ -147,18 +151,23 @@ export default function CommunityHead() {
                 className='imgbg'
                 src='https://picsum.photos/700/220?random=1'
                 alt='coverbg'
-                fill
-                objectFit='cover'
+                // fill
+                // objectFit='cover'
                 // objectPosition='center'
                 // priority
+                width={768}
+                height={220}
               />
               <Image
                 src='https://picsum.photos/700/220?random=1'
                 alt='cover_photo'
-                layout='fill'
                 loading='lazy'
-                objectFit='contain'
-                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                // layout='fill'
+                // objectFit='contain'
+                width={768}
+                height={220}
+                className='cover_img'
+                // sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
               />
             </div>
             <div className='details'>
@@ -181,28 +190,39 @@ export default function CommunityHead() {
                   </div>
                 </div>
                 <div className='stats box'>
-                  <p>Followers</p>
-                  <h4>1,111</h4>
+                  <p>Members</p>
+                  <h4>{numberWithCommas(data?.followers) || 0}</h4>
                 </div>
-                <div className='stats box'>
+                {/* <div className='stats box'>
                   <p>Following</p>
                   <h4>111</h4>
-                </div>
+                </div> */}
                 <div className='stats box'>
                   <p>Posts</p>
-                  <h4>5</h4>
+                  <h4>{numberWithCommas(data?.pCount) || "0"}</h4>
                 </div>
               </div>
               <div className='activity'>
                 <p className='about'>{data?.metadata}</p>
-                <CButton className='follow_btn'>
-                  {isFollowed ? "Unfollow" : "Follow"}
+                <CButton
+                  loading={isLoadingFollow}
+                  onClick={handleFollow}
+                  className='follow_btn'
+                >
+                  {isFollowed ? "Unjoin" : "Join"}
                 </CButton>
               </div>
+              {/* TODO: add disabled class as per social link availablity */}
               <div className='socials'>
-                <DiscordIcon />
-                <TelegramIcon />
-                <TwitterIcon />
+                <div className='disabled'>
+                  <DiscordIcon />
+                </div>
+                <div className='disabled'>
+                  <TelegramIcon />
+                </div>
+                <div className='disabled'>
+                  <TwitterIcon />
+                </div>
               </div>
             </div>
           </div>
@@ -223,14 +243,14 @@ export default function CommunityHead() {
               },
               {
                 key: "2",
-                label: "Followers",
+                label: "Members",
                 content: <Followers uid={data.id} entityType='c' />,
               },
-              {
-                key: "3",
-                label: "Voters",
-                content: <Followings uid={data.id} />,
-              },
+              // {
+              //   key: "3",
+              //   label: "Voters",
+              //   content: <Followings uid={data.id} />,
+              // },
               {
                 key: "4",
                 label: "Proposals",

@@ -1,5 +1,6 @@
 "use client";
 
+import { DropdownLowIcon, DropdownUpIcon, ShareIcon } from "@/assets/icons";
 import CButton from "@/components/common/Button";
 import CommentsLoader from "@/components/common/loaders/comments";
 import MarkdownRenderer from "@/components/common/MarkDownRender";
@@ -19,7 +20,7 @@ import { getImageSource, timeAgo } from "@/utils/helpers";
 import { IComment, IPostCommentAPI, IUser } from "@/utils/types/types";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GoComment, GoShareAndroid } from "react-icons/go";
 import { LuImagePlus } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
@@ -73,13 +74,8 @@ export default function Comments({ postId }: Iprops) {
     }
   }, [commentsData]);
 
-  // const onComment = (newComment: IComment) => {
-  //   setComments((prev) => [newComment, ...(prev || [])]);
-  // };
   const onComment = (newComment: IComment) => {
     if (newComment.pcid === null) {
-      // If it's a top-level comment, add it to the beginning of comments
-      // setComments((prevComments) => [newComment, ...(prevComments || [])]);
       setComments([newComment, ...(comments || [])]);
     }
   };
@@ -97,12 +93,7 @@ export default function Comments({ postId }: Iprops) {
                 new Date(b.cta).getTime() - new Date(a.cta).getTime()
             )
             ?.map((comment: any, index: number) => (
-              <CommentItem
-                key={index}
-                comment={comment}
-                postId={postId}
-                //  refetch={refetch}
-              />
+              <CommentItem key={index} comment={comment} postId={postId} />
             ))}
         </div>
       )}
@@ -112,7 +103,6 @@ export default function Comments({ postId }: Iprops) {
 
 interface ICommentItemProps {
   comment: IComment;
-  // refetch?: any;
   postId: number;
 }
 
@@ -142,7 +132,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
           <Link
             href={`u/${comment?.user.username}`}
             as={`/u/${comment?.user.username}`}
-            className='community_logo'
+            // className='community_logo'
           >
             <Image
               src={getImageSource(comment?.user.img)}
@@ -154,7 +144,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
           <Link
             href={`u/${comment?.user.username}`}
             as={`/u/${comment?.user.username}`}
-            className='community_logo'
+            className='user_name'
           >
             {comment?.user.username}
           </Link>
@@ -175,10 +165,10 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
           {/* <p>{comment?.content}</p> */}
         </div>
         <div className='actions'>
-          <div>
-            <PiArrowFatUpLight size={18} />
+          <div className='up_down'>
+            <DropdownUpIcon width={18} />
             <span>{comment?.up}</span>
-            <PiArrowFatDownLight size={18} />
+            <DropdownLowIcon width={18} />
           </div>
           {isReplying ? (
             <div onClick={() => handleClick(false)}>
@@ -191,7 +181,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
             </div>
           )}
           <div>
-            <GoShareAndroid size={18} />
+            <ShareIcon width={18} />
             <span>Share</span>
           </div>
         </div>
@@ -242,6 +232,10 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   const [showToolbar, setShowToolbar] = useState<boolean>(false);
   const userNameSelector = (state: RootState) => state?.user;
   const [{}, [user]] = useRedux([userNameSelector]);
+  // const commentInputRef = useRef<HTMLDivElement>(null);
+  const commentInputRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const handlePostComment = async () => {
     const postData: IPostCommentAPI = {
       uid: user?.uid,
@@ -279,7 +273,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     setImageLoading(true);
     try {
       const uploadedFile = await uploadSingleFile(file[0]);
-      setCommentImg(uploadedFile?.url);
+      setCommentImg(uploadedFile);
     } catch (error) {
       console.error("Error uploading files", error);
       NotificationMessage("error", "Error uploading files");
@@ -297,36 +291,87 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     }, 300);
   };
 
+  // useEffect(() => {
+  //   // if (commentInputRef.current) {
+  //   //   commentInputRef.current.scrollIntoView({
+  //   //     behavior: "smooth",
+  //   //     block: "end",
+  //   //   });
+  //   // }
+  //   // if (commentInputRef.current) {
+  //   //   commentInputRef.current.scrollIntoView({
+  //   //     behavior: "smooth",
+  //   //     block: "start",
+  //   //   });
+  //   // }
+
+  //   if (commentInputRef.current) {
+  //     commentInputRef.current.scrollIntoView({
+  //       behavior: "smooth",
+  //       block: "end",
+  //     });
+  //   }
+  // }, [commentInputRef, setIsReplying]);
+  useEffect(() => {
+    // const scrollAdjustment = 400;
+    if (commentInputRef.current) {
+      commentInputRef.current.focus();
+    }
+
+    if (containerRef.current) {
+      containerRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+    // window.scrollBy(0, scrollAdjustment);
+  }, [setIsReplying]);
+  // useEffect(() => {
+  //   const scrollAdjustment = commentImg ? 200 : 0;
+
+  //   if (commentInputRef.current) {
+  //     commentInputRef.current.focus();
+  //   }
+
+  //   if (containerRef.current) {
+  //     containerRef.current.scrollIntoView({
+  //       behavior: "smooth",
+  //       block: "end",
+  //     });
+  //     window.scrollBy(0, scrollAdjustment);
+  //   }
+  // }, [commentImg, setIsReplying]);
+
   return (
-    <div className='comment_input'>
+    <div className='comment_input' ref={containerRef}>
       {/* <TextArea
         content={commentBody}
         setContent={setCommentBody}
         placeholder='Write your comment'
       /> */}
-      <RichTextEditor showToolbar={showToolbar} setContent={setCommentBody} />
+      <div ref={commentInputRef}>
+        <RichTextEditor
+          showToolbar={showToolbar}
+          setContent={setCommentBody}
+          value={commentBody}
+        />
+      </div>
+      {imgLoading && (
+        <div className={`comment_image_wrapper `}>
+          <div className='skeleton image_loader'></div>
+        </div>
+      )}
       {commentImg && (
         <div className={`comment_image_wrapper `}>
-          {imgLoading ? (
-            <div className='skeleton image_loader'></div>
-          ) : (
-            <div className='image_wrapper'>
-              {/* <Image
-                src={commentImg}
-                alt='comment_img'
-                width={200}
-                height={200}
-                className='img_bg'
-              /> */}
-              <Image
-                src={commentImg}
-                alt='comment_img'
-                width={200}
-                height={200}
-                className='comment_img'
-              />
-            </div>
-          )}
+          <div className='image_wrapper'>
+            <Image
+              src={commentImg}
+              alt='comment_img'
+              width={200}
+              height={200}
+              className='comment_img'
+            />
+          </div>
           {!imgLoading && (
             <button className='delete_image_button' onClick={handleDeleteImage}>
               <MdDeleteOutline color='var(--primary)' size={20} />
@@ -347,7 +392,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
         </div>
         <CButton
           className='comment_btn'
-          disabled={commentBody === ""}
+          disabled={commentBody === "" && commentImg == null}
           onClick={() => handlePostComment()}
         >
           Comment
