@@ -48,7 +48,7 @@ export default function Post({ post }: IProps) {
         </div>
         <div className='post_content'>
           <div className='redirect_content' onClick={handleRedirectPost}>
-            <MarkdownRenderer markdownContent={post?.text} limit={150} />
+            <MarkdownRenderer markdownContent={post?.text} limit={10} />
           </div>
           <div className='post_comment'>
             <span>
