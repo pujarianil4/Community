@@ -146,28 +146,20 @@ export default function CommunityHead() {
           </div> */}
           <div className='userhead_cotainer'>
             <div className='cover_photo'>
-              <Image
+              {/* <Image
                 loading='lazy'
                 className='imgbg'
                 src='https://picsum.photos/700/220?random=1'
                 alt='coverbg'
-                // fill
-                // objectFit='cover'
-                // objectPosition='center'
-                // priority
                 width={768}
                 height={220}
-              />
+              /> */}
               <Image
                 src='https://picsum.photos/700/220?random=1'
                 alt='cover_photo'
-                loading='lazy'
-                // layout='fill'
-                // objectFit='contain'
                 width={768}
                 height={220}
                 className='cover_img'
-                // sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
               />
             </div>
             <div className='details'>
@@ -175,12 +167,8 @@ export default function CommunityHead() {
                 <div className='box user'>
                   <div className='avatar'>
                     <Image
-                      src={
-                        data?.logo
-                          ? data?.logo
-                          : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                      }
-                      alt='user'
+                      src={getImageSource(data?.logo, "c")}
+                      alt='community'
                       fill
                     />
                   </div>
@@ -209,7 +197,7 @@ export default function CommunityHead() {
                   onClick={handleFollow}
                   className='follow_btn'
                 >
-                  {isFollowed ? "Unjoin" : "Join"}
+                  {isFollowed ? "Joined" : "Join"}
                 </CButton>
               </div>
               {/* TODO: add disabled class as per social link availablity */}

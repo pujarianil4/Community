@@ -23,7 +23,7 @@ export default function Post({ post }: IProps) {
     <div className='post_heading'>
       <div className='post_bx'>
         <Image
-          src={getImageSource(post?.user.img)}
+          src={getImageSource(post?.user.img, "u")}
           alt={post?.user.name || "username"}
           width={25}
           height={25}
