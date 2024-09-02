@@ -13,6 +13,7 @@
 
     img {
       border-radius: 50%;
+      object-fit: cover;
     }
 
     h3 {
@@ -96,6 +97,16 @@
         svg {
           cursor: pointer;
         }
+
+        .success {
+          color: var(--success);
+        }
+        .error {
+          color: var(--error);
+        }
+        .info {
+          color: var(--info);
+        }
       }
 
       button {
@@ -110,7 +121,7 @@
       }
     }
     .fr-element {
-      min-height: 172px;
+      min-height: 172px !important;
     }
   }
 
@@ -132,6 +143,7 @@
     }
     .remove {
       position: absolute;
+      cursor: pointer;
       width: 20px;
       height: 20px;
       top: -8px;
@@ -139,10 +151,20 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      // background-color: var(--black);
+      background-color: var(--white);
       color: var(--white);
       border-radius: 50%;
       cursor: pointer;
+      svg {
+        color: var(--primary);
+        cursor: pointer;
+      }
+      &:hover {
+        background-color: var(--primary);
+        svg {
+          color: var(--white);
+        }
+      }
     }
   }
 }

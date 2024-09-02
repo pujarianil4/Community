@@ -12,6 +12,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { IoLogOutOutline } from "react-icons/io5";
 import "./navbar.scss";
 import CButton from "../common/Button";
+import { GoChevronDown } from "react-icons/go";
 import { FaRegBell } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 
@@ -50,6 +51,7 @@ import SolanaAuthComponent from "../common/auth/SolanaAuth";
 import TelegramLogin from "../common/auth/telegramAuth";
 import { TelegramAuthData } from "@/utils/types/types";
 import { handleDiscordLogin } from "./discordLogin";
+import { SignUpModal } from "../common/auth/signUpModal";
 export interface ISignupData {
   username: string;
   name: string;
@@ -116,6 +118,7 @@ export default function Navbar() {
 
   const userLogout = async () => {
     try {
+      deleteClientSideCookie("authToken");
       const logout = await handleLogOut();
       deleteClientSideCookie("authToken");
       setUserSession(null);
@@ -128,7 +131,19 @@ export default function Navbar() {
       };
       router.push("/");
       dispatch(actions.setUserData(initialState));
-    } catch (error) {}
+    } catch (error) {
+      deleteClientSideCookie("authToken");
+      setUserSession(null);
+      const initialState: any = {
+        username: "",
+        name: "",
+        uid: 0,
+        token: "",
+        img: "",
+      };
+      router.push("/");
+      dispatch(actions.setUserData(initialState));
+    }
   };
 
   useEffect(() => {
@@ -138,6 +153,15 @@ export default function Navbar() {
       setUserSession(user);
     }
   }, [user]);
+
+  const fetchFromCookies = () => {
+    const userData1: any = getClientSideCookie("authToken");
+    console.log("userFetc", userData1);
+    if (userData?.uid) {
+      setUserSession(userData);
+      dispatch(actions.setUserData(userData));
+    }
+  };
 
   // fetch user details after refresh
   const fetchUser = async () => {
@@ -154,13 +178,14 @@ export default function Navbar() {
         img: response?.img,
       };
       setUserSession(user);
-      // setClientSideCookie("authToken", JSON.stringify(user));
-      dispatch(actions.setUserData(user));
+      setClientSideCookie("authToken", JSON.stringify(user));
+      dispatch(actions.setUserData(userData));
     }
   };
   useEffect(() => {
-    fetchUser();
+    fetchFromCookies();
     if (common?.refetch?.user) {
+      fetchUser();
       dispatch(actions.setRefetchUser(false));
     }
   }, [common?.refetch?.user]);
@@ -202,21 +227,24 @@ export default function Navbar() {
   return (
     <>
       <nav className='nav_container'>
-        <div>
-          <Link href='#'>
-            <h2>Numity</h2>
-          </Link>
+        <div className='first_child'>
+          <div>
+            <Link href='#'>
+              <h2>Numity</h2>
+            </Link>
+          </div>
+          <div className='search_container'>
+            <CInput
+              prefix={<IoSearch />}
+              placeholder='Search Post Here'
+              className='search'
+            />
+          </div>
         </div>
-        <div className='search_container'>
-          <CInput
-            prefix={<IoSearch />}
-            placeholder='Search Post Here'
-            className='search'
-          />
-        </div>
+
         <div className='signin'>
-          {userSession?.token || userData ? (
-            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          {userSession?.token ? (
+            <div className='user_actions'>
               <CButton className='create_post' onClick={showCreatePost}>
                 <AddIcon />
                 Create Post
@@ -230,8 +258,8 @@ export default function Navbar() {
                 >
                   {userSession?.img ? (
                     <Image
-                      width={40}
-                      height={40}
+                      width={50}
+                      height={50}
                       loading='lazy'
                       className='avatar'
                       src={userSession?.img}
@@ -243,27 +271,27 @@ export default function Navbar() {
                       size={40}
                     />
                   )}
+                  {/* <GoChevronDown className='downarrow' size={20} /> */}
                 </Popover>
               </div>
             </div>
+          ) : userSession == null ? (
+            <CButton auth='auth' onClick={showModal}>
+              LogIn
+            </CButton>
           ) : (
-            <>
-              {" "}
-              <CButton auth='auth' onClick={showModal}>
-                LogIn
-              </CButton>
-            </>
+            <div></div>
           )}
         </div>
       </nav>
-      <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
-        <SignUpModal
-          modalTab={modalTab}
-          setModalTab={setModalTab}
-          handleCancel={handleCancel}
-          isModalOpen={isModalOpen}
-        />
-      </Modal>
+
+      <SignUpModal
+        modalTab={modalTab}
+        setModalTab={setModalTab}
+        handleCancel={handleCancel}
+        isModalOpen={isModalOpen}
+      />
+
       <Modal
         className='create_post_modal'
         open={isPostModalOpen}
@@ -276,170 +304,3 @@ export default function Navbar() {
     </>
   );
 }
-
-interface ISignUpModal {
-  handleCancel: () => void;
-  isModalOpen: boolean;
-  modalTab: number;
-  setModalTab: (tab: number) => void;
-  // signupData: ISignupData;
-  // setSignupData: React.Dispatch<React.SetStateAction<ISignupData>>;
-  // setIsSignup: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const SignUpModal = ({
-  handleCancel,
-  isModalOpen,
-  modalTab,
-  setModalTab,
-}: ISignUpModal) => {
-  const [usernameError, setUsernameError] = useState<string>("");
-  const CommonSelector = (state: RootState) => state?.common;
-
-  const [{ dispatch, actions }, [common]] = useRedux([CommonSelector]);
-  const [signUpData, setSignUpData] = useState({ username: "", name: "" });
-  const [isSignUp, setIsSignUp] = useState(false);
-
-  useEffect(() => {
-    setModalTab(1);
-    console.log("modal", modalTab, isModalOpen);
-
-    return () => setModalTab(1);
-  }, [isModalOpen]);
-
-  const debouncedCheckUsername = debounce(async (username: string) => {
-    try {
-      if (username === "") {
-        setUsernameError("");
-        return;
-      }
-      const user = await fetchUserByUserName(username);
-      const isAvailable = user?.username === username;
-      if (isAvailable) {
-        setUsernameError("Username already exists");
-      } else {
-        setUsernameError("Username is available");
-      }
-    } catch (error) {
-      setUsernameError("Error checking username availability");
-    }
-  }, 500);
-  const handleAuth = (isSignup: boolean = true) => {
-    console.log("IF_CALL");
-    dispatch(actions.setWalletRoute("auth"));
-    // openModal && openModal();
-    setModalTab(3);
-    setIsSignUp(isSignup);
-  };
-  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSignUpData({ ...signUpData, username: value.trim() });
-    debouncedCheckUsername(value);
-  };
-
-  const handleUserAuthData = (user: any) => {
-    if (user.error) {
-      setSignUpData({ username: "", name: "" });
-      setModalTab(1);
-      setIsSignUp(false);
-      handleCancel();
-    } else {
-      setClientSideCookie("authToken", JSON.stringify(user));
-      // setToLocalStorage("userSession", user);
-      dispatch(actions.setUserData(user));
-      dispatch(actions.setRefetchUser(true));
-      setSignUpData({ username: "", name: "" });
-      setModalTab(1);
-      setIsSignUp(false);
-      handleCancel();
-    }
-
-    // if (user?.token == "" || user.token == null || user.token == undefined) {
-    //   // setUserSession(null);
-    // } else {
-    //   //setUserSession(user);
-    // }
-  };
-  const handleTelegramAuth = (user: TelegramAuthData) => {
-    console.log("User authenticated:", user);
-  };
-
-  return (
-    <div className='signUpModal'>
-      {modalTab === 1 && (
-        <div className='login'>
-          <h4>Log In</h4>
-          <CButton auth='auth' onClick={() => handleAuth(false)}>
-            Connect Wallet
-          </CButton>
-          {/* <button>
-            <TelegramLogin
-              botUsername={"communitysetupbot"}
-              onAuthCallback={handleTelegramAuth}
-            />
-          </button> */}
-          <p>
-            Don&apos;t have account?
-            <span onClick={() => setModalTab(2)}>SignUp</span>
-          </p>
-        </div>
-      )}
-
-      {modalTab === 2 && (
-        <div className='signup'>
-          <h4>SignUp</h4>
-          <CInput
-            onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
-            type='text'
-            placeholder='UserName'
-            value={signUpData.username}
-          />
-          <p
-            className={`${
-              usernameError == "Username is available" ? "success" : "error"
-            }`}
-          >
-            {usernameError}
-          </p>
-          <CInput
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setSignUpData({ ...signUpData, name: e.target.value.trim() })
-            }
-            type='text'
-            placeholder='Name (Optional)'
-            value={signUpData.name}
-          />
-          <CButton
-            auth='auth'
-            disabled={
-              usernameError === "Username already exists" ||
-              !signUpData?.username ||
-              !signUpData?.name
-            }
-            onClick={() => handleAuth()}
-            size={18}
-          >
-            Sign Up
-          </CButton>
-          <p>
-            have account? <span onClick={() => setModalTab(1)}>LogIn</span>
-          </p>
-        </div>
-      )}
-      {modalTab == 3 && (
-        <div className='wallet_modal'>
-          <EvmAuthComponent
-            isSignUp={isSignUp}
-            signUpData={signUpData}
-            setUserAuthData={handleUserAuthData}
-          />
-          <SolanaAuthComponent
-            isSignUp={isSignUp}
-            signUpData={signUpData}
-            setUserAuthData={handleUserAuthData}
-          />
-        </div>
-      )}
-    </div>
-  );
-};

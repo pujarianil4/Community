@@ -6,6 +6,7 @@
 }
 body {
   margin: auto;
+  background-color: var(--secondary-bg);
 }
 
 a {
@@ -79,4 +80,8 @@ main {
   background-color: var(--secondary-bg);
   border-radius: $base-border-radius-md;
   padding: 12px 25px;
+}
+
+.dark {
+  background-color: var(--primary-bg);
 }

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+"use client";
+import React, { useEffect, useRef } from "react";
 import FroalaEditorComponent from "react-froala-wysiwyg";
 import "froala-editor/css/froala_editor.pkgd.min.css"; // Adjust path based on your installation method
 import "froala-editor/css/froala_style.min.css"; // Additional styles for Froala Editor
@@ -13,20 +14,33 @@ interface IProps {
   setContent: (content: string) => void;
   showToolbar?: boolean;
   placeHolder?: string;
+  value?: string;
 }
 
 const RichTextEditor: React.FC<IProps> = ({
   showToolbar = true,
   setContent,
+  value,
   placeHolder = "Write your post here...",
 }) => {
-  const editorRef = useRef<FroalaEditorComponent>(null);
+  // const editorRef = useRef<FroalaEditorComponent>(null);
+  const editorRef = useRef<any>(null);
   const turndownService = new TurndownService();
 
   const handleModelChange = (model: string) => {
-    console.log(turndownService.turndown(model));
+    // console.log(turndownService.turndown(model));
     setContent(turndownService.turndown(model));
   };
+
+  // useEffect(() => {
+  //   if (editorRef.current) {
+  //     // Set the HTML content of the editor when the value prop changes
+  //     const editorInstance = editorRef.current.editor;
+  //     if (editorInstance) {
+  //       editorInstance.html.set(value || "");
+  //     }
+  //   }
+  // }, [value]);
 
   return (
     <div className={`${!showToolbar ? "hide_toolbar" : ""} rich_text_editor`}>

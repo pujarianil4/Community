@@ -86,10 +86,14 @@ export const handleSignup = async (
 export const fetchUserByUserName = async (username: string) => {
   try {
     const response = await api.get(`/users/uname/${username}`);
-
-    return response.data;
+    console.log("response", response.data);
+    if (response.data) {
+      return response.data;
+    }
+    throw new Error("user not available");
   } catch (error) {
     console.error("FETCH_BY_NAME_ERROR", error);
+    throw error;
   }
 };
 
@@ -145,9 +149,11 @@ export const updateUser = async (payload: Partial<IUser>) => {
   }
 };
 
-export const fetchCommunities = async () => {
+export const fetchCommunities = async (sortby: string) => {
   try {
-    const response = await api.get("/community?page=1&limit=20");
+    const response = await api.get(
+      `/community?sortBy=${sortby}&order=desc&page=1&limit=20`
+    );
 
     return response.data;
   } catch (error) {
@@ -174,17 +180,20 @@ export const fetchCommunityByCname = async (cName: string) => {
     const response = await api.get(`/community/cname/${cName}`);
     let isFollowed = false;
 
-    if (response?.data?.id) {
-      isFollowed = await isUserFollowed({
-        fwid: response?.data?.id,
-        type: "c",
-      });
+    if (response.data) {
+      if (response?.data?.id) {
+        isFollowed = await isUserFollowed({
+          fwid: response?.data?.id,
+          type: "c",
+        });
+      }
+      return {
+        ...response.data,
+        isFollowed,
+      };
+    } else {
+      throw new Error("user not available");
     }
-    return {
-      ...response.data,
-      isFollowed,
-    };
-    return response.data;
   } catch (error) {
     console.error("Fetch Communities ", error);
     throw error;
@@ -249,9 +258,9 @@ export const patchPost = async (data: any) => {
   }
 };
 
-export const getFollowinsByUserId = async (userId: string) => {
+export const getFollowinsByUserId = async ({ userId, type }: any) => {
   try {
-    const response = await api.get(`/followers/fwng/${userId}`);
+    const response = await api.get(`/followers/fwng/${userId}?typ=${type}`);
     return response.data;
   } catch (error) {
     console.error("getFollowinsByUserId", error);
@@ -260,8 +269,6 @@ export const getFollowinsByUserId = async (userId: string) => {
 };
 
 export const getFollowersByUserId = async ({ userId, type }: IFollowersAPI) => {
-  console.log(userId, type);
-
   try {
     const response = await api.get(`/followers/fwrs/${userId}?typ=${type}`);
     return response.data;
@@ -382,19 +389,20 @@ export const uploadMultipleFile = async (files: FileList) => {
     const formData = new FormData();
 
     Array.from(files).forEach((file, index) => {
-      formData.append(`files${index}`, file);
+      formData.append(`files`, file);
     });
 
     console.log("This is my form data!", formData);
 
     // Send a POST request with the form data and Bearer token
-    const response = await api.post("/upload/multi", files, {
+    const response = await api.post("/upload/multi", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
 
     console.log("Upload successful:", response.data);
+    return response.data;
   } catch (error) {
     console.error("Upload failed:", error);
   }

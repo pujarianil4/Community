@@ -9,13 +9,16 @@ import { GoComment } from "react-icons/go";
 import { IPost } from "@/utils/types/types";
 import MarkdownRenderer from "@/components/common/MarkDownRender";
 import SwipeCarousel from "@/components/common/carousel";
-import { DropdownLowIcon, DropdownUpIcon, ShareIcon } from "@/assets/icons";
+import {
+  DropdownLowIcon,
+  DropdownUpIcon,
+  SaveIcon,
+  ShareIcon,
+} from "@/assets/icons";
 import PostPageLoader from "@/components/common/loaders/postPage";
-// import { getPostsByPostId } from "@/services/api/api";
 
 interface Iprops {
   post: IPost;
-  // postId: string;
 }
 
 export default async function Post({ post }: Iprops) {
@@ -33,13 +36,13 @@ export default async function Post({ post }: Iprops) {
     <section className='post_container'>
       <div className='user_head'>
         <Link
-          href={`c/${post?.community.username}`}
-          as={`/c/${post?.community.username}`}
+          href={`u/${post?.user.username}`}
+          as={`/u/${post?.user.username}`}
           className='community_logo'
         >
           <Image
-            src={getImageSource(post?.community.logo)}
-            alt={post?.community.username || "community"}
+            src={getImageSource(post?.user.img, "u")}
+            alt={post?.user.username || "user"}
             width={32}
             height={32}
           />
@@ -69,13 +72,13 @@ export default async function Post({ post }: Iprops) {
         </div>
       </div>
       {/* Content */}
-      <div className='content'>
+      <div className='content post_content'>
         <MarkdownRenderer markdownContent={post?.text} />
         {post?.images && post?.images.length > 0 && (
           <SwipeCarousel assets={post?.images} />
         )}
       </div>
-      <div className='actions'>
+      <div className='actions '>
         <div className='up_down'>
           <DropdownUpIcon width={18} />
           <span>{post?.up}</span>
@@ -88,6 +91,10 @@ export default async function Post({ post }: Iprops) {
         <div>
           <ShareIcon width={18} />
           <span>Share</span>
+        </div>
+        <div>
+          <SaveIcon width={16} height={16} />
+          <span>Save</span>
         </div>
       </div>
     </section>

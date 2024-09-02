@@ -3,10 +3,12 @@ import ReactMarkdown from "react-markdown";
 
 interface MarkdownRendererProps {
   markdownContent: string;
+  limit?: number | undefined;
 }
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   markdownContent,
+  limit,
 }) => {
   // Custom renderer for links to prevent nested <a> tags
   const renderers = {
@@ -19,11 +21,22 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
   };
 
+  const truncateContent = (content: string, maxLength: number) => {
+    if (content.length > maxLength) {
+      return content.slice(0, maxLength) + "...";
+    }
+    return content;
+  };
+
+  const truncatedContent = limit
+    ? truncateContent(markdownContent, limit)
+    : markdownContent;
+
   return (
     <div className='markdown_container'>
       <ReactMarkdown
         // eslint-disable-next-line react/no-children-prop
-        children={markdownContent}
+        children={truncatedContent}
         components={renderers}
       />
     </div>

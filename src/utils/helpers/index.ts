@@ -1,7 +1,19 @@
 import { parseCookies, setCookie, destroyCookie } from "nookies";
 
-export function setClientSideCookie(name: string, value: any) {
-  setCookie(null, name, value);
+export function setClientSideCookie(
+  name: string,
+  value: any,
+  force: boolean = false
+) {
+  if (force) {
+    console.log("setClientSideCookie", name, value);
+    setCookie(null, name, value);
+  } else {
+    const user = getClientSideCookie(name);
+    console.log("setClientSideCookie", user, value, !user);
+
+    !user && setCookie(null, name, value);
+  }
 }
 
 export function getClientSideCookie(name: string) {
@@ -60,7 +72,12 @@ export const debounce = (func: (...args: any[]) => void, delay: number) => {
   };
 };
 
-export const getImageSource = (logo: string | null, user: boolean = false) => {
+export const getImageSource = (
+  logo: string | null,
+  type: "u" | "c" | "other" = "other"
+  // user: boolean = false,
+  // community: boolean = false
+) => {
   if (
     logo &&
     (logo.startsWith("http://") ||
@@ -69,8 +86,15 @@ export const getImageSource = (logo: string | null, user: boolean = false) => {
   ) {
     return logo;
   } else {
-    if (user) return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-    return getRandomImageLink();
+    if (type === "u") {
+      return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    } else if (type === "c") {
+      // TODO: change default Community logo
+      return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    } else {
+      // TODO: Update Random Image if required
+      return getRandomImageLink();
+    }
   }
 };
 
@@ -146,4 +170,8 @@ export function identifyMediaType(url: string): "image" | "video" | "unknown" {
   } else {
     return "image";
   }
+}
+
+export function numberWithCommas(x: number | string) {
+  return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }

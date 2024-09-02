@@ -1,10 +1,15 @@
 @import "/src/styles";
 .main_panel_container {
   flex: 2;
-  max-width: 900px;
+  max-width: 756px;
   overflow-y: scroll;
   min-width: 370px;
   padding: 20px;
+  margin-left: calc((100vw - 1400px) / 2);
+
+  @include lessThan(xxl) {
+    margin-left: 0;
+  }
   // @media (width < 700px) {
   //   margin-left: 200px;
   // }
@@ -23,3 +28,12 @@
 .pagewraper {
   position: relative;
 }
+
+// .center {
+//   display: flex;
+//   width: 100%;
+//   overflow: hidden;
+//   @include lessThan(xxl) {
+//     align-items: center;
+//   }
+// }

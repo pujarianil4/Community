@@ -54,7 +54,7 @@ export default function ProposalItem() {
             className='community_logo'
           >
             <Image
-              src={getImageSource(user.img)}
+              src={getImageSource(user.img, "u")}
               alt={user.username || "user"}
               width={52}
               height={52}
