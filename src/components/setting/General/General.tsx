@@ -141,7 +141,7 @@ export default function General() {
     <>
       <div className='general_container'>
         <div>
-          <h2>Link your Account</h2>
+          {/* <h2>Link your Account</h2> */}
           <div>
             {/* Social Connections Accordion */}
             <Collapse accordion>
@@ -221,7 +221,7 @@ export default function General() {
             {/* Link Your Wallet Accordion */}
             <Collapse accordion style={{ marginTop: "16px" }}>
               <Panel
-                header='Link Address'
+                header='Linked Address'
                 key='1'
                 extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
               >
