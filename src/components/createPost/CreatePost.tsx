@@ -132,6 +132,8 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
         text: content,
         images: uplodedImg,
       };
+      console.log("Data", data);
+
       await handlePostToCommunity(data);
       setIsLoadingPost(false);
       NotificationMessage("success", "Post Created");
@@ -139,7 +141,13 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
       setIsPostModalOpen(false);
       setSelectedOption(null);
       setContent("");
+      setPics([]);
+      setUploadedImg([]);
       setSearchTerm("");
+      setUploadMsg({
+        msg: "",
+        type: "",
+      });
     } catch (error: any) {
       console.log("POST_ERROR", error);
       setIsLoadingPost(false);
@@ -165,6 +173,8 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
         const uploadedFiles = await uploadMultipleFile(newPics);
 
         setPics((prevPics) => [...prevPics, ...filesArray]);
+
+        setUploadedImg((prevPics) => [...prevPics, ...uploadedFiles]);
         setUploadMsg({ msg: "Uploaded Successfully", type: "success" });
 
         console.log("Uploaded files:", uploadedFiles);

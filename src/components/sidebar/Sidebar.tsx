@@ -28,6 +28,7 @@ import { GoStack } from "react-icons/go";
 import {
   debounce,
   getClientSideCookie,
+  getImageSource,
   getRandomImageLink,
 } from "@/utils/helpers";
 import CommunityList from "../common/loaders/communityList";
@@ -269,7 +270,7 @@ const CreateCommunityModal = ({
   onClose,
   refetchCommunities,
 }: ICreateCommunityModal) => {
-  const [imgSrc, setImgSrc] = useState("https://picsum.photos/200/300");
+  const [imgSrc, setImgSrc] = useState(getImageSource(null, "c"));
   const [form, setForm] = useState<ICommunityForm>({
     logo: imgSrc,
     name: "",
