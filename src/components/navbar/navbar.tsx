@@ -17,6 +17,7 @@ import { IoSearch } from "react-icons/io5";
 
 import { NotificationIcon, AddIcon, DropdownLowIcon } from "@/assets/icons";
 
+import axios from "axios";
 import useRedux from "@/hooks/useRedux";
 import {
   fetchUserById,
@@ -37,6 +38,9 @@ import {
 } from "@/utils/helpers";
 import Link from "next/link";
 
+//import Discord Authentication
+import fetchDiscordData from "@/services/api/fetchDiscord";
+
 import { sigMsg } from "@/utils/constants";
 import { IoSettingsOutline } from "react-icons/io5";
 
@@ -48,6 +52,7 @@ import EvmAuthComponent from "../common/auth/EvmAuth";
 import SolanaAuthComponent from "../common/auth/SolanaAuth";
 import TelegramLogin from "../common/auth/telegramAuth";
 import { TelegramAuthData } from "@/utils/types/types";
+import { handleDiscordLogin } from "./discordLogin";
 export interface ISignupData {
   username: string;
   name: string;
@@ -60,6 +65,8 @@ const userNameSelector = (state: RootState) => state?.user;
 
 const tgBotName = process.env.TG_BOT_NAME;
 export default function Navbar() {
+  const secretCode = process.env.NEXT_PUBLIC_DISCORD_ID;
+  console.log("env code", secretCode);
   const userAccount = useAccount();
 
   const [{ dispatch, actions }, [user, common]] = useRedux([
@@ -84,7 +91,7 @@ export default function Navbar() {
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const hasCalledRef = useRef(false);
   const [modalTab, setModalTab] = useState(1);
-
+  const [discordUser, setDiscordUser] = useState(null);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -109,6 +116,26 @@ export default function Navbar() {
   useEffect(() => {
     console.log("userSession", userSession);
   }, [userSession]);
+
+  // Discord Data Load
+  useEffect(() => {
+    const fetchData = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
+
+      if (code) {
+        try {
+          console.log("call navbar");
+          const discordData = await fetchDiscordData(code);
+          console.log("discord Data", discordData);
+        } catch (error) {
+          console.error("Failed to fetch Discord user data:", error);
+        }
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const userLogout = async () => {
     try {
@@ -243,9 +270,16 @@ export default function Navbar() {
               </div>
             </div>
           ) : (
-            <CButton auth='auth' onClick={showModal}>
-              LogIn
-            </CButton>
+            <>
+              {" "}
+              <CButton auth='auth' onClick={showModal}>
+                LogIn
+              </CButton>
+              <button>
+                {" "}
+                <button onClick={handleDiscordLogin}>Add Discord</button>
+              </button>
+            </>
           )}
         </div>
       </nav>
