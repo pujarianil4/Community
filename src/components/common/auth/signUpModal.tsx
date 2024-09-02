@@ -39,10 +39,10 @@ export const SignUpModal = ({
   const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
-    setModalTab(1);
+    setModalTab(3);
     console.log("modal", modalTab, isModalOpen);
 
-    return () => setModalTab(1);
+    return () => setModalTab(3);
   }, [isModalOpen]);
 
   const debouncedCheckUsername = debounce(async (username: string) => {

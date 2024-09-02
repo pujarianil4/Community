@@ -105,7 +105,7 @@ export default function EvmAuthComponent({
         if (msg == "User not Registered!" && code == 404) {
           setUserAuthData({ notRegistered: true });
         }
-        NotificationMessage("error", msg);
+        // NotificationMessage("error", msg);
       }
     }
   }, [isConnected]);
