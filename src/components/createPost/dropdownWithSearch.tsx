@@ -7,6 +7,8 @@ import CInput from "../common/Input";
 import Image from "next/image";
 import { getImageSource } from "@/utils/helpers";
 import { ICommunity } from "@/utils/types/types";
+import PageLoader from "../common/loaders/pageLoader";
+import ProfilelistLoader from "../common/loaders/profilelist";
 
 interface DropdownWithSearchProps {
   onSelect: (value: ICommunity) => void;
@@ -47,10 +49,6 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
     setVisible(false);
   };
 
-  if (!options) {
-    return <div>Loading communities...</div>;
-  }
-
   return (
     <main className='dropdown_with_search'>
       <CInput
@@ -65,28 +63,34 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
 
       {visible && (
         <div className='custom_dropdown'>
-          <List
-            className='dropdown_list'
-            dataSource={options?.filter((option) =>
-              option?.username.toLowerCase().includes(searchTerm.toLowerCase())
-            )}
-            renderItem={(item) => (
-              <List.Item onClick={() => handleSelect(item)}>
-                <div className='dropdown_item'>
-                  <Image
-                    src={getImageSource(item?.logo, "c")}
-                    alt={item?.name}
-                    width={32}
-                    height={32}
-                  />
-                  <div>
-                    <p className='community_name'>{item.username}</p>
-                    <p className='followers'>{item.followers} followers</p>
+          {options?.length > 0 ? (
+            <List
+              className='dropdown_list'
+              dataSource={options?.filter((option) =>
+                option?.username
+                  .toLowerCase()
+                  .includes(searchTerm.toLowerCase())
+              )}
+              renderItem={(item) => (
+                <List.Item onClick={() => handleSelect(item)}>
+                  <div className='dropdown_item'>
+                    <Image
+                      src={getImageSource(item?.logo, "c")}
+                      alt={item?.name}
+                      width={32}
+                      height={32}
+                    />
+                    <div>
+                      <p className='community_name'>{item.username}</p>
+                      <p className='followers'>{item.followers} followers</p>
+                    </div>
                   </div>
-                </div>
-              </List.Item>
-            )}
-          />
+                </List.Item>
+              )}
+            />
+          ) : (
+            <ProfilelistLoader />
+          )}
         </div>
       )}
     </main>

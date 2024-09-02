@@ -51,7 +51,7 @@ export const Img: React.FC<{
       <img alt='pic' src={fileUrl} />
       {onRemove && (
         <div className='remove' onClick={() => onRemove(index)}>
-          <MdDeleteOutline color='var(--primary)' size={20} />
+          <MdDeleteOutline size={20} />
         </div>
       )}
     </div>
@@ -71,6 +71,8 @@ export const FileInput: React.FC<FileInputProps> = React.memo(
     const fileRef = useRef<HTMLInputElement>(null);
 
     const onPickFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+      console.log("event.target.files", event.target.files);
+
       if (event.target.files && event.target.files.length > 0) {
         onChange(event.target.files);
       }
@@ -83,6 +85,7 @@ export const FileInput: React.FC<FileInputProps> = React.memo(
           multiple
           ref={fileRef}
           onChange={onPickFile}
+          accept='image/*,video/*'
           type='file'
           style={{ display: "none" }}
         />
@@ -95,9 +98,19 @@ export const FileInput: React.FC<FileInputProps> = React.memo(
 FileInput.displayName = "FileInput";
 
 const userNameSelector = (state: RootState) => state?.user;
+const refetchCommunitySelector = (state: RootState) =>
+  state.common.refetch.community;
+
 const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
-  const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
-  const { isLoading, data: communityList } = useAsync(fetchCommunities);
+  const [{ dispatch, actions }, [user, comminityRefetch]] = useRedux([
+    userNameSelector,
+    refetchCommunitySelector,
+  ]);
+  const {
+    isLoading,
+    data: communityList,
+    refetch,
+  } = useAsync(fetchCommunities);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
   const [isDisabled, setISDisabled] = useState(false);
   const [pics, setPics] = useState<File[]>([]);
@@ -105,6 +118,11 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   const [content, setContent] = useState<string>("");
   const [selectedOption, setSelectedOption] = useState<ICommunity | null>();
   const [searchTerm, setSearchTerm] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadMsg, setUploadMsg] = useState({
+    msg: "",
+    type: "",
+  });
 
   const handlePost = async () => {
     try {
@@ -129,48 +147,68 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
     }
   };
 
-  // const handleUploadFile = async (newPics: FileList) => {
-  //   console.log("FILES_DATA", newPics);
+  const handleUploadFile = async (newPics: FileList) => {
+    setIsUploading(true);
+    setUploadMsg({ msg: "Uploading...", type: "info" });
+    console.log("FILES_DATA", newPics);
+    try {
+      // if (newPics.length === 0) {
+      //   return;
+      // }
+
+      const filesArray = Array.from(newPics);
+
+      if (filesArray.length > 5) {
+        NotificationMessage("info", "Please select upto 5 media");
+        setUploadMsg({ msg: "", type: "" });
+      } else {
+        const uploadedFiles = await uploadMultipleFile(newPics);
+
+        setPics((prevPics) => [...prevPics, ...filesArray]);
+        setUploadMsg({ msg: "Uploaded Successfully", type: "success" });
+
+        console.log("Uploaded files:", uploadedFiles);
+      }
+      setIsUploading(false);
+      // console.log("FILES_ARR", filesArray);
+      // const uploadedFiles = await Promise.all(
+      //   filesArray?.map((file) => uploadMultipleFile(file))
+      // );
+    } catch (error) {
+      setIsUploading(false);
+      console.error("Error uploading files", error);
+      setUploadMsg({ msg: "Failed to Upload", type: "error" });
+      NotificationMessage("error", "Error uploading files");
+    }
+  };
+
+  // const handleUploadFile = async (file: any) => {
+  //   setPics([file[0]]);
   //   try {
-  //     // if (newPics.length === 0) {
-  //     //   return;
-  //     // }
-
-  //     const filesArray = Array.from(newPics);
-  //     // console.log("FILES_ARR", filesArray);
-  //     // const uploadedFiles = await Promise.all(
-  //     //   filesArray?.map((file) => uploadMultipleFile(file))
-  //     // );
-  //     const uploadedFiles = await uploadMultipleFile(newPics);
-
-  //     setPics((prevPics) => [...prevPics, ...filesArray]);
-  //     console.log("Uploaded files:", uploadedFiles);
+  //     const uploadedFile = await uploadSingleFile(file[0]);
+  //     setUploadedImg([uploadedFile]);
+  //     console.log("UPLOADED_FILE", uploadedFile);
   //   } catch (error) {
   //     console.error("Error uploading files", error);
   //     NotificationMessage("error", "Error uploading files");
   //   }
   // };
 
-  const handleUploadFile = async (file: any) => {
-    setPics([file[0]]);
-    try {
-      const uploadedFile = await uploadSingleFile(file[0]);
-      setUploadedImg([uploadedFile]);
-      console.log("UPLOADED_FILE", uploadedFile);
-    } catch (error) {
-      console.error("Error uploading files", error);
-      NotificationMessage("error", "Error uploading files");
+  useEffect(() => {
+    if (comminityRefetch) {
+      refetch();
+      dispatch(actions.setRefetchCommunity(false));
     }
-  };
+  }, [comminityRefetch]);
 
   useEffect(() => {
     setISDisabled(!content || !selectedOption);
     console.log("DIS", !content || !selectedOption);
   }, [content, selectedOption]);
 
-  if (isLoading) {
-    return <div className='create_post_loader'>loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div className='create_post_loader'>loading...</div>;
+  // }
 
   return (
     <main className='create_post_container'>
@@ -218,8 +256,9 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
             <FileInput onChange={handleUploadFile}>
               <LuImagePlus color='var(--primary)' size={20} />
             </FileInput>
-            <MdOutlineGifBox color='var(--primary)' size={20} />
-            <LuImagePlus color='var(--primary)' size={20} />
+            <span className={uploadMsg.type}>{uploadMsg?.msg}</span>
+            {/* <MdOutlineGifBox color='var(--primary)' size={20} />
+            <LuImagePlus color='var(--primary)' size={20} /> */}
           </div>
           {/* <div className='postbtn'> */}
           <CButton

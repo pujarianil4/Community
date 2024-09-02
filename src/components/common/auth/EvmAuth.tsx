@@ -14,6 +14,7 @@ import Image from "next/image";
 import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
+import NotificationMessage from "../Notification";
 export interface ISignupData {
   username: string;
   name: string;
@@ -88,9 +89,23 @@ export default function EvmAuthComponent({
         }
 
         disconnect();
-      } catch (error) {
+      } catch (error: any) {
         disconnect();
         console.error("Error signing the message:", error);
+        const msg = error.response.data.message;
+        const code = error.response.data.statusCode;
+        console.log(
+          "error",
+          msg,
+          code,
+          msg == "User not Registered!",
+          code == 404
+        );
+
+        if (msg == "User not Registered!" && code == 404) {
+          setUserAuthData({ notRegistered: true });
+        }
+        NotificationMessage("error", msg);
       }
     }
   }, [isConnected]);

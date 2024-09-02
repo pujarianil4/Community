@@ -1,7 +1,19 @@
 import { parseCookies, setCookie, destroyCookie } from "nookies";
 
-export function setClientSideCookie(name: string, value: any) {
-  setCookie(null, name, value);
+export function setClientSideCookie(
+  name: string,
+  value: any,
+  force: boolean = false
+) {
+  if (force) {
+    console.log("setClientSideCookie", name, value);
+    setCookie(null, name, value);
+  } else {
+    const user = getClientSideCookie(name);
+    console.log("setClientSideCookie", user, value, !user);
+
+    !user && setCookie(null, name, value);
+  }
 }
 
 export function getClientSideCookie(name: string) {

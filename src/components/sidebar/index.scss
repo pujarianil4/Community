@@ -2,7 +2,7 @@
 .sidebar_container {
   // position: fixed;
   background-color: var(--secondary-bg);
-  z-index: 1;
+  z-index: 100;
   width: 290px;
   height: 100%;
   transition: left ease-in-out 0.2s;
@@ -40,17 +40,23 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  .img,
   img {
     width: 30px;
     height: 30px;
     border-radius: 50%;
   }
+  .content {
+    width: 100px;
+  }
   .createText {
     color: var(--primary) !important;
     background: transparent !important;
+    padding: 0px !important;
   }
 }
 .create_community_container {
+  padding: 10px;
   .avatar {
     display: flex;
     flex-direction: column;
