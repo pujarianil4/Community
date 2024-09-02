@@ -487,6 +487,31 @@ export function ShareIcon({
     </svg>
   );
 }
+
+export function SaveIcon({
+  fill = "#ffffff",
+  width = 19,
+  height = 23,
+}: IIConProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox='0 0 19 23'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <path
+        d='M17.1386 21.4843L9.57075 16.0787L2.00293 21.4843V4.18641C2.00293 3.61295 2.23074 3.06297 2.63623 2.65747C3.04173 2.25198 3.5917 2.02417 4.16517 2.02417H14.9763C15.5498 2.02417 16.0998 2.25198 16.5053 2.65747C16.9108 3.06297 17.1386 3.61295 17.1386 4.18641V21.4843Z'
+        stroke={fill}
+        strokeWidth='2.16224'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  );
+}
+
 export function DeleteIcon({
   fill = "#fff",
   width = 17,
@@ -775,6 +800,37 @@ export function MobileIcon({
           />
         </clipPath>
       </defs>
+    </svg>
+  );
+}
+
+export function UploadIcon({
+  fill = "#fff",
+  width = 14,
+  height = 23,
+}: IIConProps) {
+  return (
+    <svg
+      width='17'
+      height='17'
+      viewBox='0 0 17 17'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <path
+        d='M7.68105 2.25439H2.15883C1.74038 2.25439 1.33907 2.42062 1.04317 2.71651C0.747284 3.01241 0.581055 3.41372 0.581055 3.83217V14.8766C0.581055 15.2951 0.747284 15.6964 1.04317 15.9923C1.33907 16.2882 1.74038 16.4544 2.15883 16.4544H13.2033C13.6217 16.4544 14.023 16.2882 14.3189 15.9923C14.6148 15.6964 14.781 15.2951 14.781 14.8766V9.35439'
+        stroke='white'
+        strokeWidth='0.788888'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M13.5978 1.07121C13.9116 0.757368 14.3373 0.581055 14.7811 0.581055C15.2249 0.581055 15.6506 0.757368 15.9644 1.07121C16.2783 1.38505 16.4546 1.8107 16.4546 2.25454C16.4546 2.69838 16.2783 3.12403 15.9644 3.43787L8.47001 10.9323L5.31445 11.7212L6.10334 8.56565L13.5978 1.07121Z'
+        stroke='white'
+        strokeWidth='0.788888'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
     </svg>
   );
 }

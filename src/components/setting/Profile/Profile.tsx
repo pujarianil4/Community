@@ -19,6 +19,7 @@ import { RootState } from "@/contexts/store";
 import { IUser } from "@/utils/types/types";
 import { debounce, getImageSource, setClientSideCookie } from "@/utils/helpers";
 import NotificationMessage from "@/components/common/Notification";
+import { UploadIcon } from "@/assets/icons";
 
 export default function Profile() {
   const [{ dispatch, actions }, [userData]] = useRedux([
@@ -28,7 +29,13 @@ export default function Profile() {
   const [usernameError, setUsernameError] = useState<string>("");
   const { isLoading, data, refetch, callFunction } = useAsync();
   const [isUploading, setIsUploading] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const fileRefs = {
+    cover: useRef<HTMLInputElement>(null),
+    avatar: useRef<HTMLInputElement>(null),
+  };
+
   const [user, setUser] = useState<IUser>({
     username: "",
     name: "",
@@ -148,32 +155,31 @@ export default function Profile() {
   const onPickFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       try {
-        setIsUploading(true);
+        setIsUploadingAvatar(true);
         const file = event.target.files[0];
         const imgURL = await uploadSingleFile(file);
         console.log("IMGURL", imgURL);
         setUser({ ...user, img: imgURL });
-        setIsUploading(false);
+        setIsUploadingAvatar(false);
       } catch (error) {
-        setIsUploading(false);
+        setIsUploadingAvatar(false);
         NotificationMessage("error", "Uploading failed");
       }
 
       //setImgSrc(imgURL);
     }
   };
-
   const onCoverImg = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       try {
-        setIsUploading(true);
+        setIsUploadingCover(true);
         const file = event.target.files[0];
         const imgURL = await uploadSingleFile(file);
         console.log("IMGURL", imgURL);
         setUser({ ...user, img: imgURL });
-        setIsUploading(false);
+        setIsUploadingCover(false);
       } catch (error) {
-        setIsUploading(false);
+        setIsUploadingCover(false);
         NotificationMessage("error", "Uploading failed");
       }
 
@@ -184,33 +190,26 @@ export default function Profile() {
   return (
     <div className='profile_container'>
       <div className='cover_bx'>
-        {/* <span className='label'>Avatar</span> */}
-
         <img
           loading='lazy'
           onError={setFallbackURL}
           src={user?.img}
-          alt='Avatar'
+          alt='Cover Img'
         />
-        <div
-          onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
-          className='upload'
-        >
-          <FiUpload size={20} />
+        <div onClick={() => fileRefs.cover.current?.click()} className='upload'>
+          <UploadIcon />
           <input
-            ref={fileRef}
-            onChange={onPickFile}
+            ref={fileRefs.cover}
+            onChange={onCoverImg}
             type='file'
             accept='image/*'
             name='img'
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploading && <span className='msg'>uploading...</span>}
+        {isUploadingCover && <span className='cvrmsg'>uploading...</span>}
       </div>
       <div className='avatar'>
-        {/* <span className='label'>Avatar</span> */}
-
         <img
           loading='lazy'
           onError={setFallbackURL}
@@ -218,12 +217,12 @@ export default function Profile() {
           alt='Avatar'
         />
         <div
-          onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
+          onClick={() => fileRefs.avatar.current?.click()}
           className='upload'
         >
-          <FiUpload size={20} />
+          <UploadIcon />
           <input
-            ref={fileRef}
+            ref={fileRefs.avatar}
             onChange={onPickFile}
             type='file'
             accept='image/*'
@@ -231,8 +230,18 @@ export default function Profile() {
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploading && <span className='msg'>uploading...</span>}
+        {isUploadingAvatar && <span className='msg'>uploading...</span>}
       </div>
+      <div className='info'>
+        <span className='label'>Name</span>
+        <input
+          type='text'
+          onChange={handleChange}
+          defaultValue={user.name}
+          name='name'
+        />
+      </div>
+
       <div className='info'>
         <span className='label'>Name</span>
         <input

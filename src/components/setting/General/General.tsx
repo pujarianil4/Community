@@ -199,7 +199,7 @@ export default function General() {
                     <div>
                       <TwitterIcon width={23} height={28} />
                       <span className='telegram-user-details'>
-                        {!user ? `@${user.username}` : "X"}
+                        {user ? `@${user.username}` : "X"}
                       </span>
                     </div>
                     <div>
@@ -235,14 +235,11 @@ export default function General() {
                     </span>
                   </div>
                   {data?.map((wallet: { address: string; typ: string }) => (
-                    <div className='addresses'>
+                    <div key={wallet.address} className='addresses'>
                       <div>
                         <div>
                           <EtherIcon />
-                          <span
-                            key={wallet.address}
-                            className='telegram-user-details'
-                          >
+                          <span className='telegram-user-details'>
                             {wallet.address} ({wallet.typ})
                           </span>
                         </div>
