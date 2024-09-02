@@ -33,7 +33,7 @@ export default function CButton({
   const commonSelector = (state: RootState) => state?.common;
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const [{ dispatch, actions }] = useRedux();
-  const [modalTab, setModalTab] = useState(1);
+  const [modalTab, setModalTab] = useState(3);
   // const [{}, [common]] = useRedux([commonSelector]);
   const handleAction = () => {
     const user = getClientSideCookie("authToken");
