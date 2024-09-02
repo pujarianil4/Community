@@ -38,9 +38,6 @@ import {
 } from "@/utils/helpers";
 import Link from "next/link";
 
-//import Discord Authentication
-import fetchDiscordData from "@/services/api/fetchDiscord";
-
 import { sigMsg } from "@/utils/constants";
 import { IoSettingsOutline } from "react-icons/io5";
 
@@ -116,26 +113,6 @@ export default function Navbar() {
   useEffect(() => {
     console.log("userSession", userSession);
   }, [userSession]);
-
-  // Discord Data Load
-  useEffect(() => {
-    const fetchData = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get("code");
-
-      if (code) {
-        try {
-          console.log("call navbar");
-          const discordData = await fetchDiscordData(code);
-          console.log("discord Data", discordData);
-        } catch (error) {
-          console.error("Failed to fetch Discord user data:", error);
-        }
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const userLogout = async () => {
     try {
@@ -275,10 +252,6 @@ export default function Navbar() {
               <CButton auth='auth' onClick={showModal}>
                 LogIn
               </CButton>
-              <button>
-                {" "}
-                <button onClick={handleDiscordLogin}>Add Discord</button>
-              </button>
             </>
           )}
         </div>

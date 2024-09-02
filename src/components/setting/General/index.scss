@@ -1,32 +1,67 @@
+@import "/src/styles";
 .general_container {
-  .linkAddress {
-    border: 1px solid var(--primary-border);
-    border-radius: 10px;
-    margin-top: 10px;
-    .header {
+  margin-bottom: 1rem;
+
+  .addresses {
+    padding: 14px 12px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    border: 1px solid var(--tertiary-border);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    div {
       display: flex;
-      background-color: var(--secondary-bg);
       justify-content: space-between;
-      padding: 10px;
-      border-radius: 10px 10px 0px 0px;
-    }
-    .addresses {
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      div {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
+      align-items: center;
       gap: 10px;
-      span {
-        cursor: pointer;
-        color: var(--label-text);
-        &:hover {
-          color: var(--primary-text);
+    }
+    gap: 10px;
+    span {
+      cursor: pointer;
+      color: var(--black);
+      font-size: $font-size-md;
+      &:hover {
+        color: var(--primary-text);
+      }
+    }
+  }
+
+  .ant-collapse {
+    border: 1px solid var(--tertiary-border);
+    border-radius: 12px;
+    padding: 5px 13px;
+    margin-top: 1rem;
+    .ant-collapse-item {
+      .ant-collapse-header {
+        .ant-collapse-expand-icon {
+          display: none;
+        }
+        .ant-collapse-header-text {
+          color: var(--primary);
+        }
+        .ant-collapse-extra {
+        }
+      }
+      .ant-collapse-content {
+        border-top: none;
+        background-color: var(--white);
+        color: var(--black);
+
+        .ant-collapse-content-box {
+          padding: 0px 13px;
         }
       }
     }
+  }
+}
+.link_address {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 23px;
+  margin-bottom: 0.4rem;
+  span {
+    font-size: 18px;
   }
 }

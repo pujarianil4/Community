@@ -150,8 +150,51 @@ export default function Profile() {
     }
   };
 
+  const onCoverImg = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      try {
+        setIsUploading(true);
+        const file = event.target.files[0];
+        const imgURL = await uploadSingleFile(file);
+        console.log("IMGURL", imgURL);
+        setUser({ ...user, img: imgURL });
+        setIsUploading(false);
+      } catch (error) {
+        setIsUploading(false);
+        NotificationMessage("error", "Uploading failed");
+      }
+
+      //setImgSrc(imgURL);
+    }
+  };
+
   return (
     <div className='profile_container'>
+      <div className='cover_bx'>
+        {/* <span className='label'>Avatar</span> */}
+
+        <img
+          loading='lazy'
+          onError={setFallbackURL}
+          src={user?.img}
+          alt='Avatar'
+        />
+        <div
+          onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
+          className='upload'
+        >
+          <FiUpload size={20} />
+          <input
+            ref={fileRef}
+            onChange={onPickFile}
+            type='file'
+            accept='image/*'
+            name='img'
+            style={{ visibility: "hidden" }}
+          />
+        </div>
+        {isUploading && <span className='msg'>uploading...</span>}
+      </div>
       <div className='avatar'>
         {/* <span className='label'>Avatar</span> */}
 
@@ -187,7 +230,7 @@ export default function Profile() {
         />
       </div>
       <div className='info'>
-        <span className='label'>UserName</span>
+        <span className='label'>Username</span>
         <input
           type='text'
           onChange={handleChange}
@@ -197,7 +240,7 @@ export default function Profile() {
       </div>
 
       <div className='info'>
-        <span className='label'>Description</span>
+        <span className='label'>Bio</span>
         <textarea
           rows={5}
           cols={10}
@@ -214,7 +257,9 @@ export default function Profile() {
         >
           {usernameError}
         </p>
-        <CButton onClick={handleSave}> Save </CButton>
+        <CButton className='save_btn ' onClick={handleSave}>
+          Save
+        </CButton>
       </div>
     </div>
   );
