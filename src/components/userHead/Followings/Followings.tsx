@@ -29,7 +29,7 @@ export default function Followings({ uid, entityType }: IFollowings) {
   const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
 
   useEffect(() => {
-    console.log("refetchData?.user", refetchData);
+    console.log("refetchData?.user", data);
 
     if (refetchData == true) {
       refetch();
@@ -39,6 +39,7 @@ export default function Followings({ uid, entityType }: IFollowings) {
 
   const returnFollow = (data: any) => {
     if (data.followedUser == null) {
+      console.log("returnFollow", { ...data.followedCommunity }.logo);
       return { ...data.followedCommunity };
     } else {
       return { ...data.followedUser };
@@ -59,11 +60,11 @@ export default function Followings({ uid, entityType }: IFollowings) {
                 <Image
                   width={40}
                   height={40}
-                  src={getImageSource(
-                    entityType === "u"
-                      ? (returnFollow(follow)?.img, "u")
-                      : (returnFollow(follow)?.logo, "c")
-                  )}
+                  src={
+                    entityType === "c"
+                      ? getImageSource(returnFollow(follow)?.logo, "c")
+                      : getImageSource(returnFollow(follow)?.img?.pro, "u")
+                  }
                   alt='avatar'
                 />
                 <span className='name'>{returnFollow(follow).name}</span>

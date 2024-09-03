@@ -55,7 +55,7 @@ export default function Followers({ uid, entityType }: IFollowers) {
                 <Image
                   width={40}
                   height={40}
-                  src={getImageSource(returnFollow(follow)?.img, "u")}
+                  src={getImageSource(returnFollow(follow)?.img?.pro, "u")}
                   alt='avatar'
                 />
                 <span className='name'>{returnFollow(follow)?.name}</span>

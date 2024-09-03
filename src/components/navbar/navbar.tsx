@@ -131,6 +131,7 @@ export default function Navbar() {
       };
       router.push("/");
       dispatch(actions.setUserData(initialState));
+      window?.location?.reload();
     } catch (error) {
       deleteClientSideCookie("authToken");
       setUserSession(null);
@@ -143,6 +144,7 @@ export default function Navbar() {
       };
       router.push("/");
       dispatch(actions.setUserData(initialState));
+      window?.location?.reload();
     }
   };
 
@@ -175,7 +177,7 @@ export default function Navbar() {
         name: response?.name,
         uid: response?.id,
         token: userData1?.token,
-        img: response?.img,
+        img: response?.img?.pro,
       };
       setUserSession(user);
       setClientSideCookie("authToken", JSON.stringify(user));
