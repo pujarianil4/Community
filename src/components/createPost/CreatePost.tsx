@@ -29,6 +29,7 @@ const RichTextEditor = dynamic(() => import("../common/richTextEditor"), {
 
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isPostModalOpen: boolean;
 }
 
 export const Img: React.FC<{
@@ -76,6 +77,8 @@ export const FileInput: React.FC<FileInputProps> = React.memo(
       if (event.target.files && event.target.files.length > 0) {
         onChange(event.target.files);
       }
+      //reset value to select same image again
+      event.target.value = "";
     };
 
     return (
@@ -101,7 +104,10 @@ const userNameSelector = (state: RootState) => state?.user;
 const refetchCommunitySelector = (state: RootState) =>
   state.common.refetch.community;
 
-const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
+const CreatePost: React.FC<Props> = ({
+  isPostModalOpen,
+  setIsPostModalOpen,
+}) => {
   const [{ dispatch, actions }, [user, comminityRefetch]] = useRedux([
     userNameSelector,
     refetchCommunitySelector,
@@ -123,6 +129,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
     msg: "",
     type: "",
   });
+  const closeBtn = document.querySelector(".ant-modal-close");
 
   const handlePost = async () => {
     try {
@@ -191,10 +198,6 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
         console.log("Uploaded files:", uploadedFiles);
       }
       setIsUploading(false);
-      // console.log("FILES_ARR", filesArray);
-      // const uploadedFiles = await Promise.all(
-      //   filesArray?.map((file) => uploadMultipleFile(file))
-      // );
     } catch (error) {
       setIsUploading(false);
       console.error("Error uploading files", error);
@@ -214,18 +217,11 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   //     NotificationMessage("error", "Error uploading files");
   //   }
   // };
-
   useEffect(() => {
-    if (comminityRefetch) {
-      refetch();
-      dispatch(actions.setRefetchCommunity(false));
-    }
-
-    // clear state on modal close
-
-    return () => {
+    closeBtn?.addEventListener("click", () => {
+      console.log("close");
+      // Clear states when the modal is closed
       setIsLoadingPost(false);
-      setIsPostModalOpen(false);
       setSelectedOption(null);
       setContent("");
       setPics([]);
@@ -235,7 +231,15 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
         msg: "",
         type: "",
       });
-    };
+      setIsPostModalOpen(false);
+    });
+  }, [closeBtn]);
+
+  useEffect(() => {
+    if (comminityRefetch) {
+      refetch();
+      dispatch(actions.setRefetchCommunity(false));
+    }
   }, [comminityRefetch]);
 
   useEffect(() => {

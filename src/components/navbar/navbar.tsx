@@ -65,7 +65,7 @@ const userNameSelector = (state: RootState) => state?.user;
 const tgBotName = process.env.TG_BOT_NAME;
 export default function Navbar() {
   const secretCode = process.env.NEXT_PUBLIC_DISCORD_ID;
-  console.log("env code", secretCode);
+
   const userAccount = useAccount();
 
   const [{ dispatch, actions }, [user, common]] = useRedux([
@@ -308,11 +308,15 @@ export default function Navbar() {
       <Modal
         className='create_post_modal'
         open={isPostModalOpen}
-        onCancel={handleClosePostModal}
         footer={<></>}
         centered
       >
-        <CreatePost setIsPostModalOpen={setIsPostModalOpen} />
+        {isPostModalOpen && (
+          <CreatePost
+            isPostModalOpen={isPostModalOpen}
+            setIsPostModalOpen={setIsPostModalOpen}
+          />
+        )}
       </Modal>
     </>
   );
