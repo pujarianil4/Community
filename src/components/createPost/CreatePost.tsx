@@ -130,7 +130,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
       const data = {
         cid: selectedOption?.id,
         text: content,
-        images: uplodedImg,
+        media: uplodedImg,
       };
       console.log("Data", data);
 

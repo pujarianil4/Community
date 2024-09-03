@@ -27,7 +27,7 @@ interface IProps {
 
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post }: IProps) {
-  const { text, up, down, time, images, user, community, id, ccount } = post;
+  const { text, up, down, time, media, user, community, id, ccount } = post;
   const router = useRouter();
 
   const handleRedirectPost = () => {
@@ -75,7 +75,7 @@ export default function FeedPost({ post }: IProps) {
           className='user_avatar'
         >
           <Image
-            src={getImageSource(post?.user.img, "u")}
+            src={getImageSource(post?.user.img?.pro, "u")}
             alt={post?.user.username || "user"}
             width={52}
             height={52}
@@ -111,7 +111,7 @@ export default function FeedPost({ post }: IProps) {
         }}
       >
         <MarkdownRenderer markdownContent={text} />
-        {images && images?.length > 0 && <SwipeCarousel assets={images} />}
+        {media && media?.length > 0 && <SwipeCarousel assets={media} />}
       </div>
 
       <div className='actions'>
