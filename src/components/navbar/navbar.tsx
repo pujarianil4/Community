@@ -308,6 +308,7 @@ export default function Navbar() {
       <Modal
         className='create_post_modal'
         open={isPostModalOpen}
+        onCancel={handleCancel}
         footer={<></>}
         centered
       >

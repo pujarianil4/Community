@@ -291,6 +291,7 @@ const CreateCommunityModal = ({
   const { isLoading, callFunction, data } = useAsync();
   const fileRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const closeBtn = document.querySelector(".ant-modal-close");
 
   const onPickFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -309,6 +310,20 @@ const CreateCommunityModal = ({
       }
     }
   };
+
+  useEffect(() => {
+    closeBtn?.addEventListener("click", () => {
+      // Clear states when the modal is closed
+      onClose();
+      setForm({
+        logo: imgSrc,
+        name: "",
+        username: "",
+        metadata: "",
+        ticker: "",
+      });
+    });
+  }, [closeBtn]);
 
   const debouncedCheckUsername = debounce(async (username: string) => {
     // try {

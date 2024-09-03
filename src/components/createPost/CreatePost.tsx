@@ -251,6 +251,8 @@ const CreatePost: React.FC<Props> = ({
   //   return <div className='create_post_loader'>loading...</div>;
   // }
 
+  const handleTestEditorInput = () => {};
+
   return (
     <main className='create_post_container'>
       <section className='user_data'>
