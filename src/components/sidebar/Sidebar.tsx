@@ -6,7 +6,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { Button, Menu } from "antd";
-import { FiUpload } from "react-icons/fi";
+import { FiUpload, FiBookmark, FiGlobe } from "react-icons/fi";
 import { BiCategory } from "react-icons/bi";
 import { FcAbout } from "react-icons/fc";
 import { IoIosHelpCircleOutline } from "react-icons/io";
@@ -129,9 +129,14 @@ const SideBar: React.FC = () => {
     { key: "", icon: <HomeIcon />, label: "Home" },
     { key: "popular", icon: <StatIcon />, label: "Popular" },
     {
-      key: "allcommunities",
-      icon: <GoStack size={20} />,
-      label: "All Communities",
+      key: "communities",
+      icon: <FiGlobe size={20} />,
+      label: "Explore Communities",
+    },
+    {
+      key: "save",
+      icon: <FiBookmark size={20} />,
+      label: "Saved",
     },
 
     {

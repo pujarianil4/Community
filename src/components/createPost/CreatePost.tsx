@@ -150,8 +150,18 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
       });
     } catch (error: any) {
       console.log("POST_ERROR", error);
-      setIsLoadingPost(false);
       NotificationMessage("error", error?.message);
+      setIsLoadingPost(false);
+      setIsPostModalOpen(false);
+      setSelectedOption(null);
+      setContent("");
+      setPics([]);
+      setUploadedImg([]);
+      setSearchTerm("");
+      setUploadMsg({
+        msg: "",
+        type: "",
+      });
     }
   };
 
@@ -174,7 +184,8 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
 
         setPics((prevPics) => [...prevPics, ...filesArray]);
 
-        setUploadedImg((prevPics) => [...prevPics, ...uploadedFiles]);
+        if (uploadedFiles.length > 0)
+          setUploadedImg((prevPics) => [...prevPics, ...uploadedFiles]);
         setUploadMsg({ msg: "Uploaded Successfully", type: "success" });
 
         console.log("Uploaded files:", uploadedFiles);
@@ -209,6 +220,22 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
       refetch();
       dispatch(actions.setRefetchCommunity(false));
     }
+
+    // clear state on modal close
+
+    return () => {
+      setIsLoadingPost(false);
+      setIsPostModalOpen(false);
+      setSelectedOption(null);
+      setContent("");
+      setPics([]);
+      setUploadedImg([]);
+      setSearchTerm("");
+      setUploadMsg({
+        msg: "",
+        type: "",
+      });
+    };
   }, [comminityRefetch]);
 
   useEffect(() => {

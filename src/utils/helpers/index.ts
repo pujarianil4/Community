@@ -5,13 +5,12 @@ export function setClientSideCookie(
   value: any,
   force: boolean = false
 ) {
+  console.log("setClientSideCookie", name, value, force);
+
   if (force) {
-    console.log("setClientSideCookie", name, value);
     setCookie(null, name, value);
   } else {
     const user = getClientSideCookie(name);
-    console.log("setClientSideCookie", user, value, !user);
-
     !user && setCookie(null, name, value);
   }
 }

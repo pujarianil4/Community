@@ -86,7 +86,7 @@ export default function Navbar() {
     name: "",
   });
   const router = useRouter();
-  const [userSession, setUserSession] = useState<any>(user || userData);
+  const [userSession, setUserSession] = useState<any>(userData);
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const hasCalledRef = useRef(false);
   const [modalTab, setModalTab] = useState(3);
@@ -131,7 +131,7 @@ export default function Navbar() {
       };
       router.push("/");
       dispatch(actions.setUserData(initialState));
-      window?.location?.reload();
+      // window?.location?.reload();
     } catch (error) {
       deleteClientSideCookie("authToken");
       setUserSession(null);
@@ -144,7 +144,7 @@ export default function Navbar() {
       };
       router.push("/");
       dispatch(actions.setUserData(initialState));
-      window?.location?.reload();
+      //  window?.location?.reload();
     }
   };
 
@@ -168,7 +168,6 @@ export default function Navbar() {
   // fetch user details after refresh
   const fetchUser = async () => {
     const userData1: any = getClientSideCookie("authToken");
-    console.log("userFetc", userData1);
 
     if (userData?.uid) {
       const response = await fetchUserById(userData?.uid);
@@ -180,6 +179,8 @@ export default function Navbar() {
         img: response?.img?.pro,
       };
       setUserSession(user);
+      console.log("user", user);
+
       setClientSideCookie("authToken", JSON.stringify(user));
       dispatch(actions.setUserData(userData));
     }
