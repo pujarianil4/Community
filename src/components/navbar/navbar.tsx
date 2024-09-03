@@ -131,6 +131,10 @@ export default function Navbar() {
       };
       router.push("/");
       dispatch(actions.setUserData(initialState));
+      // Add a short delay before reloading the page
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
       // window?.location?.reload();
     } catch (error) {
       deleteClientSideCookie("authToken");
@@ -144,13 +148,19 @@ export default function Navbar() {
       };
       router.push("/");
       dispatch(actions.setUserData(initialState));
+      // Add a short delay before reloading the page
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
       //  window?.location?.reload();
     }
   };
 
   useEffect(() => {
-    if (user?.token == "" || user.token == null || user.token == undefined) {
-      setUserSession(null);
+    console.log("userData?.token", userData?.token);
+
+    if (!userData?.token) {
+      setUserSession({ userAvailable: false });
     } else {
       setUserSession(user);
     }
@@ -278,7 +288,7 @@ export default function Navbar() {
                 </Popover>
               </div>
             </div>
-          ) : userSession == null ? (
+          ) : userSession?.userAvailable == false ? (
             <CButton auth='auth' onClick={showModal}>
               LogIn
             </CButton>
