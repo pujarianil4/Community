@@ -19,6 +19,7 @@ import { RootState } from "@/contexts/store";
 import { IUser } from "@/utils/types/types";
 import { debounce, getImageSource, setClientSideCookie } from "@/utils/helpers";
 import NotificationMessage from "@/components/common/Notification";
+import { UploadIcon } from "@/assets/icons";
 
 export default function Profile() {
   const [{ dispatch, actions }, [userData]] = useRedux([
@@ -28,34 +29,57 @@ export default function Profile() {
   const [usernameError, setUsernameError] = useState<string>("");
   const { isLoading, data, refetch, callFunction } = useAsync();
   const [isUploading, setIsUploading] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [user, setUser] = useState<IUser>({
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const fileRefs = {
+    cover: useRef<HTMLInputElement>(null),
+    avatar: useRef<HTMLInputElement>(null),
+  };
+
+  const [user, setUser] = useState<any>({
     username: "",
     name: "",
-    img: "",
+    img: {
+      pro: "",
+      cvr: "",
+    },
     desc: "",
   });
-  const [originalUser, setOriginalUser] = useState<IUser>({
+  const [originalUser, setOriginalUser] = useState<any>({
     username: "",
     name: "",
-    img: "",
+    img: {
+      pro: "",
+      cvr: "",
+    },
   });
 
   const debouncedCheckUsername = debounce(async (username: string) => {
     try {
-      if (username == "" || data?.username === username) {
+      if (username === "" || data?.username === username) {
         setUsernameError("");
         return;
       }
-      const userData = await fetchUserByUserName(username);
-      const isAvailable = userData?.username === username;
-      if (isAvailable) {
-        setUsernameError("Username already exists");
-      } else {
-        setUsernameError("Username is available");
+      const user = await fetchUserByUserName(username);
+      if (user?.username) {
+        const isAvailable = user?.username === username;
+
+        if (isAvailable) {
+          setUsernameError("Username already exists");
+        } else {
+          setUsernameError("Username is available");
+        }
       }
-    } catch (error) {
-      setUsernameError("Error checking username availability");
+    } catch (error: any) {
+      if (
+        data?.username !== username &&
+        username &&
+        error == "Error: user not available"
+      ) {
+        setUsernameError("Username is available");
+      } else {
+        setUsernameError("");
+      }
     }
   }, 500);
 
@@ -66,7 +90,7 @@ export default function Profile() {
     if (name === "username") {
       debouncedCheckUsername(value);
     }
-    setUser((prevUser) => ({
+    setUser((prevUser: any) => ({
       ...prevUser,
       [name]: value,
     }));
@@ -82,7 +106,11 @@ export default function Profile() {
       const userData = {
         username: data.username,
         name: data.name,
-        img: getImageSource(data.img, "u"),
+        img: {
+          pro: getImageSource(data?.img?.pro, "u"),
+          cvr: getImageSource(data?.img?.cvr, "u"),
+        },
+
         desc: data?.desc,
       };
       setUser(userData);
@@ -95,27 +123,44 @@ export default function Profile() {
   };
 
   const handleSave = () => {
-    const updates: Partial<IUser> = {};
+    const updates: Partial<IUser> = {
+      img: {
+        pro: user.img.pro,
+      },
+    };
     if (user.username !== originalUser.username)
       updates.username = user.username;
     if (user.name !== originalUser.name) updates.name = user.name;
     if (user.desc !== originalUser.desc) updates.desc = user.desc;
-    updates.img = user.img;
+    if (user.img.pro !== originalUser.img.pro) {
+      if (updates.img) {
+        updates.img.pro = user.img.pro;
+      }
+    }
+    if (user.img.cvr !== originalUser.img.cvr) {
+      if (updates.img) {
+        updates.img.cvr = user.img.cvr;
+      }
+    }
+
+    console.log("UpdateObject", updates);
 
     if (Object.keys(updates).length > 0) {
       setIsLoadingUpdate(true);
       updateUser(updates)
         .then((response) => {
           dispatch(actions.setRefetchUser(true));
-          const updatedUser = {
+          const updatedUser: any = {
             username: response?.username,
             name: response?.name,
             uid: response?.id,
             token: userData?.token,
-            img: response?.img,
+            img: response?.img?.pro,
           };
 
-          // setClientSideCookie("authToken", JSON.stringify(user));
+          console.log("updatedUser", updatedUser, userData);
+
+          setClientSideCookie("authToken", JSON.stringify(updatedUser), true);
 
           dispatch(actions.setUserData(updatedUser));
           setIsLoadingUpdate(false);
@@ -135,14 +180,31 @@ export default function Profile() {
   const onPickFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       try {
-        setIsUploading(true);
+        setIsUploadingAvatar(true);
         const file = event.target.files[0];
         const imgURL = await uploadSingleFile(file);
         console.log("IMGURL", imgURL);
-        setUser({ ...user, img: imgURL });
-        setIsUploading(false);
+        setUser({ ...user, img: { ...user.img, pro: imgURL } });
+        setIsUploadingAvatar(false);
       } catch (error) {
-        setIsUploading(false);
+        setIsUploadingAvatar(false);
+        NotificationMessage("error", "Uploading failed");
+      }
+
+      //setImgSrc(imgURL);
+    }
+  };
+  const onCoverImg = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      try {
+        setIsUploadingCover(true);
+        const file = event.target.files[0];
+        const imgURL = await uploadSingleFile(file);
+        console.log("IMGURL", imgURL);
+        setUser({ ...user, img: { ...user.img, cvr: imgURL } });
+        setIsUploadingCover(false);
+      } catch (error) {
+        setIsUploadingCover(false);
         NotificationMessage("error", "Uploading failed");
       }
 
@@ -152,22 +214,40 @@ export default function Profile() {
 
   return (
     <div className='profile_container'>
-      <div className='avatar'>
-        {/* <span className='label'>Avatar</span> */}
-
+      <div className='cover_bx'>
         <img
           loading='lazy'
           onError={setFallbackURL}
-          src={user?.img}
+          src={user?.img?.cvr}
+          alt='Cover Img'
+        />
+        <div onClick={() => fileRefs.cover.current?.click()} className='upload'>
+          <UploadIcon />
+          <input
+            ref={fileRefs.cover}
+            onChange={onCoverImg}
+            type='file'
+            accept='image/*'
+            name='img'
+            style={{ visibility: "hidden" }}
+          />
+        </div>
+        {isUploadingCover && <span className='cvrmsg'>uploading...</span>}
+      </div>
+      <div className='avatar'>
+        <img
+          loading='lazy'
+          onError={setFallbackURL}
+          src={user?.img?.pro}
           alt='Avatar'
         />
         <div
-          onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
+          onClick={() => fileRefs.avatar.current?.click()}
           className='upload'
         >
-          <FiUpload size={20} />
+          <UploadIcon />
           <input
-            ref={fileRef}
+            ref={fileRefs.avatar}
             onChange={onPickFile}
             type='file'
             accept='image/*'
@@ -175,8 +255,9 @@ export default function Profile() {
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploading && <span className='msg'>uploading...</span>}
+        {isUploadingAvatar && <span className='msg'>uploading...</span>}
       </div>
+
       <div className='info'>
         <span className='label'>Name</span>
         <input
@@ -187,7 +268,7 @@ export default function Profile() {
         />
       </div>
       <div className='info'>
-        <span className='label'>UserName</span>
+        <span className='label'>Username</span>
         <input
           type='text'
           onChange={handleChange}
@@ -197,7 +278,7 @@ export default function Profile() {
       </div>
 
       <div className='info'>
-        <span className='label'>Description</span>
+        <span className='label'>Bio</span>
         <textarea
           rows={5}
           cols={10}
@@ -214,7 +295,9 @@ export default function Profile() {
         >
           {usernameError}
         </p>
-        <CButton onClick={handleSave}> Save </CButton>
+        <CButton className='save_btn ' onClick={handleSave}>
+          Save
+        </CButton>
       </div>
     </div>
   );

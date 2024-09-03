@@ -3,20 +3,20 @@
   background-color: var(--primary) !important;
   border: 0px !important;
   border-radius: 5px !important;
-  color: var(--primary-text) !important;
+  color: var(--white) !important;
   font-weight: 500 !important;
   font-size: 15px !important;
-  cursor: pointer;
+  cursor: pointer !important;
   transition: background-color 0.3s ease;
   &:hover {
     background-color: var(--primary-hover) !important;
-    color: var(--primary-text) !important;
+    // color: var(--primary-text) !important;
   }
   &:disabled {
-    background-color: var(--primary) !important;
-    color: var(--primary-text) !important;
+    background-color: var(--primary-disable) !important;
+    color: var(--label-text) !important;
     opacity: 0.9;
-    cursor: not-allowed;
+    cursor: not-allowed !important;
   }
 }
 
@@ -103,4 +103,29 @@
 }
 .ant-notification-notice-close {
   color: var(--primary-text) !important;
+}
+
+.ant-tabs {
+  .ant-tabs-nav {
+    .ant-tabs-nav-wrap:before {
+      position: relative;
+    }
+    .ant-tabs-nav-list {
+      .ant-tabs-tab {
+        color: var(--primary);
+        background: var(--white);
+        padding: 7px 19px;
+        margin-right: 1rem;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        border: 1px solid var(--tertiary-border);
+        cursor: pointer;
+      }
+      .ant-tabs-tab-active {
+        background: var(--secondary-bg);
+        border: 2px solid var(--secondary-bg);
+      }
+    }
+  }
 }

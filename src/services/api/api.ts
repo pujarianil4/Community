@@ -86,10 +86,14 @@ export const handleSignup = async (
 export const fetchUserByUserName = async (username: string) => {
   try {
     const response = await api.get(`/users/uname/${username}`);
-
-    return response.data;
+    console.log("response", response.data);
+    if (response.data) {
+      return response.data;
+    }
+    throw new Error("user not available");
   } catch (error) {
     console.error("FETCH_BY_NAME_ERROR", error);
+    throw error;
   }
 };
 
@@ -176,17 +180,20 @@ export const fetchCommunityByCname = async (cName: string) => {
     const response = await api.get(`/community/cname/${cName}`);
     let isFollowed = false;
 
-    if (response?.data?.id) {
-      isFollowed = await isUserFollowed({
-        fwid: response?.data?.id,
-        type: "c",
-      });
+    if (response.data) {
+      if (response?.data?.id) {
+        isFollowed = await isUserFollowed({
+          fwid: response?.data?.id,
+          type: "c",
+        });
+      }
+      return {
+        ...response.data,
+        isFollowed,
+      };
+    } else {
+      throw new Error("user not available");
     }
-    return {
-      ...response.data,
-      isFollowed,
-    };
-    return response.data;
   } catch (error) {
     console.error("Fetch Communities ", error);
     throw error;
@@ -198,7 +205,7 @@ export const getPosts = async (sortby: string) => {
 
   try {
     const response = await api.get(
-      `/posts?sortBy=${sortby}&order=desc&page=1&limit=20`
+      `/posts?sortBy=${sortby}&order=DESC&page=1&limit=20`
     );
     console.log("============Fetched all posts=============", response.data);
     return response.data;
@@ -382,19 +389,20 @@ export const uploadMultipleFile = async (files: FileList) => {
     const formData = new FormData();
 
     Array.from(files).forEach((file, index) => {
-      formData.append(`files${index}`, file);
+      formData.append(`files`, file);
     });
 
     console.log("This is my form data!", formData);
 
     // Send a POST request with the form data and Bearer token
-    const response = await api.post("/upload/multi", files, {
+    const response = await api.post("/upload/multi", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
 
     console.log("Upload successful:", response.data);
+    return response.data;
   } catch (error) {
     console.error("Upload failed:", error);
   }

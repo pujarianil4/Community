@@ -24,9 +24,11 @@ import {
 import { RxHamburgerMenu } from "react-icons/rx";
 import useAsync from "@/hooks/useAsync";
 import NotificationMessage from "../common/Notification";
+import { GoStack } from "react-icons/go";
 import {
   debounce,
   getClientSideCookie,
+  getImageSource,
   getRandomImageLink,
 } from "@/utils/helpers";
 import CommunityList from "../common/loaders/communityList";
@@ -38,6 +40,8 @@ import {
   SettingIcon,
   StatIcon,
 } from "@/assets/icons";
+import useRedux from "@/hooks/useRedux";
+import { RootState } from "@/contexts/store";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -46,7 +50,8 @@ const LodingCommunities = [
     key: "loading1",
     label: (
       <div className='community_item'>
-        <div className='skeleton'></div>
+        <div className='img skeleton'></div>
+        <div className='content skeleton'></div>
       </div>
     ),
   },
@@ -54,7 +59,8 @@ const LodingCommunities = [
     key: "loading2",
     label: (
       <div className='community_item'>
-        <div className='skeleton'></div>
+        <div className='img skeleton'></div>
+        <div className='content skeleton'></div>
       </div>
     ),
   },
@@ -62,7 +68,8 @@ const LodingCommunities = [
     key: "loading3",
     label: (
       <div className='community_item'>
-        <div className='skeleton'></div>
+        <div className='img skeleton'></div>
+        <div className='content skeleton'></div>
       </div>
     ),
   },
@@ -70,7 +77,8 @@ const LodingCommunities = [
     key: "loading4",
     label: (
       <div className='community_item'>
-        <div className='skeleton'></div>
+        <div className='img skeleton'></div>
+        <div className='content skeleton'></div>
       </div>
     ),
   },
@@ -108,6 +116,11 @@ const SideBar: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [communityList, SetCommunityList] = useState<Array<any>>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const refetchCommunitySelector = (state: RootState) =>
+    state.common.refetch.community;
+  const [{ dispatch, actions }, [comminityRefetch]] = useRedux([
+    refetchCommunitySelector,
+  ]);
   const { isLoading, callFunction, data, refetch } = useAsync(fetchCommunities);
 
   const router = useRouter();
@@ -116,11 +129,11 @@ const SideBar: React.FC = () => {
     { key: "", icon: <HomeIcon />, label: "Home" },
     { key: "popular", icon: <StatIcon />, label: "Popular" },
     {
-      key: "notifications",
-      icon: <NotificationIcon />,
-      label: "Notifications",
+      key: "allcommunities",
+      icon: <GoStack size={20} />,
+      label: "All Communities",
     },
-    { key: "all", icon: <SettingIcon />, label: "Settings" },
+
     {
       type: "divider",
     },
@@ -198,6 +211,17 @@ const SideBar: React.FC = () => {
     SetCommunityList(inFormat);
   };
 
+  const handleCallback = () => {
+    refetch();
+    dispatch(actions.setRefetchCommunity(true));
+  };
+
+  useEffect(() => {
+    if (comminityRefetch) {
+      dispatch(actions.setRefetchCommunity(false));
+    }
+  }, [comminityRefetch]);
+
   useEffect(() => {
     if (data) getCommunities(data);
   }, [data]);
@@ -223,7 +247,7 @@ const SideBar: React.FC = () => {
       <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
         <CreateCommunityModal
           onClose={handleCancel}
-          refetchCommunities={refetch}
+          refetchCommunities={handleCallback}
         />
       </Modal>
     </>
@@ -246,7 +270,7 @@ const CreateCommunityModal = ({
   onClose,
   refetchCommunities,
 }: ICreateCommunityModal) => {
-  const [imgSrc, setImgSrc] = useState("https://picsum.photos/200/300");
+  const [imgSrc, setImgSrc] = useState(getImageSource(null, "c"));
   const [form, setForm] = useState<ICommunityForm>({
     logo: imgSrc,
     name: "",
@@ -271,8 +295,8 @@ const CreateCommunityModal = ({
         const imgURL = await uploadSingleFile(file);
         console.log("IMGURL", imgURL);
 
-        setImgSrc(imgURL.url);
-        setForm({ ...form, logo: imgURL?.url });
+        setImgSrc(imgURL);
+        setForm({ ...form, logo: imgURL });
         setIsUploading(false);
       } catch (error) {
         NotificationMessage("error", "Uploading failed");
@@ -282,6 +306,27 @@ const CreateCommunityModal = ({
   };
 
   const debouncedCheckUsername = debounce(async (username: string) => {
+    // try {
+    //   if (username === "") {
+    //     setUsernameError("");
+    //     return;
+    //   }
+    //   const user = await fetchCommunityByCname(username);
+    //   if (user?.username) {
+    //     const isAvailable = user?.username === username;
+
+    //     if (isAvailable) {
+    //       setUsernameError("Username already exists");
+    //     } else {
+    //       setUsernameError("Username is available");
+    //     }
+    //   }
+    // } catch (error: any) {
+    //   if (username && error == "Error: user not available") {
+    //     setUsernameError("Username is available");
+    //   } else {
+    //     setUsernameError("");
+    //   }
     try {
       if (username == "") {
         setUsernameError({ type: "error", msg: "" });
@@ -289,17 +334,20 @@ const CreateCommunityModal = ({
       }
       const community = await fetchCommunityByCname(username);
       console.log("COMMUNITY", community);
-      const isAvailable = community?.username === username;
-      if (isAvailable) {
-        setUsernameError({ type: "error", msg: "Community already exists" });
-      } else {
-        setUsernameError({ type: "success", msg: "Community is available" });
+      if (community) {
+        const isAvailable = community?.username === username;
+        if (isAvailable) {
+          setUsernameError({ type: "error", msg: "Community already exists" });
+        } else {
+          setUsernameError({ type: "success", msg: "Community is available" });
+        }
       }
     } catch (error) {
-      setUsernameError({
-        type: "error",
-        msg: "Error checking community availability",
-      });
+      if (username && error == "Error: user not available") {
+        setUsernameError({ type: "success", msg: "Community is available" });
+      } else {
+        setUsernameError({ type: "error", msg: "" });
+      }
     }
   }, 500);
 
@@ -378,6 +426,7 @@ const CreateCommunityModal = ({
             onChange={onPickFile}
             type='file'
             name='file'
+            accept='image/*'
             style={{ visibility: "hidden" }}
           />
         </div>

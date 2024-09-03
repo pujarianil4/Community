@@ -1,13 +1,19 @@
+interface IImsg {
+  pro?: any;
+  cvr?: any;
+}
 export interface IUser {
   id?: number;
+  uid?: number | string;
   username: string;
-  name?: string;
-  img: string;
+  name: string;
+  img: IImsg;
   sts?: number;
   cta?: string;
   uta?: string;
   desc?: string;
   tid?: string;
+  token?: string;
 }
 
 export interface ICommunity {
@@ -35,7 +41,7 @@ export interface IPost {
   ccount: number;
   time: string;
   user: IUser;
-  images?: string[];
+  media?: string[];
   // img?: string;
   community: ICommunity;
 }

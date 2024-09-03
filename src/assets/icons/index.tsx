@@ -511,3 +511,326 @@ export function SaveIcon({
     </svg>
   );
 }
+
+export function DeleteIcon({
+  fill = "#fff",
+  width = 17,
+  height = 17,
+}: IIConProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox='0 0 17 17'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <g clipPath='url(#clip0_8763_6935)'>
+        <path
+          d='M2.11426 4.53613H3.46566H14.2769'
+          stroke={fill}
+          strokeWidth='1.3514'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+        <path
+          d='M12.9255 4.53581V13.9956C12.9255 14.354 12.7831 14.6978 12.5297 14.9512C12.2762 15.2046 11.9325 15.347 11.5741 15.347H4.8171C4.45868 15.347 4.11495 15.2046 3.86151 14.9512C3.60808 14.6978 3.4657 14.354 3.4657 13.9956V4.53581M5.4928 4.53581V3.18441C5.4928 2.82599 5.63518 2.48226 5.88861 2.22882C6.14205 1.97539 6.48578 1.83301 6.8442 1.83301H9.547C9.90541 1.83301 10.2491 1.97539 10.5026 2.22882C10.756 2.48226 10.8984 2.82599 10.8984 3.18441V4.53581'
+          stroke={fill}
+          strokeWidth='1.3514'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+      </g>
+      <defs>
+        <clipPath id='clip0_8763_6935'>
+          <rect
+            width='16.2168'
+            height='16.2168'
+            fill={fill}
+            transform='translate(0.0870972 0.482178)'
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function EtherIcon({
+  fill = "#fff",
+  width = 14,
+  height = 22,
+}: IIConProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox='0 0 14 22'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <g clipPath='url(#clip0_8763_6835)'>
+        <path
+          d='M6.71456 0.319824L6.85852 0.804871V14.8785L6.71456 15.021L0.128582 11.1595L6.71456 0.319824Z'
+          fill='#343434'
+        />
+        <path
+          d='M6.71464 0.319824L13.3008 11.1595L6.71464 15.021V8.19004V0.319824Z'
+          fill='#8C8C8C'
+        />
+        <path
+          d='M6.71464 16.258L6.79578 16.3561V21.3694L6.71464 21.6043L0.124633 12.3984L6.71464 16.258Z'
+          fill='#3C3C3B'
+        />
+        <path
+          d='M6.71464 21.6043V16.258L13.3008 12.3984L6.71464 21.6043Z'
+          fill='#8C8C8C'
+        />
+        <path
+          d='M6.7146 15.0207L0.128623 11.1591L6.7146 8.1897V15.0207Z'
+          fill='#141414'
+        />
+        <path
+          d='M13.3008 11.1591L6.71464 15.0207V8.1897L13.3008 11.1591Z'
+          fill='#393939'
+        />
+      </g>
+      <defs>
+        <clipPath id='clip0_8763_6835'>
+          <rect
+            width='13.1762'
+            height='21.2846'
+            fill={fill}
+            transform='matrix(-1 0 0 1 13.3008 0.319824)'
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function SolanaIcon({
+  fill = "#fff",
+  width = 14,
+  height = 23,
+}: IIConProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox='0 0 14 23'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <g clipPath='url(#clip0_8763_6853)'>
+        <g clipPath='url(#clip1_8763_6853)'>
+          <path
+            d='M2.56913 13.7847C2.64253 13.7067 2.74345 13.6611 2.85049 13.6611H12.5573C12.7347 13.6611 12.8234 13.8888 12.698 14.0221L10.7805 16.0609C10.7071 16.1389 10.6062 16.1844 10.4991 16.1844H0.792297C0.61492 16.1844 0.526231 15.9568 0.651618 15.8235L2.56913 13.7847Z'
+            fill='url(#paint0_linear_8763_6853)'
+          />
+          <path
+            d='M2.56889 6.17215C2.64534 6.09411 2.74627 6.04858 2.85025 6.04858H12.5571C12.7345 6.04858 12.8232 6.2762 12.6978 6.40952L10.7802 8.44833C10.7069 8.52637 10.6059 8.57189 10.4989 8.57189H0.792053C0.614675 8.57189 0.525987 8.34427 0.651374 8.21095L2.56889 6.17215Z'
+            fill='url(#paint1_linear_8763_6853)'
+          />
+          <path
+            d='M10.7805 9.95413C10.7071 9.87609 10.6062 9.83057 10.4991 9.83057H0.792297C0.61492 9.83057 0.526231 10.0582 0.651618 10.1915L2.56913 12.2303C2.64253 12.3084 2.74345 12.3539 2.85049 12.3539H12.5573C12.7347 12.3539 12.8234 12.1263 12.698 11.9929L10.7805 9.95413Z'
+            fill='url(#paint2_linear_8763_6853)'
+          />
+        </g>
+      </g>
+      <defs>
+        <linearGradient
+          id='paint0_linear_8763_6853'
+          x1='11.63'
+          y1='4.83101'
+          x2='4.2419'
+          y2='18.1404'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#00FFA3' />
+          <stop offset='1' stop-color='#DC1FFF' />
+        </linearGradient>
+        <linearGradient
+          id='paint1_linear_8763_6853'
+          x1='8.69236'
+          y1='3.20006'
+          x2='1.30422'
+          y2='16.5094'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#00FFA3' />
+          <stop offset='1' stop-color='#DC1FFF' />
+        </linearGradient>
+        <linearGradient
+          id='paint2_linear_8763_6853'
+          x1='10.152'
+          y1='4.01044'
+          x2='2.76383'
+          y2='17.3198'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#00FFA3' />
+          <stop offset='1' stop-color='#DC1FFF' />
+        </linearGradient>
+        <clipPath id='clip0_8763_6853'>
+          <rect
+            width='13.1762'
+            height='21.2846'
+            fill='white'
+            transform='matrix(-1 0 0 1 13.3008 0.929443)'
+          />
+        </clipPath>
+        <clipPath id='clip1_8763_6853'>
+          <rect
+            width='12.1626'
+            height='10.1355'
+            fill='white'
+            transform='translate(0.593506 6.04858)'
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function DesktopIcon({
+  fill = "#fff",
+  width = 14,
+  height = 23,
+}: IIConProps) {
+  return (
+    <svg
+      width='23'
+      height='18'
+      viewBox='0 0 23 18'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <g clipPath='url(#clip0_8763_6900)'>
+        <g clipPath='url(#clip1_8763_6900)'>
+          <path
+            d='M17.2728 2.65796H6.46163C5.71527 2.65796 5.11023 3.263 5.11023 4.00936V10.7664C5.11023 11.5127 5.71527 12.1178 6.46163 12.1178H17.2728C18.0192 12.1178 18.6242 11.5127 18.6242 10.7664V4.00936C18.6242 3.263 18.0192 2.65796 17.2728 2.65796Z'
+            stroke='white'
+            strokeWidth='1.46972'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+          />
+          <path
+            d='M9.16443 14.8206H14.57'
+            stroke='white'
+            strokeWidth='1.46972'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+          />
+          <path
+            d='M11.8672 12.1174V14.8202'
+            stroke='white'
+            strokeWidth='1.46972'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+          />
+        </g>
+      </g>
+      <defs>
+        <clipPath id='clip0_8763_6900'>
+          <rect
+            width='21.2846'
+            height='17.2304'
+            fill='white'
+            transform='matrix(-1 0 0 1 22.1545 0.365234)'
+          />
+        </clipPath>
+        <clipPath id='clip1_8763_6900'>
+          <rect
+            width='16.2168'
+            height='16.2168'
+            fill='white'
+            transform='translate(3.75879 0.631348)'
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+export function MobileIcon({
+  fill = "#fff",
+  width = 14,
+  height = 23,
+}: IIConProps) {
+  return (
+    <svg
+      width='23'
+      height='19'
+      viewBox='0 0 23 19'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <g clipPath='url(#clip0_8763_6922)'>
+        <g clipPath='url(#clip1_8763_6922)'>
+          <path
+            d='M14.739 2.59277H7.98202C7.23566 2.59277 6.63062 3.19782 6.63062 3.94417V14.7554C6.63062 15.5017 7.23566 16.1068 7.98202 16.1068H14.739C15.4854 16.1068 16.0904 15.5017 16.0904 14.7554V3.94417C16.0904 3.19782 15.4854 2.59277 14.739 2.59277Z'
+            stroke='white'
+            strokeWidth='1.3514'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+          />
+          <path
+            d='M11.3605 13.4043H11.3678'
+            stroke='white'
+            strokeWidth='1.3514'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+          />
+        </g>
+      </g>
+      <defs>
+        <clipPath id='clip0_8763_6922'>
+          <rect
+            width='21.2846'
+            height='17.2304'
+            fill='white'
+            transform='matrix(-1 0 0 1 22.1545 0.975098)'
+          />
+        </clipPath>
+        <clipPath id='clip1_8763_6922'>
+          <rect
+            width='16.2168'
+            height='16.2168'
+            fill='white'
+            transform='translate(3.25208 1.24121)'
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function UploadIcon({
+  fill = "#fff",
+  width = 14,
+  height = 23,
+}: IIConProps) {
+  return (
+    <svg
+      width='17'
+      height='17'
+      viewBox='0 0 17 17'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <path
+        d='M7.68105 2.25439H2.15883C1.74038 2.25439 1.33907 2.42062 1.04317 2.71651C0.747284 3.01241 0.581055 3.41372 0.581055 3.83217V14.8766C0.581055 15.2951 0.747284 15.6964 1.04317 15.9923C1.33907 16.2882 1.74038 16.4544 2.15883 16.4544H13.2033C13.6217 16.4544 14.023 16.2882 14.3189 15.9923C14.6148 15.6964 14.781 15.2951 14.781 14.8766V9.35439'
+        stroke='white'
+        strokeWidth='0.788888'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M13.5978 1.07121C13.9116 0.757368 14.3373 0.581055 14.7811 0.581055C15.2249 0.581055 15.6506 0.757368 15.9644 1.07121C16.2783 1.38505 16.4546 1.8107 16.4546 2.25454C16.4546 2.69838 16.2783 3.12403 15.9644 3.43787L8.47001 10.9323L5.31445 11.7212L6.10334 8.56565L13.5978 1.07121Z'
+        stroke='white'
+        strokeWidth='0.788888'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  );
+}

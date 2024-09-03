@@ -41,7 +41,6 @@ export default function Community({ community }: IProps) {
     try {
       if (!isFollowed) {
         const data1 = await callFunction(followApi, {
-          uid: user.uid,
           typ: "c",
           fwid: data.id,
         });

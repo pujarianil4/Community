@@ -41,7 +41,7 @@ export default async function Post({ post }: Iprops) {
           className='community_logo'
         >
           <Image
-            src={getImageSource(post?.user.img, "u")}
+            src={getImageSource(post?.user.img?.pro, "u")}
             alt={post?.user.username || "user"}
             width={32}
             height={32}
@@ -74,8 +74,8 @@ export default async function Post({ post }: Iprops) {
       {/* Content */}
       <div className='content post_content'>
         <MarkdownRenderer markdownContent={post?.text} />
-        {post?.images && post?.images.length > 0 && (
-          <SwipeCarousel assets={post?.images} />
+        {post?.media && post?.media.length > 0 && (
+          <SwipeCarousel assets={post?.media} />
         )}
       </div>
       <div className='actions '>
