@@ -89,7 +89,7 @@ export default function Navbar() {
   const [userSession, setUserSession] = useState<any>(user || userData);
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const hasCalledRef = useRef(false);
-  const [modalTab, setModalTab] = useState(1);
+  const [modalTab, setModalTab] = useState(3);
   const [discordUser, setDiscordUser] = useState(null);
   const showModal = () => {
     setIsModalOpen(true);
@@ -131,6 +131,7 @@ export default function Navbar() {
       };
       router.push("/");
       dispatch(actions.setUserData(initialState));
+      window?.location?.reload();
     } catch (error) {
       deleteClientSideCookie("authToken");
       setUserSession(null);
@@ -143,6 +144,7 @@ export default function Navbar() {
       };
       router.push("/");
       dispatch(actions.setUserData(initialState));
+      window?.location?.reload();
     }
   };
 
@@ -175,7 +177,7 @@ export default function Navbar() {
         name: response?.name,
         uid: response?.id,
         token: userData1?.token,
-        img: response?.img,
+        img: response?.img?.pro,
       };
       setUserSession(user);
       setClientSideCookie("authToken", JSON.stringify(user));

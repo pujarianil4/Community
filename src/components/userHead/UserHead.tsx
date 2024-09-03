@@ -82,7 +82,6 @@ export default function UserHead() {
     try {
       if (!isFollowed) {
         const data1 = await callFunction(followApi, {
-          uid: user.uid,
           typ: "u",
           fwid: data.id,
         });
@@ -165,7 +164,7 @@ export default function UserHead() {
                 height={220}
               /> */}
               <Image
-                src='https://picsum.photos/700/220?random=1'
+                src={getImageSource(data?.img?.cvr, "other")}
                 alt='cover_photo'
                 loading='lazy'
                 width={768}
@@ -178,7 +177,7 @@ export default function UserHead() {
                 <div className='box user'>
                   <div className='avatar'>
                     <Image
-                      src={getImageSource(data?.img, "u")}
+                      src={getImageSource(data?.img?.pro, "u")}
                       alt='user'
                       width={72}
                       height={72}
@@ -191,11 +190,11 @@ export default function UserHead() {
                 </div>
                 <div className='stats box'>
                   <p>Followers</p>
-                  <h4>{numberWithCommas(data?.followers) || "0"}</h4>
+                  <h4>{numberWithCommas(data?.fwrs) || "0"}</h4>
                 </div>
                 <div className='stats box'>
                   <p>Following</p>
-                  <h4>{numberWithCommas(data?.following) || "0"}</h4>
+                  <h4>{numberWithCommas(data?.fwng) || "0"}</h4>
                 </div>
                 <div className='stats box'>
                   <p>Posts</p>

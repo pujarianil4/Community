@@ -80,9 +80,9 @@ export const getImageSource = (
 ) => {
   if (
     logo &&
-    (logo.startsWith("http://") ||
-      logo.startsWith("https://") ||
-      logo.startsWith("/"))
+    (String(logo)?.startsWith("http://") ||
+      String(logo)?.startsWith("https://") ||
+      String(logo)?.startsWith("/"))
   ) {
     return logo;
   } else {

@@ -60,7 +60,7 @@ export default function EvmAuthComponent({
             name: userdata?.name || "",
             uid: response?.uid || 0,
             token: response?.token || "",
-            img: userdata?.img,
+            img: userdata?.img?.pro,
           };
           setClientSideCookie("authToken", JSON.stringify(user));
           dispatch(actions.setUserData(user));
@@ -74,7 +74,7 @@ export default function EvmAuthComponent({
             name: userdata?.name || "",
             uid: response?.uid || 0,
             token: response?.token || "",
-            img: userdata?.img,
+            img: userdata?.img?.pro,
           };
           setClientSideCookie("authToken", JSON.stringify(user));
           dispatch(actions.setUserData(user));
@@ -105,7 +105,7 @@ export default function EvmAuthComponent({
         if (msg == "User not Registered!" && code == 404) {
           setUserAuthData({ notRegistered: true });
         }
-        NotificationMessage("error", msg);
+        // NotificationMessage("error", msg);
       }
     }
   }, [isConnected]);

@@ -36,16 +36,22 @@ export default function Profile() {
     avatar: useRef<HTMLInputElement>(null),
   };
 
-  const [user, setUser] = useState<IUser>({
+  const [user, setUser] = useState<any>({
     username: "",
     name: "",
-    img: "",
+    img: {
+      pro: "",
+      cvr: "",
+    },
     desc: "",
   });
-  const [originalUser, setOriginalUser] = useState<IUser>({
+  const [originalUser, setOriginalUser] = useState<any>({
     username: "",
     name: "",
-    img: "",
+    img: {
+      pro: "",
+      cvr: "",
+    },
   });
 
   const debouncedCheckUsername = debounce(async (username: string) => {
@@ -84,7 +90,7 @@ export default function Profile() {
     if (name === "username") {
       debouncedCheckUsername(value);
     }
-    setUser((prevUser) => ({
+    setUser((prevUser: any) => ({
       ...prevUser,
       [name]: value,
     }));
@@ -100,7 +106,11 @@ export default function Profile() {
       const userData = {
         username: data.username,
         name: data.name,
-        img: getImageSource(data.img, "u"),
+        img: {
+          pro: getImageSource(data?.img?.pro, "u"),
+          cvr: getImageSource(data?.img?.cvr, "u"),
+        },
+
         desc: data?.desc,
       };
       setUser(userData);
@@ -113,24 +123,39 @@ export default function Profile() {
   };
 
   const handleSave = () => {
-    const updates: Partial<IUser> = {};
+    const updates: Partial<IUser> = {
+      img: {
+        pro: user.img.pro,
+      },
+    };
     if (user.username !== originalUser.username)
       updates.username = user.username;
     if (user.name !== originalUser.name) updates.name = user.name;
     if (user.desc !== originalUser.desc) updates.desc = user.desc;
-    updates.img = user.img;
+    if (user.img.pro !== originalUser.img.pro) {
+      if (updates.img) {
+        updates.img.pro = user.img.pro;
+      }
+    }
+    if (user.img.cvr !== originalUser.img.cvr) {
+      if (updates.img) {
+        updates.img.cvr = user.img.cvr;
+      }
+    }
+
+    console.log("UpdateObject", updates);
 
     if (Object.keys(updates).length > 0) {
       setIsLoadingUpdate(true);
       updateUser(updates)
         .then((response) => {
           dispatch(actions.setRefetchUser(true));
-          const updatedUser = {
+          const updatedUser: any = {
             username: response?.username,
             name: response?.name,
             uid: response?.id,
             token: userData?.token,
-            img: response?.img,
+            img: response?.img?.pro,
           };
 
           console.log("updatedUser", updatedUser, userData);
@@ -159,7 +184,7 @@ export default function Profile() {
         const file = event.target.files[0];
         const imgURL = await uploadSingleFile(file);
         console.log("IMGURL", imgURL);
-        setUser({ ...user, img: imgURL });
+        setUser({ ...user, img: { ...user.img, pro: imgURL } });
         setIsUploadingAvatar(false);
       } catch (error) {
         setIsUploadingAvatar(false);
@@ -176,7 +201,7 @@ export default function Profile() {
         const file = event.target.files[0];
         const imgURL = await uploadSingleFile(file);
         console.log("IMGURL", imgURL);
-        setUser({ ...user, img: imgURL });
+        setUser({ ...user, img: { ...user.img, cvr: imgURL } });
         setIsUploadingCover(false);
       } catch (error) {
         setIsUploadingCover(false);
@@ -193,7 +218,7 @@ export default function Profile() {
         <img
           loading='lazy'
           onError={setFallbackURL}
-          src={user?.img}
+          src={user?.img?.cvr}
           alt='Cover Img'
         />
         <div onClick={() => fileRefs.cover.current?.click()} className='upload'>
@@ -213,7 +238,7 @@ export default function Profile() {
         <img
           loading='lazy'
           onError={setFallbackURL}
-          src={user?.img}
+          src={user?.img?.pro}
           alt='Avatar'
         />
         <div
