@@ -53,7 +53,7 @@ export default async function discordAuth(
     });
 
     const user = userResponse.data;
-
+    console.log("user data", user);
     return res.status(200).json({ user });
   } catch (error) {
     console.error("Error during Discord OAuth callback:", error);

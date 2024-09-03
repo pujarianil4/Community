@@ -8,6 +8,7 @@ import {
   getAddressesByUserId,
   linkAddress,
   updateUser,
+  getSession,
 } from "@/services/api/api";
 import { sigMsg } from "@/utils/constants";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
@@ -57,6 +58,10 @@ export default function General() {
     getAddressesByUserId,
     user.uid
   );
+
+  const { isLoading: sessionLoading, data: sessionData } = useAsync(getSession);
+  console.log("sessionData", sessionData);
+
   const userAccount = useAccount();
   const { disconnect } = useDisconnect();
   const [messageHash, setMessageHash] = useState<`0x${string}` | undefined>(
@@ -183,7 +188,7 @@ export default function General() {
                     </div>
                     <div>
                       <span>
-                        {user ? (
+                        {!user ? (
                           <DeleteIcon />
                         ) : (
                           <span onClick={handleDiscordLogin}>
@@ -262,36 +267,21 @@ export default function General() {
                 key='1'
                 extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
               >
-                <div className='addresses'>
-                  <div>
+                {sessionData?.map((session: { ip: string; uid: string }) => (
+                  <div key={session.uid} className='addresses'>
                     <div>
-                      <DesktopIcon />
-                      <span className='telegram-user-details'>
-                        192.168.123.132
-                      </span>
-                    </div>
-                    <div>
-                      <span>
-                        <DeleteIcon />
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className='addresses'>
-                  <div>
-                    <div>
-                      <MobileIcon />
-                      <span className='telegram-user-details'>
-                        192.168.123.132
-                      </span>
-                    </div>
-                    <div>
-                      <span>
-                        <DeleteIcon />
-                      </span>
+                      <div>
+                        <MobileIcon />
+                        <span className=''>{session.ip}</span>
+                      </div>
+                      <div>
+                        <span>
+                          <DeleteIcon />
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </Panel>
             </Collapse>
           </div>
