@@ -170,22 +170,22 @@
     }
 
     .up_down {
-      &:hover {
-        svg {
-          path {
-            stroke: var(--black);
-          }
-        }
-      }
+      // &:hover {
+      //   svg {
+      //     path {
+      //       stroke: var(--black);
+      //     }
+      //   }
+      // }
       svg {
-        width: 18px;
-        height: 14px;
-        padding: 2px;
-        path {
-          &:hover {
-            stroke: var(--primary);
-          }
-        }
+        // width: 18px;
+        // height: 14px;
+        // padding: 2px;
+        // path {
+        //   &:hover {
+        //     stroke: var(--primary);
+        //   }
+        // }
       }
     }
   }
