@@ -10,11 +10,13 @@ interface TabItem {
 
 interface TabsComponentProps {
   defaultActiveKey?: string;
+  activeKey?: string;
   items: TabItem[];
   onChange?: (key: string) => void;
 }
 const CTabs: React.FC<TabsComponentProps> = ({
   defaultActiveKey = "1",
+  activeKey,
   items,
   onChange,
 }) => {
@@ -27,6 +29,7 @@ const CTabs: React.FC<TabsComponentProps> = ({
   return (
     <Tabs
       defaultActiveKey={defaultActiveKey}
+      activeKey={activeKey}
       items={tabItems}
       onChange={onChange}
     />
