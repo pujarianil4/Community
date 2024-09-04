@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import TurndownService from "turndown";
+import "./index.scss";
 
 const extensions = [
   StarterKit,
@@ -27,25 +28,31 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   placeHolder = "type here...",
 }) => {
   const turndownService = new TurndownService();
-
+  console.log("TEST", content);
   const editor = useEditor({
     extensions,
     content,
-    onUpdate: ({ editor }) => {
-      // Convert editor content to Markdown
-      // const markdown = convertEditorContentToMarkdown(editor.getJSON());
-      // setMarkdownContent(markdown);
-      const markdown = turndownService.turndown(editor.getHTML());
-      setContent(markdown);
-    },
+    // onUpdate: ({ editor }) => {
+    //   // Convert editor content to Markdown
+    //   // const markdown = convertEditorContentToMarkdown(editor.getJSON());
+    //   // setMarkdownContent(markdown);
+    //   const markdown = turndownService.turndown(editor.getHTML());
+    //   setContent(markdown);
+    // },
   });
+
+  useEffect(() => {
+    if (editor && content !== editor.getHTML()) {
+      editor.commands.setContent(content);
+    }
+  }, [content, editor]);
 
   if (!editor) {
     return null;
   }
 
   return (
-    <>
+    <main className='tiptap_editor_container'>
       <div className={`toolbar_items ${!showToolbar ? "hide_toolbar" : ""}`}>
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -132,7 +139,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
       {/* <button onClick={() => console.log(markdownContent)}>
         Save Markdown
       </button> */}
-    </>
+    </main>
   );
 };
 

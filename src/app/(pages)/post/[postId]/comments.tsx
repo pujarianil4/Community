@@ -7,6 +7,7 @@ import MarkdownRenderer from "@/components/common/MarkDownRender";
 import NotificationMessage from "@/components/common/Notification";
 import RichTextEditor from "@/components/common/richTextEditor";
 import TextArea from "@/components/common/textArea";
+import TiptapEditor from "@/components/common/tiptapEditor";
 import { FileInput } from "@/components/createPost/CreatePost";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
@@ -135,7 +136,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
             // className='community_logo'
           >
             <Image
-              src={getImageSource(comment?.user.img, "u")}
+              src={getImageSource(comment?.user?.img?.pro, "u")}
               alt={comment?.user.username}
               width={32}
               height={32}
@@ -291,56 +292,92 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     }, 300);
   };
 
-  // useEffect(() => {
-  //   // if (commentInputRef.current) {
-  //   //   commentInputRef.current.scrollIntoView({
-  //   //     behavior: "smooth",
-  //   //     block: "end",
-  //   //   });
-  //   // }
-  //   // if (commentInputRef.current) {
-  //   //   commentInputRef.current.scrollIntoView({
-  //   //     behavior: "smooth",
-  //   //     block: "start",
-  //   //   });
-  //   // }
+  const scrollToEditor = () => {
+    if (containerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const isFullyVisible =
+        containerRect.top >= 0 && containerRect.bottom <= window.innerHeight;
 
-  //   if (commentInputRef.current) {
-  //     commentInputRef.current.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "end",
-  //     });
-  //   }
-  // }, [commentInputRef, setIsReplying]);
+      if (!isFullyVisible) {
+        window.scrollBy({
+          top: containerRect.bottom - window.innerHeight + 20, // Adding margin to ensure visibility
+          behavior: "smooth",
+        });
+      }
+    }
+  };
+
+  const smoothScrollUp = (distance: number) => {
+    window.scrollBy({
+      top: -distance,
+      behavior: "smooth",
+    });
+  };
+
   useEffect(() => {
-    // const scrollAdjustment = 400;
+    console.log("EFFECT1");
+
     if (commentInputRef.current) {
       commentInputRef.current.focus();
     }
 
-    if (containerRef.current) {
-      containerRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
-    // window.scrollBy(0, scrollAdjustment);
-  }, [setIsReplying]);
+    scrollToEditor();
+  }, [setIsReplying, commentImg]);
+
+  useEffect(() => {
+    console.log("EFFECT2");
+    // Smooth scroll up by 500px if there's not enough space at the bottom for the full comment input.
+    const checkViewportSpace = () => {
+      if (containerRef.current) {
+        const containerRect = containerRef.current.getBoundingClientRect();
+        if (containerRect.bottom > window.innerHeight) {
+          smoothScrollUp(500);
+        }
+      }
+    };
+
+    checkViewportSpace();
+  }, [commentImg, setIsReplying]);
+
   // useEffect(() => {
-  //   const scrollAdjustment = commentImg ? 200 : 0;
+  //   const scrollToEditor = () => {
+  //     const editor = commentInputRef.current;
+  //     const container = containerRef.current;
 
-  //   if (commentInputRef.current) {
-  //     commentInputRef.current.focus();
-  //   }
+  //     if (editor && container) {
+  //       const editorRect = editor.getBoundingClientRect();
+  //       const containerRect = container.getBoundingClientRect();
 
-  //   if (containerRef.current) {
-  //     containerRef.current.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "end",
-  //     });
-  //     window.scrollBy(0, scrollAdjustment);
-  //   }
-  // }, [commentImg, setIsReplying]);
+  //       const isEditorVisible =
+  //         editorRect.top >= 0 &&
+  //         editorRect.bottom <=
+  //           (window.innerHeight || document.documentElement.clientHeight);
+
+  //       if (!isEditorVisible) {
+  //         container.scrollIntoView({
+  //           behavior: "smooth",
+  //           block: "end",
+  //         });
+
+  //         if (imgLoading) {
+  //           window.scrollBy(0, 200); // Scroll an additional 200px if image preview is present
+  //         }
+  //       }
+
+  //       // Auto-focus the editor input
+  //       if (editor) {
+  //         const editorInput = editor.querySelector(
+  //           "div[contenteditable='true']"
+  //         );
+  //         if (editorInput) {
+  //           (editorInput as HTMLElement).focus();
+  //         }
+  //       }
+  //     }
+  //   };
+
+  //   scrollToEditor();
+  // }, [setIsReplying, imgLoading]);
 
   return (
     <div className='comment_input' ref={containerRef}>
@@ -350,10 +387,15 @@ const CommentInput: React.FC<ICommentInputProps> = ({
         placeholder='Write your comment'
       /> */}
       <div ref={commentInputRef}>
-        <RichTextEditor
+        {/* <RichTextEditor
           showToolbar={showToolbar}
           setContent={setCommentBody}
           value={commentBody}
+        /> */}
+        <TiptapEditor
+          showToolbar={showToolbar}
+          setContent={setCommentBody}
+          content={commentBody}
         />
       </div>
       {imgLoading && (

@@ -1,0 +1,32 @@
+.tiptap_editor_container {
+  background: transparent;
+
+  .hide_toolbar {
+    display: none;
+  }
+
+  .toolbar_items {
+  }
+
+  .ProseMirror {
+    &:focus-visible {
+      outline: none !important;
+      border: none;
+    }
+  }
+
+  .tiptap {
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    li,
+    span,
+    strong {
+      color: var(--primary-text) !important;
+    }
+  }
+}
