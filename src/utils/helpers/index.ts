@@ -5,13 +5,12 @@ export function setClientSideCookie(
   value: any,
   force: boolean = false
 ) {
+  console.log("setClientSideCookie", name, value, force);
+
   if (force) {
-    console.log("setClientSideCookie", name, value);
     setCookie(null, name, value);
   } else {
     const user = getClientSideCookie(name);
-    console.log("setClientSideCookie", user, value, !user);
-
     !user && setCookie(null, name, value);
   }
 }
@@ -174,4 +173,19 @@ export function identifyMediaType(url: string): "image" | "video" | "unknown" {
 
 export function numberWithCommas(x: number | string) {
   return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+export function countLettersDigitsAndURLs(inputString: string) {
+  const urlRegex = /https?:\/\/[^\s]+/g;
+
+  const urls = inputString.match(urlRegex) || [];
+
+  const urlLength = urls.reduce((acc, url) => acc + url.length, 0);
+
+  const stringWithoutUrls = inputString.replace(urlRegex, "");
+
+  const alphanumericOnly = stringWithoutUrls.replace(/[^a-zA-Z0-9]/g, "");
+
+  // Return the total count of letters, digits, and URL lengths
+  return alphanumericOnly.length + urlLength;
 }

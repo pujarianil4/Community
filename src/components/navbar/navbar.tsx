@@ -65,7 +65,7 @@ const userNameSelector = (state: RootState) => state?.user;
 const tgBotName = process.env.TG_BOT_NAME;
 export default function Navbar() {
   const secretCode = process.env.NEXT_PUBLIC_DISCORD_ID;
-  console.log("env code", secretCode);
+
   const userAccount = useAccount();
 
   const [{ dispatch, actions }, [user, common]] = useRedux([
@@ -86,7 +86,7 @@ export default function Navbar() {
     name: "",
   });
   const router = useRouter();
-  const [userSession, setUserSession] = useState<any>(user || userData);
+  const [userSession, setUserSession] = useState<any>(userData);
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const hasCalledRef = useRef(false);
   const [modalTab, setModalTab] = useState(3);
@@ -131,7 +131,11 @@ export default function Navbar() {
       };
       router.push("/");
       dispatch(actions.setUserData(initialState));
-      window?.location?.reload();
+      // Add a short delay before reloading the page
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+      // window?.location?.reload();
     } catch (error) {
       deleteClientSideCookie("authToken");
       setUserSession(null);
@@ -144,13 +148,19 @@ export default function Navbar() {
       };
       router.push("/");
       dispatch(actions.setUserData(initialState));
-      window?.location?.reload();
+      // Add a short delay before reloading the page
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+      //  window?.location?.reload();
     }
   };
 
   useEffect(() => {
-    if (user?.token == "" || user.token == null || user.token == undefined) {
-      setUserSession(null);
+    console.log("userData?.token", userData?.token);
+
+    if (!userData?.token) {
+      setUserSession({ userAvailable: false });
     } else {
       setUserSession(user);
     }
@@ -168,7 +178,6 @@ export default function Navbar() {
   // fetch user details after refresh
   const fetchUser = async () => {
     const userData1: any = getClientSideCookie("authToken");
-    console.log("userFetc", userData1);
 
     if (userData?.uid) {
       const response = await fetchUserById(userData?.uid);
@@ -180,6 +189,8 @@ export default function Navbar() {
         img: response?.img?.pro,
       };
       setUserSession(user);
+      console.log("user", user);
+
       setClientSideCookie("authToken", JSON.stringify(user));
       dispatch(actions.setUserData(userData));
     }
@@ -277,7 +288,7 @@ export default function Navbar() {
                 </Popover>
               </div>
             </div>
-          ) : userSession == null ? (
+          ) : userSession?.userAvailable == false ? (
             <CButton auth='auth' onClick={showModal}>
               LogIn
             </CButton>
@@ -297,11 +308,16 @@ export default function Navbar() {
       <Modal
         className='create_post_modal'
         open={isPostModalOpen}
-        onCancel={handleClosePostModal}
+        onCancel={handleCancel}
         footer={<></>}
         centered
       >
-        <CreatePost setIsPostModalOpen={setIsPostModalOpen} />
+        {isPostModalOpen && (
+          <CreatePost
+            isPostModalOpen={isPostModalOpen}
+            setIsPostModalOpen={setIsPostModalOpen}
+          />
+        )}
       </Modal>
     </>
   );
