@@ -9,6 +9,7 @@ import "froala-editor/js/plugins/quote.min.js"; // Ensure you have the correct p
 import "froala-editor/js/plugins/code_view.min.js"; // Ensure you have the correct path for code_view plugin
 import "./index.scss";
 import TurndownService from "turndown";
+import { countLettersDigitsAndURLs } from "@/utils/helpers";
 
 interface IProps {
   setContent: (content: string) => void;
@@ -28,7 +29,8 @@ const RichTextEditor: React.FC<IProps> = ({
   const turndownService = new TurndownService();
 
   const handleModelChange = (model: string) => {
-    // console.log(turndownService.turndown(model));
+    //const length = countLettersDigitsAndURLs(turndownService.turndown(model));
+
     setContent(turndownService.turndown(model));
   };
 

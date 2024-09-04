@@ -404,6 +404,7 @@ export const uploadMultipleFile = async (files: FileList) => {
     console.log("Upload successful:", response.data);
     return response.data;
   } catch (error) {
+    throw error;
     console.error("Upload failed:", error);
   }
 };
