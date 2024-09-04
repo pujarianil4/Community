@@ -16,7 +16,7 @@ import {
   SaveIcon,
   ShareIcon,
 } from "@/assets/icons";
-import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
+import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -117,20 +117,23 @@ export default function FeedPost({ post }: IProps) {
 
       <div className='actions'>
         <div className='up_down'>
-          <PiArrowFatUpLight size={18} />
+          <PiArrowFatUpDuotone size={18} />
 
           <span>{up}</span>
-          <PiArrowFatDownLight size={18} />
+          <PiArrowFatDownDuotone size={18} />
         </div>
-        <Link href={`post/${id}`} as={`/post/${id}`}>
-          <GoComment size={18} />
-          <span>{numberWithCommas(ccount) || "comments"}</span>
-        </Link>
-        <div>
+        <div className='comments'>
+          <Link href={`post/${id}`} as={`/post/${id}`}>
+            <GoComment size={18} />
+            <span>{numberWithCommas(ccount) || "comments"}</span>
+          </Link>
+        </div>
+
+        <div className='share'>
           <ShareIcon width={18} />
           <span>Share</span>
         </div>
-        <div>
+        <div className='save'>
           <SaveIcon width={16} height={16} />
           <span>Save</span>
         </div>
