@@ -31,6 +31,7 @@ const RichTextEditor = dynamic(() => import("../common/richTextEditor"), {
 
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isPostModalOpen: boolean;
 }
 
 export const Img: React.FC<{
@@ -78,6 +79,8 @@ export const FileInput: React.FC<FileInputProps> = React.memo(
       if (event.target.files && event.target.files.length > 0) {
         onChange(event.target.files);
       }
+      //reset value to select same image again
+      event.target.value = "";
     };
 
     return (
@@ -103,7 +106,10 @@ const userNameSelector = (state: RootState) => state?.user;
 const refetchCommunitySelector = (state: RootState) =>
   state.common.refetch.community;
 
-const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
+const CreatePost: React.FC<Props> = ({
+  isPostModalOpen,
+  setIsPostModalOpen,
+}) => {
   const [{ dispatch, actions }, [user, comminityRefetch]] = useRedux([
     userNameSelector,
     refetchCommunitySelector,
@@ -125,6 +131,7 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
     msg: "",
     type: "",
   });
+  const closeBtn = document.querySelector(".ant-modal-close");
 
   const handlePost = async () => {
     const turndownService = new TurndownService();
@@ -154,8 +161,18 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
       });
     } catch (error: any) {
       console.log("POST_ERROR", error);
-      setIsLoadingPost(false);
       NotificationMessage("error", error?.message);
+      setIsLoadingPost(false);
+      setIsPostModalOpen(false);
+      setSelectedOption(null);
+      setContent("");
+      setPics([]);
+      setUploadedImg([]);
+      setSearchTerm("");
+      setUploadMsg({
+        msg: "",
+        type: "",
+      });
     }
   };
 
@@ -178,16 +195,13 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
 
         setPics((prevPics) => [...prevPics, ...filesArray]);
 
-        setUploadedImg((prevPics) => [...prevPics, ...uploadedFiles]);
+        if (uploadedFiles.length > 0)
+          setUploadedImg((prevPics) => [...prevPics, ...uploadedFiles]);
         setUploadMsg({ msg: "Uploaded Successfully", type: "success" });
 
         console.log("Uploaded files:", uploadedFiles);
       }
       setIsUploading(false);
-      // console.log("FILES_ARR", filesArray);
-      // const uploadedFiles = await Promise.all(
-      //   filesArray?.map((file) => uploadMultipleFile(file))
-      // );
     } catch (error) {
       setIsUploading(false);
       console.error("Error uploading files", error);
@@ -207,6 +221,23 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   //     NotificationMessage("error", "Error uploading files");
   //   }
   // };
+  useEffect(() => {
+    closeBtn?.addEventListener("click", () => {
+      console.log("close");
+      // Clear states when the modal is closed
+      setIsLoadingPost(false);
+      setSelectedOption(null);
+      setContent("");
+      setPics([]);
+      setUploadedImg([]);
+      setSearchTerm("");
+      setUploadMsg({
+        msg: "",
+        type: "",
+      });
+      setIsPostModalOpen(false);
+    });
+  }, [closeBtn]);
 
   useEffect(() => {
     if (comminityRefetch) {
@@ -223,6 +254,8 @@ const CreatePost: React.FC<Props> = ({ setIsPostModalOpen }) => {
   // if (isLoading) {
   //   return <div className='create_post_loader'>loading...</div>;
   // }
+
+  const handleTestEditorInput = () => {};
 
   return (
     <main className='create_post_container'>

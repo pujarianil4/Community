@@ -6,7 +6,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { Button, Menu } from "antd";
-import { FiUpload } from "react-icons/fi";
+import { FiUpload, FiBookmark, FiGlobe } from "react-icons/fi";
 import { BiCategory } from "react-icons/bi";
 import { FcAbout } from "react-icons/fc";
 import { IoIosHelpCircleOutline } from "react-icons/io";
@@ -129,9 +129,14 @@ const SideBar: React.FC = () => {
     { key: "", icon: <HomeIcon />, label: "Home" },
     { key: "popular", icon: <StatIcon />, label: "Popular" },
     {
-      key: "allcommunities",
-      icon: <GoStack size={20} />,
-      label: "All Communities",
+      key: "communities",
+      icon: <FiGlobe size={20} />,
+      label: "Explore Communities",
+    },
+    {
+      key: "save",
+      icon: <FiBookmark size={20} />,
+      label: "Saved",
     },
 
     {
@@ -286,6 +291,7 @@ const CreateCommunityModal = ({
   const { isLoading, callFunction, data } = useAsync();
   const fileRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const closeBtn = document.querySelector(".ant-modal-close");
 
   const onPickFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -304,6 +310,20 @@ const CreateCommunityModal = ({
       }
     }
   };
+
+  useEffect(() => {
+    closeBtn?.addEventListener("click", () => {
+      // Clear states when the modal is closed
+      onClose();
+      setForm({
+        logo: imgSrc,
+        name: "",
+        username: "",
+        metadata: "",
+        ticker: "",
+      });
+    });
+  }, [closeBtn]);
 
   const debouncedCheckUsername = debounce(async (username: string) => {
     // try {
