@@ -100,7 +100,46 @@
   li {
     margin-left: 16px;
   }
+  h2 {
+    font-size: 20px;
+  }
+  h3 {
+    font-size: 18px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  li,
+  p,
+  code,
+  blockquote {
+    color: var(--primary-text);
+    line-height: 1.2;
+  }
+  pre {
+    padding: 2px 8px;
+    width: max-content;
+    background-color: var(--tertiary-bg);
+    margin: 1rem 0;
+  }
+  code {
+    padding: 2px 8px;
+    width: max-content;
+    background-color: var(--tertiary-bg);
+  }
+  blockquote {
+    padding: 2px 8px;
+    width: fit-content;
+    border-left: 2px solid var(--devider);
+    background-color: var(--tertiary-bg);
+    margin: 1rem 0;
+  }
 }
+
 .ant-notification-notice-close {
   color: var(--primary-text) !important;
 }

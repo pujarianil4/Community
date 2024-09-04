@@ -2,10 +2,51 @@
   background: transparent;
 
   .hide_toolbar {
-    display: none;
+    display: none !important;
   }
 
   .toolbar_items {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
+    max-width: 500px;
+    flex-wrap: wrap;
+    .icon {
+      padding: 4px 8px;
+      width: fit-content;
+      height: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      outline: none;
+      border: none;
+      border-radius: 4px;
+      background-color: transparent;
+      color: var(--primary-text);
+
+      &:hover {
+        background-color: var(--tertiary-bg);
+        color: var(--primary);
+        cursor: pointer;
+      }
+    }
+
+    .disabled {
+      opacity: 0.7;
+
+      &:hover {
+        background-color: transparent;
+        color: var(--primary-text);
+        cursor: not-allowed;
+      }
+    }
+
+    .is-active {
+      background-color: var(--tertiary-bg);
+      color: var(--primary);
+      cursor: pointer;
+    }
   }
 
   .ProseMirror {
@@ -25,8 +66,87 @@
     h6,
     li,
     span,
+    code,
+    blockquote,
     strong {
       color: var(--primary-text) !important;
     }
+
+    blockquote {
+      padding-left: 8px;
+      border-left: 2px solid var(--devider);
+      background-color: var(--tertiary-bg);
+    }
+
+    li {
+      margin-left: 20px;
+    }
+
+    a {
+      color: var(--link-color);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--link-color-hover);
+      }
+    }
   }
+
+  .editor_content {
+    padding: 8px;
+  }
+}
+
+a.link {
+  color: var(--link-color) !important;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--link-color-hover) !important;
+    text-decoration: none;
+  }
+}
+
+.link_Modal {
+  max-width: 400px !important;
+  input {
+    font-size: 15px !important;
+
+    &::placeholder {
+      font-size: 15px !important;
+    }
+  }
+
+  button {
+    // width: 64px !important;
+    // height: 32px !important;
+    background-color: var(--tertiary-bg) !important;
+    color: var(--primary-text) !important;
+
+    &:hover {
+      background-color: var(--tertiary-bg) !important;
+      color: var(--primary) !important;
+    }
+  }
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: transparent;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 400px;
+  max-width: 100%;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

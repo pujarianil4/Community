@@ -1,24 +1,53 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
-import TurndownService from "turndown";
+import Placeholder from "@tiptap/extension-placeholder";
 import "./index.scss";
+import {
+  FaBold,
+  FaCode,
+  FaItalic,
+  FaQuoteRight,
+  FaStrikethrough,
+} from "react-icons/fa6";
+import { RiCodeBlock } from "react-icons/ri";
+import { LuHeading1, LuHeading2, LuHeading3 } from "react-icons/lu";
+import {
+  AiOutlineLink,
+  AiOutlineOrderedList,
+  AiOutlineUnorderedList,
+} from "react-icons/ai";
+import { LinkModal } from "./linkModal";
+import { GoUnlink } from "react-icons/go";
 
 const extensions = [
   StarterKit,
   Link.configure({
+    openOnClick: true,
     autolink: true,
-    openOnClick: false,
     linkOnPaste: true,
+    validate: (href) => /^https?:\/\//.test(href),
+    HTMLAttributes: {
+      "data-type": "link",
+      class: "link",
+      rel: "noopener noreferrer",
+      target: "_blank",
+    },
+  }),
+  Placeholder.configure({
+    placeholder: "type here...",
   }),
 ];
 
 interface TiptapEditorProps {
   content?: string;
   setContent: (content: string) => void;
+  // onClick: (content: string) => void;
   showToolbar?: boolean;
   placeHolder?: string;
+  autoFocus?: boolean;
 }
 
 const TiptapEditor: React.FC<TiptapEditorProps> = ({
@@ -26,26 +55,61 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   setContent,
   showToolbar = true,
   placeHolder = "type here...",
+  autoFocus = false,
 }) => {
-  const turndownService = new TurndownService();
-  console.log("TEST", content);
   const editor = useEditor({
     extensions,
-    content,
-    // onUpdate: ({ editor }) => {
-    //   // Convert editor content to Markdown
-    //   // const markdown = convertEditorContentToMarkdown(editor.getJSON());
-    //   // setMarkdownContent(markdown);
-    //   const markdown = turndownService.turndown(editor.getHTML());
-    //   setContent(markdown);
-    // },
+    content: content,
   });
+
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [selectedText, setSelectedText] = useState<string>("");
+
+  const openModal = () => {
+    if (editor) {
+      const { from, to } = editor.state.selection;
+      const selected = editor.state.doc.textBetween(from, to);
+      setSelectedText(selected);
+    }
+    setIsModalVisible(true);
+  };
+
+  const handleCreateLink = (text: string, href: string) => {
+    if (editor) {
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href })
+        .insertContent(text)
+        .run();
+    }
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setSelectedText("");
+    setIsModalVisible(false);
+  };
+
+  useEffect(() => {
+    editor?.off("update");
+    editor?.on("update", ({ editor: updatedEditor }) => {
+      setContent(updatedEditor.getHTML());
+    });
+  }, [editor, setContent]);
 
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
       editor.commands.setContent(content);
     }
   }, [content, editor]);
+
+  useEffect(() => {
+    if (autoFocus && editor) {
+      editor.commands.focus();
+    }
+  }, [autoFocus, editor]);
 
   if (!editor) {
     return null;
@@ -56,89 +120,110 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
       <div className={`toolbar_items ${!showToolbar ? "hide_toolbar" : ""}`}>
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={editor.isActive("bold") ? "is-active" : ""}
+          className={`${editor.isActive("bold") ? "is-active" : ""} icon `}
         >
-          <strong>B</strong>
+          <FaBold size={14} />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={editor.isActive("italic") ? "is-active" : ""}
+          className={`${editor.isActive("italic") ? "is-active" : ""} icon`}
         >
-          <em>I</em>
+          <FaItalic size={14} />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={editor.isActive("strike") ? "is-active" : ""}
+          className={`${editor.isActive("strike") ? "is-active" : ""} icon`}
         >
-          <s>S</s>
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleCode().run()}
-          className={editor.isActive("code") ? "is-active" : ""}
-        >
-          Code
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={editor.isActive("codeBlock") ? "is-active" : ""}
-        >
-          Code-block
+          <FaStrikethrough size={14} />
         </button>
         <button
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 1 }).run()
           }
-          className={
+          className={`${
             editor.isActive("heading", { level: 1 }) ? "is-active" : ""
-          }
+          } icon`}
         >
-          h1
+          <LuHeading1 size={18} />
         </button>
         <button
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 2 }).run()
           }
-          className={
+          className={`${
             editor.isActive("heading", { level: 2 }) ? "is-active" : ""
-          }
+          } icon`}
         >
-          h2
+          <LuHeading2 size={18} />
         </button>
         <button
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 3 }).run()
           }
-          className={
+          className={`${
             editor.isActive("heading", { level: 3 }) ? "is-active" : ""
-          }
+          } icon`}
         >
-          h3
+          <LuHeading3 size={18} />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive("bulletList") ? "is-active" : ""}
+          className={`${editor.isActive("bulletList") ? "is-active" : ""} icon`}
         >
-          UL
+          <AiOutlineUnorderedList size={18} />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editor.isActive("orderedList") ? "is-active" : ""}
+          className={`${
+            editor.isActive("orderedList") ? "is-active" : ""
+          } icon`}
         >
-          OL
+          <AiOutlineOrderedList size={18} />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleCode().run()}
+          className={`${editor.isActive("code") ? "is-active" : ""} icon`}
+        >
+          <FaCode />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+          className={`${editor.isActive("codeBlock") ? "is-active" : ""} icon`}
+        >
+          <RiCodeBlock size={18} />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={editor.isActive("blockQuote") ? "is-active" : ""}
+          className={`${editor.isActive("blockQuote") ? "is-active" : ""} icon`}
         >
-          Quote
+          <FaQuoteRight size={18} />
+        </button>
+
+        <button
+          onClick={openModal}
+          className={`${editor.isActive("link") ? "is-active" : ""} icon`}
+        >
+          <AiOutlineLink size={18} />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().unsetLink().run()}
+          disabled={!editor.isActive("link")}
+          className={`${
+            editor.isActive("link") ? "is-active" : "disabled"
+          } icon `}
+        >
+          <GoUnlink size={16} />
         </button>
       </div>
-      <div>
+      <div className='editor_content'>
         <EditorContent editor={editor} />
       </div>
-      {/* <button onClick={() => console.log(markdownContent)}>
-        Save Markdown
-      </button> */}
+      <LinkModal
+        visible={isModalVisible}
+        selectedText={selectedText}
+        onCreate={handleCreateLink}
+        onCancel={handleCancel}
+      />
     </main>
   );
 };

@@ -5,8 +5,6 @@ import CButton from "@/components/common/Button";
 import CommentsLoader from "@/components/common/loaders/comments";
 import MarkdownRenderer from "@/components/common/MarkDownRender";
 import NotificationMessage from "@/components/common/Notification";
-import RichTextEditor from "@/components/common/richTextEditor";
-import TextArea from "@/components/common/textArea";
 import TiptapEditor from "@/components/common/tiptapEditor";
 import { FileInput } from "@/components/createPost/CreatePost";
 import { RootState } from "@/contexts/store";
@@ -21,13 +19,12 @@ import { getImageSource, timeAgo } from "@/utils/helpers";
 import { IComment, IPostCommentAPI, IUser } from "@/utils/types/types";
 import Image from "next/image";
 import Link from "next/link";
+import TurndownService from "turndown";
 import React, { useEffect, useRef, useState } from "react";
-import { GoComment, GoShareAndroid } from "react-icons/go";
+import { GoComment } from "react-icons/go";
 import { LuImagePlus } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
-import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 import { RiText } from "react-icons/ri";
-// import ReactMarkdown from "react-markdown";
 
 interface Iprops {
   postId: number;
@@ -108,15 +105,12 @@ interface ICommentItemProps {
 }
 
 const CommentItem: React.FC<ICommentItemProps> = React.memo(
-  ({
-    comment,
-    //  refetch
-    postId,
-  }) => {
+  ({ comment, postId }) => {
     const [isReplying, setIsReplying] = useState(false);
     const [childComments, setChildComments] = useState<IComment[]>(
       comment?.comments || []
     );
+    const scrollableContainerRef = useRef(null);
 
     const onComment = (newComment: IComment) => {
       setChildComments((prevComments) => [newComment, ...prevComments]);
@@ -127,7 +121,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
     };
 
     return (
-      <div className='comment_item'>
+      <div ref={scrollableContainerRef} className='comment_item'>
         {comment.pcid !== null && <div className='comment_line' />}
         <div className='user_head'>
           <Link
@@ -217,7 +211,6 @@ interface ICommentInputProps {
   onComment: (newComment: IComment) => void;
   setIsReplying?: (val: boolean) => void;
   parentComment?: IComment;
-  // refetch?: any;
   postId: number;
 }
 
@@ -233,20 +226,22 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   const [showToolbar, setShowToolbar] = useState<boolean>(false);
   const userNameSelector = (state: RootState) => state?.user;
   const [{}, [user]] = useRedux([userNameSelector]);
-  // const commentInputRef = useRef<HTMLDivElement>(null);
   const commentInputRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handlePostComment = async () => {
+    // console.log("commentBody", commentBody);
+    const turndownService = new TurndownService();
+    const markDown = turndownService.turndown(commentBody);
+    console.log("commentBody", markDown);
     const postData: IPostCommentAPI = {
       uid: user?.uid,
-      content: commentBody,
+      content: markDown,
       img: commentImg,
       pid: +postId,
       pcid: parentComment?.id || null,
     };
     const response = await postComments(postData);
-    // // refetch();
     const data: IComment = {
       id: response?.id,
       uid: response?.uid,
@@ -270,7 +265,6 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   };
 
   const handleUploadFile = async (file: any) => {
-    console.log("FILE_DATA", file[0]);
     setImageLoading(true);
     try {
       const uploadedFile = await uploadSingleFile(file[0]);
@@ -292,110 +286,47 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     }, 300);
   };
 
-  const scrollToEditor = () => {
-    if (containerRef.current) {
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const isFullyVisible =
-        containerRect.top >= 0 && containerRect.bottom <= window.innerHeight;
-
-      if (!isFullyVisible) {
-        window.scrollBy({
-          top: containerRect.bottom - window.innerHeight + 20, // Adding margin to ensure visibility
-          behavior: "smooth",
-        });
-      }
-    }
-  };
-
-  const smoothScrollUp = (distance: number) => {
-    window.scrollBy({
-      top: -distance,
-      behavior: "smooth",
-    });
-  };
-
   useEffect(() => {
-    console.log("EFFECT1");
+    const scrollToEditor = () => {
+      const editor = commentInputRef.current;
+      const container = containerRef.current;
 
-    if (commentInputRef.current) {
-      commentInputRef.current.focus();
-    }
+      if (editor && container) {
+        const editorRect = editor.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
 
-    scrollToEditor();
-  }, [setIsReplying, commentImg]);
+        const editorHeight = editorRect.height;
+        const editorTop = editorRect.top;
+        const editorBottom = editorRect.bottom;
+        const viewportHeight =
+          window.innerHeight || document.documentElement.clientHeight;
 
-  useEffect(() => {
-    console.log("EFFECT2");
-    // Smooth scroll up by 500px if there's not enough space at the bottom for the full comment input.
-    const checkViewportSpace = () => {
-      if (containerRef.current) {
-        const containerRect = containerRef.current.getBoundingClientRect();
-        if (containerRect.bottom > window.innerHeight) {
-          smoothScrollUp(500);
+        const visibleHeight =
+          Math.min(viewportHeight, editorBottom) - Math.max(editorTop, 0);
+        const visiblePercentage = visibleHeight / editorHeight;
+
+        const isEditorVisible = visiblePercentage >= 0.3;
+
+        if (!isEditorVisible) {
+          container.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
         }
       }
     };
 
-    checkViewportSpace();
-  }, [commentImg, setIsReplying]);
-
-  // useEffect(() => {
-  //   const scrollToEditor = () => {
-  //     const editor = commentInputRef.current;
-  //     const container = containerRef.current;
-
-  //     if (editor && container) {
-  //       const editorRect = editor.getBoundingClientRect();
-  //       const containerRect = container.getBoundingClientRect();
-
-  //       const isEditorVisible =
-  //         editorRect.top >= 0 &&
-  //         editorRect.bottom <=
-  //           (window.innerHeight || document.documentElement.clientHeight);
-
-  //       if (!isEditorVisible) {
-  //         container.scrollIntoView({
-  //           behavior: "smooth",
-  //           block: "end",
-  //         });
-
-  //         if (imgLoading) {
-  //           window.scrollBy(0, 200); // Scroll an additional 200px if image preview is present
-  //         }
-  //       }
-
-  //       // Auto-focus the editor input
-  //       if (editor) {
-  //         const editorInput = editor.querySelector(
-  //           "div[contenteditable='true']"
-  //         );
-  //         if (editorInput) {
-  //           (editorInput as HTMLElement).focus();
-  //         }
-  //       }
-  //     }
-  //   };
-
-  //   scrollToEditor();
-  // }, [setIsReplying, imgLoading]);
+    scrollToEditor();
+  }, [setIsReplying]);
 
   return (
     <div className='comment_input' ref={containerRef}>
-      {/* <TextArea
-        content={commentBody}
-        setContent={setCommentBody}
-        placeholder='Write your comment'
-      /> */}
       <div ref={commentInputRef}>
-        {/* <RichTextEditor
-          showToolbar={showToolbar}
-          setContent={setCommentBody}
-          value={commentBody}
-        /> */}
         <TiptapEditor
           showToolbar={showToolbar}
           setContent={setCommentBody}
           content={commentBody}
+          // autoFocus={true}
         />
       </div>
       {imgLoading && (
@@ -409,8 +340,8 @@ const CommentInput: React.FC<ICommentInputProps> = ({
             <Image
               src={commentImg}
               alt='comment_img'
-              width={200}
-              height={200}
+              width={100}
+              height={100}
               className='comment_img'
             />
           </div>
