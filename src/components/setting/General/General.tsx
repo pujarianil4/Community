@@ -60,7 +60,11 @@ interface TelegramLoginData {
 interface Telegram {
   Login: {
     auth: (
-      options: { bot_id: string; request_access?: boolean; lang?: string },
+      options: {
+        bot_id: string | undefined;
+        request_access?: boolean;
+        lang?: string;
+      },
       callback: (data: TelegramLoginData | false) => void
     ) => void;
   };
@@ -81,15 +85,18 @@ export default function General() {
     CommonSelector,
     userNameSelector,
   ]);
-  const [isRemoving, setIsRemoving] = useState(false);
 
   const { isLoading, data, callFunction } = useAsync(
     getAddressesByUserId,
     user.uid
   );
-
+  const botID = process.env.NEXT_PUBLIC_TELEGRAM_BOT_ID;
   const { isLoading: sessionLoading, data: sessionData } = useAsync(getSession);
-  const { isLoading: userDataLoading, data: userData } = useAsync(getUserData);
+  const {
+    isLoading: userDataLoading,
+    data: userData,
+    refetch,
+  } = useAsync(getUserData);
   console.log("userdata", userData);
   const userAccount = useAccount();
   const { disconnect } = useDisconnect();
@@ -146,15 +153,16 @@ export default function General() {
     script.onload = () => {
       if (window.Telegram) {
         window.Telegram.Login.auth(
-          { bot_id: "7280759352", request_access: true },
+          { bot_id: botID, request_access: true },
           (data) => {
             if (!data) {
               console.error("Authorization failed");
               return;
             }
             console.log("Telegram data:", data);
-            updateUser({ tid: String(user.id) })
+            updateUser({ tid: String(data.id) })
               .then((res) => {
+                refetch();
                 NotificationMessage("success", "Telegram Profile linked.");
               })
               .catch((err) => {
@@ -181,19 +189,17 @@ export default function General() {
 
   //remove Discord
   const removeDiscord = () => {
-    setIsRemoving(true);
     console.log("Removing Discord profile link...");
 
     updateUser({ did: null })
       .then((res) => {
+        refetch();
+        console.log("user resopnse ", res);
         NotificationMessage("success", "Discord Profile unlinked.");
       })
       .catch((err) => {
         console.error("Failed to unlink Discord Profile:", err);
         NotificationMessage("error", "Failed to unlink Discord Profile.");
-      })
-      .finally(() => {
-        setIsRemoving(false);
       });
   };
 
@@ -248,13 +254,9 @@ export default function General() {
                     <div>
                       <span>
                         {userData?.did ? (
-                          isRemoving ? (
-                            <span> Laoging </span>
-                          ) : (
-                            <span onClick={removeDiscord}>
-                              <DeleteIcon />
-                            </span>
-                          )
+                          <span onClick={removeDiscord}>
+                            <DeleteIcon />
+                          </span>
                         ) : (
                           <span onClick={handleDiscordLogin}>
                             <AddIcon fill='#ffffff' width={14} height={14} />
