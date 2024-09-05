@@ -21,11 +21,8 @@ import { getImageSource } from "@/utils/helpers";
 import { ErrorType, ICommunity } from "@/utils/types/types";
 import NotificationMessage from "../common/Notification";
 import CButton from "../common/Button";
-// import SkeltonLoader from "./skeltonLoader";
-
-const RichTextEditor = dynamic(() => import("../common/richTextEditor"), {
-  ssr: false,
-});
+import TiptapEditor from "../common/tiptapEditor";
+import TurndownService from "turndown";
 
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -132,11 +129,13 @@ const CreatePost: React.FC<Props> = ({
   const closeBtn = document.querySelector(".ant-modal-close");
 
   const handlePost = async () => {
+    const turndownService = new TurndownService();
+    const markDownContent = turndownService.turndown(content);
     try {
       setIsLoadingPost(true);
       const data = {
         cid: selectedOption?.id,
-        text: content,
+        text: markDownContent,
         media: uplodedImg,
       };
       console.log("Data", data);
@@ -277,7 +276,13 @@ const CreatePost: React.FC<Props> = ({
             setSearchTerm={setSearchTerm}
           />
           {/* <TestArea content={content} setContent={setContent} /> */}
-          <RichTextEditor setContent={setContent} />
+          <div className='editor_wrapper'>
+            <TiptapEditor
+              setContent={setContent}
+              content={content}
+              autoFocus={true}
+            />
+          </div>
           {pics?.length > 0 && (
             <div className='file_container'>
               {pics?.map((picFile, index) => (

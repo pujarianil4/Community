@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import CInput from "../common/Input";
-import RichTextEditor from "../common/richTextEditor";
 import CButton from "../common/Button";
 import Image from "next/image";
 import { DropdownLowIcon } from "@/assets/icons";
+import TiptapEditor from "../common/tiptapEditor";
 
 interface IProps {
   setIsProposalModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,7 +39,7 @@ export default function CreateProposal({ setIsProposalModalOpen }: IProps) {
       <CInput className='input_container' placeholder='0' />
       <label htmlFor='Description'>Description</label>
       <div className='input_container description'>
-        <RichTextEditor setContent={setContent} placeHolder='Type here' />
+        <TiptapEditor content={content} setContent={setContent} />
       </div>
       <CButton className='proposal_btn'>Save</CButton>
     </main>

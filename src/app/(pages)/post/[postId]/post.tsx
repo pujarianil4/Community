@@ -26,7 +26,6 @@ export default async function Post({ post }: Iprops) {
   // const posts = await getPostsByPostId(postId);
   // const { isLoading, data: post } = useAsync(getPostsByPostId, postId);
   // const post = await getPostsByPostId(postId);
-  console.log("POST", post);
   // if (isLoading) {
   if (!post) {
     return <PostPageLoader />;
