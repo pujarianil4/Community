@@ -61,7 +61,7 @@ $light: (
   //     rgba(110, 86, 255, 0.9),
   //     rgba(108, 84, 255, 0.87),
   //     rgba(32, 13, 148, 0.83)
-  //   ),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+  //   ),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 );
 
 $dark: (
@@ -90,12 +90,14 @@ $dark: (
   info: #408dfc,
   warning: #ffc107,
   error: #fe4242,
+  // TODO: update color code
+  link-color: #6ab5db,
+  link-hover-color: #9ccee7,
+
   //old
   // secondary-hov: #181c1f,
   // body-bg: #fff,
   // secondary-border: #2b3236,
-  link-color: #6ab5db,
-  link-hover-color: #9ccee7,
   // disable-color: #eeeeee,
   //primary-title: #fafafa,
   // secondary-title: #cccccc,
@@ -134,5 +136,5 @@ $dark: (
   //     rgba(110, 86, 255, 0.9),
   //     rgba(108, 84, 255, 0.87),
   //     rgba(32, 13, 148, 0.83)
-  //   ),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+  //   ),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 );

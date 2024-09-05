@@ -155,9 +155,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
               className='comment_img'
             />
           )}
-          {/* <ReactMarkdown>{comment?.content}</ReactMarkdown> */}
           <MarkdownRenderer markdownContent={comment?.content} />
-          {/* <p>{comment?.content}</p> */}
         </div>
         <div className='actions'>
           <div className='up_down'>
@@ -194,7 +192,6 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
               <CommentItem
                 key={childComment.id}
                 comment={childComment}
-                // refetch={refetch}
                 postId={postId}
               />
             ))}
@@ -230,10 +227,8 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handlePostComment = async () => {
-    // console.log("commentBody", commentBody);
     const turndownService = new TurndownService();
     const markDown = turndownService.turndown(commentBody);
-    console.log("commentBody", markDown);
     const postData: IPostCommentAPI = {
       uid: user?.uid,
       content: markDown,

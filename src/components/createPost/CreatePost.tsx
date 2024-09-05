@@ -23,11 +23,6 @@ import NotificationMessage from "../common/Notification";
 import CButton from "../common/Button";
 import TiptapEditor from "../common/tiptapEditor";
 import TurndownService from "turndown";
-// import SkeltonLoader from "./skeltonLoader";
-
-const RichTextEditor = dynamic(() => import("../common/richTextEditor"), {
-  ssr: false,
-});
 
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -281,7 +276,6 @@ const CreatePost: React.FC<Props> = ({
             setSearchTerm={setSearchTerm}
           />
           {/* <TestArea content={content} setContent={setContent} /> */}
-          {/* <RichTextEditor setContent={setContent} /> */}
           <div className='editor_wrapper'>
             <TiptapEditor
               setContent={setContent}
