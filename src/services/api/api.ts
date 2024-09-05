@@ -464,3 +464,25 @@ export const uploadMultipleFile = async (files: FileList) => {
 //     throw error;
 //   }
 // };
+
+//fetch sessions
+
+export const getSession = async () => {
+  try {
+    const response = await api.get("/users/sessions");
+    return response.data;
+  } catch (error) {
+    console.error("POSTS_ERROR: ", error);
+    throw error;
+  }
+};
+
+export const getUserData = async () => {
+  try {
+    const response = await api.patch("/users");
+    return response.data;
+  } catch (error) {
+    console.error("POSTS_ERROR: ", error);
+    throw error;
+  }
+};

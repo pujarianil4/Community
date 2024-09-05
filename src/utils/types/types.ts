@@ -12,7 +12,8 @@ export interface IUser {
   cta?: string;
   uta?: string;
   desc?: string;
-  tid?: string;
+  tid?: string | null;
+  did?: string | null;
   token?: string;
 }
 
