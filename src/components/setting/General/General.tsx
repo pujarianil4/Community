@@ -179,6 +179,7 @@ export default function General() {
     console.log("Removing Telegram profile link...");
     updateUser({ tid: null })
       .then((res) => {
+        refetch();
         NotificationMessage("success", "Telegram Profile unlinked.");
       })
       .catch((err) => {
