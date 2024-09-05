@@ -175,6 +175,7 @@
       display: flex;
       align-items: center;
       gap: 7px;
+      width: 55px;
       // &:hover {
       //   svg {
       //     path {
@@ -210,6 +211,15 @@
           &:first-child {
             fill: var(--primary);
             opacity: 1;
+          }
+        }
+        &:hover {
+          color: var(--primary);
+          path {
+            &:first-child {
+              fill: var(--primary);
+              opacity: 1;
+            }
           }
         }
       }

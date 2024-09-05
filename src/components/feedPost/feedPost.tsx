@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
 import { GoComment } from "react-icons/go";
@@ -17,6 +17,7 @@ import {
   ShareIcon,
 } from "@/assets/icons";
 import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
+import PostPageLoader from "../common/loaders/postPage";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -24,19 +25,36 @@ const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
 
 interface IProps {
   post: IPost;
+  overlayClassName?: string;
 }
 
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-export default function FeedPost({ post }: IProps) {
+export default function FeedPost({ post, overlayClassName }: IProps) {
   const { text, up, down, time, media, user, community, id, ccount } = post;
   const router = useRouter();
+  const [vote, setVote] = useState({
+    value: 1,
+    type: "",
+  });
 
   const handleRedirectPost = () => {
     router.push(`/post/${id}`);
   };
 
+  const handleVote = (action: string) => {
+    if (action === "up" && vote.type != "up") {
+      setVote({ value: vote.value + 1, type: "up" });
+    } else if (action === "down" && vote.type != "down") {
+      setVote({ value: vote.value - 1, type: "down" });
+    }
+  };
+
+  if (!post) {
+    return <PostPageLoader />;
+  }
+
   return (
-    <div className='postcard_container'>
+    <div className={`postcard_container ${overlayClassName}`}>
       {/* <div className='user_head'>
         <div>
           <Image src={user?.img ?? imgLink} alt='user' width={24} height={24} />
@@ -117,10 +135,17 @@ export default function FeedPost({ post }: IProps) {
 
       <div className='actions'>
         <div className='up_down'>
-          <PiArrowFatUpDuotone size={18} />
-
-          <span>{up}</span>
-          <PiArrowFatDownDuotone size={18} />
+          <PiArrowFatUpDuotone
+            className={vote.type == "up" ? "active" : ""}
+            onClick={() => handleVote("up")}
+            size={18}
+          />
+          <span>{vote.value}</span>
+          <PiArrowFatDownDuotone
+            className={vote.type == "down" ? "active" : ""}
+            onClick={() => handleVote("down")}
+            size={18}
+          />
         </div>
         <div className='comments'>
           <Link href={`post/${id}`} as={`/post/${id}`}>
