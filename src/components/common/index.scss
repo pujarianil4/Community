@@ -134,7 +134,7 @@
   blockquote {
     padding: 2px 8px;
     width: fit-content;
-    border-left: 2px solid var(--devider);
+    border-left: 2px solid var(--divider);
     background-color: var(--tertiary-bg);
     margin: 1rem 0;
   }
@@ -172,26 +172,27 @@
 //Cfilter
 
 .cfilter_container {
-  width: 150px;
+  width: 120px;
   .cfilter {
-    border: 1px solid var(--primary-border);
-    color: var(--primary-text);
+    // border: 1px solid var(--primary-border);
+    color: var(--primary);
     padding: 10px 15px;
     width: 100%;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     padding-right: 25px;
     position: relative;
+    background: var(--secondary-bg);
     span {
       text-transform: capitalize;
       font-size: 14px;
     }
     &:hover {
       span {
-        color: var(--primary);
+        color: var(--primary-text);
       }
       svg {
-        color: var(--primary);
+        color: var(--primary-text);
       }
     }
   }
@@ -202,7 +203,7 @@
 }
 
 .filter_list {
-  width: 140px;
+  width: 110px;
   p {
     padding: 5px;
     cursor: pointer;

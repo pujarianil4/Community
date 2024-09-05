@@ -59,7 +59,7 @@ export interface IComment {
   cta: string;
   uta: string;
   user: IUser;
-  img?: string;
+  img: string;
   parentComment?: IComment | null;
   comments?: IComment[];
 }

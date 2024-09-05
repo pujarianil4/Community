@@ -248,7 +248,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
       rCount: response?.rCount,
       cta: response?.cta,
       uta: response?.uta,
-      user: user as IUser,
+      user: { ...user, img: { pro: user.img } },
       img: response?.img,
       parentComment: parentComment || null,
       comments: [],
