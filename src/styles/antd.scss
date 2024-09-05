@@ -57,14 +57,15 @@
   .ant-popover-content {
     .ant-popover-inner {
       padding: 5px !important;
-      background-color: var(--secondary-bg) !important;
+      background-color: var(--secondary-bg);
       .ant-popover-inner-content {
-        color: var(--primary-text) !important;
+        color: var(--primary-text);
       }
     }
   }
   .ant-popover-arrow::before {
-    background: var(--secondary-bg) !important;
+    background: var(--secondary-bg);
+    display: none;
   }
 }
 

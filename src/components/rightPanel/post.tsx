@@ -58,6 +58,7 @@ export default function Post({ post }: IProps) {
             <Link href={`post/${post?.id}`} as={`/post/${post?.id}`}>
               <span>
                 <MessageIcon width={15} height={15} /> {post.ccount || 0}
+                <span>Comments</span>
               </span>
             </Link>
           </div>

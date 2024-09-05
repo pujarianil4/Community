@@ -168,3 +168,63 @@
     }
   }
 }
+
+//Cfilter
+
+.cfilter_container {
+  width: 150px;
+  .cfilter {
+    border: 1px solid var(--primary-border);
+    color: var(--primary-text);
+    padding: 10px 15px;
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+    padding-right: 25px;
+    position: relative;
+    span {
+      text-transform: capitalize;
+      font-size: 14px;
+    }
+    &:hover {
+      span {
+        color: var(--primary);
+      }
+      svg {
+        color: var(--primary);
+      }
+    }
+  }
+  svg {
+    position: absolute;
+    right: 5px;
+  }
+}
+
+.filter_list {
+  width: 140px;
+  p {
+    padding: 5px;
+    cursor: pointer;
+    color: var(--primary);
+    text-transform: capitalize;
+    &:hover {
+      background: var(--secondary-bg);
+    }
+  }
+}
+
+.filter_popover {
+  .ant-popover-content {
+    .ant-popover-inner {
+      padding: 5px !important;
+      background-color: var(--tertiary-bg);
+      .ant-popover-inner-content {
+        color: var(--primary-text);
+      }
+    }
+  }
+  .ant-popover-arrow::before {
+    display: none;
+  }
+}

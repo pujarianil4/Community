@@ -159,6 +159,7 @@
           li,
           span,
           code,
+          pre,
           blockquote,
           strong {
             font-size: 12px;
@@ -172,7 +173,8 @@
       }
       .post_comment {
         display: flex;
-        justify-content: space-between;
+        justify-content: end;
+        gap: 50px;
         align-items: center;
         padding-top: 0.5rem;
         span {

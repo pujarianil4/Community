@@ -25,23 +25,18 @@ export default async function fetchDiscordData(code: string) {
     const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
     };
-    console.log("params", params.toString());
 
     const tokenResponse = await axios.post(
       "https://discord.com/api/oauth2/token",
       params,
       { headers }
     );
-    console.log("tokenResponse", tokenResponse.data);
-
     const { access_token } = tokenResponse.data;
-
     const userResponse = await axios.get("https://discord.com/api/users/@me", {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
     });
-
     const user = userResponse.data;
     return user;
   } catch (error) {

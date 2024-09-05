@@ -13,6 +13,7 @@ import "./index.scss";
 import FeedPostLoader from "../common/loaders/Feedpost";
 import { Popover } from "antd";
 import { AddIcon } from "@/assets/icons";
+import CFilter from "../common/Filter";
 
 const getFunctionByMethod = {
   allPosts: getPosts,
@@ -23,6 +24,10 @@ const getFunctionByMethod = {
 interface IFeedList {
   method: keyof typeof getFunctionByMethod;
   id: string | null;
+}
+interface List {
+  value: string;
+  title: string;
 }
 
 export default function FeedList({ method, id }: IFeedList) {
@@ -40,25 +45,14 @@ export default function FeedList({ method, id }: IFeedList) {
   const refetchRoute = (state: RootState) => state?.common.refetch.user;
   const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
   const loadingArray = Array(5).fill(() => 0);
-  const [filterBy, setFilterBy] = useState("time");
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("ccount");
 
-  const lable: any = {
-    time: "New",
-    ccount: "Hot",
-  };
-
-  const handleFilter = (filter: string) => {
-    callFunction(getFunctionByMethod[method], filter);
-    setFilterBy(filter);
-    handlePopover(false);
-    setActiveTab(filter);
+  const handleFilter = (filter: List) => {
+    callFunction(getFunctionByMethod[method], filter.value);
   };
 
   useEffect(() => {
     if (method == "allPosts") {
-      handleFilter(filterBy);
+      handleFilter({ value: "time", title: "latest" });
     }
 
     if (refetchData == true) {
@@ -67,39 +61,19 @@ export default function FeedList({ method, id }: IFeedList) {
     }
   }, [refetchData]);
 
-  const list = (
-    <div>
-      <span
-        className={activeTab === "ccount" ? "active" : ""}
-        onClick={() => handleFilter("ccount")}
-      >
-        Trending
-      </span>
-      <span
-        className={activeTab === "time" ? "active" : ""}
-        onClick={() => handleFilter("time")}
-      >
-        Latest
-      </span>
-    </div>
-  );
-
-  const handlePopover = (bool: boolean) => {
-    setIsOpen(bool);
-  };
-
   return (
     <>
       {method == "allPosts" && (
-        <div className='tabs_list'>
-          {list}
-          {/* <div>
-            <span>
-              <AddIcon width={14} height={14} />
-              Create Post
-            </span>
-          </div> */}
-        </div>
+        <>
+          <CFilter
+            list={[
+              { value: "ccount", title: "trending" },
+              { value: "time", title: "latest" },
+            ]}
+            callBack={handleFilter}
+            defaultListIndex={0}
+          />
+        </>
       )}
 
       <div className='feedlist'>
