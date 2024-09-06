@@ -33,14 +33,26 @@ export default function Post({ post }: Iprops) {
     value: 1,
     type: "",
   });
-
   const handleVote = (action: string) => {
-    if (action === "up" && vote.type != "up") {
-      setVote({ value: vote.value + 1, type: "up" });
-    } else if (action === "down" && vote.type != "down") {
-      setVote({ value: vote.value - 1, type: "down" });
+    if (action === "up") {
+      if (vote.type === "down") {
+        setVote({ value: vote.value + 2, type: "up" });
+      } else if (vote.type === "up") {
+        setVote({ value: vote.value - 1, type: "" });
+      } else {
+        setVote({ value: vote.value + 1, type: "up" });
+      }
+    } else if (action === "down") {
+      if (vote.type === "up") {
+        setVote({ value: vote.value - 2, type: "down" });
+      } else if (vote.type === "down") {
+        setVote({ value: vote.value + 1, type: "" });
+      } else {
+        setVote({ value: vote.value - 1, type: "down" });
+      }
     }
   };
+
   if (!post) {
     return <PostPageLoader />;
   }
@@ -112,19 +124,17 @@ export default function Post({ post }: Iprops) {
       </div> */}
       <div className='actions'>
         <div className='up_down'>
-          <div className='up_down'>
-            <PiArrowFatUpDuotone
-              className={vote.type == "up" ? "active" : ""}
-              onClick={() => handleVote("up")}
-              size={18}
-            />
-            <span>{vote.value}</span>
-            <PiArrowFatDownDuotone
-              className={vote.type == "down" ? "active" : ""}
-              onClick={() => handleVote("down")}
-              size={18}
-            />
-          </div>
+          <PiArrowFatUpDuotone
+            className={vote.type == "up" ? "active" : ""}
+            onClick={() => handleVote("up")}
+            size={18}
+          />
+          <span>{vote.value}</span>
+          <PiArrowFatDownDuotone
+            className={vote.type == "down" ? "active" : ""}
+            onClick={() => handleVote("down")}
+            size={18}
+          />
         </div>
         <div className='comments'>
           <GoComment size={18} />

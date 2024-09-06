@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getImageSource, numberWithCommas, timeAgo } from "@/utils/helpers";
-import { IPost } from "@/utils/types/types";
+import { IPost, IVotePayload } from "@/utils/types/types";
 import SwipeCarousel from "../common/carousel";
 import { IoIosMore } from "react-icons/io";
 import {
@@ -18,6 +18,7 @@ import {
 } from "@/assets/icons";
 import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 import PostPageLoader from "../common/loaders/postPage";
+import { sendVote } from "@/services/api/api";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -28,12 +29,17 @@ interface IProps {
   overlayClassName?: string;
 }
 
+interface Vote {
+  value: number;
+  type: "up" | "down" | "";
+}
+
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post, overlayClassName }: IProps) {
   const { text, up, down, time, media, user, community, id, ccount } = post;
   const router = useRouter();
-  const [vote, setVote] = useState({
-    value: 1,
+  const [vote, setVote] = useState<Vote>({
+    value: 0,
     type: "",
   });
 
@@ -41,11 +47,46 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
     router.push(`/post/${id}`);
   };
 
-  const handleVote = (action: string) => {
-    if (action === "up" && vote.type != "up") {
-      setVote({ value: vote.value + 1, type: "up" });
-    } else if (action === "down" && vote.type != "down") {
-      setVote({ value: vote.value - 1, type: "down" });
+  const handleVote = async (action: string) => {
+    const previousVote = { ...vote };
+
+    let newVote: Vote = { ...vote };
+
+    if (action === "up") {
+      if (vote.type === "down") {
+        newVote = { value: vote.value + 2, type: "up" };
+      } else if (vote.type === "up") {
+        newVote = { value: vote.value - 1, type: "" };
+      } else {
+        newVote = { value: vote.value + 1, type: "up" };
+      }
+    } else if (action === "down") {
+      if (vote.type === "up") {
+        newVote = { value: vote.value - 2, type: "down" };
+      } else if (vote.type === "down") {
+        newVote = { value: vote.value + 1, type: "" };
+      } else {
+        newVote = { value: vote.value - 1, type: "down" };
+      }
+    }
+
+    setVote(newVote);
+
+    try {
+      if (id) {
+        const payload: IVotePayload = {
+          typ: "p",
+          cntId: id,
+          voteTyp: newVote.type,
+        };
+        const afterVote = await sendVote(payload);
+        console.log("updated", afterVote, payload);
+
+        // setVote({ value: updatedPost.voteCount, type: newVote.type });
+      }
+    } catch (error) {
+      console.error("Vote failed:", error);
+      setVote(previousVote);
     }
   };
 

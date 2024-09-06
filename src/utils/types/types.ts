@@ -127,3 +127,9 @@ declare global {
     TelegramAuthLogin: TTelegramAuthLogin;
   }
 }
+
+export interface IVotePayload {
+  typ: string;
+  cntId: number;
+  voteTyp: "up" | "down" | "";
+}
