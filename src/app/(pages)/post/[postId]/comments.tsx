@@ -13,10 +13,17 @@ import useRedux from "@/hooks/useRedux";
 import {
   fetchComments,
   postComments,
+  sendVote,
   uploadSingleFile,
 } from "@/services/api/api";
 import { getImageSource, timeAgo } from "@/utils/helpers";
-import { IComment, IPostCommentAPI, IUser } from "@/utils/types/types";
+import {
+  IComment,
+  IPostCommentAPI,
+  IUser,
+  IVotePayload,
+} from "@/utils/types/types";
+import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 import Image from "next/image";
 import Link from "next/link";
 import TurndownService from "turndown";
@@ -104,12 +111,63 @@ interface ICommentItemProps {
   postId: number;
 }
 
+interface Vote {
+  value: number;
+  type: "up" | "down" | "";
+}
 const CommentItem: React.FC<ICommentItemProps> = React.memo(
   ({ comment, postId }) => {
     const [isReplying, setIsReplying] = useState(false);
     const [childComments, setChildComments] = useState<IComment[]>(
       comment?.comments || []
     );
+    const [vote, setVote] = useState<Vote>({
+      value: Number(comment.up) + Number(comment.down),
+      type: "",
+    });
+
+    const handleVote = async (action: string) => {
+      const previousVote = { ...vote };
+
+      let newVote: Vote = { ...vote };
+
+      if (action === "up") {
+        if (vote.type === "down") {
+          newVote = { value: vote.value + 2, type: "up" };
+        } else if (vote.type === "up") {
+          newVote = { value: vote.value - 1, type: "" };
+        } else {
+          newVote = { value: vote.value + 1, type: "up" };
+        }
+      } else if (action === "down") {
+        if (vote.type === "up") {
+          newVote = { value: vote.value - 2, type: "down" };
+        } else if (vote.type === "down") {
+          newVote = { value: vote.value + 1, type: "" };
+        } else {
+          newVote = { value: vote.value - 1, type: "down" };
+        }
+      }
+
+      setVote(newVote);
+
+      try {
+        if (comment.id) {
+          const payload: IVotePayload = {
+            typ: "c",
+            cntId: comment.id,
+            voteTyp: newVote.type,
+          };
+          const afterVote = await sendVote(payload);
+          console.log("updated", afterVote, payload);
+
+          // setVote({ value: updatedPost.voteCount, type: newVote.type });
+        }
+      } catch (error) {
+        console.error("Vote failed:", error);
+        setVote(previousVote);
+      }
+    };
     const scrollableContainerRef = useRef(null);
 
     const onComment = (newComment: IComment) => {
@@ -157,23 +215,59 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
           )}
           <MarkdownRenderer markdownContent={comment?.content} />
         </div>
+        {/* <div className='actions'>
+          <div className='up_down'>
+            <PiArrowFatUpDuotone
+              // className={vote.type == "up" ? "active" : ""}
+              // onClick={() => handleVote("up")}
+              size={18}
+            />
+            <span>{vote.value}</span>
+            <PiArrowFatDownDuotone
+              // className={vote.type == "down" ? "active" : ""}
+              // onClick={() => handleVote("down")}
+              size={18}
+            />
+          </div>
+          <div className='comments'>
+            <GoComment size={18} />
+            <span>{post?.ccount > 0 ? post.ccount : "comments"}</span>
+          </div>
+
+          <div className='share'>
+            <ShareIcon width={18} />
+            <span>Share</span>
+          </div>
+          <div className='save'>
+            <SaveIcon width={16} height={16} />
+            <span>Save</span>
+          </div>
+        </div> */}
         <div className='actions'>
           <div className='up_down'>
-            <DropdownUpIcon width={18} />
-            <span>{comment?.up}</span>
-            <DropdownLowIcon width={18} />
+            <PiArrowFatUpDuotone
+              className={vote.type == "up" ? "active" : ""}
+              onClick={() => handleVote("up")}
+              size={18}
+            />
+            <span>{vote.value} trest</span>
+            <PiArrowFatDownDuotone
+              className={vote.type == "down" ? "active" : ""}
+              onClick={() => handleVote("down")}
+              size={18}
+            />
           </div>
           {isReplying ? (
-            <div onClick={() => handleClick(false)}>
+            <div className='comments' onClick={() => handleClick(false)}>
               <span>Cancel</span>
             </div>
           ) : (
-            <div onClick={() => handleClick(true)}>
+            <div className='comments' onClick={() => handleClick(true)}>
               <GoComment size={18} />
               <span>Reply</span>
             </div>
           )}
-          <div>
+          <div className='save'>
             <ShareIcon width={18} />
             <span>Share</span>
           </div>
@@ -248,7 +342,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
       rCount: response?.rCount,
       cta: response?.cta,
       uta: response?.uta,
-      user: user as IUser,
+      user: { ...user, img: { pro: user.img } },
       img: response?.img,
       parentComment: parentComment || null,
       comments: [],

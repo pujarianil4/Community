@@ -1,3 +1,4 @@
+import { getClientSideCookie } from "@/utils/helpers";
 import { PublicKey } from "@solana/web3.js";
 
 import axios, { AxiosInstance } from "axios";
@@ -7,6 +8,7 @@ import {
   IFollowersAPI,
   IPostCommentAPI,
   IUser,
+  IVotePayload,
 } from "@/utils/types/types";
 
 const url = "https://community-slr7.onrender.com"; //process.env.BASE_API_URL;
@@ -483,6 +485,16 @@ export const getUserData = async () => {
     return response.data;
   } catch (error) {
     console.error("POSTS_ERROR: ", error);
+    throw error;
+  }
+};
+
+export const sendVote = async (payload: IVotePayload) => {
+  try {
+    const user = getClientSideCookie("authToken");
+    const response = await api.post("/vote", { ...payload, uid: user?.uid });
+    return response.data;
+  } catch (error) {
     throw error;
   }
 };

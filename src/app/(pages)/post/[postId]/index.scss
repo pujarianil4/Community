@@ -90,10 +90,18 @@
   .actions {
     display: flex;
     gap: 24px;
-    max-width: 400px;
     justify-content: space-between;
-    margin: 16px 0px 0 40px;
-    div {
+    margin: 16px 0 0 52px;
+    max-width: 400px;
+
+    // gap: 15px;
+    // margin: 15px 0 0 0px;
+    // padding-top: 10px;
+    // border-top: 1px solid var(--primary-border);
+    .comments,
+    .save,
+    .share,
+    a {
       min-width: 50px;
       display: flex;
       align-items: center;
@@ -123,20 +131,54 @@
     }
 
     .up_down {
-      &:hover {
-        svg {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      // &:hover {
+      //   svg {
+      //     path {
+      //       stroke: var(--black);
+      //     }
+      //   }
+      // }
+      color: var(--primary-text);
+      span {
+        font-size: 12px;
+      }
+      svg {
+        cursor: pointer;
+        path {
+          &:first-child {
+            fill: transparent;
+            opacity: 1;
+          }
+        }
+        &:hover {
+          color: var(--primary);
           path {
-            stroke: var(--black);
+            &:first-child {
+              fill: var(--primary);
+              opacity: 0;
+            }
           }
         }
       }
-      svg {
-        width: 18px;
-        height: 14px;
-        padding: 2px;
+
+      .active {
+        color: var(--primary);
         path {
-          &:hover {
-            stroke: var(--primary);
+          &:first-child {
+            fill: var(--primary);
+            opacity: 1;
+          }
+        }
+        &:hover {
+          color: var(--primary);
+          path {
+            &:first-child {
+              fill: var(--primary);
+              opacity: 1;
+            }
           }
         }
       }
