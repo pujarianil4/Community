@@ -39,7 +39,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
   const { text, up, down, time, media, user, community, id, ccount } = post;
   const router = useRouter();
   const [vote, setVote] = useState<Vote>({
-    value: 0,
+    value: Number(up) + Number(down),
     type: "",
   });
 

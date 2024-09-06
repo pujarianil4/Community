@@ -6,7 +6,7 @@ import Link from "next/link";
 import { IoIosMore } from "react-icons/io";
 import { getImageSource, timeAgo } from "@/utils/helpers";
 import { GoComment } from "react-icons/go";
-import { IPost } from "@/utils/types/types";
+import { IPost, IVotePayload } from "@/utils/types/types";
 import MarkdownRenderer from "@/components/common/MarkDownRender";
 import SwipeCarousel from "@/components/common/carousel";
 import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
@@ -17,9 +17,15 @@ import {
   ShareIcon,
 } from "@/assets/icons";
 import PostPageLoader from "@/components/common/loaders/postPage";
+import { sendVote } from "@/services/api/api";
 
 interface Iprops {
   post: IPost;
+}
+
+interface Vote {
+  value: number;
+  type: "up" | "down" | "";
 }
 
 export default function Post({ post }: Iprops) {
@@ -29,27 +35,59 @@ export default function Post({ post }: Iprops) {
   // const post = await getPostsByPostId(postId);
   // if (isLoading) {
 
-  const [vote, setVote] = useState({
-    value: 1,
+  console.log(
+    "post",
+    post,
+    Number(post.up) - Number(post.down),
+    post.up,
+    post.down
+  );
+
+  const [vote, setVote] = useState<Vote>({
+    value: Number(post.up) + Number(post.down),
     type: "",
   });
-  const handleVote = (action: string) => {
+
+  const handleVote = async (action: string) => {
+    const previousVote = { ...vote };
+
+    let newVote: Vote = { ...vote };
+
     if (action === "up") {
       if (vote.type === "down") {
-        setVote({ value: vote.value + 2, type: "up" });
+        newVote = { value: vote.value + 2, type: "up" };
       } else if (vote.type === "up") {
-        setVote({ value: vote.value - 1, type: "" });
+        newVote = { value: vote.value - 1, type: "" };
       } else {
-        setVote({ value: vote.value + 1, type: "up" });
+        newVote = { value: vote.value + 1, type: "up" };
       }
     } else if (action === "down") {
       if (vote.type === "up") {
-        setVote({ value: vote.value - 2, type: "down" });
+        newVote = { value: vote.value - 2, type: "down" };
       } else if (vote.type === "down") {
-        setVote({ value: vote.value + 1, type: "" });
+        newVote = { value: vote.value + 1, type: "" };
       } else {
-        setVote({ value: vote.value - 1, type: "down" });
+        newVote = { value: vote.value - 1, type: "down" };
       }
+    }
+
+    setVote(newVote);
+
+    try {
+      if (post.id) {
+        const payload: IVotePayload = {
+          typ: "p",
+          cntId: post.id,
+          voteTyp: newVote.type,
+        };
+        const afterVote = await sendVote(payload);
+        console.log("updated", afterVote, payload);
+
+        // setVote({ value: updatedPost.voteCount, type: newVote.type });
+      }
+    } catch (error) {
+      console.error("Vote failed:", error);
+      setVote(previousVote);
     }
   };
 
