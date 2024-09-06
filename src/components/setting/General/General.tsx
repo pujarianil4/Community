@@ -43,7 +43,7 @@ import {
 
 //discord
 import { handleDiscordLogin } from "../socialLinks/discordLogin";
-import fetchDiscordData from "@/services/api/fetchDiscord";
+import { handleTwitterLogin } from "../socialLinks/twitter/loginButton";
 
 const { Panel } = Collapse;
 
@@ -280,7 +280,7 @@ export default function General() {
                         {userData?.tid ? (
                           <DeleteIcon />
                         ) : (
-                          <span>
+                          <span onClick={handleTwitterLogin}>
                             <AddIcon fill='#ffffff' width={14} height={14} />
                           </span>
                         )}
