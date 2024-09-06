@@ -20,50 +20,52 @@ export default function Post({ post }: IProps) {
     router.push(`/post/${post?.id}`);
   };
   return (
-    <div className='post_heading'>
-      <div className='post_bx'>
-        <Image
-          src={getImageSource(post?.user.img?.pro, "u")}
-          alt={post?.user.name || "username"}
-          width={25}
-          height={25}
-          loading='lazy'
-        />
+    <Link href={`post/${post?.id}`} as={`/post/${post?.id}`}>
+      <div className='post_heading'>
+        <div className='post_bx'>
+          <Image
+            src={getImageSource(post?.user.img?.pro, "u")}
+            alt={post?.user.name || "username"}
+            width={25}
+            height={25}
+            loading='lazy'
+          />
 
-        <span className='username'>{post?.user.username} </span>
-        <span>{">"}</span>
-        <span className='community'>{post?.community.username}</span>
-      </div>
-      <div className='post_content_bx'>
-        <div className='post_inn_bx' onClick={handleRedirectPost}>
-          {/* TODO: Update for Video too */}
-          {post?.media && post?.media.length > 0 && (
-            <Image
-              src={post?.media[0]}
-              alt='post_img'
-              width={96}
-              height={78}
-              loading='lazy'
-            />
-          )}
-        </div>
-        <div className='post_content'>
-          <div className='redirect_content' onClick={handleRedirectPost}>
-            <MarkdownRenderer markdownContent={post?.text} limit={10} />
+          <div className='post_info'>
+            <span className='username'>{post?.user.username} </span>
+            <span className='community'>- {post?.community.username}</span>
           </div>
-          <div className='post_comment'>
-            <span>
-              <DropdownUpIcon width={12} height={12} /> {post.up || 0}
-            </span>
-            <Link href={`post/${post?.id}`} as={`/post/${post?.id}`}>
+        </div>
+        <div className='post_content_bx'>
+          <div className='post_inn_bx' onClick={handleRedirectPost}>
+            {/* TODO: Update for Video too */}
+            {post?.media && post?.media.length > 0 && (
+              <Image
+                src={post?.media[0]}
+                alt='post_img'
+                width={96}
+                height={78}
+                loading='lazy'
+              />
+            )}
+          </div>
+          <div className='post_content'>
+            <div className='redirect_content' onClick={handleRedirectPost}>
+              <MarkdownRenderer markdownContent={post?.text} limit={120} />
+            </div>
+            <div className='post_comment'>
+              <span>
+                <DropdownUpIcon width={12} height={12} /> {post.up || 0}
+              </span>
+
               <span>
                 <MessageIcon width={15} height={15} /> {post.ccount || 0}
+                <span>Comments</span>
               </span>
-            </Link>
+            </div>
           </div>
         </div>
-      </div>
-      {/* <div className='post_bx'>
+        {/* <div className='post_bx'>
         <img src='https://testcommunity.s3.amazonaws.com/0125f211-bf33-4610-8e73-6fc864787743-metamaskicon.png' />
         <span className='username'> anilpujari</span>
         <span className='community'> anilpujaricommunity</span>
@@ -87,7 +89,8 @@ export default function Post({ post }: IProps) {
           </div>
         </div>
       </div> */}
-    </div>
+      </div>
+    </Link>
   );
 }
 

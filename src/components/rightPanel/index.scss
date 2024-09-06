@@ -23,7 +23,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--devider);
+    border-bottom: 1px solid var(--divider);
     padding: 10px 0px;
     h2 {
       color: var(--primary-text);
@@ -87,7 +87,7 @@
     }
   }
   .post_heading {
-    border-bottom: 1px solid var(--devider);
+    border-bottom: 1px solid var(--divider);
     padding: 1rem 0px;
     h2 {
       color: var(--primary-text);
@@ -104,11 +104,16 @@
       align-items: center;
       gap: 0.7rem;
       margin-bottom: 8px;
+      .post_info {
+        display: flex;
+        gap: 5px;
+      }
       .username {
         font-size: $font-size-sm;
       }
       .community {
-        font-size: $font-size-xsm;
+        font-size: $font-size-xxsm;
+        opacity: 0.8;
       }
       img {
         width: 25px;
@@ -140,16 +145,30 @@
       .post_content {
         width: 100%;
         max-height: 96px;
-        height: 70px;
+        min-height: 78px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
 
         .redirect_content {
+          overflow: hidden;
+          height: 68px;
           cursor: pointer;
-          h1,h2,h3,h4,p{
+          p,
+          h1,
+          h2,
+          h3,
+          h4,
+          h5,
+          h6,
+          li,
+          span,
+          code,
+          pre,
+          blockquote,
+          strong {
             font-size: 12px;
-            color: var(--primary-text);
+            color: var(--primary-text) !important;
           }
         }
       }
@@ -159,7 +178,8 @@
       }
       .post_comment {
         display: flex;
-        justify-content: space-between;
+        justify-content: end;
+        gap: 50px;
         align-items: center;
         padding-top: 0.5rem;
         span {

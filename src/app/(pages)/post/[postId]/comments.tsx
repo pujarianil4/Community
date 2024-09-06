@@ -5,8 +5,7 @@ import CButton from "@/components/common/Button";
 import CommentsLoader from "@/components/common/loaders/comments";
 import MarkdownRenderer from "@/components/common/MarkDownRender";
 import NotificationMessage from "@/components/common/Notification";
-import RichTextEditor from "@/components/common/richTextEditor";
-import TextArea from "@/components/common/textArea";
+import TiptapEditor from "@/components/common/tiptapEditor";
 import { FileInput } from "@/components/createPost/CreatePost";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
@@ -14,19 +13,25 @@ import useRedux from "@/hooks/useRedux";
 import {
   fetchComments,
   postComments,
+  sendVote,
   uploadSingleFile,
 } from "@/services/api/api";
 import { getImageSource, timeAgo } from "@/utils/helpers";
-import { IComment, IPostCommentAPI, IUser } from "@/utils/types/types";
+import {
+  IComment,
+  IPostCommentAPI,
+  IUser,
+  IVotePayload,
+} from "@/utils/types/types";
+import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 import Image from "next/image";
 import Link from "next/link";
+import TurndownService from "turndown";
 import React, { useEffect, useRef, useState } from "react";
-import { GoComment, GoShareAndroid } from "react-icons/go";
+import { GoComment } from "react-icons/go";
 import { LuImagePlus } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
-import { PiArrowFatDownLight, PiArrowFatUpLight } from "react-icons/pi";
 import { RiText } from "react-icons/ri";
-// import ReactMarkdown from "react-markdown";
 
 interface Iprops {
   postId: number;
@@ -106,16 +111,64 @@ interface ICommentItemProps {
   postId: number;
 }
 
+interface Vote {
+  value: number;
+  type: "up" | "down" | "";
+}
 const CommentItem: React.FC<ICommentItemProps> = React.memo(
-  ({
-    comment,
-    //  refetch
-    postId,
-  }) => {
+  ({ comment, postId }) => {
     const [isReplying, setIsReplying] = useState(false);
     const [childComments, setChildComments] = useState<IComment[]>(
       comment?.comments || []
     );
+    const [vote, setVote] = useState<Vote>({
+      value: Number(comment.up) + Number(comment.down),
+      type: "",
+    });
+
+    const handleVote = async (action: string) => {
+      const previousVote = { ...vote };
+
+      let newVote: Vote = { ...vote };
+
+      if (action === "up") {
+        if (vote.type === "down") {
+          newVote = { value: vote.value + 2, type: "up" };
+        } else if (vote.type === "up") {
+          newVote = { value: vote.value - 1, type: "" };
+        } else {
+          newVote = { value: vote.value + 1, type: "up" };
+        }
+      } else if (action === "down") {
+        if (vote.type === "up") {
+          newVote = { value: vote.value - 2, type: "down" };
+        } else if (vote.type === "down") {
+          newVote = { value: vote.value + 1, type: "" };
+        } else {
+          newVote = { value: vote.value - 1, type: "down" };
+        }
+      }
+
+      setVote(newVote);
+
+      try {
+        if (comment.id) {
+          const payload: IVotePayload = {
+            typ: "c",
+            cntId: comment.id,
+            voteTyp: newVote.type,
+          };
+          const afterVote = await sendVote(payload);
+          console.log("updated", afterVote, payload);
+
+          // setVote({ value: updatedPost.voteCount, type: newVote.type });
+        }
+      } catch (error) {
+        console.error("Vote failed:", error);
+        setVote(previousVote);
+      }
+    };
+    const scrollableContainerRef = useRef(null);
 
     const onComment = (newComment: IComment) => {
       setChildComments((prevComments) => [newComment, ...prevComments]);
@@ -126,7 +179,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
     };
 
     return (
-      <div className='comment_item'>
+      <div ref={scrollableContainerRef} className='comment_item'>
         {comment.pcid !== null && <div className='comment_line' />}
         <div className='user_head'>
           <Link
@@ -135,7 +188,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
             // className='community_logo'
           >
             <Image
-              src={getImageSource(comment?.user.img, "u")}
+              src={getImageSource(comment?.user?.img?.pro, "u")}
               alt={comment?.user.username}
               width={32}
               height={32}
@@ -160,27 +213,61 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
               className='comment_img'
             />
           )}
-          {/* <ReactMarkdown>{comment?.content}</ReactMarkdown> */}
           <MarkdownRenderer markdownContent={comment?.content} />
-          {/* <p>{comment?.content}</p> */}
         </div>
+        {/* <div className='actions'>
+          <div className='up_down'>
+            <PiArrowFatUpDuotone
+              // className={vote.type == "up" ? "active" : ""}
+              // onClick={() => handleVote("up")}
+              size={18}
+            />
+            <span>{vote.value}</span>
+            <PiArrowFatDownDuotone
+              // className={vote.type == "down" ? "active" : ""}
+              // onClick={() => handleVote("down")}
+              size={18}
+            />
+          </div>
+          <div className='comments'>
+            <GoComment size={18} />
+            <span>{post?.ccount > 0 ? post.ccount : "comments"}</span>
+          </div>
+
+          <div className='share'>
+            <ShareIcon width={18} />
+            <span>Share</span>
+          </div>
+          <div className='save'>
+            <SaveIcon width={16} height={16} />
+            <span>Save</span>
+          </div>
+        </div> */}
         <div className='actions'>
           <div className='up_down'>
-            <DropdownUpIcon width={18} />
-            <span>{comment?.up}</span>
-            <DropdownLowIcon width={18} />
+            <PiArrowFatUpDuotone
+              className={vote.type == "up" ? "active" : ""}
+              onClick={() => handleVote("up")}
+              size={18}
+            />
+            <span>{vote.value} trest</span>
+            <PiArrowFatDownDuotone
+              className={vote.type == "down" ? "active" : ""}
+              onClick={() => handleVote("down")}
+              size={18}
+            />
           </div>
           {isReplying ? (
-            <div onClick={() => handleClick(false)}>
+            <div className='comments' onClick={() => handleClick(false)}>
               <span>Cancel</span>
             </div>
           ) : (
-            <div onClick={() => handleClick(true)}>
+            <div className='comments' onClick={() => handleClick(true)}>
               <GoComment size={18} />
               <span>Reply</span>
             </div>
           )}
-          <div>
+          <div className='save'>
             <ShareIcon width={18} />
             <span>Share</span>
           </div>
@@ -199,7 +286,6 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
               <CommentItem
                 key={childComment.id}
                 comment={childComment}
-                // refetch={refetch}
                 postId={postId}
               />
             ))}
@@ -216,7 +302,6 @@ interface ICommentInputProps {
   onComment: (newComment: IComment) => void;
   setIsReplying?: (val: boolean) => void;
   parentComment?: IComment;
-  // refetch?: any;
   postId: number;
 }
 
@@ -232,20 +317,20 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   const [showToolbar, setShowToolbar] = useState<boolean>(false);
   const userNameSelector = (state: RootState) => state?.user;
   const [{}, [user]] = useRedux([userNameSelector]);
-  // const commentInputRef = useRef<HTMLDivElement>(null);
   const commentInputRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handlePostComment = async () => {
+    const turndownService = new TurndownService();
+    const markDown = turndownService.turndown(commentBody);
     const postData: IPostCommentAPI = {
       uid: user?.uid,
-      content: commentBody,
+      content: markDown,
       img: commentImg,
       pid: +postId,
       pcid: parentComment?.id || null,
     };
     const response = await postComments(postData);
-    // // refetch();
     const data: IComment = {
       id: response?.id,
       uid: response?.uid,
@@ -257,7 +342,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
       rCount: response?.rCount,
       cta: response?.cta,
       uta: response?.uta,
-      user: user as IUser,
+      user: { ...user, img: { pro: user.img } },
       img: response?.img,
       parentComment: parentComment || null,
       comments: [],
@@ -269,7 +354,6 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   };
 
   const handleUploadFile = async (file: any) => {
-    console.log("FILE_DATA", file[0]);
     setImageLoading(true);
     try {
       const uploadedFile = await uploadSingleFile(file[0]);
@@ -291,69 +375,47 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     }, 300);
   };
 
-  // useEffect(() => {
-  //   // if (commentInputRef.current) {
-  //   //   commentInputRef.current.scrollIntoView({
-  //   //     behavior: "smooth",
-  //   //     block: "end",
-  //   //   });
-  //   // }
-  //   // if (commentInputRef.current) {
-  //   //   commentInputRef.current.scrollIntoView({
-  //   //     behavior: "smooth",
-  //   //     block: "start",
-  //   //   });
-  //   // }
-
-  //   if (commentInputRef.current) {
-  //     commentInputRef.current.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "end",
-  //     });
-  //   }
-  // }, [commentInputRef, setIsReplying]);
   useEffect(() => {
-    // const scrollAdjustment = 400;
-    if (commentInputRef.current) {
-      commentInputRef.current.focus();
-    }
+    const scrollToEditor = () => {
+      const editor = commentInputRef.current;
+      const container = containerRef.current;
 
-    if (containerRef.current) {
-      containerRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
-    // window.scrollBy(0, scrollAdjustment);
+      if (editor && container) {
+        const editorRect = editor.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+
+        const editorHeight = editorRect.height;
+        const editorTop = editorRect.top;
+        const editorBottom = editorRect.bottom;
+        const viewportHeight =
+          window.innerHeight || document.documentElement.clientHeight;
+
+        const visibleHeight =
+          Math.min(viewportHeight, editorBottom) - Math.max(editorTop, 0);
+        const visiblePercentage = visibleHeight / editorHeight;
+
+        const isEditorVisible = visiblePercentage >= 0.3;
+
+        if (!isEditorVisible) {
+          container.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }
+    };
+
+    scrollToEditor();
   }, [setIsReplying]);
-  // useEffect(() => {
-  //   const scrollAdjustment = commentImg ? 200 : 0;
-
-  //   if (commentInputRef.current) {
-  //     commentInputRef.current.focus();
-  //   }
-
-  //   if (containerRef.current) {
-  //     containerRef.current.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "end",
-  //     });
-  //     window.scrollBy(0, scrollAdjustment);
-  //   }
-  // }, [commentImg, setIsReplying]);
 
   return (
     <div className='comment_input' ref={containerRef}>
-      {/* <TextArea
-        content={commentBody}
-        setContent={setCommentBody}
-        placeholder='Write your comment'
-      /> */}
       <div ref={commentInputRef}>
-        <RichTextEditor
+        <TiptapEditor
           showToolbar={showToolbar}
           setContent={setCommentBody}
-          value={commentBody}
+          content={commentBody}
+          // autoFocus={true}
         />
       </div>
       {imgLoading && (
@@ -367,8 +429,8 @@ const CommentInput: React.FC<ICommentInputProps> = ({
             <Image
               src={commentImg}
               alt='comment_img'
-              width={200}
-              height={200}
+              width={100}
+              height={100}
               className='comment_img'
             />
           </div>

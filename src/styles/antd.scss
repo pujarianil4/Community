@@ -3,6 +3,13 @@
   background-color: var(--secondary-bg) !important;
   color: var(--primary-text) !important;
   padding: 10px !important;
+  .ant-modal-header {
+    background: transparent !important;
+    .ant-modal-title {
+      color: var(--primary-text) !important;
+      margin-bottom: 16px;
+    }
+  }
   .ant-modal-close {
     color: var(--black) !important;
   }
@@ -50,14 +57,15 @@
   .ant-popover-content {
     .ant-popover-inner {
       padding: 5px !important;
-      background-color: var(--secondary-bg) !important;
+      background-color: var(--secondary-bg);
       .ant-popover-inner-content {
-        color: var(--primary-text) !important;
+        color: var(--primary-text);
       }
     }
   }
   .ant-popover-arrow::before {
-    background: var(--secondary-bg) !important;
+    background: var(--secondary-bg);
+    display: none;
   }
 }
 
@@ -109,7 +117,7 @@
     background-color: var(--secondary-bg) !important;
   }
   .ant-menu-item-divider {
-    border-color: var(--devider) !important;
+    border-color: var(--divider) !important;
     border-style: solid;
     border-width: 0;
     border-top-width: 1px;

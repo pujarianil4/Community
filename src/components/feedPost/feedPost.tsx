@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
 import { GoComment } from "react-icons/go";
@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getImageSource, numberWithCommas, timeAgo } from "@/utils/helpers";
-import { IPost } from "@/utils/types/types";
+import { IPost, IVotePayload } from "@/utils/types/types";
 import SwipeCarousel from "../common/carousel";
 import { IoIosMore } from "react-icons/io";
 import {
@@ -16,6 +16,9 @@ import {
   SaveIcon,
   ShareIcon,
 } from "@/assets/icons";
+import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
+import PostPageLoader from "../common/loaders/postPage";
+import { sendVote } from "@/services/api/api";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -23,19 +26,76 @@ const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
 
 interface IProps {
   post: IPost;
+  overlayClassName?: string;
+}
+
+interface Vote {
+  value: number;
+  type: "up" | "down" | "";
 }
 
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-export default function FeedPost({ post }: IProps) {
+export default function FeedPost({ post, overlayClassName }: IProps) {
   const { text, up, down, time, media, user, community, id, ccount } = post;
   const router = useRouter();
+  const [vote, setVote] = useState<Vote>({
+    value: Number(up) + Number(down),
+    type: "",
+  });
 
   const handleRedirectPost = () => {
     router.push(`/post/${id}`);
   };
 
+  const handleVote = async (action: string) => {
+    const previousVote = { ...vote };
+
+    let newVote: Vote = { ...vote };
+
+    if (action === "up") {
+      if (vote.type === "down") {
+        newVote = { value: vote.value + 2, type: "up" };
+      } else if (vote.type === "up") {
+        newVote = { value: vote.value - 1, type: "" };
+      } else {
+        newVote = { value: vote.value + 1, type: "up" };
+      }
+    } else if (action === "down") {
+      if (vote.type === "up") {
+        newVote = { value: vote.value - 2, type: "down" };
+      } else if (vote.type === "down") {
+        newVote = { value: vote.value + 1, type: "" };
+      } else {
+        newVote = { value: vote.value - 1, type: "down" };
+      }
+    }
+
+    setVote(newVote);
+
+    try {
+      if (id) {
+        const payload: IVotePayload = {
+          typ: "p",
+          cntId: id,
+          voteTyp: newVote.type,
+        };
+        const afterVote = await sendVote(payload);
+        console.log("updated", afterVote, payload);
+
+        // setVote({ value: updatedPost.voteCount, type: newVote.type });
+      }
+    } catch (error) {
+      console.error("Vote failed:", error);
+      setVote(previousVote);
+    }
+  };
+
+  if (!post) {
+    return <PostPageLoader />;
+  }
+
   return (
-    <div className='postcard_container'>
+    <div className={`postcard_container ${overlayClassName}`}>
       {/* <div className='user_head'>
         <div>
           <Image src={user?.img ?? imgLink} alt='user' width={24} height={24} />
@@ -116,19 +176,30 @@ export default function FeedPost({ post }: IProps) {
 
       <div className='actions'>
         <div className='up_down'>
-          <DropdownUpIcon width={18} />
-          <span>{up}</span>
-          <DropdownLowIcon width={18} />
+          <PiArrowFatUpDuotone
+            className={vote.type == "up" ? "active" : ""}
+            onClick={() => handleVote("up")}
+            size={18}
+          />
+          <span>{vote.value}</span>
+          <PiArrowFatDownDuotone
+            className={vote.type == "down" ? "active" : ""}
+            onClick={() => handleVote("down")}
+            size={18}
+          />
         </div>
-        <Link href={`post/${id}`} as={`/post/${id}`}>
-          <GoComment size={18} />
-          <span>{numberWithCommas(ccount) || "comments"}</span>
-        </Link>
-        <div>
+        <div className='comments'>
+          <Link href={`post/${id}`} as={`/post/${id}`}>
+            <GoComment size={18} />
+            <span>{numberWithCommas(ccount) || "comments"}</span>
+          </Link>
+        </div>
+
+        <div className='share'>
           <ShareIcon width={18} />
           <span>Share</span>
         </div>
-        <div>
+        <div className='save'>
           <SaveIcon width={16} height={16} />
           <span>Save</span>
         </div>
