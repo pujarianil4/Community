@@ -53,8 +53,8 @@ $light: (
   error-bg: #dc3545,
   error-border: #a52834,
 
-  card-shadow: 0 0.5rem 1.2rem rgb(189 197 209 / 20%),
-  // popup-shadow: -3px 5px 36px 3px #20004c,
+  card-shadow: 0 0.5rem 1.2rem rgb(189 197 209 / 20%)
+    // popup-shadow: -3px 5px 36px 3px #20004c,
   // popup-back-color: #1e174c,
   // popup-border:
   //   linear-gradient(
@@ -63,7 +63,7 @@ $light: (
   //     rgba(110, 86, 255, 0.9),
   //     rgba(108, 84, 255, 0.87),
   //     rgba(32, 13, 148, 0.83)
-  //   ),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+  //   ),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 );
 
 $dark: (
@@ -87,7 +87,7 @@ $dark: (
   tertiary: #393a3d,
   tertiary-bg: #393a3d,
   tertiary-border: #393a3d,
-  devider: rgba(255, 255, 255, 0.3),
+  divider: rgba(255, 255, 255, 0.3),
   success: #00a186,
   label-text: #8ba2ad,
   info: #408dfc,
@@ -139,5 +139,5 @@ $dark: (
   //     rgba(110, 86, 255, 0.9),
   //     rgba(108, 84, 255, 0.87),
   //     rgba(32, 13, 148, 0.83)
-  //   ),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+  //   ),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 );

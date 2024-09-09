@@ -59,7 +59,7 @@ export interface IComment {
   cta: string;
   uta: string;
   user: IUser;
-  img?: string;
+  img: string;
   parentComment?: IComment | null;
   comments?: IComment[];
 }
@@ -126,4 +126,10 @@ declare global {
   interface Window {
     TelegramAuthLogin: TTelegramAuthLogin;
   }
+}
+
+export interface IVotePayload {
+  typ: string;
+  cntId: number;
+  voteTyp: "up" | "down" | "";
 }

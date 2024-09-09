@@ -175,6 +175,7 @@
       display: flex;
       align-items: center;
       gap: 7px;
+      width: 75px;
       // &:hover {
       //   svg {
       //     path {
@@ -184,9 +185,13 @@
       // }
       span {
         font-size: 12px;
+        width: 20px;
+        text-align: center;
       }
       svg {
         cursor: pointer;
+        width: 18px;
+        height: 18px;
         path {
           &:first-child {
             fill: transparent;
@@ -210,6 +215,15 @@
           &:first-child {
             fill: var(--primary);
             opacity: 1;
+          }
+        }
+        &:hover {
+          color: var(--primary);
+          path {
+            &:first-child {
+              fill: var(--primary);
+              opacity: 1;
+            }
           }
         }
       }

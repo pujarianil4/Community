@@ -23,7 +23,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--devider);
+    border-bottom: 1px solid var(--divider);
     padding: 10px 0px;
     h2 {
       color: var(--primary-text);
@@ -105,11 +105,16 @@
       align-items: center;
       gap: 0.7rem;
       margin-bottom: 8px;
+      .post_info {
+        display: flex;
+        gap: 5px;
+      }
       .username {
         font-size: $font-size-sm;
       }
       .community {
-        font-size: $font-size-xsm;
+        font-size: $font-size-xxsm;
+        opacity: 0.8;
       }
       img {
         width: 25px;
