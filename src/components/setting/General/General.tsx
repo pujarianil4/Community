@@ -1,5 +1,7 @@
 "use client";
 import "./index.scss";
+import axios from "axios";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getSignMessage } from "@/config/ethers";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
@@ -77,6 +79,8 @@ declare global {
   }
 }
 
+import SocialAccount from "../socialLinks";
+
 export default function General() {
   const { openConnectModal } = useConnectModal();
   const CommonSelector = (state: RootState) => state?.common;
@@ -105,6 +109,8 @@ export default function General() {
   );
   const hasCalledRef = useRef<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //twitter
 
   const handleOpenModal = () => {
     dispatch(actions.setWalletRoute("linkWallet"));
@@ -144,64 +150,37 @@ export default function General() {
   }, [userAccount.isConnected, user]);
 
   //handle Tg Data
-  const handleAuth = () => {
-    const script = document.createElement("script");
-    script.src = "https://telegram.org/js/telegram-widget.js?27";
-    script.async = true;
-    document.body.appendChild(script);
+  const handleTelegramAuth = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://telegram.org/js/telegram-widget.js?27";
+      script.async = true;
+      document.body.appendChild(script);
 
-    script.onload = () => {
-      if (window.Telegram) {
-        window.Telegram.Login.auth(
-          { bot_id: botID, request_access: true },
-          (data) => {
-            if (!data) {
-              console.error("Authorization failed");
-              return;
+      script.onload = () => {
+        if (window.Telegram) {
+          window.Telegram.Login.auth(
+            { bot_id: botID, request_access: true },
+            (data) => {
+              if (!data) {
+                console.error("Authorization failed");
+                reject("Authorization failed");
+                return;
+              }
+
+              console.log("Telegram data:", data);
+              resolve(data); // Resolve the Promise with the Telegram data
             }
-            console.log("Telegram data:", data);
-            updateUser({ tid: String(data.id) })
-              .then((res) => {
-                refetch();
-                NotificationMessage("success", "Telegram Profile linked.");
-              })
-              .catch((err) => {
-                throw err;
-              });
-          }
-        );
-      }
-    };
-  };
+          );
+        } else {
+          reject("Telegram object not found");
+        }
+      };
 
-  //remove Telegram
-  const removeTelegram = () => {
-    console.log("Removing Telegram profile link...");
-    updateUser({ tid: null })
-      .then((res) => {
-        refetch();
-        NotificationMessage("success", "Telegram Profile unlinked.");
-      })
-      .catch((err) => {
-        console.error("Failed to unlink Telegram Profile:", err);
-        NotificationMessage("error", "Failed to unlink Telegram Profile.");
-      });
-  };
-
-  //remove Discord
-  const removeDiscord = () => {
-    console.log("Removing Discord profile link...");
-
-    updateUser({ did: null })
-      .then((res) => {
-        refetch();
-        console.log("user resopnse ", res);
-        NotificationMessage("success", "Discord Profile unlinked.");
-      })
-      .catch((err) => {
-        console.error("Failed to unlink Discord Profile:", err);
-        NotificationMessage("error", "Failed to unlink Discord Profile.");
-      });
+      script.onerror = () => {
+        reject("Failed to load Telegram script");
+      };
+    });
   };
 
   return (
@@ -209,85 +188,36 @@ export default function General() {
       <div className='general_container'>
         <div>
           <div>
-            {/* Social Connections Accordion */}
-            <Collapse accordion>
+            <Collapse accordion style={{ marginTop: "16px" }}>
               <Panel
                 header='Social Connections'
                 key='1'
                 extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
               >
-                <div className='addresses'>
-                  <div>
-                    <div>
-                      <TelegramIcon width={23} height={28} />
-                      <span className='telegram-user-details'>
-                        {userData?.tid ? `@${userData.tid}` : "Telegram"}
-                      </span>
-                    </div>
-                    <div>
-                      <span>
-                        {userData?.tid ? (
-                          <span onClick={removeTelegram}>
-                            <DeleteIcon />
-                          </span>
-                        ) : (
-                          <span onClick={handleAuth}>
-                            {" "}
-                            <AddIcon
-                              fill='#ffffff'
-                              width={14}
-                              height={14}
-                            />{" "}
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className='addresses'>
-                  <div>
-                    <div>
-                      <DiscordIcon width={23} height={28} />
-                      <span>
-                        {userData?.did ? `@${userData.did}` : "Discord"}
-                      </span>
-                    </div>
-                    <div>
-                      <span>
-                        {userData?.did ? (
-                          <span onClick={removeDiscord}>
-                            <DeleteIcon />
-                          </span>
-                        ) : (
-                          <span onClick={handleDiscordLogin}>
-                            <AddIcon fill='#ffffff' width={14} height={14} />
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className='addresses'>
-                  <div>
-                    <div>
-                      <TwitterIcon width={23} height={28} />
-                      <span className=''>
-                        {userData?.tid ? `@${user.username}` : "X"}
-                      </span>
-                    </div>
-                    <div>
-                      <span>
-                        {userData?.tid ? (
-                          <DeleteIcon />
-                        ) : (
-                          <span onClick={handleTwitterLogin}>
-                            <AddIcon fill='#ffffff' width={14} height={14} />
-                          </span>
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                <SocialAccount
+                  platform='Telegram'
+                  icon={<TelegramIcon width={23} height={28} />}
+                  username={userData?.tid}
+                  fetchUserData={refetch}
+                  authMethod={handleTelegramAuth}
+                  userField='tid'
+                />
+                <SocialAccount
+                  platform='Discord'
+                  icon={<DiscordIcon width={23} height={28} />}
+                  username={userData?.did}
+                  fetchUserData={refetch}
+                  authMethod={handleDiscordLogin}
+                  userField='did'
+                />
+                <SocialAccount
+                  platform='X'
+                  icon={<TwitterIcon width={23} height={28} />}
+                  username={userData?.xid}
+                  fetchUserData={refetch}
+                  authMethod={handleTwitterLogin}
+                  userField='xid'
+                />
               </Panel>
             </Collapse>
 
@@ -336,17 +266,15 @@ export default function General() {
                 extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
               >
                 {sessionData?.map((session: { ip: string; uid: string }) => (
-                  <div key={session.uid} className='addresses'>
-                    <div>
-                      <div>
-                        <MobileIcon />
-                        <span className=''>{session.ip}</span>
-                      </div>
-                      <div>
-                        <span>
-                          <DeleteIcon />
-                        </span>
-                      </div>
+                  <div key={session.uid} className='s_m_bx'>
+                    <span>
+                      <MobileIcon />
+                    </span>
+                    <div className='u_bx'>
+                      <span className='u_txt'>{session.ip}</span>{" "}
+                      <span>
+                        <DeleteIcon />
+                      </span>
                     </div>
                   </div>
                 ))}
