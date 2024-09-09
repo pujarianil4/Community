@@ -1,0 +1,97 @@
+@import "/src/styles";
+.actions {
+  display: flex;
+  gap: 3rem;
+  // justify-content: space-between;
+  margin: 16px 0 0 0px;
+  max-width: 400px;
+
+  @include lessThan(xl) {
+    margin-left: 0;
+  }
+
+  @include lessThan(lg) {
+    gap: 1.5rem;
+  }
+
+  .comments,
+  .save,
+  .share,
+  a {
+    min-width: 50px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    // color: var(--light-tx) !important;
+
+    span {
+      font-size: 12px;
+      color: var(--light-tx) !important;
+    }
+    svg {
+      // color: var(--light-tx);
+      path {
+        stroke: var(--black);
+      }
+    }
+    color: var(--primary-text);
+    // color: var(--light-tx);
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: var(--primary) !important;
+      svg {
+        path {
+          stroke: var(--primary);
+        }
+      }
+    }
+  }
+
+  .save {
+    width: 52px;
+  }
+
+  .share {
+    width: 60px;
+  }
+
+  .up_down {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    span {
+      font-size: 12px;
+    }
+    svg {
+      cursor: pointer;
+      path {
+        &:first-child {
+          fill: transparent;
+          opacity: 1;
+        }
+      }
+      &:hover {
+        color: var(--primary);
+        path {
+          &:first-child {
+            fill: var(--primary);
+            opacity: 0;
+          }
+        }
+      }
+    }
+
+    .active {
+      color: var(--primary);
+      path {
+        &:first-child {
+          fill: var(--primary);
+          opacity: 1;
+        }
+      }
+    }
+  }
+}

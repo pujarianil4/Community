@@ -1,0 +1,55 @@
+@import "/src/styles";
+
+.comment_post_card {
+  width: 100%;
+  border-radius: 12px;
+  background-color: var(--secondary-bg);
+  margin: 1.5rem 0;
+  padding: 1rem;
+
+  .markdown_container {
+    font-size: $font-size-md;
+  }
+
+  .comment {
+    padding: 1rem;
+    background-color: var(--wrapper-bg);
+    margin-top: 16px;
+    border-radius: 12px;
+
+    .user_head {
+      height: 40px;
+    }
+
+    .markdown_container {
+      font-size: $font-size-sm;
+    }
+  }
+
+  .user_head {
+    z-index: 10;
+    height: 48px;
+    img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .names {
+      a {
+        color: var(--label-text) !important;
+      }
+      .user_name {
+        font-size: $font-size-md;
+        font-weight: $font-weight-medium;
+      }
+      .community_name {
+        font-size: 12px;
+      }
+    }
+
+    .post_time {
+      font-size: $font-size-xsm;
+      margin-top: 12px;
+    }
+  }
+}

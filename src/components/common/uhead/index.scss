@@ -1,0 +1,57 @@
+.user_head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-direction: row;
+  margin-bottom: 8px;
+  height: 56px;
+  img {
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+  }
+
+  a {
+    color: var(--primary-text) !important;
+    transition: color 0.3s ease;
+    &:hover {
+      color: var(--primary);
+    }
+    line-height: 1.3;
+  }
+  a,
+  p {
+    font-size: 15px;
+  }
+
+  .names {
+    display: flex;
+    flex-direction: column;
+    .user_name {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--primary-text);
+    }
+
+    .community_name {
+      color: var(--primary-text);
+    }
+
+    a:hover {
+      color: var(--link-hover-color) !important;
+    }
+  }
+  .post_time {
+    margin-bottom: auto;
+    margin-top: 8px;
+    color: var(--label-text);
+  }
+  .more {
+    margin-left: auto;
+    cursor: pointer;
+    svg {
+      fill: var(--label-text);
+    }
+  }
+}

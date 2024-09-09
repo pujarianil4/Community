@@ -47,7 +47,7 @@
 
 // //linkTarget="_blank"
 
-import React from "react";
+import React, { CSSProperties } from "react";
 import ReactMarkdown from "react-markdown";
 
 interface MarkdownRendererProps {
@@ -70,20 +70,30 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
   };
 
-  const truncateContent = (content: string, maxLength: number) => {
-    if (content.length > maxLength) {
-      return content.slice(0, maxLength) + "...";
-    }
-    return content;
-  };
+  const dynamicStyle: CSSProperties = limit
+    ? {
+        display: "-webkit-box",
+        WebkitLineClamp: limit,
+        WebkitBoxOrient: "vertical" as const,
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+      }
+    : {};
 
-  const truncatedContent = limit
-    ? truncateContent(markdownContent, limit)
-    : markdownContent;
+  // const truncateContent = (content: string, maxLength: number) => {
+  //   if (content.length > maxLength) {
+  //     return content.slice(0, maxLength) + "...";
+  //   }
+  //   return content;
+  // };
+
+  // const truncatedContent = limit
+  //   ? truncateContent(markdownContent, limit)
+  //   : markdownContent;
 
   return (
-    <div className='markdown_container'>
-      <ReactMarkdown components={components}>{truncatedContent}</ReactMarkdown>
+    <div className='markdown_container' style={dynamicStyle}>
+      <ReactMarkdown components={components}>{markdownContent}</ReactMarkdown>
     </div>
   );
 };
