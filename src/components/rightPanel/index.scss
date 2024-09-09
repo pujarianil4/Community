@@ -87,6 +87,7 @@
     }
   }
   .post_heading {
+    max-width: 276px;
     border-bottom: 1px solid var(--devider);
     padding: 1rem 0px;
     h2 {
@@ -138,6 +139,7 @@
         }
       }
       .post_content {
+        // position: relative;
         width: 100%;
         max-height: 96px;
         min-height: 78px;
@@ -149,6 +151,7 @@
           overflow: hidden;
           height: 68px;
           cursor: pointer;
+          // width: 160px;
           p,
           h1,
           h2,
@@ -164,6 +167,8 @@
           strong {
             font-size: 12px;
             color: var(--primary-text) !important;
+            max-width: 100%; // Ensure the content does not exceed the parent’s width
+            box-sizing: border-box;
           }
         }
       }

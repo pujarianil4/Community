@@ -1,5 +1,9 @@
 "use client";
-import { getImageSource, getRandomImageLink } from "@/utils/helpers";
+import {
+  getImageSource,
+  getRandomImageLink,
+  identifyMediaType,
+} from "@/utils/helpers";
 import React from "react";
 import "./index.scss";
 import { DropdownUpIcon, MessageIcon } from "@/assets/icons";
@@ -19,6 +23,10 @@ export default function Post({ post }: IProps) {
   const handleRedirectPost = () => {
     router.push(`/post/${post?.id}`);
   };
+  const isMedia =
+    post?.media &&
+    post?.media.length > 0 &&
+    identifyMediaType(post?.media[0]) === "image";
   return (
     <div className='post_heading'>
       <div className='post_bx'>
@@ -37,7 +45,7 @@ export default function Post({ post }: IProps) {
       <div className='post_content_bx'>
         <div className='post_inn_bx' onClick={handleRedirectPost}>
           {/* TODO: Update for Video too */}
-          {post?.media && post?.media.length > 0 && (
+          {isMedia && post?.media && (
             <Image
               src={post?.media[0]}
               alt='post_img'
@@ -48,8 +56,12 @@ export default function Post({ post }: IProps) {
           )}
         </div>
         <div className='post_content'>
-          <div className='redirect_content' onClick={handleRedirectPost}>
-            <MarkdownRenderer markdownContent={post?.text} limit={120} />
+          <div
+            style={{ width: `${isMedia ? "164px" : "276px"}` }}
+            className='redirect_content'
+            onClick={handleRedirectPost}
+          >
+            <MarkdownRenderer markdownContent={post?.text} limit={3} />
           </div>
           <div className='post_comment'>
             <span>
