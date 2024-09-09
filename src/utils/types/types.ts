@@ -27,7 +27,7 @@ export interface ICommunity {
   metadata: string;
   pCount: number;
   followers: number;
-  totalSupply: number;
+  tSupply: number;
   sts: number;
   cta: string;
   uta: string;
