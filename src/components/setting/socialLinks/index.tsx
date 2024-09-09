@@ -27,7 +27,7 @@ const SocialAccount: React.FC<SocialAccountProps> = ({
         if (data) {
           updateUser({ [userField]: String(data.id) })
             .then(() => {
-              fetchUserData(); // Refetch user data to get updated info
+              fetchUserData();
               NotificationMessage("success", `${platform} Profile linked.`);
             })
             .catch((err) => {

@@ -168,8 +168,21 @@ export default function General() {
                 return;
               }
 
+              updateUser({ [data?.id]: String(data.id) })
+                .then(() => {
+                  refetch();
+                  NotificationMessage("success", " Telegram Profile linked.");
+                })
+                .catch((err) => {
+                  console.error(`Failed to link Telgram Profile:`, err);
+                  NotificationMessage(
+                    "error",
+                    "Failed to link Telegram Profile."
+                  );
+                });
+
               console.log("Telegram data:", data);
-              resolve(data); // Resolve the Promise with the Telegram data
+              resolve(data);
             }
           );
         } else {
