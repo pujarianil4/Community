@@ -23,7 +23,11 @@ export default function User() {
   ];
   return (
     <>
-      <CardList cardListData={dummyData as IUser[]} type='u' />
+      <CardList
+        cardListData={dummyData as IUser[]}
+        type='u'
+        isLoading={isLoading}
+      />
     </>
   );
 }

@@ -20,7 +20,11 @@ export default function Communities() {
   ];
   return (
     <>
-      <CardList cardListData={dummyData as ICommunity[]} type='c' />
+      <CardList
+        cardListData={dummyData as ICommunity[]}
+        type='c'
+        isLoading={isLoading}
+      />
     </>
   );
 }

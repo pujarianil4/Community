@@ -3,6 +3,8 @@ import "./index.scss";
 import Card from "./card";
 import { ICommunity, IUser } from "@/utils/types/types";
 import CFilter from "../common/Filter";
+import EmptyData from "../common/Empty";
+import CardListLoader from "./cardListLoader";
 
 interface List {
   value: string;
@@ -13,6 +15,7 @@ interface IProps {
   type: "u" | "c";
   showFilters?: boolean;
   handleFilter?: (filter: List) => void;
+  isLoading?: boolean;
 }
 
 export default function CardList({
@@ -20,9 +23,14 @@ export default function CardList({
   type = "u",
   showFilters = false,
   handleFilter,
+  isLoading = false,
 }: IProps) {
+  if (!isLoading && cardListData?.length === 0) {
+    return <EmptyData />;
+  }
   return (
     //community Filters :['pCount','followers','tSupply','sts','cta', 'uta']
+
     <main>
       {showFilters && (
         <section className='filters'>
@@ -51,22 +59,34 @@ export default function CardList({
         </section>
       )}
       <section className='communities'>
-        {cardListData &&
-          cardListData?.map((card) => {
-            if (type === "c") {
-              return (
-                <Card
-                  key={card?.id}
-                  cardData={card as ICommunity}
-                  type={type}
-                />
-              );
-            } else {
-              return (
-                <Card key={card?.id} cardData={card as IUser} type={type} />
-              );
-            }
-          })}
+        {!isLoading ? (
+          <>
+            {cardListData &&
+              cardListData?.map((card) => {
+                if (type === "c") {
+                  return (
+                    <Card
+                      key={card?.id}
+                      cardData={card as ICommunity}
+                      type={type}
+                    />
+                  );
+                } else {
+                  return (
+                    <Card key={card?.id} cardData={card as IUser} type={type} />
+                  );
+                }
+              })}
+          </>
+        ) : (
+          <div className='communities'>
+            {Array(12)
+              .fill(() => 0)
+              .map((_: any, i: number) => (
+                <CardListLoader key={i} />
+              ))}
+          </div>
+        )}
       </section>
     </main>
   );

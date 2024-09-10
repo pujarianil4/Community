@@ -37,7 +37,13 @@ export default function SearchPostItem({ post }: IProps) {
         <Actions post={post} />
       </div>
       {firstMediaIsImage && (
-        <Image src={media[0]} alt='' width={160} height={128} />
+        <Image
+          className='post_img'
+          src={media[0]}
+          alt=''
+          width={160}
+          height={128}
+        />
       )}
     </article>
   );

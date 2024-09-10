@@ -28,6 +28,7 @@ export default function CommunitiesList() {
         type='c'
         showFilters
         handleFilter={(filter) => handleFilter(filter)}
+        isLoading={isLoading}
       />
     </>
   );

@@ -6,6 +6,8 @@ import useAsync from "@/hooks/useAsync";
 import { getPosts } from "@/services/api/api";
 import SearchPostItem from "./post";
 import { IPost } from "@/utils/types/types";
+import PostLoader from "./postLoader";
+import EmptyData from "@/components/common/Empty";
 
 interface List {
   value: string;
@@ -19,6 +21,10 @@ export default function Posts() {
   const handleFilter = (filter: List) => {
     callFunction(getPosts, filter.value);
   };
+
+  if (posts.length === 0 && !isLoading) {
+    return <EmptyData />;
+  }
   return (
     <main className='search_post_container'>
       {/* Update Filters as per data */}
@@ -46,11 +52,21 @@ export default function Posts() {
           defaultListIndex={0}
         />
       </section>
-      <section>
-        {posts?.map((post: IPost) => (
-          <SearchPostItem key={post?.id} post={post} />
-        ))}
-      </section>
+      {isLoading ? (
+        <>
+          {Array(5)
+            .fill(() => 0)
+            .map((_: any, i: number) => (
+              <PostLoader key={i} />
+            ))}
+        </>
+      ) : (
+        <section>
+          {posts?.map((post: IPost) => (
+            <SearchPostItem key={post?.id} post={post} />
+          ))}
+        </section>
+      )}
     </main>
   );
 }

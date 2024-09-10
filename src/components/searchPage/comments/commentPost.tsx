@@ -42,7 +42,10 @@ export default function CommentPost() {
       username: "Unilend",
       name: "Unilend",
       ticker: "UFT",
-      logo: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
+      img: {
+        pro: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
+        cvr: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
+      },
       metadata: "unilend",
       pCount: 5,
       followers: 3,
