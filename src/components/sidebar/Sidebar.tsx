@@ -203,7 +203,7 @@ const SideBar: React.FC = () => {
           <div className='community_item'>
             <img
               loading='lazy'
-              src={cm?.logo}
+              src={getImageSource(cm?.img?.pro)}
               alt='profile'
               onError={handleError}
             />
