@@ -22,7 +22,7 @@ export default function Card({ cardData, type = "u" }: IProps) {
           className='cover_photo'
           src={
             type === "c"
-              ? (cardData as ICommunity)?.logo
+              ? (cardData as ICommunity)?.img.cvr
               : (cardData as IUser)?.img?.cvr
           } // TODO: Update c image
           alt='cover_photo'
@@ -33,7 +33,7 @@ export default function Card({ cardData, type = "u" }: IProps) {
           className='main_photo'
           src={
             type === "c"
-              ? (cardData as ICommunity)?.logo
+              ? (cardData as ICommunity)?.img.pro
               : (cardData as IUser)?.img?.pro
           }
           alt='main_photo'

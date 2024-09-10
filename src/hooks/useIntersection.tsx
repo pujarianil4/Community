@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 export function useIntersectionObserver(
-  ref: React.RefObject<HTMLVideoElement>,
+  ref: React.RefObject<HTMLVideoElement | HTMLDivElement>,
   options: IntersectionObserverInit = {
     root: null,
     rootMargin: "100px",
