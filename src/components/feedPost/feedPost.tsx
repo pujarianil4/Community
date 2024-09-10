@@ -19,6 +19,7 @@ import {
 import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 import PostPageLoader from "../common/loaders/postPage";
 import { sendVote } from "@/services/api/api";
+import ShareButton from "../common/shareButton";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -195,10 +196,11 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
           </Link>
         </div>
 
-        <div className='share'>
-          <ShareIcon width={18} />
-          <span>Share</span>
-        </div>
+        <ShareButton
+          postTitle={text}
+          postUrl={`http://localhost:3000/post/${id}`}
+          postImage={media?.[0] || ""}
+        />
         <div className='save'>
           <SaveIcon width={16} height={16} />
           <span>Save</span>

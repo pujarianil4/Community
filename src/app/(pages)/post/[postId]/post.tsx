@@ -18,7 +18,7 @@ import {
 } from "@/assets/icons";
 import PostPageLoader from "@/components/common/loaders/postPage";
 import { sendVote } from "@/services/api/api";
-
+import ShareButton from "@/components/common/shareButton";
 interface Iprops {
   post: IPost;
 }
@@ -179,10 +179,15 @@ export default function Post({ post }: Iprops) {
           <span>{post?.ccount > 0 ? post.ccount : "comments"}</span>
         </div>
 
-        <div className='share'>
+        {/* <div className='share'>
           <ShareIcon width={18} />
           <span>Share</span>
-        </div>
+        </div> */}
+        <ShareButton
+          postTitle={post.text}
+          postUrl={`http://localhost:3000/post/${post.id}`}
+          postImage={post.media?.[0] || ""}
+        />
         <div className='save'>
           <SaveIcon width={16} height={16} />
           <span>Save</span>

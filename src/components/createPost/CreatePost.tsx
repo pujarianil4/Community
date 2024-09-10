@@ -4,7 +4,11 @@ import React, { useState, useEffect, useRef, memo } from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
-import { MdDeleteOutline, MdOutlineGifBox } from "react-icons/md";
+import {
+  MdDeleteOutline,
+  MdEmojiEmotions,
+  MdOutlineGifBox,
+} from "react-icons/md";
 import {
   fetchCommunities,
   handlePostToCommunity,
@@ -301,12 +305,11 @@ const CreatePost: React.FC<Props> = ({
             )}
             <div className='inputs'>
               <FileInput onChange={handleUploadFile}>
-                <LuImagePlus color='var(--primary)' size={20} />
+                <LuImagePlus color='#636466' size={20} />
               </FileInput>
-              <span className={uploadMsg.type}>{uploadMsg?.msg}</span>
-              {/* <MdOutlineGifBox color='var(--primary)' size={20} />
-            <LuImagePlus color='var(--primary)' size={20} /> */}
               <LinkIcon />
+              <MdEmojiEmotions color='#636466' size={20} />
+              <span className={uploadMsg.type}>{uploadMsg?.msg}</span>
             </div>
           </div>
         </div>
