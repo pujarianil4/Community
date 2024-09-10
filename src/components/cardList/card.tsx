@@ -3,7 +3,7 @@ import React from "react";
 import { ICommunity, IUser } from "@/utils/types/types";
 import Image from "next/image";
 import CButton from "@/components/common/Button";
-import { numberWithCommas } from "@/utils/helpers";
+import { getImageSource, numberWithCommas } from "@/utils/helpers";
 import CommunityFollowButton from "../communityFollowBtn";
 import UserFollowButton from "../communityFollowBtn/userFollowbtn";
 import { useRouter } from "next/navigation";
@@ -34,11 +34,12 @@ export default function Card({ cardData, type = "u" }: IProps) {
       <div className='photo_section'>
         <Image
           className='cover_photo'
-          src={
+          src={getImageSource(
             type === "c"
               ? (cardData as ICommunity)?.img?.cvr
-              : (cardData as IUser)?.img?.cvr
-          } // TODO: Update c image
+              : (cardData as IUser)?.img?.cvr,
+            "cvr"
+          )} // TODO: Update c image
           alt='cover_photo'
           width={176}
           height={50}
@@ -47,8 +48,8 @@ export default function Card({ cardData, type = "u" }: IProps) {
           className='main_photo'
           src={
             type === "c"
-              ? (cardData as ICommunity)?.img?.pro
-              : (cardData as IUser)?.img?.pro
+              ? getImageSource((cardData as ICommunity)?.img?.pro, "c")
+              : getImageSource((cardData as IUser)?.img?.pro, "u")
           }
           alt='main_photo'
           width={56}

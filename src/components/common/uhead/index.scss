@@ -49,9 +49,29 @@
   }
   .more {
     margin-left: auto;
-    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     svg {
       fill: var(--label-text);
     }
+    .options {
+      cursor: pointer;
+      display: flex;
+      justify-content: end;
+    }
+    .views {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      span {
+        color: var(--label-text);
+        font-size: 10px;
+      }
+    }
   }
+}
+
+.options_popup {
+  width: 200px;
 }
