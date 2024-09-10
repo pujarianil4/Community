@@ -41,12 +41,14 @@ export default function CommunityFollowButton({ communityId }: IProps) {
   }, [data]);
 
   return (
-    <CButton
-      className='follow_btn'
-      loading={isLoadingFollow || isLoading}
-      onClick={handleFollowToggle}
-    >
-      {isFollowed ? "Joined" : "Join"}
-    </CButton>
+    <div onClick={(event) => event.stopPropagation()}>
+      <CButton
+        className='follow_btn'
+        loading={isLoadingFollow || isLoading}
+        onClick={handleFollowToggle}
+      >
+        {isFollowed ? "Joined" : "Join"}
+      </CButton>
+    </div>
   );
 }

@@ -25,6 +25,7 @@
   flex-direction: column;
   overflow: hidden;
   background-color: var(--secondary-bg);
+  cursor: pointer;
 
   @include lessThan(xl) {
     width: 45%;

@@ -6,6 +6,7 @@ import CButton from "@/components/common/Button";
 import { numberWithCommas } from "@/utils/helpers";
 import CommunityFollowButton from "../communityFollowBtn";
 import UserFollowButton from "../communityFollowBtn/userFollowbtn";
+import { useRouter } from "next/navigation";
 
 interface IUserCardProps {
   cardData: IUser;
@@ -16,11 +17,20 @@ interface ICommunityCardProps {
   cardData: ICommunity;
   type: "c";
 }
-// TODO: ADD FOLLOW API, ADD Redirect url
+// TODO: ADD Redirect url
 type IProps = ICommunityCardProps | IUserCardProps;
 export default function Card({ cardData, type = "u" }: IProps) {
+  const router = useRouter();
+
+  const handleRedirect = () => {
+    if (type == "c") {
+      router.push(`/c/${cardData?.username}`);
+    } else {
+      router.push(`/u/${cardData?.username}`);
+    }
+  };
   return (
-    <section className='card_container'>
+    <section className='card_container' onClick={handleRedirect}>
       <div className='photo_section'>
         <Image
           className='cover_photo'
@@ -30,7 +40,7 @@ export default function Card({ cardData, type = "u" }: IProps) {
               : (cardData as IUser)?.img?.cvr
           } // TODO: Update c image
           alt='cover_photo'
-          width={200}
+          width={176}
           height={50}
         />
         <Image

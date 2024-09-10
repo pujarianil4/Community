@@ -73,7 +73,7 @@ export default function UserFollowButton({ userId }: IProps) {
   }, [user, data, refetchData]);
 
   return (
-    <>
+    <div onClick={(event) => event.stopPropagation()}>
       {isSelf ? (
         <CButton onClick={handleEdit} className='follow_btn'>
           Edit
@@ -87,6 +87,6 @@ export default function UserFollowButton({ userId }: IProps) {
           {isFollowed ? "Joined" : "Join"}
         </CButton>
       )}
-    </>
+    </div>
   );
 }
