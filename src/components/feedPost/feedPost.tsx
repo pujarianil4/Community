@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
 import { GoComment } from "react-icons/go";
@@ -20,6 +20,9 @@ import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 import PostPageLoader from "../common/loaders/postPage";
 import { sendVote } from "@/services/api/api";
 import ShareButton from "../common/shareButton";
+import { useIntersectionObserver } from "@/hooks/useIntersection";
+import UHead from "../common/uhead";
+import Actions from "../common/actions";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -38,6 +41,9 @@ interface Vote {
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post, overlayClassName }: IProps) {
   const { text, up, down, time, media, user, community, id, ccount } = post;
+  const postRef = useRef<HTMLDivElement | null>(null);
+  const stayTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isViewed = useIntersectionObserver(postRef);
   const router = useRouter();
   const [vote, setVote] = useState<Vote>({
     value: Number(up) + Number(down),
@@ -91,45 +97,27 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
     }
   };
 
+  useEffect(() => {
+    if (isViewed) {
+      stayTimerRef.current = setTimeout(() => {
+        //call view count api
+        console.log("viewed", id);
+      }, 3000);
+    } else {
+      if (stayTimerRef.current) {
+        clearTimeout(stayTimerRef.current);
+        stayTimerRef.current = null;
+      }
+    }
+  }, [isViewed]);
+
   if (!post) {
     return <PostPageLoader />;
   }
 
   return (
-    <div className={`postcard_container ${overlayClassName}`}>
+    <div ref={postRef} className={`postcard_container ${overlayClassName}`}>
       {/* <div className='user_head'>
-        <div>
-          <Image src={user?.img ?? imgLink} alt='user' width={24} height={24} />
-          <Link href={`u/${user.username}`} as={`/u/${user.username}`}>
-            <div className='head'>
-              <Image
-                src={getImageSource(user.img, true)}
-                alt='user'
-                width={24}
-                height={24}
-              />
-              <span>{user?.username ?? "User Name"}</span>
-            </div>
-          </Link>
-          <LiaArrowRightSolid />
-          <Link
-            href={`c/${community?.username}`}
-            as={`/c/${community.username}`}
-          >
-            <div className='head'>
-              <Image
-                src={community?.logo || imgLink}
-                alt='community'
-                width={24}
-                height={24}
-              />
-              <span>{community?.username ?? "Community"}</span>
-            </div>
-          </Link>
-        </div>
-        <span>{timeAgo(time)}</span>
-      </div> */}
-      <div className='user_head'>
         <Link
           href={`u/${post?.user.username}`}
           as={`/u/${post?.user.username}`}
@@ -162,7 +150,16 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
         <div className='more'>
           <IoIosMore />
         </div>
-      </div>
+      </div> */}
+
+      {post && (
+        <UHead
+          user={post.user}
+          community={post.community}
+          time={post.time}
+          showMore
+        />
+      )}
 
       <div
         className='content'
@@ -175,7 +172,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
         {media && media?.length > 0 && <SwipeCarousel assets={media} />}
       </div>
 
-      <div className='actions'>
+      {/* <div className='actions'>
         <div className='up_down'>
           <PiArrowFatUpDuotone
             className={vote.type == "up" ? "active" : ""}
@@ -205,7 +202,8 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
           <SaveIcon width={16} height={16} />
           <span>Save</span>
         </div>
-      </div>
+      </div> */}
+      <Actions type='p' post={post} showSave showShare />
     </div>
   );
 }

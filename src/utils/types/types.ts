@@ -23,7 +23,7 @@ export interface ICommunity {
   username: string;
   name: string;
   ticker: string;
-  logo: string;
+  img: IImsg;
   metadata: string;
   pCount: number;
   followers: number;

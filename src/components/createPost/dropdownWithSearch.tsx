@@ -77,7 +77,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
                 <List.Item onClick={() => handleSelect(item)}>
                   {/* <div className='dropdown_item'>
                     <Image
-                      src={getImageSource(item?.logo, "c")}
+                      src={getImageSource(item?.img?.pro, "c")}
                       alt={item?.name}
                       width={32}
                       height={32}

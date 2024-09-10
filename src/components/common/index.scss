@@ -234,3 +234,29 @@
     display: none;
   }
 }
+
+.cpopup_content {
+  width: 120px;
+  padding: 5px;
+  .option {
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--primary-text);
+    text-transform: capitalize;
+    border-radius: 5px;
+    &:hover {
+      // background: var(--secondary-bg);
+      opacity: 0.8;
+    }
+
+    span {
+      font-size: 11px;
+    }
+    svg {
+      width: 20px;
+    }
+  }
+}
