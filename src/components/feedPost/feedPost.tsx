@@ -21,6 +21,7 @@ import PostPageLoader from "../common/loaders/postPage";
 import { sendVote } from "@/services/api/api";
 import { useIntersectionObserver } from "@/hooks/useIntersection";
 import UHead from "../common/uhead";
+import Actions from "../common/actions";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -170,7 +171,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
         {media && media?.length > 0 && <SwipeCarousel assets={media} />}
       </div>
 
-      <div className='actions'>
+      {/* <div className='actions'>
         <div className='up_down'>
           <PiArrowFatUpDuotone
             className={vote.type == "up" ? "active" : ""}
@@ -199,7 +200,8 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
           <SaveIcon width={16} height={16} />
           <span>Save</span>
         </div>
-      </div>
+      </div> */}
+      <Actions type='p' post={post} showSave showShare />
     </div>
   );
 }

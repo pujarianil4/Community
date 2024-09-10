@@ -83,7 +83,7 @@ export default function UHead({
       <p className='post_time'>&bull; {timeAgo(time)}</p>
       {showMore && (
         <div className='more'>
-          <CPopup list={popupList}>
+          <CPopup list={popupList} onAction='hover'>
             <div className='options'>
               <IoIosMore />
             </div>

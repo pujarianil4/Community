@@ -9,9 +9,10 @@ interface List {
 interface IPopup {
   children: React.ReactNode;
   list: Array<List>;
+  onAction?: "click" | "hover";
 }
 
-export default function CPopup({ children, list }: IPopup) {
+export default function CPopup({ children, list, onAction = "click" }: IPopup) {
   const content = (
     <div className='cpopup_content'>
       {list?.map(({ icon: Icon, label }: List) => (
@@ -28,7 +29,7 @@ export default function CPopup({ children, list }: IPopup) {
       className='filter_popover'
       overlayClassName='filter_popover'
       content={content}
-      trigger='click'
+      trigger={onAction}
     >
       {children}
     </Popover>
