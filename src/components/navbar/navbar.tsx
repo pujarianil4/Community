@@ -52,6 +52,7 @@ import TelegramLogin from "../common/auth/telegramAuth";
 import { TelegramAuthData } from "@/utils/types/types";
 import { handleDiscordLogin } from "./discordLogin";
 import { SignUpModal } from "../common/auth/signUpModal";
+import Searchbar from "./searchbar";
 export interface ISignupData {
   username: string;
   name: string;
@@ -246,13 +247,7 @@ export default function Navbar() {
               <h2>Numity</h2>
             </Link>
           </div>
-          <div className='search_container'>
-            <CInput
-              prefix={<IoSearch />}
-              placeholder='Search Post Here'
-              className='search'
-            />
-          </div>
+          <Searchbar />
         </div>
 
         <div className='signin'>

@@ -834,3 +834,41 @@ export function UploadIcon({
     </svg>
   );
 }
+
+export function CloseIcon({
+  fill = "#636466",
+  width = 18,
+  height = 18,
+}: IIConProps) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox='0 0 18 18'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <path
+        d='M9 17C13.4183 17 17 13.4183 17 9C17 4.58172 13.4183 1 9 1C4.58172 1 1 4.58172 1 9C1 13.4183 4.58172 17 9 17Z'
+        stroke={fill}
+        strokeWidth='1.6'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M11.4001 6.59998L6.6001 11.4'
+        stroke={fill}
+        strokeWidth='1.6'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M6.6001 6.59998L11.4001 11.4'
+        stroke={fill}
+        strokeWidth='1.6'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  );
+}

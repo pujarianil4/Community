@@ -1,0 +1,71 @@
+@import "/src/styles";
+.search_post_container {
+  .filters {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.25rem;
+  }
+}
+
+.search_post_item {
+  margin: 2rem 0;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+
+  .content {
+    .markdown_container {
+      max-height: 44px;
+      font-size: $font-size-md;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    // Head
+    .user_head {
+      z-index: 10;
+      img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .names {
+        a {
+          color: var(--label-text) !important;
+        }
+        .user_name {
+          font-size: 16px;
+          font-weight: $font-weight-medium;
+        }
+        .community_name {
+          font-size: 12px;
+        }
+      }
+
+      .post_time {
+        font-size: $font-size-xsm;
+        margin-top: 12px;
+      }
+    }
+  }
+  img {
+    max-width: 160px;
+    width: 100%;
+    aspect-ratio: 1.25;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  @include lessThan(lg) {
+    img {
+      max-width: 120px;
+      max-height: 96px;
+    }
+  }
+}
