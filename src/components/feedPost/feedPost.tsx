@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
 import { GoComment } from "react-icons/go";
@@ -19,6 +19,7 @@ import {
 import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 import PostPageLoader from "../common/loaders/postPage";
 import { sendVote } from "@/services/api/api";
+import { useIntersectionObserver } from "@/hooks/useIntersection";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -37,6 +38,9 @@ interface Vote {
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post, overlayClassName }: IProps) {
   const { text, up, down, time, media, user, community, id, ccount } = post;
+  const postRef = useRef<HTMLDivElement | null>(null);
+  const stayTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isViewed = useIntersectionObserver(postRef);
   const router = useRouter();
   const [vote, setVote] = useState<Vote>({
     value: Number(up) + Number(down),
@@ -90,12 +94,26 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
     }
   };
 
+  useEffect(() => {
+    if (isViewed) {
+      stayTimerRef.current = setTimeout(() => {
+        //call view count api
+        console.log("viewed", id);
+      }, 3000);
+    } else {
+      if (stayTimerRef.current) {
+        clearTimeout(stayTimerRef.current);
+        stayTimerRef.current = null;
+      }
+    }
+  }, [isViewed]);
+
   if (!post) {
     return <PostPageLoader />;
   }
 
   return (
-    <div className={`postcard_container ${overlayClassName}`}>
+    <div ref={postRef} className={`postcard_container ${overlayClassName}`}>
       {/* <div className='user_head'>
         <div>
           <Image src={user?.img ?? imgLink} alt='user' width={24} height={24} />
