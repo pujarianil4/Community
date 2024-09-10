@@ -18,6 +18,7 @@ const discord = () => {
               NotificationMessage("success", "Discord Profile linked.");
             })
             .catch((err) => {
+              router.push("/settings");
               throw err;
             });
 

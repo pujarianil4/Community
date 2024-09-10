@@ -17,9 +17,16 @@ import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
 import { IUser } from "@/utils/types/types";
-import { debounce, getImageSource, setClientSideCookie } from "@/utils/helpers";
+import {
+  debounce,
+  getImageSource,
+  getRandomImageLink,
+  setClientSideCookie,
+} from "@/utils/helpers";
 import NotificationMessage from "@/components/common/Notification";
-import { UploadIcon } from "@/assets/icons";
+import { LinkIcon, UploadIcon } from "@/assets/icons";
+import Avatar from "@/components/common/loaders/userAvatar";
+import ProfileAvatar from "@/components/common/loaders/profileAvatar";
 
 export default function Profile() {
   const [{ dispatch, actions }, [userData]] = useRedux([
@@ -31,6 +38,9 @@ export default function Profile() {
   const [isUploading, setIsUploading] = useState(false);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+
+  const [imageError, setImageError] = useState(false);
   const fileRefs = {
     cover: useRef<HTMLInputElement>(null),
     avatar: useRef<HTMLInputElement>(null),
@@ -108,7 +118,7 @@ export default function Profile() {
         name: data.name,
         img: {
           pro: getImageSource(data?.img?.pro, "u"),
-          cvr: getImageSource(data?.img?.cvr, "u"),
+          cvr: getImageSource(data?.img?.cvr, "cov"),
         },
 
         desc: data?.desc,
@@ -118,8 +128,8 @@ export default function Profile() {
     }
   }, [data]);
 
-  const setFallbackURL = () => {
-    //'https://picsum.photos/200/300'
+  const setFallbackURL = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = getRandomImageLink();
   };
 
   const handleSave = () => {
@@ -212,15 +222,25 @@ export default function Profile() {
     }
   };
 
+  const handleImageLoad = () => {
+    setIsImageLoading(false);
+  };
+
   return (
     <div className='profile_container'>
       <div className='cover_bx'>
-        <img
-          loading='lazy'
-          onError={setFallbackURL}
-          src={user?.img?.cvr}
-          alt='Cover Img'
-        />
+        {!user?.img?.cvr ? (
+          <ProfileAvatar />
+        ) : (
+          <img
+            loading='lazy'
+            onLoad={handleImageLoad}
+            onError={setFallbackURL}
+            src={user?.img?.cvr}
+            alt='Cover Img'
+          />
+        )}
+
         <div onClick={() => fileRefs.cover.current?.click()} className='upload'>
           <UploadIcon />
           <input
@@ -235,12 +255,18 @@ export default function Profile() {
         {isUploadingCover && <span className='cvrmsg'>uploading...</span>}
       </div>
       <div className='avatar'>
-        <img
-          loading='lazy'
-          onError={setFallbackURL}
-          src={user?.img?.pro}
-          alt='Avatar'
-        />
+        {!user?.img?.pro ? (
+          <Avatar />
+        ) : (
+          <img
+            loading='lazy'
+            onLoad={handleImageLoad}
+            onError={setFallbackURL}
+            src={user?.img?.pro}
+            alt='Avatar Image'
+          />
+        )}
+
         <div
           onClick={() => fileRefs.avatar.current?.click()}
           className='upload'
@@ -255,7 +281,7 @@ export default function Profile() {
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploadingAvatar && <span className='msg'>uploading...</span>}
+        {isUploadingAvatar && <span className='msg'>Uploading...</span>}
       </div>
 
       <div className='info'>

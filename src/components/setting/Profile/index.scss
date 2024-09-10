@@ -31,7 +31,8 @@
       height: 30px;
       cursor: pointer;
       svg {
-        margin: 4px;
+        margin-left: 7px;
+        margin-top: 5px;
       }
     }
   }
@@ -59,17 +60,19 @@
       right: -80px;
       bottom: 0px;
     }
+
     .upload {
       position: absolute;
-      right: 2px;
-      bottom: 30px;
+      right: -36px;
+      bottom: 0px;
       background: var(--secondary-bg);
       border-radius: 50%;
       width: 30px;
       height: 30px;
       cursor: pointer;
       svg {
-        margin: 4px;
+        margin-left: 7px;
+        margin-top: 5px;
       }
     }
   }

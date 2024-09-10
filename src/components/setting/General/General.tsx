@@ -17,7 +17,6 @@ import { sigMsg } from "@/utils/constants";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import React, { useEffect, useRef, useState } from "react";
 import { useAccount, useDisconnect } from "wagmi";
-import TelegramLogin from "@/components/common/auth/telegramAuth";
 import CButton from "@/components/common/Button";
 import { TelegramAuthData } from "@/utils/types/types";
 import NotificationMessage from "@/components/common/Notification";
@@ -43,43 +42,12 @@ import {
   DeleteFilled,
 } from "@ant-design/icons";
 
-//discord
-import { handleDiscordLogin } from "../socialLinks/discordLogin";
-import { handleTwitterLogin } from "../socialLinks/twitter/loginButton";
+//Auth Import
+import Discord from "@/components/common/auth/DiscordAuth";
+import TwitterConnect from "@/components/common/auth/TwitterAuth";
+import TelegramConnect from "@/components/common/auth/TelegramAuth";
 
 const { Panel } = Collapse;
-
-//tg types
-interface TelegramLoginData {
-  auth_date: number;
-  first_name: string;
-  hash: string;
-  id: number;
-  last_name?: string;
-  username?: string;
-}
-
-interface Telegram {
-  Login: {
-    auth: (
-      options: {
-        bot_id: string | undefined;
-        request_access?: boolean;
-        lang?: string;
-      },
-      callback: (data: TelegramLoginData | false) => void
-    ) => void;
-  };
-}
-
-// Extend the global Window interface to include Telegram
-declare global {
-  interface Window {
-    Telegram: Telegram;
-  }
-}
-
-import SocialAccount from "../socialLinks";
 
 export default function General() {
   const { openConnectModal } = useConnectModal();
@@ -148,52 +116,15 @@ export default function General() {
       callFunction(getAddressesByUserId, user.uid);
     }
   }, [userAccount.isConnected, user]);
-
-  //handle Tg Data
-  const handleTelegramAuth = (): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "https://telegram.org/js/telegram-widget.js?27";
-      script.async = true;
-      document.body.appendChild(script);
-
-      script.onload = () => {
-        if (window.Telegram) {
-          window.Telegram.Login.auth(
-            { bot_id: botID, request_access: true },
-            (data) => {
-              if (!data) {
-                console.error("Authorization failed");
-                reject("Authorization failed");
-                return;
-              }
-
-              updateUser({ [data?.id]: String(data.id) })
-                .then(() => {
-                  refetch();
-                  NotificationMessage("success", " Telegram Profile linked.");
-                })
-                .catch((err) => {
-                  console.error(`Failed to link Telgram Profile:`, err);
-                  NotificationMessage(
-                    "error",
-                    "Failed to link Telegram Profile."
-                  );
-                });
-
-              console.log("Telegram data:", data);
-              resolve(data);
-            }
-          );
-        } else {
-          reject("Telegram object not found");
-        }
-      };
-
-      script.onerror = () => {
-        reject("Failed to load Telegram script");
-      };
-    });
+  const removeSession = () => {
+    // updateUser({ tid: null })
+    //   .then(() => {
+    //     refetch();
+    //     NotificationMessage("success", "Telegram Profile unlinked.");
+    //   })
+    //   .catch(() => {
+    //     NotificationMessage("error", "Failed to unlink Telegram Profile.");
+    //   });
   };
 
   return (
@@ -207,30 +138,9 @@ export default function General() {
                 key='1'
                 extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
               >
-                <SocialAccount
-                  platform='Telegram'
-                  icon={<TelegramIcon width={23} height={28} />}
-                  username={userData?.tid}
-                  fetchUserData={refetch}
-                  authMethod={handleTelegramAuth}
-                  userField='tid'
-                />
-                <SocialAccount
-                  platform='Discord'
-                  icon={<DiscordIcon width={23} height={28} />}
-                  username={userData?.did}
-                  fetchUserData={refetch}
-                  authMethod={handleDiscordLogin}
-                  userField='did'
-                />
-                <SocialAccount
-                  platform='X'
-                  icon={<TwitterIcon width={23} height={28} />}
-                  username={userData?.xid}
-                  fetchUserData={refetch}
-                  authMethod={handleTwitterLogin}
-                  userField='xid'
-                />
+                <TelegramConnect />
+                <Discord />
+                <TwitterConnect />
               </Panel>
             </Collapse>
 
@@ -285,7 +195,7 @@ export default function General() {
                     </span>
                     <div className='u_bx'>
                       <span className='u_txt'>{session.ip}</span>{" "}
-                      <span>
+                      <span onClick={removeSession}>
                         <DeleteIcon />
                       </span>
                     </div>
