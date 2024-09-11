@@ -34,7 +34,7 @@ declare global {
   }
 }
 
-const SocialConnections = () => {
+const TelegramAuth = () => {
   const botID = process.env.NEXT_PUBLIC_TELEGRAM_BOT_ID;
 
   const {
@@ -125,4 +125,4 @@ const SocialConnections = () => {
   );
 };
 
-export default SocialConnections;
+export default TelegramAuth;

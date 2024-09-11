@@ -16,7 +16,7 @@ async function handleDiscordLogin() {
   window.location.href = oauthUrl;
 }
 
-const SocialConnections = () => {
+const DiscordAuth = () => {
   const {
     isLoading: userDataLoading,
     data: userData,
@@ -60,4 +60,4 @@ const SocialConnections = () => {
   );
 };
 
-export default SocialConnections;
+export default DiscordAuth;

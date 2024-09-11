@@ -28,7 +28,7 @@ async function handleTwitterLogin() {
   window.location.href = authUrl;
 }
 
-const SocialConnections = () => {
+const TwitterAuth = () => {
   const {
     isLoading: userDataLoading,
     data: userData,
@@ -71,4 +71,4 @@ const SocialConnections = () => {
   );
 };
 
-export default SocialConnections;
+export default TwitterAuth;

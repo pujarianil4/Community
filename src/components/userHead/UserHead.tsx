@@ -208,7 +208,7 @@ export default function UserHead() {
               <div className='activity'>
                 <div className='about' onClick={viewDesc}>
                   <MarkdownRenderer
-                    markdownContent={data?.metadata}
+                    markdownContent={data?.desc}
                     limit={!isExpanded ? 3 : undefined}
                   />
                 </div>
