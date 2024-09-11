@@ -1,9 +1,11 @@
+"use client";
 import { getImageSource, timeAgo } from "@/utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import CButton from "../common/Button";
 import MarkdownRenderer from "../common/MarkDownRender";
+import { useRouter } from "next/navigation";
 
 export default function ProposalItem() {
   // TODO: create seperate component for USER_HEAD
@@ -44,6 +46,10 @@ export default function ProposalItem() {
   const content =
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.";
 
+  const router = useRouter();
+  const handleRedirect = () => {
+    router.push(`/p/${proposalId}`);
+  };
   return (
     <>
       <section className='proposal_Item'>
@@ -77,37 +83,37 @@ export default function ProposalItem() {
             </Link>
           </div>
           <p className='post_time'>&bull; {timeAgo(time)}</p>
-          <CButton>{isActive ? "Active" : "Ended"}</CButton>
+          {/* TODO: add action */}
+          <CButton onClick={() => {}}>{isActive ? "Active" : "Ended"}</CButton>
           {/* <div className='more'><IoIosMore /></div> */}
         </div>
-        <Link href={`p/${proposalId}`} as={`/p/${proposalId}`}>
-          <div className='proposal_data'>
-            <div className='content'>
-              <MarkdownRenderer markdownContent={content} />
-              <div className='stats'>
-                <p>On going</p>
-                <p>452 WUFT</p>
-                <p>Started on January 12,2023</p>
-              </div>
-            </div>
-            <div className='votes'>
-              <div className='range_bar_data'>
-                <div className='range_data'>
-                  <p>Yes</p>
-                  <p className='yes'>{yesCount} WUFT</p>
-                </div>
-                <RangeBar total={yesCount + noCount} current={yesCount} />
-              </div>
-              <div className='range_bar_data'>
-                <div className='range_data'>
-                  <p>No</p>
-                  <p className='no'>{noCount} WUFT</p>
-                </div>
-                <RangeBar total={yesCount + noCount} current={noCount} />
-              </div>
+
+        <div className='proposal_data' onClick={handleRedirect}>
+          <div className='content'>
+            <MarkdownRenderer markdownContent={content} />
+            <div className='stats'>
+              <p>On going</p>
+              <p>452 WUFT</p>
+              <p>Started on January 12,2023</p>
             </div>
           </div>
-        </Link>
+          <div className='votes'>
+            <div className='range_bar_data'>
+              <div className='range_data'>
+                <p>Yes</p>
+                <p className='yes'>{yesCount} WUFT</p>
+              </div>
+              <RangeBar total={yesCount + noCount} current={yesCount} />
+            </div>
+            <div className='range_bar_data'>
+              <div className='range_data'>
+                <p>No</p>
+                <p className='no'>{noCount} WUFT</p>
+              </div>
+              <RangeBar total={yesCount + noCount} current={noCount} />
+            </div>
+          </div>
+        </div>
       </section>
     </>
   );

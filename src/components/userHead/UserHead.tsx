@@ -168,7 +168,7 @@ export default function UserHead() {
                 height={220}
               /> */}
               <Image
-                src={getImageSource(data?.img?.cvr, "other")}
+                src={getImageSource(data?.img?.cvr, "cvr")}
                 alt='cover_photo'
                 loading='lazy'
                 width={768}
