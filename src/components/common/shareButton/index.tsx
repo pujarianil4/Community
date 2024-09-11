@@ -1,16 +1,17 @@
 import React, { useState } from "react";
+import Head from "next/head";
 import { Modal, Button, message } from "antd";
 import { ShareIcon } from "@/assets/icons";
 import "./index.scss";
 import {
   FacebookShareButton,
   TwitterShareButton,
-  LinkedinShareButton,
-  WhatsappShareButton,
+  TelegramShareButton,
+  TelegramIcon,
   FacebookIcon,
   TwitterIcon,
-  LinkedinIcon,
-  WhatsappIcon,
+  RedditShareButton,
+  RedditIcon,
 } from "next-share";
 
 interface ShareModalProps {
@@ -49,6 +50,24 @@ const ShareButton: React.FC<ShareModalProps> = ({
 
   return (
     <>
+      <Head>
+        {/* Open Graph meta tags */}
+        <title> Social media platform for post</title>
+        <meta name='description' content='Hi tis is my Title ' />
+        <link rel='icon'> href="#" </link>
+        <meta property='og:image' content={postImage || ""} />
+        <meta property='og:url' content={postUrl} />
+        <meta property='og:title' content={postTitle} />
+        <meta property='og:description' content={postTitle} />
+
+        {/* Twitter Card meta tags */}
+        <meta name='twitter:card' content='summary_large_image' />
+        <meta name='twitter:title' content={postTitle} />
+        <meta name='twitter:description' content={postTitle} />
+        <meta name='twitter:image' content={postImage} />
+        <meta name='twitter:url' content={postUrl} />
+      </Head>
+
       <div className='share' onClick={showModal}>
         <ShareIcon width={18} />
         <span>Share</span>
@@ -80,24 +99,22 @@ const ShareButton: React.FC<ShareModalProps> = ({
           }}
         >
           {/* Facebook */}
-          <FacebookShareButton url={postUrl} quote={postTitle}>
+          <FacebookShareButton url={postUrl} quote={"hi this is my first post"}>
             <FacebookIcon size={32} round />
           </FacebookShareButton>
 
           {/* Twitter */}
-          <TwitterShareButton url={postUrl} title={postTitle}>
+          <TwitterShareButton url={postUrl} title={"hi this is my first post"}>
             <TwitterIcon size={32} round />
           </TwitterShareButton>
 
-          {/* LinkedIn */}
-          <LinkedinShareButton url={postUrl}>
-            <LinkedinIcon size={32} round />
-          </LinkedinShareButton>
+          <TelegramShareButton url={postUrl} title={"hi this is my first post"}>
+            <TelegramIcon size={32} round />
+          </TelegramShareButton>
 
-          {/* WhatsApp */}
-          <WhatsappShareButton url={postUrl} title={postTitle} separator=':: '>
-            <WhatsappIcon size={32} round />
-          </WhatsappShareButton>
+          <RedditShareButton url={postUrl} title={"hi this is my first post"}>
+            <RedditIcon size={32} round />
+          </RedditShareButton>
         </div>
 
         {/* Copy Link Button */}

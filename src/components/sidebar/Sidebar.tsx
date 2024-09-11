@@ -43,6 +43,7 @@ import {
 } from "@/assets/icons";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
+import TurndownService from "turndown";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -270,7 +271,10 @@ interface ICommunityForm {
   username?: string;
   ticker?: string;
   metadata?: string;
-  logo?: string;
+  img: {
+    pro: string;
+    cvr: string;
+  };
 }
 interface ICreateCommunityModal {
   onClose: () => void;
@@ -284,7 +288,10 @@ const CreateCommunityModal = ({
   const [imgSrc, setImgSrc] = useState(getImageSource(null, "c"));
   const [imgSrcCover, setImgSrcCover] = useState(getImageSource(null, "cov"));
   const [form, setForm] = useState<ICommunityForm>({
-    logo: imgSrc,
+    img: {
+      pro: imgSrc,
+      cvr: imgSrcCover,
+    },
     name: "",
     username: "",
     metadata: "",
@@ -296,12 +303,17 @@ const CreateCommunityModal = ({
     msg: "",
   });
   const { isLoading, callFunction, data } = useAsync();
-  const fileRef = useRef<HTMLInputElement>(null);
+  const fileRefs = {
+    cover: useRef<HTMLInputElement>(null),
+    avatar: useRef<HTMLInputElement>(null),
+  };
   const closeBtn = document.querySelector(".ant-modal-close");
 
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [content, setContent] = useState<string>("");
+  const turndownService = new TurndownService();
+  const markDownContent = turndownService.turndown(content);
 
   const onPickFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -309,30 +321,34 @@ const CreateCommunityModal = ({
         setIsUploadingAvatar(true);
         const file = event.target.files[0];
         const imgURL = await uploadSingleFile(file);
-        console.log("IMGURL", imgURL);
-
         setImgSrc(imgURL);
-        setForm({ ...form, logo: imgURL });
+        setForm((prevForm) => ({
+          ...prevForm,
+          img: { ...prevForm.img, pro: imgURL },
+        }));
         setIsUploadingAvatar(false);
       } catch (error) {
-        NotificationMessage("error", "Uploading failed");
+        NotificationMessage("error", "Avatar uploading failed");
         setIsUploadingAvatar(false);
       }
     }
   };
 
+  // Handle cover image upload
   const onCoverImg = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       try {
         setIsUploadingCover(true);
         const file = event.target.files[0];
         const imgURL = await uploadSingleFile(file);
-        console.log("IMGURL", imgURL);
         setImgSrcCover(imgURL);
-        setForm({ ...form, logo: imgURL });
+        setForm((prevForm) => ({
+          ...prevForm,
+          img: { ...prevForm.img, cvr: imgURL },
+        }));
         setIsUploadingCover(false);
       } catch (error) {
-        NotificationMessage("error", "Uploading failed");
+        NotificationMessage("error", "Cover uploading failed");
         setIsUploadingCover(false);
       }
     }
@@ -343,7 +359,10 @@ const CreateCommunityModal = ({
       // Clear states when the modal is closed
       onClose();
       setForm({
-        logo: imgSrc,
+        img: {
+          pro: imgSrc,
+          cvr: imgSrcCover,
+        },
         name: "",
         username: "",
         metadata: "",
@@ -427,7 +446,7 @@ const CreateCommunityModal = ({
       form.name?.trim() !== "" &&
       form.username?.trim() !== "" &&
       form.ticker?.trim() !== "" &&
-      form.metadata?.trim() !== "";
+      markDownContent?.trim() !== "";
     console.log("isFormValid", bool);
     if (usernameError.type == "error") {
       return false;
@@ -438,8 +457,11 @@ const CreateCommunityModal = ({
   const handleCreateCommunity = async () => {
     try {
       console.log("Form", form);
-
-      await callFunction(createCommunity, form);
+      const communityForm = {
+        ...form,
+        metadata: markDownContent,
+      };
+      await callFunction(createCommunity, communityForm);
       NotificationMessage("success", "Community Created");
       refetchCommunities();
       onClose();
@@ -466,7 +488,7 @@ const CreateCommunityModal = ({
   return (
     <div className='create_community_container'>
       <div className='cover_bx'>
-        {!imgSrc ? (
+        {!imgSrcCover ? (
           <span>Loading...</span>
         ) : (
           <img
@@ -478,12 +500,14 @@ const CreateCommunityModal = ({
         )}
 
         <div
-          onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
+          onClick={() =>
+            fileRefs.cover.current?.click && fileRefs.cover.current?.click()
+          }
           className='upload'
         >
           <UploadIcon />
           <input
-            ref={fileRef}
+            ref={fileRefs.cover}
             onChange={onCoverImg}
             type='file'
             name='file'
@@ -506,12 +530,14 @@ const CreateCommunityModal = ({
         )}
 
         <div
-          onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
+          onClick={() =>
+            fileRefs.avatar.current?.click && fileRefs.avatar.current?.click()
+          }
           className='upload'
         >
           <UploadIcon />
           <input
-            ref={fileRef}
+            ref={fileRefs.avatar}
             onChange={onPickFile}
             type='file'
             name='file'

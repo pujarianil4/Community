@@ -27,7 +27,8 @@ import NotificationMessage from "@/components/common/Notification";
 import { LinkIcon, UploadIcon } from "@/assets/icons";
 import Avatar from "@/components/common/loaders/userAvatar";
 import ProfileAvatar from "@/components/common/loaders/profileAvatar";
-
+import TiptapEditor from "@components/common/tiptapEditor";
+import TurndownService from "turndown";
 export default function Profile() {
   const [{ dispatch, actions }, [userData]] = useRedux([
     (state: RootState) => state.user,
@@ -45,6 +46,9 @@ export default function Profile() {
     cover: useRef<HTMLInputElement>(null),
     avatar: useRef<HTMLInputElement>(null),
   };
+  const [content, setContent] = useState<string>("");
+  const turndownService = new TurndownService();
+  const markDownDesc = turndownService.turndown(content);
 
   const [user, setUser] = useState<any>({
     username: "",
@@ -125,6 +129,7 @@ export default function Profile() {
       };
       setUser(userData);
       setOriginalUser(userData);
+      setContent(data?.desc);
     }
   }, [data]);
 
@@ -136,12 +141,13 @@ export default function Profile() {
     const updates: Partial<IUser> = {
       img: {
         pro: user.img.pro,
+        cvr: user.img.cvr,
       },
     };
     if (user.username !== originalUser.username)
       updates.username = user.username;
     if (user.name !== originalUser.name) updates.name = user.name;
-    if (user.desc !== originalUser.desc) updates.desc = user.desc;
+    if (markDownDesc !== originalUser.desc) updates.desc = markDownDesc;
     if (user.img.pro !== originalUser.img.pro) {
       if (updates.img) {
         updates.img.pro = user.img.pro;
@@ -305,13 +311,20 @@ export default function Profile() {
 
       <div className='info'>
         <span className='label'>Bio</span>
-        <textarea
+        {/* <textarea
           rows={5}
           cols={10}
           onChange={handleChange}
           name='desc'
           defaultValue={user.desc}
-        />
+        /> */}
+        <div className='editor'>
+          <TiptapEditor
+            setContent={setContent}
+            content={content}
+            autoFocus={false}
+          />
+        </div>
       </div>
       <div className='btns'>
         <p

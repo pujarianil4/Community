@@ -263,7 +263,7 @@
         background: transparent;
         border: 1px solid var(--primary-border);
         border-radius: 8px;
-        color: var(--primary-border);
+        color: var(--primary-text);
         outline: none;
       }
 
@@ -299,12 +299,14 @@
         height: 16px;
       }
 
-      .error {
+      .user_msg_error {
         color: var(--error);
+        margin-right: 1rem;
       }
 
-      .success {
+      .user_msg {
         color: var(--success);
+        margin-right: 1rem;
       }
     }
   }

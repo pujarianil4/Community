@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Head from "next/head";
 import "./index.scss";
 import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 import Link from "next/link";
@@ -7,6 +8,7 @@ import { numberWithCommas } from "@/utils/helpers";
 import { SaveIcon, ShareIcon } from "@/assets/icons";
 import { IPost, IVotePayload } from "@/utils/types/types";
 import { sendVote } from "@/services/api/api";
+import ShareButton from "../shareButton";
 
 interface IProps {
   post: IPost;
@@ -20,14 +22,13 @@ interface Vote {
   type: "up" | "down" | "";
 }
 
-// TODO: add actions share, save
 export default function Actions({
   post,
   type,
   showShare = false,
   showSave = false,
 }: IProps) {
-  const { up, down, id, ccount } = post;
+  const { up, down, id, ccount, text, media } = post;
 
   const [vote, setVote] = useState<Vote>({
     value: Number(up) + Number(down),
@@ -36,7 +37,6 @@ export default function Actions({
 
   const handleVote = async (action: string) => {
     const previousVote = { ...vote };
-
     let newVote: Vote = { ...vote };
 
     if (action === "up") {
@@ -68,48 +68,60 @@ export default function Actions({
         };
         const afterVote = await sendVote(payload);
         console.log("updated", afterVote, payload);
-
-        // setVote({ value: updatedPost.voteCount, type: newVote.type });
       }
     } catch (error) {
       console.error("Vote failed:", error);
       setVote(previousVote);
     }
   };
-  return (
-    <div className='actions'>
-      <div className='up_down'>
-        <PiArrowFatUpDuotone
-          className={vote.type == "up" ? "active" : ""}
-          onClick={() => handleVote("up")}
-          size={18}
-        />
-        <span>{vote.value}</span>
-        <PiArrowFatDownDuotone
-          className={vote.type == "down" ? "active" : ""}
-          onClick={() => handleVote("down")}
-          size={18}
-        />
-      </div>
-      <div className='comments'>
-        <Link href={`post/${id}`} as={`/post/${id}`}>
-          <GoComment size={18} />
-          <span>{numberWithCommas(ccount) || "comments"}</span>
-        </Link>
-      </div>
 
-      {showShare && (
-        <div className='share'>
-          <ShareIcon width={18} />
-          <span>Share</span>
+  // Dynamic URL creation
+  const [postUrl, setPostUrl] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const currentDomain = window.location.origin;
+      setPostUrl(`${currentDomain}/post/${id}`);
+    }
+  }, [id]);
+
+  return (
+    <>
+      <div className='actions'>
+        <div className='up_down'>
+          <PiArrowFatUpDuotone
+            className={vote.type == "up" ? "active" : ""}
+            onClick={() => handleVote("up")}
+            size={18}
+          />
+          <span>{vote.value}</span>
+          <PiArrowFatDownDuotone
+            className={vote.type == "down" ? "active" : ""}
+            onClick={() => handleVote("down")}
+            size={18}
+          />
         </div>
-      )}
-      {showSave && (
-        <div className='save'>
-          <SaveIcon width={16} height={16} />
-          <span>Save</span>
+        <div className='comments'>
+          <Link href={`post/${id}`} as={`/post/${id}`}>
+            <GoComment size={18} />
+            <span>{numberWithCommas(ccount) || "comments"}</span>
+          </Link>
         </div>
-      )}
-    </div>
+
+        {showShare && (
+          <ShareButton
+            postTitle={text}
+            postUrl={postUrl}
+            postImage={media?.[0] || ""}
+          />
+        )}
+        {showSave && (
+          <div className='save'>
+            <SaveIcon width={16} height={16} />
+            <span>Save</span>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

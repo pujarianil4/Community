@@ -92,8 +92,11 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   //   : markdownContent;
 
   return (
-    <div className='markdown_container' style={dynamicStyle}>
-      <ReactMarkdown components={components}>{markdownContent}</ReactMarkdown>
+    <div>
+      <div className='markdown_container' style={dynamicStyle}>
+        <ReactMarkdown components={components}>{markdownContent}</ReactMarkdown>
+      </div>
+      <button>view</button>
     </div>
   );
 };

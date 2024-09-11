@@ -91,11 +91,11 @@
       background: transparent;
       border: 1px solid var(--primary-border);
       border-radius: 12px;
-      color: var(--primary-border);
+      color: var(--primary-text);
       outline: none;
     }
 
-    textarea {
+    .editor {
       resize: none;
       padding: 10px;
       background: transparent;
@@ -103,6 +103,7 @@
       border-radius: 12px;
       color: var(--primary-text);
       outline: none;
+      height: 140px;
     }
   }
   .save_btn {
