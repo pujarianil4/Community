@@ -22,7 +22,7 @@ export default function Posts() {
     callFunction(getPosts, filter.value);
   };
 
-  if (posts.length === 0 && !isLoading) {
+  if (posts?.length === 0 && !isLoading) {
     return <EmptyData />;
   }
   return (

@@ -34,7 +34,7 @@ export default function SearchPostItem({ post }: IProps) {
       <div className='content'>
         <UHead user={user} community={community} time={time} />
         <MarkdownRenderer markdownContent={text} limit={2} />
-        <Actions post={post} />
+        <Actions post={post} type='p' />
       </div>
       {firstMediaIsImage && (
         <Image
