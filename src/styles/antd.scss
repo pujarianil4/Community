@@ -147,3 +147,194 @@
   color: var(--label-text) !important;
   opacity: 0.5 !important;
 }
+
+// ant tree
+
+// .comments {
+//   .ant-tree-treenode {
+//     padding: 0px;
+//   }
+//   .ant-tree,
+//   .ant-tree-node-selected {
+//     background-color: var(--primary-bg);
+
+//     color: var(--secondary-text);
+
+//     .ant-tree-indent-unit,
+//     .ant-tree-indent-unit-start {
+//       border-inline-end: none;
+//     }
+
+//     .ant-tree-show-line {
+//       .ant-tree-indent-unit {
+//         &::before {
+//           left: 11px;
+//           top: 11px;
+//           border-inline-end: none;
+//         }
+//       }
+//     }
+//   }
+//   .ant-tree-treenode,
+//   .ant-tree-treenode-switcher-close,
+//   .ant-tree-treenode-switcher-open {
+//     .ant-tree-node-content-wrapper .ant-tree-node-content-wrapper-normal {
+//       width: 100% !important;
+//     }
+//     width: 100%;
+//     &::after {
+//       content: "";
+//       height: 100%;
+//       position: absolute;
+//       left: 11px;
+//       top: 18px;
+//       border-inline-end: none;
+//     }
+//   }
+//   .ant-tree-node-content-wrapper .ant-tree-node-content-wrapper-normal {
+//     width: 100% !important;
+//   }
+//   .ant-tree .ant-tree-node-content-wrapper {
+//     width: 100% !important;
+//   }
+//   .ant-tree-indent-unit {
+//     &::before {
+//       border-inline-end: none;
+//     }
+//   }
+
+//   .ant-tree-switcher {
+//     top: 18px;
+//     &::after {
+//       content: "";
+//       height: 100%;
+//       position: absolute;
+//       left: 17px;
+//       top: 11px;
+//       border-inline-end: 1px solid var(--secondary-text);
+//     }
+//   }
+
+//   .ant-tree-indent-unit-start {
+//     &::before {
+//       left: 17px;
+//       // top: 11px !important;
+//       bottom: 25px;
+//       border-inline-end: 1px solid var(--secondary-text) !important;
+//     }
+//   }
+//   .ant-tree-node-selected {
+//     background: transparent !important;
+//   }
+//   .ant-tree-indent-unit {
+//     border-inline-end: none;
+//   }
+//   .ant-tree-switcher-leaf-line {
+//     left: 6px;
+//     &::before {
+//       border-inline-end: 1px solid var(--secondary-text) !important;
+//     }
+//   }
+//   .ant-tree-switcher-leaf-line {
+//     &::after {
+//       border-bottom: 1px solid var(--secondary-text) !important;
+//     }
+//   }
+//   .ant-tree-switcher-line-icon {
+//     vertical-align: 0.85em !important;
+//     position: relative;
+//     left: 5px;
+//     top: -1px;
+//   }
+// }
+
+.comments {
+  .ant-tree-treenode,
+  .ant-tree-treenode-switcher-close,
+  .ant-tree-treenode-switcher-open {
+    width: 100%;
+    position: relative;
+    padding: 0;
+
+    &::after {
+      content: "";
+      height: 100%;
+      position: absolute;
+      left: 11px;
+      top: 18px;
+      border-inline-end: none;
+    }
+
+    .ant-tree-node-content-wrapper-normal,
+    .ant-tree-node-content-wrapper {
+      width: 100% !important;
+    }
+  }
+
+  .ant-tree,
+  .ant-tree-node-selected {
+    background-color: var(--primary-bg);
+    color: var(--secondary-text);
+    border-inline-end: none;
+
+    .ant-tree-indent-unit,
+    .ant-tree-indent-unit-start {
+      border-inline-end: none;
+    }
+
+    .ant-tree-show-line {
+      .ant-tree-indent-unit::before {
+        left: 11px;
+        top: 11px;
+        border-inline-end: none;
+      }
+    }
+  }
+
+  .ant-tree-switcher {
+    top: 18px;
+
+    &::after {
+      content: "";
+      height: 100%;
+      position: absolute;
+      left: 17px;
+      top: 11px;
+      border-inline-end: 1px solid var(--secondary-text);
+    }
+  }
+
+  .ant-tree-indent-unit-start::before {
+    left: 17px;
+    bottom: -25px !important;
+    border-inline-end: 1px solid var(--secondary-text) !important;
+  }
+
+  .ant-tree-node-selected {
+    background: transparent !important;
+  }
+
+  .ant-tree-switcher-leaf-line {
+    left: 6px;
+
+    &::before,
+    &::after {
+      border-color: var(--secondary-text) !important;
+    }
+
+    &::before {
+      border-inline-end: 1px solid;
+    }
+
+    &::after {
+      border-bottom: 1px solid;
+    }
+  }
+
+  .ant-tree-switcher-line-icon {
+    vertical-align: 0.85em !important;
+    position: relative;
+    left: 5px;
+    top: -1px;
+  }
+}
