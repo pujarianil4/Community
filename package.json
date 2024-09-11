@@ -29,6 +29,7 @@
     "encoding": "^0.1.13",
     "ethers": "^6.13.1",
     "next": "14.2.5",
+    "next-share": "^0.27.0",
     "nookies": "^2.5.2",
     "pino-pretty": "^11.2.2",
     "react": "^18",

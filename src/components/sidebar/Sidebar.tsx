@@ -12,7 +12,7 @@ import { FcAbout } from "react-icons/fc";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import { PiGlobeStand } from "react-icons/pi";
 import { MdOutlineTopic, MdContentPaste } from "react-icons/md";
-
+import TiptapEditor from "../common/tiptapEditor";
 import "./index.scss";
 import CButton from "../common/Button";
 import {
@@ -39,9 +39,11 @@ import {
   NotificationIcon,
   SettingIcon,
   StatIcon,
+  UploadIcon,
 } from "@/assets/icons";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
+import TurndownService from "turndown";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -249,7 +251,12 @@ const SideBar: React.FC = () => {
           />
         </div>
       </div>
-      <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
+      <Modal
+        open={isModalOpen}
+        onCancel={handleCancel}
+        className='community-model'
+        footer={<></>}
+      >
         <CreateCommunityModal
           onClose={handleCancel}
           refetchCommunities={handleCallback}
@@ -264,7 +271,10 @@ interface ICommunityForm {
   username?: string;
   ticker?: string;
   metadata?: string;
-  logo?: string;
+  img: {
+    pro: string;
+    cvr: string;
+  };
 }
 interface ICreateCommunityModal {
   onClose: () => void;
@@ -276,8 +286,12 @@ const CreateCommunityModal = ({
   refetchCommunities,
 }: ICreateCommunityModal) => {
   const [imgSrc, setImgSrc] = useState(getImageSource(null, "c"));
+  const [imgSrcCover, setImgSrcCover] = useState(getImageSource(null, "cvr"));
   const [form, setForm] = useState<ICommunityForm>({
-    logo: imgSrc,
+    img: {
+      pro: imgSrc,
+      cvr: imgSrcCover,
+    },
     name: "",
     username: "",
     metadata: "",
@@ -289,24 +303,53 @@ const CreateCommunityModal = ({
     msg: "",
   });
   const { isLoading, callFunction, data } = useAsync();
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const fileRefs = {
+    cover: useRef<HTMLInputElement>(null),
+    avatar: useRef<HTMLInputElement>(null),
+  };
   const closeBtn = document.querySelector(".ant-modal-close");
+
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [content, setContent] = useState<string>("");
+  const turndownService = new TurndownService();
+  const markDownContent = turndownService.turndown(content);
 
   const onPickFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       try {
-        setIsUploading(true);
+        setIsUploadingAvatar(true);
         const file = event.target.files[0];
         const imgURL = await uploadSingleFile(file);
-        console.log("IMGURL", imgURL);
-
         setImgSrc(imgURL);
-        setForm({ ...form, logo: imgURL });
-        setIsUploading(false);
+        setForm((prevForm) => ({
+          ...prevForm,
+          img: { ...prevForm.img, pro: imgURL },
+        }));
+        setIsUploadingAvatar(false);
       } catch (error) {
-        NotificationMessage("error", "Uploading failed");
-        setIsUploading(false);
+        NotificationMessage("error", "Avatar uploading failed");
+        setIsUploadingAvatar(false);
+      }
+    }
+  };
+
+  // Handle cover image upload
+  const onCoverImg = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      try {
+        setIsUploadingCover(true);
+        const file = event.target.files[0];
+        const imgURL = await uploadSingleFile(file);
+        setImgSrcCover(imgURL);
+        setForm((prevForm) => ({
+          ...prevForm,
+          img: { ...prevForm.img, cvr: imgURL },
+        }));
+        setIsUploadingCover(false);
+      } catch (error) {
+        NotificationMessage("error", "Cover uploading failed");
+        setIsUploadingCover(false);
       }
     }
   };
@@ -316,7 +359,10 @@ const CreateCommunityModal = ({
       // Clear states when the modal is closed
       onClose();
       setForm({
-        logo: imgSrc,
+        img: {
+          pro: imgSrc,
+          cvr: imgSrcCover,
+        },
         name: "",
         username: "",
         metadata: "",
@@ -324,6 +370,11 @@ const CreateCommunityModal = ({
       });
     });
   }, [closeBtn]);
+
+  //fallback img
+  const setFallbackURL = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = getRandomImageLink();
+  };
 
   const debouncedCheckUsername = debounce(async (username: string) => {
     // try {
@@ -395,7 +446,7 @@ const CreateCommunityModal = ({
       form.name?.trim() !== "" &&
       form.username?.trim() !== "" &&
       form.ticker?.trim() !== "" &&
-      form.metadata?.trim() !== "";
+      markDownContent?.trim() !== "";
     console.log("isFormValid", bool);
     if (usernameError.type == "error") {
       return false;
@@ -406,8 +457,11 @@ const CreateCommunityModal = ({
   const handleCreateCommunity = async () => {
     try {
       console.log("Form", form);
-
-      await callFunction(createCommunity, form);
+      const communityForm = {
+        ...form,
+        metadata: markDownContent,
+      };
+      await callFunction(createCommunity, communityForm);
       NotificationMessage("success", "Community Created");
       refetchCommunities();
       onClose();
@@ -433,16 +487,57 @@ const CreateCommunityModal = ({
 
   return (
     <div className='create_community_container'>
-      <div className='avatar'>
-        <img src={imgSrc} alt='logo' />
+      <div className='cover_bx'>
+        {!imgSrcCover ? (
+          <span>Loading...</span>
+        ) : (
+          <img
+            loading='lazy'
+            onError={setFallbackURL}
+            src={imgSrcCover}
+            alt='Avatar'
+          />
+        )}
 
         <div
-          onClick={() => fileRef?.current?.click && fileRef?.current?.click()}
+          onClick={() =>
+            fileRefs.cover.current?.click && fileRefs.cover.current?.click()
+          }
           className='upload'
         >
-          <FiUpload size={20} />
+          <UploadIcon />
           <input
-            ref={fileRef}
+            ref={fileRefs.cover}
+            onChange={onCoverImg}
+            type='file'
+            name='file'
+            accept='image/*'
+            style={{ visibility: "hidden" }}
+          />
+        </div>
+        {isUploadingCover && <span className='cvrmsg'>uploading...</span>}
+      </div>
+      <div className='avatar'>
+        {!imgSrc ? (
+          <span>Loading...</span>
+        ) : (
+          <img
+            loading='lazy'
+            onError={setFallbackURL}
+            src={imgSrc}
+            alt='Avatar'
+          />
+        )}
+
+        <div
+          onClick={() =>
+            fileRefs.avatar.current?.click && fileRefs.avatar.current?.click()
+          }
+          className='upload'
+        >
+          <UploadIcon />
+          <input
+            ref={fileRefs.avatar}
             onChange={onPickFile}
             type='file'
             name='file'
@@ -450,8 +545,9 @@ const CreateCommunityModal = ({
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploading && <span className='msg'>uploading...</span>}
+        {isUploadingAvatar && <span className='msg'>uploading...</span>}
       </div>
+
       <div className='info'>
         <span className='label'>Community Name</span>
         <input
@@ -462,7 +558,7 @@ const CreateCommunityModal = ({
         />
       </div>
       <div className='info'>
-        <span className='label'>UserName</span>
+        <span className='label'>Username</span>
         <input
           type='text'
           name='username'
@@ -481,13 +577,22 @@ const CreateCommunityModal = ({
       </div>
       <div className='info'>
         <span className='label'>Description</span>
-        <textarea
+        {/* <textarea
           name='metadata'
           value={form.metadata}
           rows={5}
           cols={10}
           onChange={handleForm}
-        />
+        > */}
+        <div className='editor'>
+          <TiptapEditor
+            setContent={setContent}
+            content={content}
+            autoFocus={false}
+          />
+        </div>
+
+        {/* </textarea> */}
       </div>
       <div className='btns'>
         {usernameError.type == "success" && (

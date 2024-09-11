@@ -23,15 +23,16 @@
     }
     .upload {
       position: absolute;
-      right: 330px;
-      bottom: 80px;
+      right: 4px;
+      bottom: 5px;
       background: var(--secondary-bg);
       border-radius: 50%;
       width: 30px;
       height: 30px;
       cursor: pointer;
       svg {
-        margin: 4px;
+        margin-left: 7px;
+        margin-top: 5px;
       }
     }
   }
@@ -59,17 +60,19 @@
       right: -80px;
       bottom: 0px;
     }
+
     .upload {
       position: absolute;
-      right: 2px;
-      bottom: 30px;
+      right: -36px;
+      bottom: 0px;
       background: var(--secondary-bg);
       border-radius: 50%;
       width: 30px;
       height: 30px;
       cursor: pointer;
       svg {
-        margin: 4px;
+        margin-left: 7px;
+        margin-top: 5px;
       }
     }
   }
@@ -88,11 +91,11 @@
       background: transparent;
       border: 1px solid var(--primary-border);
       border-radius: 12px;
-      color: var(--primary-border);
+      color: var(--primary-text);
       outline: none;
     }
 
-    textarea {
+    .editor {
       resize: none;
       padding: 10px;
       background: transparent;
@@ -100,6 +103,7 @@
       border-radius: 12px;
       color: var(--primary-text);
       outline: none;
+      height: 140px;
     }
   }
   .save_btn {

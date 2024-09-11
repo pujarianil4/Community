@@ -86,7 +86,7 @@ export const getImageSource = (
     return logo;
   } else {
     if (type === "u") {
-      return "https://testcommunity.s3.ap-south-1.amazonaws.com/fa1f245d-6797-4493-8711-3661a76e0d35-Group%2030094.png";
+      return "https://testcommunity.s3.amazonaws.com/592aea6e-1492-4d70-81fd-399a14db8a73-user.png";
     } else if (type === "c") {
       // TODO: change default Community logo
       return "https://testcommunity.s3.amazonaws.com/67c9729d-b9b8-4936-9f13-111e4a917f71-Group%2030094.png";
