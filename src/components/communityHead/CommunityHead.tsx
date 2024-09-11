@@ -164,7 +164,7 @@ export default function CommunityHead() {
                 src={
                   data?.img?.cvr
                     ? data.img.cvr
-                    : getImageSource(data?.logo, "cov")
+                    : getImageSource(data?.logo, "cvr")
                 }
                 alt='cover_photo'
                 width={768}
