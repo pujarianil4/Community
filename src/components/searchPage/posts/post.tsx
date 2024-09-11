@@ -34,10 +34,16 @@ export default function SearchPostItem({ post }: IProps) {
       <div className='content'>
         <UHead user={user} community={community} time={time} />
         <MarkdownRenderer markdownContent={text} limit={2} />
-        <Actions post={post} />
+        <Actions post={post} type='p' />
       </div>
       {firstMediaIsImage && (
-        <Image src={media[0]} alt='' width={160} height={128} />
+        <Image
+          className='post_img'
+          src={media[0]}
+          alt=''
+          width={160}
+          height={128}
+        />
       )}
     </article>
   );

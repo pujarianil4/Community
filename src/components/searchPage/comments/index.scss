@@ -53,3 +53,18 @@
     }
   }
 }
+
+.comment_post_loader {
+  margin-bottom: 24px;
+  .user_head,
+  .content {
+    border-radius: 4px;
+  }
+  .user_head {
+    height: 48px;
+    margin-bottom: 16px;
+  }
+  .content {
+    height: 180px;
+  }
+}
