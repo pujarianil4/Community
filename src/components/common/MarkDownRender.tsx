@@ -60,12 +60,13 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   markdownContent,
   limit,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false); // Track expanded/collapsed state
-  const [isTruncated, setIsTruncated] = useState(false); // Track if content is truncated
-  const contentRef = useRef<HTMLDivElement | null>(null); // Ref for the content div
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isTruncated, setIsTruncated] = useState(false);
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   const components = {
     a: ({ href, children }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+      // Check if href is defined and is a valid string
       return (
         <a href={href || "#"} target='_blank' rel='noreferrer'>
           {children}
@@ -74,7 +75,6 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
   };
 
-  // Toggle between expanded and collapsed view
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
@@ -88,7 +88,6 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     }
   }, [markdownContent, limit, isExpanded]);
 
-  // Apply ellipsis style only when content is not expanded
   const dynamicStyle: CSSProperties =
     limit && !isExpanded
       ? {
@@ -98,25 +97,32 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           overflow: "hidden",
           textOverflow: "ellipsis",
         }
-      : {}; // When expanded, remove the ellipsis
+      : {};
+
+  // const truncateContent = (content: string, maxLength: number) => {
+  //   if (content.length > maxLength) {
+  //     return content.slice(0, maxLength) + "...";
+  //   }
+  //   return content;
+  // };
+
+  // const truncatedContent = limit
+  //   ? truncateContent(markdownContent, limit)
+  //   : markdownContent;
 
   return (
     <div className='markdown_container'>
       <div ref={contentRef} style={dynamicStyle}>
         <ReactMarkdown components={components}>{markdownContent}</ReactMarkdown>
       </div>
-
-      {isTruncated && (
+      {isTruncated && !isExpanded && (
         <div className='view_bx' onClick={toggleExpand}>
-          {isExpanded ? (
-            <>
-              <FaChevronUp />
-            </>
-          ) : (
-            <>
-              <FaChevronDown />
-            </>
-          )}
+          <FaChevronDown />
+        </div>
+      )}
+      {isExpanded && (
+        <div className='view_bx' onClick={toggleExpand}>
+          <FaChevronUp />
         </div>
       )}
     </div>
