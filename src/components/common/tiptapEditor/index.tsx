@@ -22,6 +22,8 @@ import {
 import { LinkModal } from "./linkModal";
 import { GoUnlink } from "react-icons/go";
 
+// const maxCharCount = 300;
+
 const extensions = [
   StarterKit,
   Link.configure({
@@ -44,10 +46,10 @@ const extensions = [
 interface TiptapEditorProps {
   content?: string;
   setContent: (content: string) => void;
-  // onClick: (content: string) => void;
   showToolbar?: boolean;
   placeHolder?: string;
   autoFocus?: boolean;
+  maxCharCount: number;
 }
 
 const TiptapEditor: React.FC<TiptapEditorProps> = ({
@@ -56,14 +58,33 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   showToolbar = true,
   placeHolder = "type here...",
   autoFocus = false,
+  maxCharCount,
 }) => {
+  const [remainingChars, setRemainingChars] = useState<number>(
+    maxCharCount - (content?.length || 0)
+  );
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [selectedText, setSelectedText] = useState<string>("");
+
   const editor = useEditor({
     extensions,
     content: content,
-  });
+    onUpdate: ({ editor }) => {
+      const currentText = editor.getText();
+      const charCount = currentText.length;
+      const charsLeft = maxCharCount - charCount;
 
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [selectedText, setSelectedText] = useState<string>("");
+      if (charsLeft >= 0) {
+        setContent(editor.getHTML());
+        setRemainingChars(charsLeft);
+      } else {
+        const trimmedContent = currentText.slice(0, maxCharCount);
+        editor.commands.setContent(trimmedContent);
+        setContent(editor.getHTML());
+        setRemainingChars(0);
+      }
+    },
+  });
 
   const openModal = () => {
     if (editor) {
@@ -93,15 +114,10 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   };
 
   useEffect(() => {
-    editor?.off("update");
-    editor?.on("update", ({ editor: updatedEditor }) => {
-      setContent(updatedEditor.getHTML());
-    });
-  }, [editor, setContent]);
-
-  useEffect(() => {
     if (editor && content !== editor.getHTML()) {
       editor.commands.setContent(content);
+      const initialCharCount = editor.getText().length;
+      setRemainingChars(maxCharCount - initialCharCount);
     }
   }, [content, editor]);
 
@@ -217,6 +233,13 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
       </div>
       <div className='editor_content'>
         <EditorContent editor={editor} />
+      </div>
+      <div
+        className={`char_count ${
+          remainingChars <= 0 ? "outOfLimit" : "withinLimit"
+        }`}
+      >
+        {remainingChars} / {maxCharCount}
       </div>
       <LinkModal
         visible={isModalVisible}

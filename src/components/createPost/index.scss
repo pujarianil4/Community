@@ -47,15 +47,12 @@
       }
 
       .post_editor {
-        border: 1px solid var(--primary-border);
-        border-radius: 16px;
         margin-top: 2rem;
-        padding: 10px;
-
         .editor_wrapper {
           margin: 10px 0;
           max-height: 350px;
-          height: 300px;
+          min-height: 150px;
+          // height: 300px;
         }
 
         .inputs {

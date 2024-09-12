@@ -47,8 +47,9 @@
 
 // //linkTarget="_blank"
 
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 interface MarkdownRendererProps {
   markdownContent: string;
@@ -59,9 +60,12 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   markdownContent,
   limit,
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false); // Track expanded/collapsed state
+  const [isTruncated, setIsTruncated] = useState(false); // Track if content is truncated
+  const contentRef = useRef<HTMLDivElement | null>(null); // Ref for the content div
+
   const components = {
     a: ({ href, children }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-      // Check if href is defined and is a valid string
       return (
         <a href={href || "#"} target='_blank' rel='noreferrer'>
           {children}
@@ -70,30 +74,51 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
   };
 
-  const dynamicStyle: CSSProperties = limit
-    ? {
-        display: "-webkit-box",
-        WebkitLineClamp: limit,
-        WebkitBoxOrient: "vertical" as const,
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-      }
-    : {};
+  // Toggle between expanded and collapsed view
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
 
-  // const truncateContent = (content: string, maxLength: number) => {
-  //   if (content.length > maxLength) {
-  //     return content.slice(0, maxLength) + "...";
-  //   }
-  //   return content;
-  // };
+  // Check if the content is overflowing (i.e., it has ellipsis)
+  useEffect(() => {
+    if (contentRef.current) {
+      const isOverflowing =
+        contentRef.current.scrollHeight > contentRef.current.clientHeight;
+      setIsTruncated(isOverflowing);
+    }
+  }, [markdownContent, limit, isExpanded]);
 
-  // const truncatedContent = limit
-  //   ? truncateContent(markdownContent, limit)
-  //   : markdownContent;
+  // Apply ellipsis style only when content is not expanded
+  const dynamicStyle: CSSProperties =
+    limit && !isExpanded
+      ? {
+          display: "-webkit-box",
+          WebkitLineClamp: limit,
+          WebkitBoxOrient: "vertical" as const,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }
+      : {}; // When expanded, remove the ellipsis
 
   return (
-    <div className='markdown_container' style={dynamicStyle}>
-      <ReactMarkdown components={components}>{markdownContent}</ReactMarkdown>
+    <div className='markdown_container'>
+      <div ref={contentRef} style={dynamicStyle}>
+        <ReactMarkdown components={components}>{markdownContent}</ReactMarkdown>
+      </div>
+
+      {isTruncated && (
+        <div className='view_bx' onClick={toggleExpand}>
+          {isExpanded ? (
+            <>
+              <FaChevronUp />
+            </>
+          ) : (
+            <>
+              <FaChevronDown />
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };

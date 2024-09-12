@@ -265,6 +265,9 @@
         border-radius: 8px;
         color: var(--primary-text);
         outline: none;
+        &:focus {
+          border: 1px solid var(--black);
+        }
       }
 
       textarea {
@@ -281,7 +284,6 @@
         background: transparent;
         border: 1px solid var(--primary-border);
         border-radius: 8px;
-        height: 150px;
       }
     }
     .save_btn {

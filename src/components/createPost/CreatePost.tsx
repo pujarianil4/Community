@@ -28,7 +28,7 @@ import CButton from "../common/Button";
 import TiptapEditor from "../common/tiptapEditor";
 import TurndownService from "turndown";
 import { LinkIcon } from "@/assets/icons";
-
+import FocusableDiv from "../common/focusableDiv";
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPostModalOpen: boolean;
@@ -282,35 +282,36 @@ const CreatePost: React.FC<Props> = ({
           />
           {/* <TestArea content={content} setContent={setContent} /> */}
           <div className='post_editor'>
-            <div className='editor_wrapper'>
+            <FocusableDiv>
               <TiptapEditor
                 setContent={setContent}
                 content={content}
                 autoFocus={true}
+                maxCharCount={300}
               />
-            </div>
-            {pics?.length > 0 && (
-              <div className='file_container'>
-                {pics?.map((picFile, index) => (
-                  <Img
-                    key={index}
-                    index={index}
-                    file={picFile}
-                    onRemove={(rmIndx) =>
-                      setPics(pics.filter((_, idx) => idx !== rmIndx))
-                    }
-                  />
-                ))}
+              {pics?.length > 0 && (
+                <div className='file_container'>
+                  {pics?.map((picFile, index) => (
+                    <Img
+                      key={index}
+                      index={index}
+                      file={picFile}
+                      onRemove={(rmIndx) =>
+                        setPics(pics.filter((_, idx) => idx !== rmIndx))
+                      }
+                    />
+                  ))}
+                </div>
+              )}
+              <div className='inputs'>
+                <FileInput onChange={handleUploadFile}>
+                  <LuImagePlus color='#636466' size={20} />
+                </FileInput>
+                <LinkIcon />
+                <MdEmojiEmotions color='#636466' size={20} />
+                <span className={uploadMsg.type}>{uploadMsg?.msg}</span>
               </div>
-            )}
-            <div className='inputs'>
-              <FileInput onChange={handleUploadFile}>
-                <LuImagePlus color='#636466' size={20} />
-              </FileInput>
-              <LinkIcon />
-              <MdEmojiEmotions color='#636466' size={20} />
-              <span className={uploadMsg.type}>{uploadMsg?.msg}</span>
-            </div>
+            </FocusableDiv>
           </div>
         </div>
         <div className='media'>

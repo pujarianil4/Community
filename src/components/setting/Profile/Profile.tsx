@@ -29,6 +29,8 @@ import Avatar from "@/components/common/loaders/userAvatar";
 import ProfileAvatar from "@/components/common/loaders/profileAvatar";
 import TiptapEditor from "@components/common/tiptapEditor";
 import TurndownService from "turndown";
+import FocusableDiv from "@/components/common/focusableDiv";
+
 export default function Profile() {
   const [{ dispatch, actions }, [userData]] = useRedux([
     (state: RootState) => state.user,
@@ -231,6 +233,10 @@ export default function Profile() {
   const handleImageLoad = () => {
     setIsImageLoading(false);
   };
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
 
   return (
     <div className='profile_container'>
@@ -318,13 +324,15 @@ export default function Profile() {
           name='desc'
           defaultValue={user.desc}
         /> */}
-        <div className='editor'>
+
+        <FocusableDiv>
           <TiptapEditor
             setContent={setContent}
             content={content}
-            autoFocus={false}
+            autoFocus={true}
+            maxCharCount={100}
           />
-        </div>
+        </FocusableDiv>
       </div>
       <div className='btns'>
         <p

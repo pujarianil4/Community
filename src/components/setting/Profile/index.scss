@@ -93,6 +93,9 @@
       border-radius: 12px;
       color: var(--primary-text);
       outline: none;
+      &:focus {
+        border: 1px solid var(--black);
+      }
     }
 
     .editor {
@@ -102,8 +105,11 @@
       border: 1px solid var(--primary-border);
       border-radius: 12px;
       color: var(--primary-text);
-      outline: none;
-      height: 140px;
+      transition: box-shadow 0.3s ease;
+
+      &.focused {
+        border: 1px solid var(--black); // Change border color on focus
+      }
     }
   }
   .save_btn {

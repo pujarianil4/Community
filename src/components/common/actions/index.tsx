@@ -8,6 +8,7 @@ import { SaveIcon, ShareIcon } from "@/assets/icons";
 import { IPost, IVotePayload } from "@/utils/types/types";
 import { sendVote } from "@/services/api/api";
 import ShareButton from "../shareButton";
+
 interface IProps {
   post: IPost;
   showShare?: boolean;
