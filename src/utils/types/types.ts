@@ -14,6 +14,7 @@ export interface IUser {
   desc?: string;
   tid?: string | null;
   did?: string | null;
+  xid?: string | null;
   token?: string;
 }
 

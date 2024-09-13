@@ -1,9 +1,12 @@
+@import "/src/styles";
 .create_post_modal {
-  width: 540px;
-  height: 620px;
+  width: 800px !important;
+  border-radius: 16px !important;
+  background-color: var(--white) !important;
+  box-shadow: -5px -6px 4px 0 rgba(0, 0, 0, 0.3);
 }
 .create_post_container {
-  padding: 16px 0 0;
+  padding: 20px 20px;
 
   .user_data {
     margin-top: -12px;
@@ -29,14 +32,11 @@
 
   .create_post_form {
     .inputArea {
+      margin-top: 1rem;
       display: flex;
       flex-direction: column;
       flex: 1;
-      // height: 464px;
       height: fit-content;
-      min-height: 400px;
-      margin-top: 16px;
-
       textarea {
         width: 100%;
         background: transparent;
@@ -46,15 +46,23 @@
         flex: 1;
       }
 
-      .editor_wrapper {
-        margin: 16px 0;
-      }
-    }
+      .post_editor {
+        border: 1px solid var(--primary-border);
+        border-radius: 16px;
+        margin-top: 2rem;
+        padding: 10px;
 
-    hr {
-      margin: 0.25rem 0 1rem;
-      // border-color: var(--primary-border);
-      border: 0.5px solid var(--primary-border);
+        .editor_wrapper {
+          margin: 10px 0;
+          max-height: 350px;
+          height: 300px;
+        }
+
+        .inputs {
+          display: flex;
+          gap: 5px;
+        }
+      }
     }
 
     // .placeholder-container {
@@ -92,7 +100,9 @@
 
     .media {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 1.5rem;
       .inputs {
         display: flex;
         align-content: center;
@@ -180,21 +190,44 @@
 
 .dropdown_with_search {
   box-sizing: border-box;
+
+  .search_input {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    background-color: var(--tertiary-bg);
+    padding: 8px;
+
+    .s_icon {
+      color: #757575;
+    }
+  }
   .custom_dropdown {
     position: absolute;
-    width: calc(100% - 68px);
-    height: 360px;
+    width: calc(100% - 52%);
+    height: 300px;
     overflow-y: scroll;
     padding: 16px 12px;
-    background-color: var(--white);
+    background-color: var(--secondary-bg);
     box-shadow: var(--card-shadow);
     z-index: 100;
-    border-radius: 8px;
+    border-radius: 16px;
+    margin-top: 0.5rem;
   }
 
   .dropdown_input {
-    width: 100%;
     cursor: pointer;
+    border: none;
+    height: 25px;
+    width: -moz-fit-content;
+    width: fit-content;
+    padding: 0 5px;
+    background-color: transparent;
+    color: var(--primary-text);
+    font-size: 15px;
+    outline: none;
   }
 
   .dropdown_list {
@@ -208,35 +241,52 @@
 
   .dropdown_list .ant-list-item {
     cursor: pointer;
-    padding: 8px 16px !important;
+    padding: 8px 8px !important;
     border-radius: 8px;
     color: var(--body-bg);
   }
 
-  .dropdown_item {
+  .c_post {
+    width: 100%;
     display: flex;
+    justify-content: center;
+    flex-direction: row;
+    margin-bottom: 1rem;
+    gap: 10px;
     align-items: center;
-    gap: 8px;
-
+    // height: 30px;
     img {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
-      margin-right: 12px;
+      margin-right: 8px;
     }
-    .community_name {
-      color: var(--primary-text);
-      font-size: 16px;
-    }
+    .u_bx {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      // line-height: 15px;
+      .u_txt {
+        font-size: $font-size-md;
 
-    .followers {
-      color: var(--label-text);
-      font-size: 12px;
+        color: var(--primary-text);
+        @include lessThan(sm) {
+          font-size: $font-size-sm;
+        }
+      }
+      .u_follow {
+        font-size: $font-size-sm;
+
+        color: var(--label-text);
+        @include lessThan(sm) {
+          font-size: $font-size-xsm;
+        }
+      }
     }
   }
 
   .dropdown_list .ant-list-item:hover {
-    background-color: var(--primary-hover);
+    background-color: var(--tertiary-bg);
   }
 }
 
@@ -304,6 +354,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .postBtn {
+      border: 1px solid var(--primary-text);
+      background-color: transparent;
+    }
   }
 
   .inputs {

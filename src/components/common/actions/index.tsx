@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.scss";
 import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 import Link from "next/link";
@@ -7,7 +7,7 @@ import { numberWithCommas } from "@/utils/helpers";
 import { SaveIcon, ShareIcon } from "@/assets/icons";
 import { IPost, IVotePayload } from "@/utils/types/types";
 import { sendVote } from "@/services/api/api";
-
+import ShareButton from "../shareButton";
 interface IProps {
   post: IPost;
   showShare?: boolean;
@@ -27,12 +27,22 @@ export default function Actions({
   showShare = false,
   showSave = false,
 }: IProps) {
-  const { up, down, id, ccount } = post;
+  const { up, down, id, ccount, text, media } = post;
 
   const [vote, setVote] = useState<Vote>({
     value: Number(up) + Number(down),
     type: "",
   });
+
+  // Dynamic URL creation
+  const [postUrl, setPostUrl] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const currentDomain = window.location.origin;
+      setPostUrl(`${currentDomain}/post/${id}`);
+    }
+  }, [id]);
 
   const handleVote = async (action: string) => {
     const previousVote = { ...vote };
@@ -99,10 +109,11 @@ export default function Actions({
       </div>
 
       {showShare && (
-        <div className='share'>
-          <ShareIcon width={18} />
-          <span>Share</span>
-        </div>
+        <ShareButton
+          postTitle={text}
+          postUrl={postUrl}
+          postImage={media?.[0] || ""}
+        />
       )}
       {showSave && (
         <div className='save'>

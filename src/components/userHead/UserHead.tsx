@@ -17,7 +17,7 @@ import CTabs from "../common/Tabs";
 import FeedList from "../feedPost/feedList";
 import Followers from "./followers/Followers";
 import Followings from "./Followings/Followings";
-
+import MarkdownRenderer from "../common/MarkDownRender";
 import { usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import {
@@ -49,6 +49,10 @@ export default function UserHead() {
   const [isSelf, setIsSelf] = useState<boolean>(user.uid === data?.id);
   const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
 
+  const [isExpanded, setIsExpanded] = useState(false);
+  const viewDesc = () => {
+    setIsExpanded((prev) => !prev);
+  };
   useEffect(() => {
     callBack(fetchUser, userId || id);
   }, [userId]);
@@ -202,9 +206,12 @@ export default function UserHead() {
                 </div>
               </div>
               <div className='activity'>
-                <p className='about'>
-                  {data?.desc || "Hello this is my official account"}
-                </p>
+                <div className='about' onClick={viewDesc}>
+                  <MarkdownRenderer
+                    markdownContent={data?.desc}
+                    limit={!isExpanded ? 3 : undefined}
+                  />
+                </div>
                 {isSelf ? (
                   <CButton onClick={handleEdit} className='follow_btn'>
                     Edit
