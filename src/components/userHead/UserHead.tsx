@@ -49,10 +49,6 @@ export default function UserHead() {
   const [isSelf, setIsSelf] = useState<boolean>(user.uid === data?.id);
   const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
 
-  const [isExpanded, setIsExpanded] = useState(false);
-  const viewDesc = () => {
-    setIsExpanded((prev) => !prev);
-  };
   useEffect(() => {
     callBack(fetchUser, userId || id);
   }, [userId]);
@@ -206,11 +202,8 @@ export default function UserHead() {
                 </div>
               </div>
               <div className='activity'>
-                <div className='about' onClick={viewDesc}>
-                  <MarkdownRenderer
-                    markdownContent={data?.desc}
-                    limit={!isExpanded ? 3 : undefined}
-                  />
+                <div className='about'>
+                  <MarkdownRenderer markdownContent={data?.desc} limit={3} />
                 </div>
                 {isSelf ? (
                   <CButton onClick={handleEdit} className='follow_btn'>

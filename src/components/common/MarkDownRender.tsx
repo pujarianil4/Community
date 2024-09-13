@@ -47,8 +47,9 @@
 
 // //linkTarget="_blank"
 
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 interface MarkdownRendererProps {
   markdownContent: string;
@@ -59,6 +60,10 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   markdownContent,
   limit,
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isTruncated, setIsTruncated] = useState(false);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+
   const components = {
     a: ({ href, children }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
       // Check if href is defined and is a valid string
@@ -70,15 +75,29 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
   };
 
-  const dynamicStyle: CSSProperties = limit
-    ? {
-        display: "-webkit-box",
-        WebkitLineClamp: limit,
-        WebkitBoxOrient: "vertical" as const,
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-      }
-    : {};
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  // Check if the content is overflowing (i.e., it has ellipsis)
+  useEffect(() => {
+    if (contentRef.current) {
+      const isOverflowing =
+        contentRef.current.scrollHeight > contentRef.current.clientHeight;
+      setIsTruncated(isOverflowing);
+    }
+  }, [markdownContent, limit, isExpanded]);
+
+  const dynamicStyle: CSSProperties =
+    limit && !isExpanded
+      ? {
+          display: "-webkit-box",
+          WebkitLineClamp: limit,
+          WebkitBoxOrient: "vertical" as const,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }
+      : {};
 
   // const truncateContent = (content: string, maxLength: number) => {
   //   if (content.length > maxLength) {
@@ -92,8 +111,20 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   //   : markdownContent;
 
   return (
-    <div className='markdown_container' style={dynamicStyle}>
-      <ReactMarkdown components={components}>{markdownContent}</ReactMarkdown>
+    <div className='markdown_container'>
+      <div ref={contentRef} style={dynamicStyle}>
+        <ReactMarkdown components={components}>{markdownContent}</ReactMarkdown>
+      </div>
+      {isTruncated && !isExpanded && (
+        <div className='view_bx' onClick={toggleExpand}>
+          <FaChevronDown />
+        </div>
+      )}
+      {isExpanded && (
+        <div className='view_bx' onClick={toggleExpand}>
+          <FaChevronUp />
+        </div>
+      )}
     </div>
   );
 };

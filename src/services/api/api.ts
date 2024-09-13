@@ -250,6 +250,17 @@ export const getPostsByPostId = async (postId: string) => {
   }
 };
 
+export const getPostsForMeta = async (postId: string) => {
+  try {
+    const response = await api.get(`/posts/${postId}`);
+    const { text, media } = response.data;
+    return { text, media };
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+    return null;
+  }
+};
+
 export const patchPost = async (data: any) => {
   try {
     const response = await api.patch("/posts", data);

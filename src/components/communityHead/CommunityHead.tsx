@@ -49,11 +49,6 @@ export default function CommunityHead() {
     refetchRoute,
   ]);
   const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const viewDesc = () => {
-    setIsExpanded((prev) => !prev);
-  };
 
   const {
     isLoading: isLoadingFollow,
@@ -204,11 +199,8 @@ export default function CommunityHead() {
                   <h4>{numberWithCommas(data?.pCount) || "0"}</h4>
                 </div>
               </div>
-              <div className='activity' onClick={viewDesc}>
-                <MarkdownRenderer
-                  markdownContent={data?.metadata}
-                  limit={!isExpanded ? 3 : undefined}
-                />
+              <div className='activity'>
+                <MarkdownRenderer markdownContent={data?.metadata} limit={3} />
 
                 <CButton
                   loading={isLoadingFollow}

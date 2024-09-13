@@ -33,6 +33,7 @@ import {
 } from "@/utils/helpers";
 import CommunityList from "../common/loaders/communityList";
 
+import FocusableDiv from "../common/focusableDiv";
 import {
   AddIcon,
   HomeIcon,
@@ -584,13 +585,22 @@ const CreateCommunityModal = ({
           cols={10}
           onChange={handleForm}
         > */}
-        <div className='editor'>
+        {/* <div className='editor'>
           <TiptapEditor
             setContent={setContent}
             content={content}
             autoFocus={false}
           />
-        </div>
+        </div> */}
+
+        <FocusableDiv>
+          <TiptapEditor
+            setContent={setContent}
+            content={content}
+            autoFocus={true}
+            maxCharCount={100}
+          />
+        </FocusableDiv>
 
         {/* </textarea> */}
       </div>

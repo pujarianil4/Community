@@ -50,24 +50,6 @@ const ShareButton: React.FC<ShareModalProps> = ({
 
   return (
     <>
-      <Head>
-        {/* Open Graph meta tags */}
-        <title> Social media platform for post</title>
-        <meta name='description' content='Hi tis is my Title ' />
-        <link rel='icon'> href="#" </link>
-        <meta property='og:image' content={postImage || ""} />
-        <meta property='og:url' content={postUrl} />
-        <meta property='og:title' content={postTitle} />
-        <meta property='og:description' content={postTitle} />
-
-        {/* Twitter Card meta tags */}
-        <meta name='twitter:card' content='summary_large_image' />
-        <meta name='twitter:title' content={postTitle} />
-        <meta name='twitter:description' content={postTitle} />
-        <meta name='twitter:image' content={postImage} />
-        <meta name='twitter:url' content={postUrl} />
-      </Head>
-
       <div className='share' onClick={showModal}>
         <ShareIcon width={18} />
         <span>Share</span>
@@ -99,20 +81,20 @@ const ShareButton: React.FC<ShareModalProps> = ({
           }}
         >
           {/* Facebook */}
-          <FacebookShareButton url={postUrl} quote={"hi this is my first post"}>
+          <FacebookShareButton url={postUrl} quote={postTitle}>
             <FacebookIcon size={32} round />
           </FacebookShareButton>
 
           {/* Twitter */}
-          <TwitterShareButton url={postUrl} title={"hi this is my first post"}>
+          <TwitterShareButton url={postUrl} title={postTitle}>
             <TwitterIcon size={32} round />
           </TwitterShareButton>
 
-          <TelegramShareButton url={postUrl} title={"hi this is my first post"}>
+          <TelegramShareButton url={postUrl} title={postTitle}>
             <TelegramIcon size={32} round />
           </TelegramShareButton>
 
-          <RedditShareButton url={postUrl} title={"hi this is my first post"}>
+          <RedditShareButton url={postUrl} title={postTitle}>
             <RedditIcon size={32} round />
           </RedditShareButton>
         </div>
