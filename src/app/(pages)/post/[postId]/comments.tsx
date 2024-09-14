@@ -40,6 +40,7 @@ import {
 import { Select, Switch, Tree } from "antd";
 import type { TreeDataNode } from "antd";
 import UHead from "@/components/common/uhead";
+import { DataNode } from "antd/es/tree";
 
 interface Iprops {
   postId: number;
@@ -47,7 +48,11 @@ interface Iprops {
 export default function Comments({ postId }: Iprops) {
   const { isLoading, data: commentsData } = useAsync(fetchComments, postId);
   const [comments, setComments] = useState<IComment[]>([]);
+  const [commentsTree, setCommentsTree] = useState<DataNode[]>([]);
   const loadingArray = Array(5).fill(() => 0);
+  const [actualData, setActualData] = useState<IComment[]>([]);
+  const actualDataRef = useRef<IComment[]>();
+  actualDataRef.current = actualData;
 
   function organizeComments(comments: IComment[]): IComment[] {
     const commentMap = new Map<number, IComment>();
@@ -84,8 +89,9 @@ export default function Comments({ postId }: Iprops) {
           new Date(b.cta).getTime() - new Date(a.cta).getTime()
       );
 
-    console.log("sorted", sorted);
-
+    const treeData: TreeDataNode[] = generateTreeData(sorted);
+    console.log("sorted", sorted, treeData);
+    setCommentsTree(treeData);
     return sorted;
   }
 
@@ -99,7 +105,14 @@ export default function Comments({ postId }: Iprops) {
         : (index + 1).toString();
 
       return {
-        title: <CommentItem key={index} comment={comment} postId={postId} />,
+        title: (
+          <CommentItem
+            onReply={onComment}
+            key={index}
+            comment={comment}
+            postId={postId}
+          />
+        ),
         key: currentKey,
         icon: <CarryOutOutlined />,
         children: comment.comments
@@ -109,25 +122,47 @@ export default function Comments({ postId }: Iprops) {
     });
   };
 
-  const treeData: TreeDataNode[] = generateTreeData(comments);
+  // const treeData: TreeDataNode[] = generateTreeData(comments);
 
-  console.log("tree", treeData, comments);
+  // console.log("tree", treeData, comments);
 
   useEffect(() => {
     if (commentsData) {
       const updatedCommentsData = organizeComments(commentsData);
       setComments(updatedCommentsData);
+      setActualData(commentsData);
     }
   }, [commentsData]);
+
+  useEffect(() => {
+    console.log("actualData", commentsData);
+  }, [actualData]);
 
   const onSelect = (selectedKeys: React.Key[], info: any) => {
     console.log("selected", selectedKeys, info);
   };
 
   const onComment = (newComment: IComment) => {
-    if (newComment.pcid === null) {
-      setComments([newComment, ...(comments || [])]);
-    }
+    const withAddedComment = [newComment, ...(actualDataRef.current || [])];
+
+    console.log(
+      "comment",
+      withAddedComment,
+      actualDataRef,
+      actualData,
+      newComment
+    );
+    setActualData(withAddedComment);
+    const organized = organizeComments(withAddedComment);
+    setComments(organized);
+
+    // const treeData: TreeDataNode[] = generateTreeData(organized);
+    // console.log("aftercomment", withAddedComment, treeData);
+    // setCommentsTree(treeData);
+  };
+
+  const onReply = (newReply: IComment) => {
+    const u = [commentsData, newReply];
   };
   return (
     <section className='comments'>
@@ -147,7 +182,7 @@ export default function Comments({ postId }: Iprops) {
             rootClassName='comments'
             // defaultExpandedKeys={["1"]}
             onSelect={onSelect}
-            treeData={treeData}
+            treeData={commentsTree}
           />
         </div>
       )}
@@ -158,6 +193,7 @@ export default function Comments({ postId }: Iprops) {
 interface ICommentItemProps {
   comment: IComment;
   postId: number;
+  onReply: (reply: IComment) => void;
 }
 
 interface Vote {
@@ -165,7 +201,7 @@ interface Vote {
   type: "up" | "down" | "";
 }
 const CommentItem: React.FC<ICommentItemProps> = React.memo(
-  ({ comment, postId }) => {
+  ({ comment, postId, onReply }) => {
     const [isReplying, setIsReplying] = useState(false);
     const [childComments, setChildComments] = useState<IComment[]>(
       comment?.comments || []
@@ -220,7 +256,8 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
     const scrollableContainerRef = useRef(null);
 
     const onComment = (newComment: IComment) => {
-      setChildComments((prevComments) => [newComment, ...prevComments]);
+      // setChildComments((prevComments) => [newComment, ...prevComments]);
+      onReply(newComment);
     };
 
     const handleClick = (val: boolean) => {
@@ -228,7 +265,12 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
     };
 
     return (
-      <div ref={scrollableContainerRef} className='comment_item'>
+      <div
+        ref={scrollableContainerRef}
+        className={`comment_item ${
+          comment.comments?.length == 0 ? "lastComment" : ""
+        } `}
+      >
         <div className='user_head'>
           <Link
             href={`u/${comment?.user.username}`}
