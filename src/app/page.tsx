@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <main>
       <PageWraper>
-        <FeedList method='allPosts' id={null} />
+        <FeedList method='allPosts' id={null} sortby='time' order='DESC' />
       </PageWraper>
     </main>
   );

@@ -1,11 +1,12 @@
 @import "/src/styles";
 .postcard_container {
-  width: 100%;
+  width: 98%;
   padding: 24px 20px;
   height: max-content;
   border-radius: $base-border-radius-md;
   background-color: var(--secondary-bg);
-  margin-top: 2rem;
+  margin: 1.5rem 0 0 0;
+  // margin: 2rem 20px 0 0;
   color: var(--primary-text);
   box-sizing: border-box;
   // .user_head {
@@ -256,8 +257,8 @@
     filter: blur(15px);
   }
   .media {
-    height: auto !important;
-    width: auto !important;
+    // height: auto !important;
+    // width: auto !important;
     object-fit: contain;
     // max-width: calc(548px + 72% - 548px);
     // max-width: 35rem;
@@ -389,4 +390,16 @@
       background: var(--secondary-hover);
     }
   }
+}
+
+.virtuoso {
+  height: 1000px;
+  // overflow: "auto";
+  overflow-y: auto;
+  padding-right: 20px;
+}
+
+.main_panel_container {
+  padding-right: 0 !important;
+  // height: 700px;
 }
