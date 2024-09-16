@@ -4,7 +4,8 @@
   background-color: var(--secondary-bg);
   z-index: 100;
   width: 290px;
-  height: 100%;
+  height: calc(100vh - 80px);
+  overflow-y: scroll;
   transition: left ease-in-out 0.2s;
   // @media (width < 700px) {
   //   width: 200px;
