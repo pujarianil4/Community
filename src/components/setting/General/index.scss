@@ -65,3 +65,28 @@
     font-size: 18px;
   }
 }
+.s_m_bx {
+  padding: 14px 12px;
+  display: flex;
+  justify-content: unset;
+  flex-direction: row;
+  border: 1px solid var(--tertiary-border);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  gap: 10px;
+  align-items: center;
+  .u_bx {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    line-height: 15px;
+    .u_txt {
+      font-size: $font-size-md;
+      cursor: pointer;
+      color: var(--black);
+      @include lessThan(sm) {
+        font-size: $font-size-xsm;
+      }
+    }
+  }
+}

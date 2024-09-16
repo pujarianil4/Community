@@ -154,7 +154,7 @@ export const updateUser = async (payload: Partial<IUser>) => {
 export const fetchCommunities = async (sortby: string) => {
   try {
     const response = await api.get(
-      `/community?sortBy=${sortby}&order=desc&page=1&limit=20`
+      `/community?sortBy=${sortby}&order=DESC&page=1&limit=20`
     );
 
     return response.data;
@@ -275,6 +275,17 @@ export const getPostsByPostId = async (postId: string) => {
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
+  }
+};
+
+export const getPostsForMeta = async (postId: string) => {
+  try {
+    const response = await api.get(`/posts/${postId}`);
+    const { text, media } = response.data;
+    return { text, media };
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+    return null;
   }
 };
 

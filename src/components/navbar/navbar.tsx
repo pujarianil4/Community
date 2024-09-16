@@ -46,11 +46,7 @@ import CInput from "../common/Input";
 import Image from "next/image";
 import NotificationMessage from "../common/Notification";
 import { useRouter } from "next/navigation";
-import EvmAuthComponent from "../common/auth/EvmAuth";
-import SolanaAuthComponent from "../common/auth/SolanaAuth";
-import TelegramLogin from "../common/auth/telegramAuth";
-import { TelegramAuthData } from "@/utils/types/types";
-import { handleDiscordLogin } from "./discordLogin";
+
 import { SignUpModal } from "../common/auth/signUpModal";
 import Searchbar from "./searchbar";
 export interface ISignupData {
@@ -133,9 +129,9 @@ export default function Navbar() {
       router.push("/");
       dispatch(actions.setUserData(initialState));
       // Add a short delay before reloading the page
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 100);
       // window?.location?.reload();
     } catch (error) {
       deleteClientSideCookie("authToken");

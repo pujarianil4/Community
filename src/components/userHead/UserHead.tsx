@@ -17,7 +17,7 @@ import CTabs from "../common/Tabs";
 import FeedList from "../feedPost/feedList";
 import Followers from "./followers/Followers";
 import Followings from "./Followings/Followings";
-
+import MarkdownRenderer from "../common/MarkDownRender";
 import { usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import {
@@ -164,7 +164,7 @@ export default function UserHead() {
                 height={220}
               /> */}
               <Image
-                src={getImageSource(data?.img?.cvr, "other")}
+                src={getImageSource(data?.img?.cvr, "cvr")}
                 alt='cover_photo'
                 loading='lazy'
                 width={768}
@@ -202,9 +202,9 @@ export default function UserHead() {
                 </div>
               </div>
               <div className='activity'>
-                <p className='about'>
-                  {data?.desc || "Hello this is my official account"}
-                </p>
+                <div className='about'>
+                  <MarkdownRenderer markdownContent={data?.desc} limit={3} />
+                </div>
                 {isSelf ? (
                   <CButton onClick={handleEdit} className='follow_btn'>
                     Edit

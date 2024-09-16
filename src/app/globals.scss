@@ -6,7 +6,6 @@
 }
 body {
   margin: auto;
-  background-color: var(--secondary-bg);
 }
 
 a {
@@ -82,6 +81,10 @@ main {
   padding: 12px 25px;
 }
 
-.dark {
+html,
+body,
+.dark,
+main {
   background-color: var(--primary-bg);
+  overflow: hidden;
 }

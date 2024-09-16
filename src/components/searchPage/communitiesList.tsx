@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import "./index.scss";
-import Card from "../card";
+// import "./index.scss";
 import useAsync from "@/hooks/useAsync";
 import { fetchCommunities } from "@/services/api/api";
-import { ICommunity, IUser } from "@/utils/types/types";
+import CardList from "@/components/cardList";
+import { ICommunity } from "@/utils/types/types";
 
 export default function Communities() {
   const { isLoading, data, refetch } = useAsync(fetchCommunities, "followers");
@@ -19,11 +19,12 @@ export default function Communities() {
     ...data,
   ];
   return (
-    <main className='communities'>
-      {dummyData &&
-        dummyData?.map((card) => (
-          <Card key={card.id} cardData={card} type='c' />
-        ))}
-    </main>
+    <>
+      <CardList
+        cardListData={dummyData as ICommunity[]}
+        type='c'
+        isLoading={isLoading}
+      />
+    </>
   );
 }

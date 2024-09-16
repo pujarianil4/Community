@@ -20,6 +20,7 @@ import {
   getImageSource,
   getRandomImageLink,
   numberWithCommas,
+  setToLocalStorage,
 } from "@/utils/helpers";
 import {
   AddIcon,
@@ -30,7 +31,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import Proposals from "../proposals";
-
+import MarkdownRenderer from "../common/MarkDownRender";
+import { ICommunity } from "@/utils/types/types";
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
 
@@ -49,6 +51,7 @@ export default function CommunityHead() {
     refetchRoute,
   ]);
   const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
+
   const {
     isLoading: isLoadingFollow,
     data: followResponse,
@@ -58,6 +61,34 @@ export default function CommunityHead() {
   useEffect(() => {
     refetch();
   }, [communityId]);
+
+  const addItemToRecentCommunity = (
+    data: ICommunity[],
+    newItem: ICommunity
+  ) => {
+    const existingIndex = data?.findIndex((item) => item.id === newItem.id);
+
+    if (existingIndex !== -1) {
+      data[existingIndex] = newItem;
+    } else {
+      data.push(newItem);
+    }
+
+    if (data.length > 5) {
+      data.shift();
+    }
+
+    return data;
+  };
+
+  useEffect(() => {
+    if (data) {
+      const value = localStorage?.getItem("recentCommunity");
+      const prevCommunities: any = value ? JSON.parse(value) : [];
+      const recentCommunities = addItemToRecentCommunity(prevCommunities, data);
+      setToLocalStorage("recentCommunity", recentCommunities);
+    }
+  }, [data]);
 
   useEffect(() => {
     setIsFollowed(data?.isFollowed);
@@ -96,6 +127,7 @@ export default function CommunityHead() {
     setIsFollowed(data?.isFollowed);
     console.log("User", data);
   }, [data]);
+
   return (
     <>
       {!data ? (
@@ -154,7 +186,11 @@ export default function CommunityHead() {
                 height={220}
               /> */}
               <Image
-                src='https://picsum.photos/700/220?random=1'
+                src={
+                  data?.img?.cvr
+                    ? data.img.cvr
+                    : getImageSource(data?.logo, "cvr")
+                }
                 alt='cover_photo'
                 width={768}
                 height={220}
@@ -166,7 +202,11 @@ export default function CommunityHead() {
                 <div className='box user'>
                   <div className='avatar'>
                     <Image
-                      src={getImageSource(data?.logo, "c")}
+                      src={
+                        data?.img?.pro
+                          ? data.img.pro
+                          : getImageSource(data?.logo, "c")
+                      }
                       alt='community'
                       fill
                     />
@@ -190,7 +230,8 @@ export default function CommunityHead() {
                 </div>
               </div>
               <div className='activity'>
-                <p className='about'>{data?.metadata}</p>
+                <MarkdownRenderer markdownContent={data?.metadata} limit={3} />
+
                 <CButton
                   loading={isLoadingFollow}
                   onClick={handleFollow}
