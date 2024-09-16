@@ -20,6 +20,7 @@ import {
   getImageSource,
   getRandomImageLink,
   numberWithCommas,
+  setToLocalStorage,
 } from "@/utils/helpers";
 import {
   AddIcon,
@@ -31,6 +32,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Proposals from "../proposals";
 import MarkdownRenderer from "../common/MarkDownRender";
+import { ICommunity } from "@/utils/types/types";
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
 
@@ -59,6 +61,34 @@ export default function CommunityHead() {
   useEffect(() => {
     refetch();
   }, [communityId]);
+
+  const addItemToRecentCommunity = (
+    data: ICommunity[],
+    newItem: ICommunity
+  ) => {
+    const existingIndex = data?.findIndex((item) => item.id === newItem.id);
+
+    if (existingIndex !== -1) {
+      data[existingIndex] = newItem;
+    } else {
+      data.push(newItem);
+    }
+
+    if (data.length > 5) {
+      data.shift();
+    }
+
+    return data;
+  };
+
+  useEffect(() => {
+    if (data) {
+      const value = localStorage?.getItem("recentCommunity");
+      const prevCommunities: any = value ? JSON.parse(value) : [];
+      const recentCommunities = addItemToRecentCommunity(prevCommunities, data);
+      setToLocalStorage("recentCommunity", recentCommunities);
+    }
+  }, [data]);
 
   useEffect(() => {
     setIsFollowed(data?.isFollowed);
