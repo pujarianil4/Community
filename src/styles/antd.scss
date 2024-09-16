@@ -336,7 +336,7 @@
       height: 100%;
       position: absolute;
       left: 17px;
-      top: 11px;
+      top: 4px;
       border-inline-end: 1px solid var(--secondary-text);
     }
   }
@@ -353,7 +353,7 @@
 
   .ant-tree-switcher-leaf-line {
     left: 6px;
-
+    height: 88% !important;
     &::before,
     &::after {
       border-color: var(--secondary-text) !important;
@@ -361,20 +361,23 @@
 
     &::before {
       border-inline-end: 1px solid;
-      top: 11px !important;
+      top: 0px !important;
       bottom: -17px !important;
     }
 
     &::after {
       border-bottom: 1px solid;
+      height: 0px !important;
     }
   }
 
   .ant-tree-switcher-line-icon {
     vertical-align: 0.85em !important;
     position: relative;
+    background: var(--primary-bg);
     left: 5px;
-    top: -1px;
+    top: -8px;
+    z-index: 1;
   }
 
   .ant-tree-treenode-leaf-last {
@@ -384,7 +387,13 @@
       }
     }
     .ant-tree-switcher-noop {
-      visibility: hidden;
+      visibility: visible;
+
+      .ant-tree-switcher-leaf-line {
+        &::before {
+          visibility: hidden;
+        }
+      }
     }
   }
 
@@ -395,11 +404,11 @@
       height: 100%;
       position: absolute;
       left: 17px;
-      top: 11px;
+      top: 5px;
       border-inline-end: none;
       border-left: 1px solid var(--secondary-text);
       border-bottom: 1px solid var(--secondary-text);
-      width: 17px;
+      width: 25px;
     }
   }
   .ant-tree-switcher-noop {

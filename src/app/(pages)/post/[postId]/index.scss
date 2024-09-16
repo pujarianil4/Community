@@ -10,7 +10,8 @@
     align-items: center;
     gap: 8px;
     flex-direction: row;
-    margin-bottom: 8px;
+
+    height: 35px;
     img {
       border-radius: 50%;
       width: 30px !important;
@@ -70,7 +71,7 @@
   }
 
   .content {
-    margin: 12px 0 0 40px;
+    margin: 0px 0 0 40px;
     .post_image {
       position: relative;
       width: 100%;
@@ -106,10 +107,10 @@
     .save,
     .share,
     a {
-      min-width: 50px;
+      min-width: 80px;
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
+
       gap: 8px;
 
       span {
@@ -203,7 +204,7 @@
     padding: 8px;
     border: 1px solid var(--primary-border);
     border-radius: 8px;
-    margin: 16px 0 16px 40px;
+    margin: 16px 0 16px 16px;
 
     .comment_image_wrapper {
       position: relative;

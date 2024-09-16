@@ -41,6 +41,7 @@ import { Select, Switch, Tree } from "antd";
 import type { TreeDataNode } from "antd";
 import UHead from "@/components/common/uhead";
 import { DataNode } from "antd/es/tree";
+import Actions from "@/components/common/actions";
 
 interface Iprops {
   postId: number;
@@ -358,11 +359,12 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
               <span>Reply</span>
             </div>
           )}
-          <div className='save'>
+          <div className='share'>
             <ShareIcon width={18} />
             <span>Share</span>
           </div>
         </div>
+
         {isReplying && (
           <CommentInput
             onComment={onComment}
@@ -507,7 +509,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
           setContent={setCommentBody}
           content={commentBody}
           maxCharCount={300}
-          // autoFocus={true}
+          autoFocus={true}
         />
       </div>
       {imgLoading && (
