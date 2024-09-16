@@ -2,7 +2,6 @@
 .create_post_modal {
   width: 940px !important;
   border-radius: 16px !important;
-  background-color: var(--white) !important;
   box-shadow: -5px -6px 4px 0 rgba(0, 0, 0, 0.3);
 
   .ant-model-content {
@@ -13,7 +12,7 @@
 }
 .create_post_container {
   padding: 2rem;
-
+  background-color: var(--secondary-bg) !important;
   section {
     margin: 1rem 0;
   }
@@ -26,6 +25,8 @@
     justify-content: space-between;
     div {
       display: flex;
+      align-items: center;
+      justify-content: center;
       gap: 1rem;
     }
     img {
@@ -36,6 +37,17 @@
     h3 {
       font-size: 24px;
       font-weight: 500;
+      @include lessThan(md) {
+        font-size: 16px;
+      }
+    }
+    .draft_btn {
+      background-color: var(--secondary-bg) !important;
+      border: 1px solid var(--primary-border) !important;
+      color: var(--primary) !important;
+      &:hover {
+        opacity: 0.6;
+      }
     }
   }
 
@@ -136,12 +148,26 @@
       }
 
       .create_btn {
+        padding: 7px 15px !important;
         background-color: var(--secondary-bg) !important;
-        color: var(--primary) !important;
-        outline: none;
-        height: 40px;
         border: 1px solid var(--primary-border) !important;
-        border-radius: 12px !important;
+        border-radius: 5px !important;
+        color: var(--primary) !important;
+        height: 40px;
+        font-size: 15px !important;
+        cursor: pointer !important;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          opacity: 0.6;
+        }
+
+        &:disabled {
+          background-color: var(--secondary-bg) !important;
+          color: var(--label-text) !important;
+          opacity: 0.9;
+          cursor: not-allowed !important;
+        }
       }
     }
     .fr-element {
@@ -200,7 +226,7 @@
 
 .dropdown_with_search {
   box-sizing: border-box;
-
+  background-color: var(--secondary-bg);
   .search_input {
     width: 50%;
     display: flex;
@@ -428,6 +454,15 @@
     border-radius: 10px;
     .editBtn {
       margin-right: 10px;
+    }
+    .hvr_postBtn,
+    .editBtn {
+      background-color: var(--secondary-bg) !important;
+      color: var(--primary) !important;
+      border: 1px solid var(--primary-border) !important;
+      &:hover {
+        opacity: 0.6;
+      }
     }
   }
 

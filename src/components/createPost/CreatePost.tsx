@@ -327,7 +327,7 @@ const CreatePost: React.FC<Props> = ({
           </h3>
         </div>
         <div>
-          <CButton onClick={() => setIsDraft(!isDraft)} className='create_btn'>
+          <CButton onClick={() => setIsDraft(!isDraft)} className='draft_btn'>
             {isDraft ? "Create Post" : "Draft"}
           </CButton>
         </div>
@@ -370,7 +370,7 @@ const CreatePost: React.FC<Props> = ({
                     >
                       Edit
                     </CButton>
-                    <CButton onClick={handlePost} className='postBtn'>
+                    <CButton onClick={handlePost} className='hvr_postBtn'>
                       Post
                     </CButton>
                   </div>
