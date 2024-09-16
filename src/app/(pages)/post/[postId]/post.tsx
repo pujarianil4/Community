@@ -91,7 +91,7 @@ export default function Post({ post }: Iprops) {
     }
   };
 
-  if (!post) {
+  if (!post?.text) {
     return <PostPageLoader />;
   }
 
