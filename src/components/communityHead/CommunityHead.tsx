@@ -226,7 +226,11 @@ export default function CommunityHead() {
               {
                 key: "1",
                 label: "Posts",
-                content: <FeedList method='byCName' id={communityId} />,
+                content: (
+                  <div style={{ height: "1000px" }}>
+                    <FeedList method='byCName' id={communityId} />
+                  </div>
+                ),
               },
               {
                 key: "2",

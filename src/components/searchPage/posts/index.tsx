@@ -17,7 +17,7 @@ export default function Posts() {
   const { isLoading, data: posts, refetch, callFunction } = useAsync(getPosts);
 
   const handleFilter = (filter: List) => {
-    callFunction(getPosts, filter.value);
+    callFunction(getPosts, { sortby: filter.value });
   };
   return (
     <main className='search_post_container'>
