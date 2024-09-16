@@ -15,7 +15,7 @@ export default function RightPanel() {
 
   const { isLoading: isPostLoading, data: postByComments } = useAsync(
     getPosts,
-    "pCount"
+    { sortby: "pCount" }
   );
   const { isLoading, data: communities } = useAsync(fetchCommunities, "pCount");
 

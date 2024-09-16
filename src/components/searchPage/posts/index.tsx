@@ -19,7 +19,7 @@ export default function Posts() {
   const { isLoading, data: posts, refetch, callFunction } = useAsync(getPosts);
 
   const handleFilter = (filter: List) => {
-    callFunction(getPosts, filter.value);
+    callFunction(getPosts, { sortby: filter.value });
   };
 
   if (posts?.length === 0 && !isLoading) {
