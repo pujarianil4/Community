@@ -327,11 +327,7 @@ const CreatePost: React.FC<Props> = ({
           </h3>
         </div>
         <div>
-          <CButton
-            loading={isLoadingPost}
-            onClick={() => setIsDraft(!isDraft)}
-            className='create_btn'
-          >
+          <CButton onClick={() => setIsDraft(!isDraft)} className='create_btn'>
             {isDraft ? "Create Post" : "Draft"}
           </CButton>
         </div>
@@ -453,7 +449,7 @@ const CreatePost: React.FC<Props> = ({
           </div>
           <div className='media'>
             <CButton
-              loading={isLoadingPost}
+              loading={isLoadingPostData}
               disabled={isDisabled}
               onClick={handleSaveDraft}
               className='create_btn'
