@@ -149,8 +149,7 @@ const CreatePost: React.FC<Props> = ({
     isLoading: isLoadingPostData,
     data: posts,
     refetch: refetchPost,
-    callFunction,
-  } = useAsync(getPosts);
+  } = useAsync(getPosts, { sortby: "pCount" });
 
   const [isEditingPost, setIsEditingPost] = useState(false); // State to check if we're editing a post
 
