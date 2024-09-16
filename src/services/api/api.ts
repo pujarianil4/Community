@@ -154,7 +154,7 @@ export const updateUser = async (payload: Partial<IUser>) => {
 export const fetchCommunities = async (sortby: string) => {
   try {
     const response = await api.get(
-      `/community?sortBy=${sortby}&order=desc&page=1&limit=20`
+      `/community?sortBy=${sortby}&order=DESC&page=1&limit=20`
     );
 
     return response.data;
@@ -202,12 +202,22 @@ export const fetchCommunityByCname = async (cName: string) => {
   }
 };
 
-export const getPosts = async (sortby: string) => {
+export const getPosts = async ({
+  sortby,
+  order = "DESC",
+  page = 1,
+  limit = 20,
+}: {
+  sortby: string;
+  order: string;
+  page: number;
+  limit: number;
+}) => {
   console.log("sortBy", sortby);
 
   try {
     const response = await api.get(
-      `/posts?sortBy=${sortby}&order=DESC&page=1&limit=20`
+      `/posts?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}`
     );
     console.log("============Fetched all posts=============", response.data);
     return response.data;
@@ -217,10 +227,18 @@ export const getPosts = async (sortby: string) => {
   }
 };
 
-export const getPostsBycName = async (cname: string) => {
+export const getPostsBycName = async ({
+  nameId,
+  page = 1,
+  limit = 20,
+}: {
+  nameId: string;
+  page: number;
+  limit: number;
+}) => {
   try {
     const response = await api.get(
-      `/posts/community/cname/${cname}?page=1&limit=20`
+      `/posts/community/cname/${nameId}?page=${page}&limit=${limit}`
     );
     console.log("============Fetched all posts=============", response.data);
     return response.data;
@@ -230,9 +248,19 @@ export const getPostsBycName = async (cname: string) => {
   }
 };
 
-export const getPostsByuName = async (uname: string) => {
+export const getPostsByuName = async ({
+  nameId,
+  page = 1,
+  limit = 20,
+}: {
+  nameId: string;
+  page: number;
+  limit: number;
+}) => {
   try {
-    const response = await api.get(`/posts/username/${uname}?page=1&limit=20`);
+    const response = await api.get(
+      `/posts/username/${nameId}?page=${page}&limit=${limit}`
+    );
     console.log("============Fetched all posts=============", response.data);
     return response.data;
   } catch (error) {

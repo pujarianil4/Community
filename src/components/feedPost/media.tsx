@@ -33,7 +33,6 @@ export default function Media({ asset, totalAssets, className }: IProps) {
           src={asset}
           alt='postbg'
           fill
-          objectFit='cover'
           // objectPosition='center'
           // priority
         />
@@ -42,11 +41,10 @@ export default function Media({ asset, totalAssets, className }: IProps) {
             loading='lazy'
             src={asset}
             alt='postbg'
-            // className='media'
+            className='media'
             // width={100}
             // height={100}
             fill
-            objectFit='contain'
 
             // objectPosition='center'
             // priority

@@ -45,6 +45,8 @@ import {
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
 import TurndownService from "turndown";
+import { ICommunity } from "@/utils/types/types";
+import Image from "next/image";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -119,6 +121,9 @@ const SideBar: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [communityList, SetCommunityList] = useState<Array<any>>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [recentCommunities, setRecentCommunities] = useState([]);
+
+  console.log("recentCommunities", recentCommunities);
   const refetchCommunitySelector = (state: RootState) =>
     state.common.refetch.community;
   const [{ dispatch, actions }, [comminityRefetch]] = useRedux([
@@ -145,6 +150,9 @@ const SideBar: React.FC = () => {
     {
       type: "divider",
     },
+    recentCommunities.length > 0
+      ? { key: "recentCommunity", label: "Recent", children: recentCommunities }
+      : null,
     {
       key: "community",
       label: "My Community",
@@ -224,6 +232,36 @@ const SideBar: React.FC = () => {
     dispatch(actions.setRefetchCommunity(true));
   };
 
+  const getRecentCommunities = () => {
+    const value = localStorage?.getItem("recentCommunity");
+    let prevCommunities = [];
+    prevCommunities = value ? JSON.parse(value) : [];
+    if (prevCommunities?.length > 0) {
+      const updateData = prevCommunities?.map((item: ICommunity) => ({
+        key: `c/${item.username}`,
+        label: (
+          <div className='community_item'>
+            <Image
+              src={getImageSource(item?.img?.pro, "c")}
+              alt={item.username}
+              width={30}
+              height={30}
+              loading='lazy'
+            />
+            <span>{item.username}</span>
+          </div>
+        ),
+      }));
+      setRecentCommunities(updateData);
+    } else {
+      setRecentCommunities([]);
+    }
+  };
+
+  useEffect(() => {
+    getRecentCommunities();
+  }, []);
+
   useEffect(() => {
     if (comminityRefetch) {
       dispatch(actions.setRefetchCommunity(false));
@@ -244,7 +282,7 @@ const SideBar: React.FC = () => {
         <div className='custom-menu'>
           <Menu
             defaultSelectedKeys={["1"]}
-            defaultOpenKeys={["community", "categories"]}
+            defaultOpenKeys={["community", "categories", "recentCommunity"]}
             mode='inline'
             theme='dark'
             onClick={onClick}

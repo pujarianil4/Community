@@ -5,6 +5,7 @@ import PageWraper from "@/components/Wrapers/PageWraper";
 import "./index.scss";
 import Comments from "./comments";
 import Post from "./post";
+import FeedPost from "@/components/feedPost/feedPost";
 import { getPostsByPostId, getPostsForMeta } from "@/services/api/api";
 
 interface Iprops {
@@ -17,7 +18,8 @@ export default async function PostPage({ params }: Iprops) {
   return (
     <PageWraper hideRightPanel>
       <main className='post_page'>
-        <Post post={postData} />
+        {/* <Post post={postData} /> */}
+        <FeedPost post={postData} />
         <Comments postId={postId} />
       </main>
     </PageWraper>

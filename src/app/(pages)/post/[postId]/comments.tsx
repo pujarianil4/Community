@@ -32,14 +32,28 @@ import { GoComment } from "react-icons/go";
 import { LuImagePlus } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
 import { RiText } from "react-icons/ri";
+import {
+  CarryOutOutlined,
+  CheckOutlined,
+  FormOutlined,
+} from "@ant-design/icons";
+import { Select, Switch, Tree } from "antd";
+import type { TreeDataNode } from "antd";
+import UHead from "@/components/common/uhead";
+import { DataNode } from "antd/es/tree";
+import Actions from "@/components/common/actions";
 
 interface Iprops {
   postId: number;
 }
 export default function Comments({ postId }: Iprops) {
   const { isLoading, data: commentsData } = useAsync(fetchComments, postId);
-  const [comments, setComments] = useState<IComment[]>();
+  const [comments, setComments] = useState<IComment[]>([]);
+  const [commentsTree, setCommentsTree] = useState<DataNode[]>([]);
   const loadingArray = Array(5).fill(() => 0);
+  const [actualData, setActualData] = useState<IComment[]>([]);
+  const actualDataRef = useRef<IComment[]>();
+  actualDataRef.current = actualData;
 
   function organizeComments(comments: IComment[]): IComment[] {
     const commentMap = new Map<number, IComment>();
@@ -69,20 +83,87 @@ export default function Comments({ postId }: Iprops) {
       }
     });
 
-    return rootComments;
+    const sorted = rootComments
+      ?.filter((comment: any) => comment?.pcid === null)
+      ?.sort(
+        (a: any, b: any) =>
+          new Date(b.cta).getTime() - new Date(a.cta).getTime()
+      );
+
+    const treeData: TreeDataNode[] = generateTreeData(sorted);
+    console.log("sorted", sorted, treeData);
+    setCommentsTree(treeData);
+    return sorted;
   }
+
+  const generateTreeData = (
+    comments: IComment[],
+    parentKey = ""
+  ): TreeDataNode[] => {
+    return comments.map((comment, index) => {
+      const currentKey = parentKey
+        ? `${parentKey}-${index + 1}`
+        : (index + 1).toString();
+
+      return {
+        title: (
+          <CommentItem
+            onReply={onComment}
+            key={index}
+            comment={comment}
+            postId={postId}
+          />
+        ),
+        key: currentKey,
+        icon: <CarryOutOutlined />,
+        children: comment.comments
+          ? generateTreeData(comment.comments, currentKey)
+          : [],
+      };
+    });
+  };
+
+  // const treeData: TreeDataNode[] = generateTreeData(comments);
+
+  // console.log("tree", treeData, comments);
 
   useEffect(() => {
     if (commentsData) {
       const updatedCommentsData = organizeComments(commentsData);
       setComments(updatedCommentsData);
+      setActualData(commentsData);
     }
   }, [commentsData]);
 
+  useEffect(() => {
+    console.log("actualData", commentsData);
+  }, [actualData]);
+
+  const onSelect = (selectedKeys: React.Key[], info: any) => {
+    console.log("selected", selectedKeys, info);
+  };
+
   const onComment = (newComment: IComment) => {
-    if (newComment.pcid === null) {
-      setComments([newComment, ...(comments || [])]);
-    }
+    const withAddedComment = [newComment, ...(actualDataRef.current || [])];
+
+    console.log(
+      "comment",
+      withAddedComment,
+      actualDataRef,
+      actualData,
+      newComment
+    );
+    setActualData(withAddedComment);
+    const organized = organizeComments(withAddedComment);
+    setComments(organized);
+
+    // const treeData: TreeDataNode[] = generateTreeData(organized);
+    // console.log("aftercomment", withAddedComment, treeData);
+    // setCommentsTree(treeData);
+  };
+
+  const onReply = (newReply: IComment) => {
+    const u = [commentsData, newReply];
   };
   return (
     <section className='comments'>
@@ -91,15 +172,19 @@ export default function Comments({ postId }: Iprops) {
         loadingArray.map((_: any, i: number) => <CommentsLoader key={i} />)
       ) : (
         <div className='comment_container'>
-          {comments
-            ?.filter((comment: any) => comment?.pcid === null)
-            ?.sort(
-              (a: any, b: any) =>
-                new Date(b.cta).getTime() - new Date(a.cta).getTime()
-            )
-            ?.map((comment: any, index: number) => (
-              <CommentItem key={index} comment={comment} postId={postId} />
-            ))}
+          {/* {comments?.map((comment: any, index: number) => (
+            <CommentItem key={index} comment={comment} postId={postId} />
+          ))} */}
+
+          <Tree
+            showLine={true}
+            showIcon={false}
+            className='comments'
+            rootClassName='comments'
+            // defaultExpandedKeys={["1"]}
+            onSelect={onSelect}
+            treeData={commentsTree}
+          />
         </div>
       )}
     </section>
@@ -109,6 +194,7 @@ export default function Comments({ postId }: Iprops) {
 interface ICommentItemProps {
   comment: IComment;
   postId: number;
+  onReply: (reply: IComment) => void;
 }
 
 interface Vote {
@@ -116,7 +202,7 @@ interface Vote {
   type: "up" | "down" | "";
 }
 const CommentItem: React.FC<ICommentItemProps> = React.memo(
-  ({ comment, postId }) => {
+  ({ comment, postId, onReply }) => {
     const [isReplying, setIsReplying] = useState(false);
     const [childComments, setChildComments] = useState<IComment[]>(
       comment?.comments || []
@@ -171,7 +257,8 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
     const scrollableContainerRef = useRef(null);
 
     const onComment = (newComment: IComment) => {
-      setChildComments((prevComments) => [newComment, ...prevComments]);
+      // setChildComments((prevComments) => [newComment, ...prevComments]);
+      onReply(newComment);
     };
 
     const handleClick = (val: boolean) => {
@@ -179,8 +266,12 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
     };
 
     return (
-      <div ref={scrollableContainerRef} className='comment_item'>
-        {comment.pcid !== null && <div className='comment_line' />}
+      <div
+        ref={scrollableContainerRef}
+        className={`comment_item ${
+          comment.comments?.length == 0 ? "lastComment" : ""
+        } `}
+      >
         <div className='user_head'>
           <Link
             href={`u/${comment?.user.username}`}
@@ -190,8 +281,8 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
             <Image
               src={getImageSource(comment?.user?.img?.pro, "u")}
               alt={comment?.user.username}
-              width={32}
-              height={32}
+              width={30}
+              height={30}
             />
           </Link>
           <Link
@@ -203,6 +294,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
           </Link>
           <p className='post_time'>&bull; {timeAgo(comment?.cta)}</p>
         </div>
+
         <div className='content'>
           {comment?.img && (
             <Image
@@ -250,7 +342,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
               onClick={() => handleVote("up")}
               size={18}
             />
-            <span>{vote.value} trest</span>
+            <span>{vote.value}</span>
             <PiArrowFatDownDuotone
               className={vote.type == "down" ? "active" : ""}
               onClick={() => handleVote("down")}
@@ -267,11 +359,12 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
               <span>Reply</span>
             </div>
           )}
-          <div className='save'>
+          <div className='share'>
             <ShareIcon width={18} />
             <span>Share</span>
           </div>
         </div>
+
         {isReplying && (
           <CommentInput
             onComment={onComment}
@@ -280,7 +373,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
             postId={postId}
           />
         )}
-        {childComments.length > 0 && (
+        {/* {childComments.length > 0 && (
           <div className='nested_comments'>
             {childComments.map((childComment) => (
               <CommentItem
@@ -290,7 +383,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
               />
             ))}
           </div>
-        )}
+        )} */}
       </div>
     );
   }
@@ -416,7 +509,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
           setContent={setCommentBody}
           content={commentBody}
           maxCharCount={300}
-          // autoFocus={true}
+          autoFocus={true}
         />
       </div>
       {imgLoading && (

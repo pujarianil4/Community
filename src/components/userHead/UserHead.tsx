@@ -243,7 +243,11 @@ export default function UserHead() {
             {
               key: "1",
               label: "Posts",
-              content: <FeedList method='byUName' id={userId} />,
+              content: (
+                <div style={{ height: "1000px" }}>
+                  <FeedList method='byUName' id={userId} />
+                </div>
+              ),
             },
             {
               key: "2",
