@@ -4,7 +4,11 @@ import React, { useState, useEffect, useRef, memo } from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
-import { MdDeleteOutline, MdOutlineGifBox } from "react-icons/md";
+import {
+  MdDeleteOutline,
+  MdEmojiEmotions,
+  MdOutlineGifBox,
+} from "react-icons/md";
 import {
   fetchCommunities,
   handlePostToCommunity,
@@ -23,7 +27,8 @@ import NotificationMessage from "../common/Notification";
 import CButton from "../common/Button";
 import TiptapEditor from "../common/tiptapEditor";
 import TurndownService from "turndown";
-
+import { LinkIcon } from "@/assets/icons";
+import FocusableDiv from "../common/focusableDiv";
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPostModalOpen: boolean;
@@ -276,43 +281,46 @@ const CreatePost: React.FC<Props> = ({
             setSearchTerm={setSearchTerm}
           />
           {/* <TestArea content={content} setContent={setContent} /> */}
-          <div className='editor_wrapper'>
-            <TiptapEditor
-              setContent={setContent}
-              content={content}
-              autoFocus={true}
-            />
+          <div className='post_editor'>
+            <FocusableDiv>
+              <TiptapEditor
+                setContent={setContent}
+                content={content}
+                autoFocus={true}
+                maxCharCount={300}
+              />
+              {pics?.length > 0 && (
+                <div className='file_container'>
+                  {pics?.map((picFile, index) => (
+                    <Img
+                      key={index}
+                      index={index}
+                      file={picFile}
+                      onRemove={(rmIndx) =>
+                        setPics(pics.filter((_, idx) => idx !== rmIndx))
+                      }
+                    />
+                  ))}
+                </div>
+              )}
+              <div className='inputs'>
+                <FileInput onChange={handleUploadFile}>
+                  <LuImagePlus color='#636466' size={20} />
+                </FileInput>
+                <LinkIcon />
+                <MdEmojiEmotions color='#636466' size={20} />
+                <span className={uploadMsg.type}>{uploadMsg?.msg}</span>
+              </div>
+            </FocusableDiv>
           </div>
-          {pics?.length > 0 && (
-            <div className='file_container'>
-              {pics?.map((picFile, index) => (
-                <Img
-                  key={index}
-                  index={index}
-                  file={picFile}
-                  onRemove={(rmIndx) =>
-                    setPics(pics.filter((_, idx) => idx !== rmIndx))
-                  }
-                />
-              ))}
-            </div>
-          )}
         </div>
-        <hr />
         <div className='media'>
-          <div className='inputs'>
-            <FileInput onChange={handleUploadFile}>
-              <LuImagePlus color='var(--primary)' size={20} />
-            </FileInput>
-            <span className={uploadMsg.type}>{uploadMsg?.msg}</span>
-            {/* <MdOutlineGifBox color='var(--primary)' size={20} />
-            <LuImagePlus color='var(--primary)' size={20} /> */}
-          </div>
           {/* <div className='postbtn'> */}
           <CButton
             loading={isLoadingPost}
             disabled={isDisabled}
             onClick={handlePost}
+            className='postBtn'
           >
             Post
           </CButton>

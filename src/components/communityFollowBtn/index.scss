@@ -1,0 +1,9 @@
+@import "/src/styles";
+.follow_btn {
+  width: fit-content;
+  height: 28px;
+  padding: 6px 8px !important;
+  font-size: $font-size-xsm;
+  background-color: var(--tertiary-bg) !important;
+  color: var(--primary) !important;
+}

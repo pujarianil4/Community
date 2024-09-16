@@ -81,7 +81,7 @@
   max-width: 100%;
   word-wrap: break-word;
   overflow-x: hidden;
-
+  max-height: 70px;
   a {
     color: var(--link-color) !important;
 
@@ -258,5 +258,13 @@
     svg {
       width: 20px;
     }
+  }
+}
+
+.view_bx {
+  color: var(--black);
+  svg {
+    width: 13px;
+    height: 13px;
   }
 }

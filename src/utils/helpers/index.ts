@@ -73,7 +73,7 @@ export const debounce = (func: (...args: any[]) => void, delay: number) => {
 
 export const getImageSource = (
   logo: string | null,
-  type: "u" | "c" | "cov" | "other" = "other"
+  type: "u" | "c" | "cvr" | "other" = "other"
   // user: boolean = false,
   // community: boolean = false
 ) => {
@@ -86,11 +86,11 @@ export const getImageSource = (
     return logo;
   } else {
     if (type === "u") {
-      return "https://testcommunity.s3.ap-south-1.amazonaws.com/fa1f245d-6797-4493-8711-3661a76e0d35-Group%2030094.png";
+      return "https://testcommunity.s3.amazonaws.com/592aea6e-1492-4d70-81fd-399a14db8a73-user.png";
     } else if (type === "c") {
       // TODO: change default Community logo
       return "https://testcommunity.s3.amazonaws.com/67c9729d-b9b8-4936-9f13-111e4a917f71-Group%2030094.png";
-    } else if (type === "cov") {
+    } else if (type === "cvr") {
       // TODO: change default Community logo
       return "https://testcommunity.s3.amazonaws.com/b8a7d819-61f5-43bb-be46-cc8331c42db8-cover.png";
     } else {

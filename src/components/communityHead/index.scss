@@ -195,7 +195,7 @@
         justify-content: space-between;
         align-items: flex-start;
         padding: 0.75rem 0.75rem 0;
-        height: 86px;
+        height: fit-content;
 
         p {
           font-size: 14px;
@@ -211,8 +211,8 @@
 
       .socials {
         width: 120px;
-        height: 28px;
-        padding: 0 0.75rem 0.75rem;
+        /* height: 28px; */
+        padding: 4px 0.75rem 0.75rem;
         margin-left: auto;
         display: flex;
         gap: 24px;

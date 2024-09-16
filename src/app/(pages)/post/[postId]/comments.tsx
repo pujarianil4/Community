@@ -506,6 +506,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
           showToolbar={showToolbar}
           setContent={setCommentBody}
           content={commentBody}
+          maxCharCount={300}
           // autoFocus={true}
         />
       </div>

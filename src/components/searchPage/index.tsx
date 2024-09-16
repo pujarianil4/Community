@@ -3,8 +3,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "./index.scss";
 import CTabs from "../common/Tabs";
 import Posts from "./posts";
-import Communities from "./communities";
-import User from "./user";
+import Communities from "./communitiesList";
+import User from "./userList";
 import SearchComments from "./comments";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
