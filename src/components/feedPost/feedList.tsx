@@ -69,6 +69,7 @@ export default function FeedList({ method, id }: IFeedList) {
             list={[
               { value: "ccount", title: "trending" },
               { value: "time", title: "latest" },
+              { value: "up", title: "vote" },
             ]}
             callBack={handleFilter}
             defaultListIndex={0}
