@@ -200,7 +200,11 @@ export default function CommunityHead() {
                 </div>
               </div>
               <div className='activity'>
-                <MarkdownRenderer markdownContent={data?.metadata} limit={3} />
+                <MarkdownRenderer
+                  markdownContent={data?.metadata}
+                  limit={3}
+                  showViewMore={true}
+                />
 
                 <CButton
                   loading={isLoadingFollow}

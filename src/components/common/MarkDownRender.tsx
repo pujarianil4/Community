@@ -54,11 +54,13 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 interface MarkdownRendererProps {
   markdownContent: string;
   limit?: number;
+  showViewMore?: boolean;
 }
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   markdownContent,
   limit,
+  showViewMore = false,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTruncated, setIsTruncated] = useState(false);
@@ -115,14 +117,14 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       <div ref={contentRef} style={dynamicStyle}>
         <ReactMarkdown components={components}>{markdownContent}</ReactMarkdown>
       </div>
-      {isTruncated && !isExpanded && (
+      {showViewMore && isTruncated && !isExpanded && (
         <div className='view_bx' onClick={toggleExpand}>
-          <FaChevronDown />
+          View More
         </div>
       )}
-      {isExpanded && (
+      {showViewMore && isExpanded && (
         <div className='view_bx' onClick={toggleExpand}>
-          <FaChevronUp />
+          View Less
         </div>
       )}
     </div>

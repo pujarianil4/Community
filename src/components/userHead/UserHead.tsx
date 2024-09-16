@@ -203,7 +203,11 @@ export default function UserHead() {
               </div>
               <div className='activity'>
                 <div className='about'>
-                  <MarkdownRenderer markdownContent={data?.desc} limit={3} />
+                  <MarkdownRenderer
+                    markdownContent={data?.desc}
+                    limit={3}
+                    showViewMore={true}
+                  />
                 </div>
                 {isSelf ? (
                   <CButton onClick={handleEdit} className='follow_btn'>
