@@ -15,8 +15,8 @@ interface IPopup {
 export default function CPopup({ children, list, onAction = "click" }: IPopup) {
   const content = (
     <div className='cpopup_content'>
-      {list?.map(({ icon: Icon, label }: List) => (
-        <div className='option'>
+      {list?.map(({ icon: Icon, label }: List, index: number) => (
+        <div key={index} className='option'>
           {Icon && Icon}
           <span>{label}</span>
         </div>

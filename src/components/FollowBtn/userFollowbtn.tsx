@@ -7,12 +7,13 @@ import useAsync from "@/hooks/useAsync";
 import "./index.scss";
 import { RootState } from "@/contexts/store";
 import { useRouter } from "next/navigation";
+import { IUser } from "@/utils/types/types";
 
 interface IProps {
-  userId: string;
+  userData: IUser;
 }
 
-export default function UserFollowButton({ userId }: IProps) {
+export default function UserFollowButton({ userData }: IProps) {
   const router = useRouter();
   const userNameSelector = (state: RootState) => state?.user;
   const refetchRoute = (state: RootState) => state?.common.refetch;
@@ -20,33 +21,41 @@ export default function UserFollowButton({ userId }: IProps) {
     userNameSelector,
     refetchRoute,
   ]);
-  const {
-    isLoading,
-    data,
-    error,
-    callFunction: callBack,
-  } = useAsync(fetchUser, userId);
+  // const {
+  //   isLoading,
+  //   data,
+  //   error,
+  //   callFunction: callBack,
+  // } = useAsync(fetchUser, userId);
   const {
     isLoading: isLoadingFollow,
     data: followResponse,
     callFunction,
   } = useAsync();
-  const [isSelf, setIsSelf] = useState<boolean>(user.uid === data?.id);
-  const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
+  const [isSelf, setIsSelf] = useState<boolean>(user.uid === userData?.id);
+  const [isFollowed, setIsFollowed] = useState<boolean>(
+    userData?.isFollowed as boolean
+  );
+  const [isUnfollowLoading, setIsUnFollowLoading] = useState<boolean>(false);
 
   const handleFollowToggle = async () => {
     try {
       if (!isFollowed) {
         await callFunction(followApi, {
           typ: "u",
-          fwid: data.id,
+          fwid: userData.id,
         });
         dispatch(actions.setRefetchUser(true));
         setIsFollowed(true);
       } else {
-        await UnFollowAPI(data.id);
+        setIsUnFollowLoading(true);
+        await UnFollowAPI({
+          type: "u",
+          fwid: userData?.id?.toString() as string,
+        });
         dispatch(actions.setRefetchUser(true));
         setIsFollowed(false);
+        setIsUnFollowLoading(false);
       }
     } catch (error) {
       console.error("Error handling follow:", error);
@@ -57,20 +66,20 @@ export default function UserFollowButton({ userId }: IProps) {
     router.push(`/settings`);
   };
 
-  useEffect(() => {
-    setIsFollowed(data?.isFollowed);
+  // useEffect(() => {
+  //   setIsFollowed(userData?.isFollowed);
 
-    if (refetchData?.user == true) {
-      callBack(fetchUser, userId);
-      dispatch(actions.resetRefetch());
-    }
+  //   if (refetchData?.user == true) {
+  //     callBack(fetchUser, userId);
+  //     dispatch(actions.resetRefetch());
+  //   }
 
-    if (user.uid === data?.id) {
-      setIsSelf(true);
-    } else {
-      setIsSelf(false);
-    }
-  }, [user, data, refetchData]);
+  //   if (user.uid === data?.id) {
+  //     setIsSelf(true);
+  //   } else {
+  //     setIsSelf(false);
+  //   }
+  // }, [user, data, refetchData]);
 
   return (
     <div onClick={(event) => event.stopPropagation()}>
@@ -81,7 +90,7 @@ export default function UserFollowButton({ userId }: IProps) {
       ) : (
         <CButton
           className='follow_btn'
-          loading={isLoadingFollow || isLoading}
+          loading={isLoadingFollow || isUnfollowLoading}
           onClick={handleFollowToggle}
         >
           {isFollowed ? "Joined" : "Join"}

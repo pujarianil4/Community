@@ -17,6 +17,7 @@ const api: AxiosInstance = axios.create({
 });
 // TODO create seperate file for each catogery
 // UI for notification
+
 const updateAuthorizationHeader = () => {
   const token = store.getState().user?.token;
 
@@ -77,7 +78,6 @@ export const handleSignup = async (
       pubKey,
     });
     console.log("==============userSignUp=================", response);
-    // setToLocalStorage("userSession", response.data);
     return response.data;
   } catch (error) {
     console.error("SIGNUP_ERROR ", error);
@@ -152,11 +152,11 @@ export const updateUser = async (payload: Partial<IUser>) => {
 };
 
 export const fetchCommunities = async (sortby: string) => {
+  const uid = store.getState().user?.uid;
   try {
     const response = await api.get(
-      `/community?sortBy=${sortby}&order=DESC&page=1&limit=20`
+      `/community?sortBy=${sortby}&order=DESC&page=1&limit=20&uid=${uid}`
     );
-
     return response.data;
   } catch (error) {
     console.error("Fetch Communities ", error);
@@ -175,10 +175,12 @@ export const createCommunity = async (data: any) => {
 };
 
 export const fetchCommunityByCname = async (cName: string) => {
+  const uid = store.getState().user?.uid;
   if (!cName) {
     return null;
   }
   try {
+    // const response = await api.get(`/community/cname/${cName}&uid=${uid}`);
     const response = await api.get(`/community/cname/${cName}`);
     let isFollowed = false;
 
@@ -213,11 +215,11 @@ export const getPosts = async ({
   page: number;
   limit: number;
 }) => {
-  console.log("sortBy", sortby);
+  const uid = store.getState().user?.uid;
 
   try {
     const response = await api.get(
-      `/posts?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}`
+      `/posts?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}`
     );
     console.log("============Fetched all posts=============", response.data);
     return response.data;
@@ -236,11 +238,12 @@ export const getPostsBycName = async ({
   page: number;
   limit: number;
 }) => {
+  const uid = store.getState().user?.uid;
   try {
     const response = await api.get(
-      `/posts/community/cname/${nameId}?page=${page}&limit=${limit}`
+      `/posts/community/cname/${nameId}?page=${page}&limit=${limit}&uid=${uid}`
     );
-    console.log("============Fetched all posts=============", response.data);
+    console.log("=========Fetched all posts By Cname=========", response.data);
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
@@ -257,11 +260,12 @@ export const getPostsByuName = async ({
   page: number;
   limit: number;
 }) => {
+  const uid = store.getState().user?.uid;
   try {
     const response = await api.get(
-      `/posts/username/${nameId}?page=${page}&limit=${limit}`
+      `/posts/username/${nameId}?page=${page}&limit=${limit}&uid=${uid}`
     );
-    console.log("============Fetched all posts=============", response.data);
+    console.log("=========Fetched all posts By Uname==========", response.data);
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
@@ -330,8 +334,11 @@ export const followApi = async (data: IFollowAPI) => {
 };
 
 export const fetchComments = async (postId: string) => {
+  const uid = store.getState().user?.uid;
   try {
-    const response = await api.get(`/comments/post/${postId}?page=1&limit=100`);
+    const response = await api.get(
+      `/comments/post/${postId}?page=1&limit=100&uid=${uid}`
+    );
     return response.data;
   } catch (error) {
     console.error("COMMENTS_ERROR: ", error);
@@ -380,8 +387,6 @@ export const isUserFollowed = async ({
 }) => {
   const uid = store.getState().user?.uid;
 
-  console.log("UID", uid);
-
   try {
     const response = await api.get(
       `/followers/isFollow/${uid}?fwid=${fwid}&typ=${type}`
@@ -393,9 +398,15 @@ export const isUserFollowed = async ({
   }
 };
 
-export const UnFollowAPI = async (id: string) => {
+export const UnFollowAPI = async ({
+  fwid,
+  type,
+}: {
+  fwid: string;
+  type: string;
+}) => {
   try {
-    const response = await api.delete(`/followers/${id}`);
+    const response = await api.delete(`/followers/${fwid}?typ=${type}`);
     return response.data;
   } catch (error) {
     console.error("POSTS_ERROR: ", error);
