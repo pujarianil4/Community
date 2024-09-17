@@ -209,32 +209,34 @@ export default function UserHead() {
                     showViewMore={true}
                   />
                 </div>
-                {isSelf ? (
-                  <CButton onClick={handleEdit} className='follow_btn'>
-                    Edit
-                  </CButton>
-                ) : (
-                  <CButton
-                    loading={isLoadingFollow}
-                    onClick={handleFollow}
-                    className='follow_btn'
-                  >
-                    {isFollowed ? "Unfollow" : "Follow"}
-                  </CButton>
-                )}
+                <div className='social_bx'>
+                  {isSelf ? (
+                    <CButton onClick={handleEdit} className='follow_btn'>
+                      Edit
+                    </CButton>
+                  ) : (
+                    <CButton
+                      loading={isLoadingFollow}
+                      onClick={handleFollow}
+                      className='follow_btn'
+                    >
+                      {isFollowed ? "Unfollow" : "Follow"}
+                    </CButton>
+                  )}
+                  <div className='socials'>
+                    <div className='disabled'>
+                      <DiscordIcon />
+                    </div>
+                    <div className='disabled'>
+                      <TelegramIcon />
+                    </div>
+                    <div className='disabled'>
+                      <TwitterIcon />
+                    </div>
+                  </div>
+                </div>
               </div>
               {/* TODO: add disabled class as per social link availablity */}
-              <div className='socials'>
-                <div className='disabled'>
-                  <DiscordIcon />
-                </div>
-                <div className='disabled'>
-                  <TelegramIcon />
-                </div>
-                <div className='disabled'>
-                  <TwitterIcon />
-                </div>
-              </div>
             </div>
           </div>
         )}

@@ -8,12 +8,13 @@ export interface User {
   uid: number;
   token?: string;
   img: string;
+  sid: number;
 }
 const cookies = parseCookies();
 const auth = cookies?.authToken;
 
 const userData: any = auth && JSON.parse(auth);
-
+console.log("userdata", userData);
 //TODO update Later
 const initialState: User = {
   username: userData?.username || "",
@@ -21,6 +22,7 @@ const initialState: User = {
   uid: userData?.uid || 0,
   token: userData?.token || "",
   img: userData?.img,
+  sid: userData?.id || "",
 };
 
 export const userSlice = createSlice({
@@ -33,6 +35,7 @@ export const userSlice = createSlice({
       state.uid = action.payload?.uid;
       state.token = action.payload?.token;
       state.img = action.payload?.img;
+      state.sid = action.payload?.sid;
     },
   },
 });
