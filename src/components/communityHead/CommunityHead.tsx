@@ -33,9 +33,11 @@ import Link from "next/link";
 import Proposals from "../proposals";
 import MarkdownRenderer from "../common/MarkDownRender";
 import { ICommunity } from "@/utils/types/types";
+import { Modal } from "antd";
+import CreatePost from "../createPost/CreatePost";
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
-
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const pathname = usePathname();
   const pathArray = pathname.split("/");
   const communityId = id || pathArray[pathArray.length - 1];
@@ -51,7 +53,9 @@ export default function CommunityHead() {
     refetchRoute,
   ]);
   const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
-
+  const handleCancel = () => {
+    setIsPostModalOpen(false);
+  };
   const {
     isLoading: isLoadingFollow,
     data: followResponse,
@@ -120,7 +124,7 @@ export default function CommunityHead() {
 
   const handleCreatePost = () => {
     // TODO: Show create post with current community
-    console.log("CREATE_POST");
+    setIsPostModalOpen(true);
   };
 
   useEffect(() => {
@@ -296,6 +300,22 @@ export default function CommunityHead() {
           />
         </div>
       )}
+
+      <Modal
+        className='create_post_modal'
+        open={isPostModalOpen}
+        onCancel={handleCancel}
+        footer={<></>}
+        centered
+      >
+        {isPostModalOpen && (
+          <CreatePost
+            isPostModalOpen={isPostModalOpen}
+            defaultCommunity={data}
+            setIsPostModalOpen={setIsPostModalOpen}
+          />
+        )}
+      </Modal>
     </>
   );
 }

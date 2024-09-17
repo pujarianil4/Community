@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, List } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import CInput from "../common/Input";
@@ -16,6 +16,7 @@ interface DropdownWithSearchProps {
   options: ICommunity[];
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  defaultSelection?: ICommunity;
 }
 
 const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
@@ -23,6 +24,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
   options,
   searchTerm,
   setSearchTerm,
+  defaultSelection,
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -50,6 +52,12 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
     setVisible(false);
   };
 
+  useEffect(() => {
+    if (defaultSelection?.id) {
+      handleSelect(defaultSelection);
+    }
+  }, [defaultSelection]);
+
   return (
     <main className='dropdown_with_search'>
       <div className='search_input'>
@@ -58,12 +66,13 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
           className='dropdown_input'
           placeholder='Select Community'
           value={searchTerm}
+          disabled={!!defaultSelection?.id}
           onChange={handleSearch}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
       </div>
-      {visible && (
+      {visible && !defaultSelection?.id && (
         <div className='custom_dropdown'>
           {options?.length > 0 ? (
             <List

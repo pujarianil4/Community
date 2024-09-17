@@ -32,6 +32,7 @@ import FocusableDiv from "../common/focusableDiv";
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPostModalOpen: boolean;
+  defaultCommunity?: ICommunity;
 }
 
 export const Img: React.FC<{
@@ -109,6 +110,7 @@ const refetchCommunitySelector = (state: RootState) =>
 const CreatePost: React.FC<Props> = ({
   isPostModalOpen,
   setIsPostModalOpen,
+  defaultCommunity,
 }) => {
   const [{ dispatch, actions }, [user, comminityRefetch]] = useRedux([
     userNameSelector,
@@ -276,6 +278,7 @@ const CreatePost: React.FC<Props> = ({
         <div className='inputArea'>
           <DropdownWithSearch
             onSelect={setSelectedOption}
+            defaultSelection={defaultCommunity}
             options={communityList}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
