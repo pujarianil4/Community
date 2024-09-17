@@ -126,13 +126,14 @@ export default function Navbar() {
         token: "",
         img: "",
       };
-      router.push("/");
+
+      // router.push("/");
       dispatch(actions.setUserData(initialState));
       // Add a short delay before reloading the page
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 100);
-      // window?.location?.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      window?.location?.reload();
     } catch (error) {
       deleteClientSideCookie("authToken");
       setUserSession(null);
@@ -148,7 +149,7 @@ export default function Navbar() {
       // Add a short delay before reloading the page
       setTimeout(() => {
         window.location.reload();
-      }, 100);
+      }, 1000);
       //  window?.location?.reload();
     }
   };

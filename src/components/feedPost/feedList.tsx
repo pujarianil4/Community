@@ -24,13 +24,20 @@ interface IFeedList {
   id: string | null;
   sortby?: string;
   order?: string;
+  className?: string;
 }
 interface List {
   value: string;
   title: string;
 }
 
-export default function FeedList({ method, id, sortby, order }: IFeedList) {
+export default function FeedList({
+  method,
+  id,
+  sortby,
+  order,
+  className = "virtuoso",
+}: IFeedList) {
   // const { userId, communityId } = useParams<{
   //   userId: string;
   //   communityId: string;
@@ -113,23 +120,26 @@ export default function FeedList({ method, id, sortby, order }: IFeedList) {
           loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />)
         )}
       </div> */}
-      <Virtuoso
-        data={posts}
-        // totalCount={200} // add this if we know total count of posts and remove below condition
-        endReached={() => {
-          if (
-            !isLoading &&
-            posts.length % limit === 0 &&
-            posts.length / limit === page
-          ) {
-            setPage((prevPage) => prevPage + 1);
-          }
-        }}
-        itemContent={(index, post) => <FeedPost key={index} post={post} />}
-        className='virtuoso'
-      />
-      {isLoading && page > 1 && <FeedPostLoader />}
-      {!isLoading && posts.length === 0 && <EmptyData />}
+      <div>
+        <Virtuoso
+          // style={{ position: "sticky" }}
+          data={posts}
+          // totalCount={200} // add this if we know total count of posts and remove below condition
+          endReached={() => {
+            if (
+              !isLoading &&
+              posts.length % limit === 0 &&
+              posts.length / limit === page
+            ) {
+              setPage((prevPage) => prevPage + 1);
+            }
+          }}
+          itemContent={(index, post) => <FeedPost key={index} post={post} />}
+          className={className}
+        />
+        {isLoading && page > 0 && <FeedPostLoader />}
+        {!isLoading && posts.length === 0 && <EmptyData />}
+      </div>
     </>
   );
 }

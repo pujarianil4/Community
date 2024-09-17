@@ -8,15 +8,17 @@ export function setClientSideCookie(
   console.log("setClientSideCookie", name, value, force);
 
   if (force) {
-    setCookie(null, name, value);
+    setCookie(null, name, value, { path: "/" });
   } else {
     const user = getClientSideCookie(name);
-    !user && setCookie(null, name, value);
+    !user && setCookie(null, name, value, { path: "/" });
   }
 }
 
 export function getClientSideCookie(name: string) {
   const cookies = parseCookies();
+  console.log("cookies", cookies);
+
   return cookies[name] && JSON.parse(cookies[name]);
 }
 

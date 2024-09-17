@@ -269,7 +269,11 @@ export default function CommunityHead() {
                 label: "Posts",
                 content: (
                   <div style={{ height: "1000px" }}>
-                    <FeedList method='byCName' id={communityId} />
+                    <FeedList
+                      method='byCName'
+                      id={communityId}
+                      className='virtuosoStatic'
+                    />
                   </div>
                 ),
               },
