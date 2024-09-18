@@ -537,3 +537,25 @@ export const sendVote = async (payload: IVotePayload) => {
     throw error;
   }
 };
+
+// remove Address
+export const removeAddress = async (address: string) => {
+  try {
+    const response = await api.patch("/users/address/remove", {
+      address: address,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//remove Session
+export const removeSession = async (sessionId: string) => {
+  try {
+    const response = await api.patch(`/users/session/${sessionId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
