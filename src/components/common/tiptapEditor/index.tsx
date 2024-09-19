@@ -49,7 +49,7 @@ interface TiptapEditorProps {
   showToolbar?: boolean;
   placeHolder?: string;
   autoFocus?: boolean;
-  maxCharCount: number;
+  maxCharCount?: number;
 }
 
 const TiptapEditor: React.FC<TiptapEditorProps> = ({
@@ -58,7 +58,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   showToolbar = true,
   placeHolder = "type here...",
   autoFocus = false,
-  maxCharCount,
+  maxCharCount = 2000,
 }) => {
   const [remainingChars, setRemainingChars] = useState<number>(
     maxCharCount - (content?.length || 0)

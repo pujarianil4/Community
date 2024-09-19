@@ -286,7 +286,7 @@ export default function CommunityHead() {
               {
                 key: "4",
                 label: "Proposals",
-                content: <Proposals />,
+                content: <Proposals cid={data.id} cname={data.name} />,
               },
             ]}
           />
