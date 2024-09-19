@@ -83,7 +83,11 @@ export default function UserHead() {
               </div>
               <div className='activity'>
                 <div className='about'>
-                  <MarkdownRenderer markdownContent={data?.desc} limit={3} />
+                  <MarkdownRenderer
+                    markdownContent={data?.desc}
+                    limit={3}
+                    showViewMore={true}
+                  />
                 </div>
                 <UserFollowButton userData={data} />
               </div>

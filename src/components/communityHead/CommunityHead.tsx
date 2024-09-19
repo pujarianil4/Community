@@ -128,7 +128,11 @@ export default function CommunityHead() {
                 </div>
               </div>
               <div className='activity'>
-                <MarkdownRenderer markdownContent={data?.metadata} limit={3} />
+                <MarkdownRenderer
+                  markdownContent={data?.metadata}
+                  limit={3}
+                  showViewMore={true}
+                />
                 <CommunityFollowButton communityData={data} />
               </div>
               {/* TODO: add disabled class as per social link availablity */}
