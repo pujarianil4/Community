@@ -134,3 +134,39 @@ export interface IVotePayload {
   cntId: number;
   voteTyp: "up" | "down" | "";
 }
+
+export interface ICreateProposalPayload {
+  title: string;
+  desc: string;
+  cid: number;
+  validity: string;
+}
+
+export interface IVoteProposalPayload {
+  pid: number;
+  value: number;
+}
+
+export interface IProposalForm {
+  title: string;
+  desc: string;
+  cid: number;
+  validity: string;
+}
+
+export interface IProposal {
+  id: number;
+  sts: number;
+  title: string;
+  cid: number;
+  uid: number;
+  desc: string;
+  validity: string;
+  up: number;
+  down: number;
+  cta: string;
+  uta: string;
+  isVoted: true;
+  user: IUser;
+  community: ICommunity;
+}
