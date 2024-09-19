@@ -33,9 +33,11 @@ import Link from "next/link";
 import Proposals from "../proposals";
 import MarkdownRenderer from "../common/MarkDownRender";
 import { ICommunity } from "@/utils/types/types";
+import { Modal } from "antd";
+import CreatePost from "../createPost/CreatePost";
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
-
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const pathname = usePathname();
   const pathArray = pathname.split("/");
   const communityId = id || pathArray[pathArray.length - 1];
@@ -118,9 +120,14 @@ export default function CommunityHead() {
     } catch (error) {}
   };
 
+  const handleCancel = () => {
+    setIsPostModalOpen(false);
+  };
+
   const handleCreatePost = () => {
     // TODO: Show create post with current community
     console.log("CREATE_POST");
+    setIsPostModalOpen(true);
   };
 
   useEffect(() => {
@@ -134,63 +141,10 @@ export default function CommunityHead() {
         <UandCHeadLoader />
       ) : (
         <div className='user_container'>
-          {/* <div className='userhead_cotainer'>
-            <div className='info'>
-              <img
-                src={data?.logo ? data?.logo : getImageSource(data?.logo)}
-                alt='avatar'
-              />
-              <div className='head'>
-                <div className='names'>
-                  <h4>{data?.name}</h4>
-                  <span className='username'>@{data?.username}</span>
-                </div>
-
-                <CButton
-                  loading={isLoadingFollow}
-                  onClick={handleFollow}
-                  className={`${isFollowed && "followed"}`}
-                >
-                  {isFollowed ? "Unfollow" : "Follow"}
-                </CButton>
-              </div>
-            </div>
-            <div className='content'>
-              <div className='statics'>
-                <div>
-                  <h4>{data?.pCount}</h4>
-                  <span>Posts</span>
-                </div>
-                <div>
-                  <h4>{data?.followers}</h4>
-                  <span>Followers</span>
-                </div>
-                <div>
-                  <h4>0</h4>
-                  <span>Followings</span>
-                </div>
-              </div>
-              <div className='overview'>
-                <p>{data?.metadata}</p>
-              </div>
-            </div>
-          </div> */}
           <div className='userhead_cotainer'>
             <div className='cover_photo'>
-              {/* <Image
-                loading='lazy'
-                className='imgbg'
-                src='https://picsum.photos/700/220?random=1'
-                alt='coverbg'
-                width={768}
-                height={220}
-              /> */}
               <Image
-                src={
-                  data?.img?.cvr
-                    ? data.img.cvr
-                    : getImageSource(data?.logo, "cvr")
-                }
+                src={getImageSource(data?.img?.cvr, "cvr")}
                 alt='cover_photo'
                 width={768}
                 height={220}
@@ -202,11 +156,7 @@ export default function CommunityHead() {
                 <div className='box user'>
                   <div className='avatar'>
                     <Image
-                      src={
-                        data?.img?.pro
-                          ? data.img.pro
-                          : getImageSource(data?.logo, "c")
-                      }
+                      src={getImageSource(data?.img?.pro, "c")}
                       alt='community'
                       fill
                     />
@@ -296,6 +246,22 @@ export default function CommunityHead() {
           />
         </div>
       )}
+
+      <Modal
+        className='create_post_modal'
+        open={isPostModalOpen}
+        onCancel={handleCancel}
+        footer={<></>}
+        centered
+      >
+        {isPostModalOpen && (
+          <CreatePost
+            isPostModalOpen={isPostModalOpen}
+            setIsPostModalOpen={setIsPostModalOpen}
+            defaultCommunity={data}
+          />
+        )}
+      </Modal>
     </>
   );
 }
