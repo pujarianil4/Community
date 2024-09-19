@@ -8,6 +8,7 @@ import React, { useEffect, useRef, useState, ChangeEvent } from "react";
 import { Modal, Divider, Popover } from "antd";
 import { useDisconnect } from "wagmi";
 import { PiUserCircleDuotone } from "react-icons/pi";
+
 import { AiOutlinePlus } from "react-icons/ai";
 import { IoLogOutOutline } from "react-icons/io5";
 import "./navbar.scss";
@@ -88,6 +89,7 @@ export default function Navbar() {
   const hasCalledRef = useRef(false);
   const [modalTab, setModalTab] = useState(3);
   const [discordUser, setDiscordUser] = useState(null);
+  const [showSearchBar, setShowSearchBar] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -243,15 +245,25 @@ export default function Navbar() {
               <h2>Numity</h2>
             </Link>
           </div>
-          <Searchbar />
+          <div className='hidesearchbar'>
+            <Searchbar />
+          </div>
         </div>
 
         <div className='signin'>
           {userSession?.token ? (
             <div className='user_actions'>
+              <div className='search'>
+                {showSearchBar && (
+                  <div className='absolute_searchbar'>
+                    <Searchbar />
+                  </div>
+                )}
+                <IoSearch onClick={() => setShowSearchBar(true)} />
+              </div>
               <CButton className='create_post' onClick={showCreatePost}>
                 <AddIcon />
-                Create Post
+                <span>Create Post</span>
               </CButton>
               <FaRegBell className='notification' size={25} />
               <div className='user_icon'>
