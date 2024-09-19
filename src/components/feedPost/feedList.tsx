@@ -101,35 +101,39 @@ export default function FeedList({ method, id, sortby, order }: IFeedList) {
           />
         </>
       )}
-
-      {/* <div className='feedlist'>
-        {!isLoading && posts ? (
-          posts.length > 0 ? (
-            posts?.map((post: any) => <FeedPost key={post.id} post={post} />)
+      {method == "allPosts" ? (
+        <>
+          <Virtuoso
+            data={posts}
+            // totalCount={200} // add this if we know total count of posts and remove below condition
+            endReached={() => {
+              if (
+                !isLoading &&
+                posts.length % limit === 0 &&
+                posts.length / limit === page
+              ) {
+                setPage((prevPage) => prevPage + 1);
+              }
+            }}
+            itemContent={(index, post) => <FeedPost key={index} post={post} />}
+            className='virtuoso'
+          />
+          {isLoading && page > 1 && <FeedPostLoader />}
+          {!isLoading && posts.length === 0 && <EmptyData />}
+        </>
+      ) : (
+        <div className='feedlist'>
+          {!isLoading && posts ? (
+            posts.length > 0 ? (
+              posts?.map((post: any) => <FeedPost key={post.id} post={post} />)
+            ) : (
+              <EmptyData />
+            )
           ) : (
-            <EmptyData />
-          )
-        ) : (
-          loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />)
-        )}
-      </div> */}
-      <Virtuoso
-        data={posts}
-        // totalCount={200} // add this if we know total count of posts and remove below condition
-        endReached={() => {
-          if (
-            !isLoading &&
-            posts.length % limit === 0 &&
-            posts.length / limit === page
-          ) {
-            setPage((prevPage) => prevPage + 1);
-          }
-        }}
-        itemContent={(index, post) => <FeedPost key={index} post={post} />}
-        className='virtuoso'
-      />
-      {isLoading && page > 1 && <FeedPostLoader />}
-      {!isLoading && posts.length === 0 && <EmptyData />}
+            loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />)
+          )}
+        </div>
+      )}
     </>
   );
 }

@@ -9,6 +9,7 @@ import "./index.scss";
 interface PageWrapperProps {
   children: ReactNode;
   hideRightPanel?: boolean;
+  hideScroll?: boolean;
 }
 
 export default function PageWraper({
@@ -20,7 +21,7 @@ export default function PageWraper({
       <Navbar />
       <Wraper>
         <SideBar />
-        <MainPanel>{children}</MainPanel>
+        <MainPanel hideScroll>{children}</MainPanel>
         {!hideRightPanel && <RightPanel />}
       </Wraper>
     </div>
