@@ -189,6 +189,19 @@ const SideBar: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const extractNextString = (input: string) => {
+    const startIndex = input.indexOf("c/");
+    if (startIndex !== -1) {
+      const endIndex = input.indexOf("/", startIndex + 2);
+      if (endIndex !== -1) {
+        return input.substring(startIndex, endIndex);
+      } else {
+        return input.substring(startIndex);
+      }
+    }
+    return input;
+  };
+
   const onClick: MenuProps["onClick"] = (e) => {
     if (e.key == "createCommunity") {
       const user = getClientSideCookie("authToken");
@@ -196,8 +209,8 @@ const SideBar: React.FC = () => {
         showModal();
       } else {
       }
-    } else if (["recentCommunity"].includes(e.key)) {
-      const path = e.key.replace(/\/\d+$/, "");
+    } else if (e.key[0] === "c" && e.key[1] === "/") {
+      const path = extractNextString(e.key);
       router.push(`/${path}`);
     } else if (!["popular"].includes(e.key)) {
       router.push(`/${e.key}`);
