@@ -28,7 +28,7 @@ export default function Actions({
   showShare = false,
   showSave = false,
 }: IProps) {
-  const { up, down, id, ccount, text, media } = post;
+  const { up, down, id, isVoted, ccount, text, media } = post;
 
   const [vote, setVote] = useState<Vote>({
     value: Number(up) + Number(down),
@@ -91,7 +91,7 @@ export default function Actions({
     <div className='actions'>
       <div className='up_down'>
         <PiArrowFatUpDuotone
-          className={vote.type == "up" ? "active" : ""}
+          className={vote.type == "up" || isVoted ? "active" : ""}
           onClick={() => handleVote("up")}
           size={18}
         />

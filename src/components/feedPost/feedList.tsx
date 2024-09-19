@@ -87,6 +87,10 @@ export default function FeedList({ method, id, sortby, order }: IFeedList) {
   if (page < 2 && isLoading) {
     return loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />);
   }
+
+  if (!isLoading && posts?.length === 0) {
+    return <EmptyData />;
+  }
   return (
     <>
       {method == "allPosts" && (
@@ -130,7 +134,6 @@ export default function FeedList({ method, id, sortby, order }: IFeedList) {
         className='virtuoso'
       />
       {isLoading && page > 1 && <FeedPostLoader />}
-      {!isLoading && posts.length === 0 && <EmptyData />}
     </>
   );
 }

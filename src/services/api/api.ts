@@ -109,20 +109,22 @@ export const handlePostToCommunity = async (data: any) => {
 };
 
 export const fetchUser = async (username: string) => {
+  const uid = store.getState().user?.uid;
   if (!username) {
     return null;
   }
   try {
-    const response = await api.get(`/users/uname/${username}`);
-    const isFollowed = await isUserFollowed({
-      fwid: response?.data?.id,
-      type: "u",
-    });
-
-    return {
-      ...response.data,
-      isFollowed,
-    };
+    const response = await api.get(`/users/uname/${username}?uid=${uid}`);
+    return response.data[0];
+    // const isFollowed = await isUserFollowed({
+    //   fwid: response?.data?.id,
+    //   type: "u",
+    // });
+    // console.log("CHECK_U", response.data);
+    // return {
+    //   ...response.data,
+    //   isFollowed,
+    // };
   } catch (error) {
     console.error("Fetch User ", error);
     throw error;
@@ -180,24 +182,22 @@ export const fetchCommunityByCname = async (cName: string) => {
     return null;
   }
   try {
-    // const response = await api.get(`/community/cname/${cName}&uid=${uid}`);
-    const response = await api.get(`/community/cname/${cName}`);
-    let isFollowed = false;
-
-    if (response.data) {
-      if (response?.data?.id) {
-        isFollowed = await isUserFollowed({
-          fwid: response?.data?.id,
-          type: "c",
-        });
-      }
-      return {
-        ...response.data,
-        isFollowed,
-      };
-    } else {
-      throw new Error("user not available");
-    }
+    const response = await api.get(`/community/cname/${cName}?uid=${uid}`);
+    return response.data[0];
+    // if (response.data) {
+    //   if (response?.data?.id) {
+    //     isFollowed = await isUserFollowed({
+    //       fwid: response?.data?.id,
+    //       type: "c",
+    //     });
+    //   }
+    //   return {
+    //     ...response.data,
+    //     isFollowed,
+    //   };
+    // } else {
+    //   throw new Error("user not available");
+    // }
   } catch (error) {
     console.error("Fetch Communities ", error);
     throw error;
@@ -274,8 +274,9 @@ export const getPostsByuName = async ({
 };
 
 export const getPostsByPostId = async (postId: string) => {
+  const uid = store.getState().user?.uid;
   try {
-    const response = await api.get(`/posts/${postId}`);
+    const response = await api.get(`/posts/${postId}?uid=${uid}`);
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
