@@ -4,11 +4,13 @@ import { PublicKey } from "@solana/web3.js";
 import axios, { AxiosInstance } from "axios";
 import { store } from "@contexts/store";
 import {
+  ICreateProposalPayload,
   IFollowAPI,
   IFollowersAPI,
   IPostCommentAPI,
   IUser,
   IVotePayload,
+  IVoteProposalPayload,
 } from "@/utils/types/types";
 
 const url = "https://community-slr7.onrender.com"; //process.env.BASE_API_URL;
@@ -450,64 +452,7 @@ export const uploadMultipleFile = async (files: FileList) => {
   }
 };
 
-// export const uploadMultipleFile = async (files: FileList) => {
-//   try {
-//     console.log("BEFORE", files);
-//     const formData = new FormData();
-
-//     // Append each file to the form data
-//     // Array.from(files).forEach((file, index) => {
-//     //   formData.append(`files[]`, file);
-//     // });
-
-//     for (let i = 0; i < files.length; i++) {
-//       console.log("CURRENT_FILE", files[i]);
-//       formData.append("files[]", files[i]);
-//     }
-//     console.log("UPLOAD_FILES", formData);
-
-//     const response = await api.post("/upload/multi", files, {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//       },
-//     });
-
-//     console.log("Files uploaded successfully", response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error uploading files", error);
-//     throw error;
-//   }
-// };
-
-// export const uploadMultipleFile = async (files: FileList) => {
-//   try {
-//     console.log("Selected Files:", files);
-
-//     const formData = new FormData();
-
-//     for (let i = 0; i < files.length; i++) {
-//       formData.append(`files${i}`, fs.createReadStream(files[i]));
-//     }
-
-//     console.log("FormData before upload:", formData);
-
-//     const response = await api.post("/upload/multi", formData, {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//       },
-//     });
-
-//     console.log("Files uploaded successfully", response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error uploading files", error);
-//     throw error;
-//   }
-// };
-
 //fetch sessions
-
 export const getSession = async () => {
   try {
     const response = await api.get("/users/sessions");
@@ -535,5 +480,77 @@ export const sendVote = async (payload: IVotePayload) => {
     return response.data;
   } catch (error) {
     throw error;
+  }
+};
+
+//GOVERNANCE
+export const createProposal = async (payload: ICreateProposalPayload) => {
+  try {
+    const { data } = await api.post(`/governance/proposal`, payload);
+    console.log("=====New Proposal Created=====");
+    return data;
+  } catch (error) {
+    console.error("Proposal_Error", error);
+  }
+};
+
+export const fetchAllProposals = async ({
+  page = 1,
+  limit = 10,
+}: {
+  page: number;
+  limit: number;
+}) => {
+  const uid = store.getState().user?.uid;
+  try {
+    const { data } = await api.get(
+      `/governance/proposal?page=${page}&limit=${limit}&uid=${uid}`
+    );
+    return data;
+  } catch (error) {
+    console.error("Fetch_Proposals_Error", error);
+  }
+};
+
+export const fetchProposalsByCId = async ({
+  cid,
+  page = 1,
+  limit = 10,
+}: {
+  cid: number;
+  page: number;
+  limit: number;
+}) => {
+  const uid = store.getState().user?.uid;
+  try {
+    const { data } = await api.get(
+      `/governance/proposal/c/${cid}?page=${page}&limit=${limit}&uid=${uid}`
+    );
+    return data;
+  } catch (error) {
+    console.error("Fetch_Proposals_Error", error);
+  }
+};
+
+export const fetchProposalByID = async (proposalId: number) => {
+  const uid = store.getState().user?.uid;
+  try {
+    const { data } = await api.get(
+      `/governance/proposal/${proposalId}?uid=${uid}`
+    );
+
+    return data[0];
+  } catch (error) {
+    console.error("Fetch_ProposalByID_Error", error);
+  }
+};
+
+export const voteToProposal = async (payload: IVoteProposalPayload) => {
+  try {
+    const { data } = await api.post(`/governance/vote`, payload);
+    console.log("=====Proposal Vote=====");
+    return data;
+  } catch (error) {
+    console.error("Vote Proposal Error", error);
   }
 };
