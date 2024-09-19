@@ -1,0 +1,44 @@
+.chead {
+  min-width: 200px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px;
+  .img,
+  img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    height: 30px;
+    p {
+      font-size: 14px;
+      height: auto; /* Ensures height only depends on content */
+      line-height: 1.2;
+      display: block; /* Default for p tag */
+      margin: 0;
+      padding: 0;
+      color: var(--primary-text);
+    }
+
+    span {
+      font-size: 10px;
+      height: auto; /* Ensures height only depends on content */
+      line-height: 1.2;
+      display: block; /* Default for p tag */
+      margin: 0;
+      padding: 0;
+      color: var(--secondary-text);
+    }
+  }
+  // .createText {
+  //   color: var(--primary) !important;
+  //   background: transparent !important;
+  //   padding: 0px !important;
+  // }
+}

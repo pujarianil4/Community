@@ -1,4 +1,5 @@
 import { Popover } from "antd";
+import { TooltipPlacement } from "antd/es/tooltip";
 import React from "react";
 import { IoIosMore } from "react-icons/io";
 import "./index.scss";
@@ -10,13 +11,21 @@ interface IPopup {
   children: React.ReactNode;
   list: Array<List>;
   onAction?: "click" | "hover";
+  position?: TooltipPlacement;
+  onSelect: (label: string) => void;
 }
 
-export default function CPopup({ children, list, onAction = "click" }: IPopup) {
+export default function CPopup({
+  children,
+  list,
+  onAction = "click",
+  position = "bottomRight",
+  onSelect,
+}: IPopup) {
   const content = (
     <div className='cpopup_content'>
       {list?.map(({ icon: Icon, label }: List) => (
-        <div className='option'>
+        <div onClick={() => onSelect(label)} key={label} className='option'>
           {Icon && Icon}
           <span>{label}</span>
         </div>
@@ -25,7 +34,7 @@ export default function CPopup({ children, list, onAction = "click" }: IPopup) {
   );
   return (
     <Popover
-      placement='bottomRight'
+      placement={position}
       className='filter_popover'
       overlayClassName='filter_popover'
       content={content}

@@ -50,6 +50,8 @@ export default function UHead({
     },
   ];
 
+  const handleSelectMore = () => {};
+
   return (
     <div className='user_head'>
       <Link
@@ -83,7 +85,7 @@ export default function UHead({
       <p className='post_time'>&bull; {timeAgo(time)}</p>
       {showMore && (
         <div className='more'>
-          <CPopup list={popupList} onAction='hover'>
+          <CPopup onSelect={handleSelectMore} list={popupList} onAction='hover'>
             <div className='options'>
               <IoIosMore />
             </div>

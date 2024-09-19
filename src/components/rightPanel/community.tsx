@@ -12,6 +12,7 @@ import {
 } from "@/services/api/api";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
+import CHead from "../common/chead";
 interface IProps {
   community: ICommunity;
 }
@@ -30,12 +31,16 @@ export default function Community({ community }: IProps) {
     refetchRoute,
   ]);
   const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
-  console.log("isFollowed", isFollowed);
+
   const {
     isLoading: isLoadingFollow,
     data: followResponse,
     callFunction,
   } = useAsync();
+
+  useEffect(() => {
+    console.log("follow", isFollowed);
+  }, [isFollowed]);
 
   const handleFollow = async () => {
     try {
@@ -76,14 +81,15 @@ export default function Community({ community }: IProps) {
         as={`/c/${community?.username}`}
         className='community_bx'
       >
-        <Image
+        {/* <Image
           src={getImageSource(community?.img?.pro, "c")}
           alt={community?.name}
           width={50}
           height={50}
           loading='lazy'
         />
-        <span>{community?.username}</span>
+        <span>{community?.username}</span> */}
+        <CHead community={community} />
       </Link>
       <div className='community_join'>
         <CButton
