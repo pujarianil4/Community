@@ -77,6 +77,7 @@ const SolanaAuthComponent = ({
           uid: response?.uid || 0,
           token: response?.token || "",
           img: userdata?.img.pro,
+          sid: response?.id || "",
         };
 
         setClientSideCookie("authToken", JSON.stringify(user));
@@ -96,6 +97,7 @@ const SolanaAuthComponent = ({
           uid: response?.uid || 0,
           token: response?.token || "",
           img: userdata?.img.pro,
+          sid: response?.id || "",
         };
         setClientSideCookie("authToken", JSON.stringify(user));
         dispatch(actions.setUserData(user));

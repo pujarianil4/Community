@@ -15,6 +15,7 @@ import {
   RedditIcon,
 } from "next-share";
 
+import MarkdownRenderer from "../MarkDownRender";
 interface ShareModalProps {
   postTitle: string;
   postUrl: string;
@@ -24,7 +25,6 @@ interface ShareModalProps {
 const ShareButton: React.FC<ShareModalProps> = ({
   postTitle,
   postUrl,
-
   postImage,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,7 +69,8 @@ const ShareButton: React.FC<ShareModalProps> = ({
             alt={postTitle}
             style={{ width: "100%", marginBottom: "20px" }}
           />
-          <h2>{postTitle}</h2>
+          {/* <h2>{markDownContent}</h2> */}
+          <MarkdownRenderer markdownContent={postTitle} />
         </div>
 
         <div

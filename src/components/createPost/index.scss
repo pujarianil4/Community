@@ -13,12 +13,17 @@
 .create_post_container {
   padding: 2rem;
   background-color: var(--secondary-bg) !important;
+  position: relative;
+  .back_btn {
+    position: absolute;
+    top: 10px;
+  }
   section {
     margin: 1rem 0;
   }
 
   .user_data {
-    margin-top: -12px;
+    margin-top: 2rem;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -457,9 +462,9 @@
     }
     .hvr_postBtn,
     .editBtn {
-      background-color: var(--secondary-bg) !important;
+      background-color: var(--tertiary-bg) !important;
       color: var(--primary) !important;
-      border: 1px solid var(--primary-border) !important;
+      // border: 1px solid var(--primary-border) !important;
       &:hover {
         opacity: 0.6;
       }
@@ -546,20 +551,17 @@
     .ant-pagination-prev,
     .ant-pagination-next {
       .ant-pagination-item-link {
-        background: var(--secondary-bg);
-        color: var(--primary);
-        border: 1px solid var(--primary-border);
+        color: #99959c;
       }
     }
 
     .ant-pagination-item {
       background: var(--secondary-bg) !important;
-      border: 1px solid var(--primary-border) !important;
-      color: var(--primary-border) !important;
+      color: var(--black) !important;
     }
     .ant-pagination-item-active {
-      background: var(--secondary-bg) !important;
-      color: var(--primary) !important;
+      background: var(--primary) !important;
+      color: var(--white) !important;
       border: 1px solid var(--primary-border) !important;
       &:hover {
         background: var(--primary);

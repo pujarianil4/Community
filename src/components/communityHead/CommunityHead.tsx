@@ -119,25 +119,30 @@ export default function CommunityHead() {
                 </div>
               </div>
               <div className='activity'>
-                <MarkdownRenderer
-                  markdownContent={data?.metadata}
-                  limit={3}
-                  showViewMore={true}
-                />
-                <CommunityFollowButton communityData={data} />
+                <div className='desc_bx'>
+                  <MarkdownRenderer
+                    markdownContent={data?.metadata}
+                    limit={3}
+                    showViewMore={true}
+                  />
+                </div>
+
+                <div className='social_bx'>
+                  <CommunityFollowButton communityData={data} />
+                  <div className='socials'>
+                    <div className='disabled'>
+                      <DiscordIcon />
+                    </div>
+                    <div className='disabled'>
+                      <TelegramIcon />
+                    </div>
+                    <div className='disabled'>
+                      <TwitterIcon />
+                    </div>
+                  </div>
+                </div>
               </div>
               {/* TODO: add disabled class as per social link availablity */}
-              <div className='socials'>
-                <div className='disabled'>
-                  <DiscordIcon />
-                </div>
-                <div className='disabled'>
-                  <TelegramIcon />
-                </div>
-                <div className='disabled'>
-                  <TwitterIcon />
-                </div>
-              </div>
             </div>
           </div>
           <div className='more_btns'>

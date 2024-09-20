@@ -45,7 +45,7 @@
       }
       .ant-collapse-content {
         border-top: none;
-        background-color: var(--white);
+        background-color: #101113;
         color: var(--black);
 
         .ant-collapse-content-box {
@@ -65,6 +65,7 @@
     font-size: 18px;
   }
 }
+
 .s_m_bx {
   padding: 14px 12px;
   display: flex;
@@ -74,7 +75,7 @@
   border-radius: 12px;
   margin-bottom: 1rem;
   gap: 10px;
-  align-items: center;
+
   .u_bx {
     width: 100%;
     display: flex;

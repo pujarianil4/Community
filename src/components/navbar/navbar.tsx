@@ -127,6 +127,7 @@ export default function Navbar() {
         uid: 0,
         token: "",
         img: "",
+        sid: "",
       };
 
       dispatch(actions.setUserData(initialState));
@@ -144,6 +145,7 @@ export default function Navbar() {
         uid: 0,
         token: "",
         img: "",
+        sid: "",
       };
 
       dispatch(actions.setUserData(initialState));
@@ -177,15 +179,17 @@ export default function Navbar() {
   // fetch user details after refresh
   const fetchUser = async () => {
     const userData1: any = getClientSideCookie("authToken");
-
+    console.log("userData1", userData1);
     if (userData?.uid) {
       const response = await fetchUserById(userData?.uid);
+      console.log("response", response);
       const user = {
         username: response?.username,
         name: response?.name,
         uid: response?.id,
         token: userData1?.token,
         img: response?.img?.pro,
+        sid: response?.id || "",
       };
       setUserSession(user);
       console.log("user", user);

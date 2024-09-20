@@ -27,7 +27,7 @@ import NotificationMessage from "../common/Notification";
 import CButton from "../common/Button";
 import TiptapEditor from "../common/tiptapEditor";
 import TurndownService from "turndown";
-import { LinkIcon } from "@/assets/icons";
+import { BackIcon, LinkIcon } from "@/assets/icons";
 import FocusableDiv from "../common/focusableDiv";
 
 import { getPosts } from "@/services/api/api";
@@ -177,10 +177,10 @@ const CreatePost: React.FC<Props> = ({
       const data = {
         cid: selectedOption?.id,
         text: markDownContent,
-        media: uploadedImg, // This includes both new and old media URLs
+        media: uploadedImg ? uploadedImg : null,
       };
 
-      await handlePostToCommunity(data); // Posting to the community
+      await handlePostToCommunity(data);
       setIsLoadingPost(false);
       NotificationMessage("success", "Post Updated");
       resetPostForm();
@@ -207,7 +207,7 @@ const CreatePost: React.FC<Props> = ({
       const draftData = {
         cid: selectedOption?.id,
         text: markDownContent,
-        media: uploadedImg,
+        media: uploadedImg ? uploadedImg : null,
         isDraft: true, // Mark this post as a draft
       };
 
@@ -302,8 +302,7 @@ const CreatePost: React.FC<Props> = ({
 
     if (post?.media?.length > 0) {
       const mediaFiles = post.media.map((mediaUrl: any) => {
-        // If necessary, create dummy File objects from the media URLs
-        return { url: mediaUrl }; // Treat as a URL instead of a File object
+        return { url: mediaUrl };
       });
 
       // Update pics and uploadedImg states
@@ -321,6 +320,10 @@ const CreatePost: React.FC<Props> = ({
 
   return (
     <main className='create_post_container'>
+      <span className='back_btn' onClick={() => setIsDraft(!isDraft)}>
+        {isDraft ? <BackIcon /> : ""}
+      </span>
+
       <section className='user_data'>
         <div>
           <Image
@@ -335,9 +338,11 @@ const CreatePost: React.FC<Props> = ({
           </h3>
         </div>
         <div>
-          <CButton onClick={() => setIsDraft(!isDraft)} className='draft_btn'>
-            {isDraft ? "Create Post" : "Draft"}
-          </CButton>
+          {!isDraft ? (
+            <CButton onClick={() => setIsDraft(!isDraft)} className='draft_btn'>
+              Draft
+            </CButton>
+          ) : null}
         </div>
       </section>
 
