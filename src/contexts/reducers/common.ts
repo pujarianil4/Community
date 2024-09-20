@@ -8,6 +8,7 @@ export interface Common {
     user: boolean;
     community: boolean;
   };
+  proposalVote: boolean;
 }
 
 //TODO update Later
@@ -18,6 +19,7 @@ const initialState: Common = {
     user: false,
     community: false,
   },
+  proposalVote: false,
 };
 
 export const commonSlice = createSlice({
@@ -35,6 +37,9 @@ export const commonSlice = createSlice({
     },
     setRefetchCommunity: (state, action: PayloadAction<boolean>) => {
       state.refetch.community = action.payload;
+    },
+    setProposalVote: (state, action: PayloadAction<boolean>) => {
+      state.proposalVote = action.payload;
     },
     resetRefetch: (state) => {
       state.refetch.community = false;

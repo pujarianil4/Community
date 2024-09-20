@@ -8,6 +8,7 @@ export const {
   setRefetchPost,
   setRefetchUser,
   resetRefetch,
+  setProposalVote,
 } = commonSlice.actions;
 
 export const userReducer = userSlice.reducer;

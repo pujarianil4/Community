@@ -1,16 +1,21 @@
 "use client";
 import React, { useState } from "react";
 import "./index.scss";
-import ProposalItem from "./proposalItem";
 import CInput from "../common/Input";
 import { IoSearch } from "react-icons/io5";
 import CButton from "../common/Button";
 import { AddIcon } from "@/assets/icons";
 import { Modal } from "antd";
 import CreateProposal from "./createProposal";
+import ProposalList from "./proposalList";
 
-export default function Proposals() {
+interface IPrpos {
+  cid: number;
+  cname: string;
+}
+export default function Proposals({ cid, cname }: IPrpos) {
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
+  const [refetchProposal, setRefetchProposal] = useState(false);
   const handleCreateProposal = () => {
     setIsProposalModalOpen(true);
   };
@@ -29,9 +34,11 @@ export default function Proposals() {
             <AddIcon /> Create Proposal
           </CButton>
         </section>
-        <ProposalItem />
-        <ProposalItem />
-        <ProposalItem />
+        <ProposalList
+          cid={cid}
+          refetchProposal={refetchProposal}
+          setRefetchProposal={setRefetchProposal}
+        />
       </main>
       <Modal
         className='create_proposal_modal'
@@ -40,7 +47,12 @@ export default function Proposals() {
         footer={<></>}
         centered
       >
-        <CreateProposal setIsProposalModalOpen={setIsProposalModalOpen} />
+        <CreateProposal
+          setIsProposalModalOpen={setIsProposalModalOpen}
+          cname={cname}
+          cid={cid}
+          setRefetchProposal={setRefetchProposal}
+        />
       </Modal>
     </>
   );
