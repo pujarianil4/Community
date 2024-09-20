@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import { Modal, Button, message } from "antd";
+import { FiShare } from "react-icons/fi";
 import { ShareIcon } from "@/assets/icons";
 import "./index.scss";
 import {
@@ -51,7 +52,7 @@ const ShareButton: React.FC<ShareModalProps> = ({
   return (
     <>
       <div className='share' onClick={showModal}>
-        <ShareIcon width={18} />
+        <FiShare size={16} />
         <span>Share</span>
       </div>
 

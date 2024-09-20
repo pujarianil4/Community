@@ -47,6 +47,7 @@ import { RootState } from "@/contexts/store";
 import TurndownService from "turndown";
 import { ICommunity } from "@/utils/types/types";
 import Image from "next/image";
+import CHead from "../common/chead";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -226,15 +227,18 @@ const SideBar: React.FC = () => {
       return {
         key: "c/" + cm.username,
         label: (
-          <div className='community_item'>
-            <img
-              loading='lazy'
-              src={getImageSource(cm?.img?.pro)}
-              alt='profile'
-              onError={handleError}
-            />
-            <span>{cm?.name}</span>
-          </div>
+          <>
+            {/* <div className='community_item'>
+              <img
+                loading='lazy'
+                src={getImageSource(cm?.img?.pro, "c")}
+                alt='profile'
+                onError={handleError}
+              />
+              <span>{cm?.name}</span>
+            </div> */}
+            <CHead community={cm} />
+          </>
         ),
       };
     });
@@ -255,18 +259,7 @@ const SideBar: React.FC = () => {
       const updateData = prevCommunities?.map(
         (item: ICommunity, index: number) => ({
           key: `c/${item.username}/${index}`,
-          label: (
-            <div className='community_item'>
-              <Image
-                src={getImageSource(item?.img?.pro, "c")}
-                alt={item.username}
-                width={30}
-                height={30}
-                loading='lazy'
-              />
-              <span>{item.username}</span>
-            </div>
-          ),
+          label: <CHead community={item} />,
         })
       );
       setRecentCommunities(updateData.reverse());

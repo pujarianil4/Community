@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./index.scss";
 import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
+import { AiOutlineRetweet } from "react-icons/ai";
 import Link from "next/link";
 import { GoComment } from "react-icons/go";
 import { numberWithCommas } from "@/utils/helpers";
@@ -8,6 +9,8 @@ import { SaveIcon, ShareIcon } from "@/assets/icons";
 import { IPost, IVotePayload } from "@/utils/types/types";
 import { sendVote } from "@/services/api/api";
 import ShareButton from "../shareButton";
+import { PiBookmarkSimpleDuotone } from "react-icons/pi";
+import CPopup from "../popup";
 
 interface IProps {
   post: IPost;
@@ -44,6 +47,8 @@ export default function Actions({
       setPostUrl(`${currentDomain}/post/${id}`);
     }
   }, [id]);
+
+  const handleSelectRepost = () => {};
 
   const handleVote = async (action: string) => {
     const previousVote = { ...vote };
@@ -102,13 +107,25 @@ export default function Actions({
           size={18}
         />
       </div>
-      <div className='comments'>
-        <Link href={`post/${id}`} as={`/post/${id}`}>
+      <Link href={`post/${id}`} as={`/post/${id}`}>
+        <div className='comments'>
           <GoComment size={18} />
           <span>{numberWithCommas(ccount) || "comments"}</span>
-        </Link>
-      </div>
-
+        </div>
+      </Link>
+      {showSave && (
+        <CPopup
+          onSelect={handleSelectRepost}
+          onAction='hover'
+          position='top'
+          list={[{ label: "Repost with Description" }, { label: "Repost" }]}
+        >
+          <div className='other'>
+            <AiOutlineRetweet size={16} />
+            <span>RePost</span>
+          </div>
+        </CPopup>
+      )}
       {showShare && (
         <ShareButton
           postTitle={text}
@@ -117,8 +134,8 @@ export default function Actions({
         />
       )}
       {showSave && (
-        <div className='save'>
-          <SaveIcon width={16} height={16} />
+        <div className='other'>
+          <PiBookmarkSimpleDuotone size={16} />
           <span>Save</span>
         </div>
       )}

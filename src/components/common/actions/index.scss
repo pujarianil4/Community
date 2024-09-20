@@ -1,11 +1,13 @@
 @import "/src/styles";
 .actions {
   display: flex;
-  gap: 3rem;
-  // justify-content: space-between;
-  margin: 16px 0 0 0px;
-  max-width: 400px;
+  justify-content: space-between;
 
+  // justify-content: space-between;
+
+  width: 80%;
+  margin: auto;
+  margin-top: 16px;
   @include lessThan(xl) {
     margin-left: 0;
   }
@@ -14,31 +16,41 @@
     gap: 1.5rem;
   }
 
-  .comments,
-  .save,
-  .share,
   a {
-    min-width: 50px;
+    .comments {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      span {
+        font-size: 12px;
+        color: var(--light-tx) !important;
+      }
+      color: var(--primary-text);
+      cursor: pointer;
+      transition: color 0.3s ease;
+      &:hover {
+        color: var(--primary) !important;
+        svg {
+          path {
+            stroke: var(--primary);
+          }
+        }
+      }
+    }
+  }
+
+  .other,
+  .share {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    // color: var(--light-tx) !important;
-
+    gap: 5px;
+    color: var(--primary-text);
+    cursor: pointer;
+    transition: color 0.3s ease;
     span {
       font-size: 12px;
       color: var(--light-tx) !important;
     }
-    svg {
-      // color: var(--light-tx);
-      path {
-        stroke: var(--black);
-      }
-    }
-    color: var(--primary-text);
-    // color: var(--light-tx);
-    cursor: pointer;
-    transition: color 0.3s ease;
 
     &:hover {
       color: var(--primary) !important;
@@ -50,9 +62,45 @@
     }
   }
 
-  .save {
-    width: 52px;
-  }
+  // .comments,
+  // .save,
+  // .share,
+  // a {
+  //   min-width: 50px
+  //   display: flex;
+  //   align-items: center;
+  //   // flex-wrap: wrap;
+
+  //   // color: var(--light-tx) !important;
+
+  //   span {
+  //     font-size: 12px;
+  //     color: var(--light-tx) !important;
+  //   }
+  //   // svg {
+  //   //   // color: var(--light-tx);
+  //   //   path {
+  //   //     stroke: var(--black);
+  //   //   }
+  //   // }
+  //   color: var(--primary-text);
+  //   // color: var(--light-tx);
+  //   cursor: pointer;
+  //   transition: color 0.3s ease;
+
+  //   // &:hover {
+  //   //   color: var(--primary) !important;
+  //   //   svg {
+  //   //     path {
+  //   //       stroke: var(--primary);
+  //   //     }
+  //   //   }
+  //   // }
+  // }
+
+  // .save {
+  //   width: 52px;
+  // }
 
   .share {
     width: 60px;
@@ -61,7 +109,7 @@
   .up_down {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
     span {
       font-size: 12px;
     }

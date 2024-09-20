@@ -8,7 +8,6 @@ import { ICommunity } from "@/utils/types/types";
 
 export default function Communities() {
   const { isLoading, data, refetch } = useAsync(fetchCommunities, "followers");
-  console.log("COMMUNITY_DATA", data);
   const dummyData = data?.length > 0 && [
     ...data,
     ...data,

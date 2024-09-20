@@ -1,7 +1,7 @@
 "use client";
 import useAsync from "@/hooks/useAsync";
 import { fetchCommunityByCname } from "@/services/api/api";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CButton from "../common/Button";
 import { useParams, usePathname } from "next/navigation";
 import "./index.scss";
@@ -25,9 +25,11 @@ import Proposals from "../proposals";
 import MarkdownRenderer from "../common/MarkDownRender";
 import { ICommunity } from "@/utils/types/types";
 import CommunityFollowButton from "../FollowBtn/communityFollowBtn";
+import { Modal } from "antd";
+import CreatePost from "../createPost/CreatePost";
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
-
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const pathname = usePathname();
   const pathArray = pathname.split("/");
   const communityId = id || pathArray[pathArray.length - 1];
@@ -62,9 +64,14 @@ export default function CommunityHead() {
     }
   }, [data]);
 
+  const handleCancel = () => {
+    setIsPostModalOpen(false);
+  };
+
   const handleCreatePost = () => {
     // TODO: Show create post with current community
     console.log("CREATE_POST");
+    setIsPostModalOpen(true);
   };
 
   return (
@@ -75,20 +82,8 @@ export default function CommunityHead() {
         <div className='user_container'>
           <div className='userhead_cotainer'>
             <div className='cover_photo'>
-              {/* <Image
-                loading='lazy'
-                className='imgbg'
-                src='https://picsum.photos/700/220?random=1'
-                alt='coverbg'
-                width={768}
-                height={220}
-              /> */}
               <Image
-                src={
-                  data?.img?.cvr
-                    ? data.img.cvr
-                    : getImageSource(data?.logo, "cvr")
-                }
+                src={getImageSource(data?.img?.cvr, "cvr")}
                 alt='cover_photo'
                 width={768}
                 height={220}
@@ -100,11 +95,7 @@ export default function CommunityHead() {
                 <div className='box user'>
                   <div className='avatar'>
                     <Image
-                      src={
-                        data?.img?.pro
-                          ? data.img.pro
-                          : getImageSource(data?.logo, "c")
-                      }
+                      src={getImageSource(data?.img?.pro, "c")}
                       alt='community'
                       fill
                     />
@@ -187,6 +178,22 @@ export default function CommunityHead() {
           />
         </div>
       )}
+
+      <Modal
+        className='create_post_modal'
+        open={isPostModalOpen}
+        onCancel={handleCancel}
+        footer={<></>}
+        centered
+      >
+        {isPostModalOpen && (
+          <CreatePost
+            isPostModalOpen={isPostModalOpen}
+            setIsPostModalOpen={setIsPostModalOpen}
+            defaultCommunity={data}
+          />
+        )}
+      </Modal>
     </>
   );
 }

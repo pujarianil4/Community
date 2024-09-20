@@ -15,13 +15,14 @@ interface PageWrapperProps {
 export default function PageWraper({
   children,
   hideRightPanel,
+  hideScroll,
 }: PageWrapperProps) {
   return (
     <div className='pagewraper'>
       <Navbar />
       <Wraper>
         <SideBar />
-        <MainPanel hideScroll>{children}</MainPanel>
+        <MainPanel hideScroll={hideScroll}>{children}</MainPanel>
         {!hideRightPanel && <RightPanel />}
       </Wraper>
     </div>

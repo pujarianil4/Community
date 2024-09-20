@@ -143,7 +143,6 @@ export default function Searchbar() {
         onKeyDown={handleKeyDown}
       /> */}
       <div className='search_input'>
-        <IoSearch />
         {selectedData.length > 0 && (
           <div
             className='user_pill'
