@@ -81,7 +81,7 @@
   max-width: 100%;
   word-wrap: break-word;
   overflow-x: hidden;
-  max-height: 70px;
+  // max-height: 70px;
   a {
     color: var(--link-color) !important;
 
@@ -237,7 +237,7 @@
 }
 
 .cpopup_content {
-  width: 120px;
+  min-width: 120px;
   padding: 5px;
   .option {
     padding: 5px;
@@ -245,12 +245,13 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    color: var(--primary-text);
+    color: var(--primary);
     text-transform: capitalize;
     border-radius: 5px;
     &:hover {
-      // background: var(--secondary-bg);
-      opacity: 0.8;
+      background: var(--primary-bg);
+      color: var(--primary);
+      // opacity: 0.8;
     }
 
     span {
@@ -263,9 +264,7 @@
 }
 
 .view_bx {
-  color: var(--black);
-  svg {
-    width: 13px;
-    height: 13px;
-  }
+  color: var(--primary);
+  font-size: 10px;
+  margin-top: 5px;
 }

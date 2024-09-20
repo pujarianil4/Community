@@ -9,7 +9,7 @@ import FeedList from "@/components/feedPost/feedList";
 export default function Home() {
   return (
     <main>
-      <PageWraper>
+      <PageWraper hideScroll>
         <FeedList method='allPosts' id={null} sortby='time' order='DESC' />
       </PageWraper>
     </main>

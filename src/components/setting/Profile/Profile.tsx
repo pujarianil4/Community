@@ -174,6 +174,7 @@ export default function Profile() {
             uid: response?.id,
             token: userData?.token,
             img: response?.img?.pro,
+            sid: response?.id || "",
           };
 
           console.log("updatedUser", updatedUser, userData);
@@ -330,7 +331,7 @@ export default function Profile() {
             setContent={setContent}
             content={content}
             autoFocus={true}
-            maxCharCount={100}
+            maxCharCount={200}
           />
         </FocusableDiv>
       </div>

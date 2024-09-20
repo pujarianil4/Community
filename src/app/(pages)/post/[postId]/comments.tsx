@@ -310,7 +310,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
         <div className='actions'>
           <div className='up_down'>
             <PiArrowFatUpDuotone
-              className={vote.type == "up" ? "active" : ""}
+              className={vote.type == "up" || comment?.isVoted ? "active" : ""}
               onClick={() => handleVote("up")}
               size={18}
             />

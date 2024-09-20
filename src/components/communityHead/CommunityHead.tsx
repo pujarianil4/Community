@@ -1,10 +1,6 @@
 "use client";
 import useAsync from "@/hooks/useAsync";
-import {
-  fetchCommunityByCname,
-  followApi,
-  UnFollowAPI,
-} from "@/services/api/api";
+import { fetchCommunityByCname } from "@/services/api/api";
 import React, { useEffect, useState } from "react";
 import CButton from "../common/Button";
 import { useParams, usePathname } from "next/navigation";
@@ -12,13 +8,9 @@ import "./index.scss";
 import UandCHeadLoader from "../common/loaders/UandCHead";
 import CTabs from "../common/Tabs";
 import FeedList from "../feedPost/feedList";
-import { RootState } from "@/contexts/store";
-import useRedux from "@/hooks/useRedux";
 import Followers from "../userHead/followers/Followers";
-import Followings from "../userHead/Followings/Followings";
 import {
   getImageSource,
-  getRandomImageLink,
   numberWithCommas,
   setToLocalStorage,
 } from "@/utils/helpers";
@@ -29,38 +21,20 @@ import {
   TwitterIcon,
 } from "@/assets/icons";
 import Image from "next/image";
-import Link from "next/link";
 import Proposals from "../proposals";
 import MarkdownRenderer from "../common/MarkDownRender";
 import { ICommunity } from "@/utils/types/types";
+import CommunityFollowButton from "../FollowBtn/communityFollowBtn";
+import { Modal } from "antd";
+import CreatePost from "../createPost/CreatePost";
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
-
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const pathname = usePathname();
   const pathArray = pathname.split("/");
   const communityId = id || pathArray[pathArray.length - 1];
 
-  const { isLoading, data, refetch } = useAsync(
-    fetchCommunityByCname,
-    communityId
-  );
-  const userNameSelector = (state: RootState) => state?.user;
-  const refetchRoute = (state: RootState) => state?.common.refetch;
-  const [{ dispatch, actions }, [user, refetchData]] = useRedux([
-    userNameSelector,
-    refetchRoute,
-  ]);
-  const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
-
-  const {
-    isLoading: isLoadingFollow,
-    data: followResponse,
-    callFunction,
-  } = useAsync();
-
-  useEffect(() => {
-    refetch();
-  }, [communityId]);
+  const { data } = useAsync(fetchCommunityByCname, communityId);
 
   const addItemToRecentCommunity = (
     data: ICommunity[],
@@ -90,43 +64,15 @@ export default function CommunityHead() {
     }
   }, [data]);
 
-  useEffect(() => {
-    setIsFollowed(data?.isFollowed);
-
-    if (refetchData?.user == true) {
-      refetch();
-      dispatch(actions.resetRefetch());
-    }
-  }, [refetchData]);
-  //const data = await fetchCommunityByCname("nifty50");
-
-  const handleFollow = async () => {
-    try {
-      if (!isFollowed) {
-        const data1 = await callFunction(followApi, {
-          typ: "c",
-          fwid: data.id,
-        });
-
-        dispatch(actions.setRefetchUser(true));
-        setIsFollowed(true);
-      } else {
-        await UnFollowAPI(data.id);
-        dispatch(actions.setRefetchUser(true));
-        setIsFollowed(false);
-      }
-    } catch (error) {}
+  const handleCancel = () => {
+    setIsPostModalOpen(false);
   };
 
   const handleCreatePost = () => {
     // TODO: Show create post with current community
     console.log("CREATE_POST");
+    setIsPostModalOpen(true);
   };
-
-  useEffect(() => {
-    setIsFollowed(data?.isFollowed);
-    console.log("User", data);
-  }, [data]);
 
   return (
     <>
@@ -134,63 +80,10 @@ export default function CommunityHead() {
         <UandCHeadLoader />
       ) : (
         <div className='user_container'>
-          {/* <div className='userhead_cotainer'>
-            <div className='info'>
-              <img
-                src={data?.logo ? data?.logo : getImageSource(data?.logo)}
-                alt='avatar'
-              />
-              <div className='head'>
-                <div className='names'>
-                  <h4>{data?.name}</h4>
-                  <span className='username'>@{data?.username}</span>
-                </div>
-
-                <CButton
-                  loading={isLoadingFollow}
-                  onClick={handleFollow}
-                  className={`${isFollowed && "followed"}`}
-                >
-                  {isFollowed ? "Unfollow" : "Follow"}
-                </CButton>
-              </div>
-            </div>
-            <div className='content'>
-              <div className='statics'>
-                <div>
-                  <h4>{data?.pCount}</h4>
-                  <span>Posts</span>
-                </div>
-                <div>
-                  <h4>{data?.followers}</h4>
-                  <span>Followers</span>
-                </div>
-                <div>
-                  <h4>0</h4>
-                  <span>Followings</span>
-                </div>
-              </div>
-              <div className='overview'>
-                <p>{data?.metadata}</p>
-              </div>
-            </div>
-          </div> */}
           <div className='userhead_cotainer'>
             <div className='cover_photo'>
-              {/* <Image
-                loading='lazy'
-                className='imgbg'
-                src='https://picsum.photos/700/220?random=1'
-                alt='coverbg'
-                width={768}
-                height={220}
-              /> */}
               <Image
-                src={
-                  data?.img?.cvr
-                    ? data.img.cvr
-                    : getImageSource(data?.logo, "cvr")
-                }
+                src={getImageSource(data?.img?.cvr, "cvr")}
                 alt='cover_photo'
                 width={768}
                 height={220}
@@ -202,11 +95,7 @@ export default function CommunityHead() {
                 <div className='box user'>
                   <div className='avatar'>
                     <Image
-                      src={
-                        data?.img?.pro
-                          ? data.img.pro
-                          : getImageSource(data?.logo, "c")
-                      }
+                      src={getImageSource(data?.img?.pro, "c")}
                       alt='community'
                       fill
                     />
@@ -230,28 +119,30 @@ export default function CommunityHead() {
                 </div>
               </div>
               <div className='activity'>
-                <MarkdownRenderer markdownContent={data?.metadata} limit={3} />
+                <div className='desc_bx'>
+                  <MarkdownRenderer
+                    markdownContent={data?.metadata}
+                    limit={3}
+                    showViewMore={true}
+                  />
+                </div>
 
-                <CButton
-                  loading={isLoadingFollow}
-                  onClick={handleFollow}
-                  className='follow_btn'
-                >
-                  {isFollowed ? "Joined" : "Join"}
-                </CButton>
+                <div className='social_bx'>
+                  <CommunityFollowButton communityData={data} />
+                  <div className='socials'>
+                    <div className='disabled'>
+                      <DiscordIcon />
+                    </div>
+                    <div className='disabled'>
+                      <TelegramIcon />
+                    </div>
+                    <div className='disabled'>
+                      <TwitterIcon />
+                    </div>
+                  </div>
+                </div>
               </div>
               {/* TODO: add disabled class as per social link availablity */}
-              <div className='socials'>
-                <div className='disabled'>
-                  <DiscordIcon />
-                </div>
-                <div className='disabled'>
-                  <TelegramIcon />
-                </div>
-                <div className='disabled'>
-                  <TwitterIcon />
-                </div>
-              </div>
             </div>
           </div>
           <div className='more_btns'>
@@ -292,6 +183,22 @@ export default function CommunityHead() {
           />
         </div>
       )}
+
+      <Modal
+        className='create_post_modal'
+        open={isPostModalOpen}
+        onCancel={handleCancel}
+        footer={<></>}
+        centered
+      >
+        {isPostModalOpen && (
+          <CreatePost
+            isPostModalOpen={isPostModalOpen}
+            setIsPostModalOpen={setIsPostModalOpen}
+            defaultCommunity={data}
+          />
+        )}
+      </Modal>
     </>
   );
 }

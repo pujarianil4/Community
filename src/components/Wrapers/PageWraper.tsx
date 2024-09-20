@@ -9,18 +9,20 @@ import "./index.scss";
 interface PageWrapperProps {
   children: ReactNode;
   hideRightPanel?: boolean;
+  hideScroll?: boolean;
 }
 
 export default function PageWraper({
   children,
   hideRightPanel,
+  hideScroll,
 }: PageWrapperProps) {
   return (
     <div className='pagewraper'>
       <Navbar />
       <Wraper>
         <SideBar />
-        <MainPanel>{children}</MainPanel>
+        <MainPanel hideScroll={hideScroll}>{children}</MainPanel>
         {!hideRightPanel && <RightPanel />}
       </Wraper>
     </div>

@@ -17,7 +17,6 @@ export default function CommunitiesList() {
     refetch,
     callFunction,
   } = useAsync(fetchCommunities, "followers");
-  console.log("COMMUNITY_DATA", communityData);
   const handleFilter = (filter: List) => {
     callFunction(fetchCommunities, filter.value);
   };

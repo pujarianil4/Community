@@ -16,6 +16,8 @@ interface DropdownWithSearchProps {
   options: ICommunity[];
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  selected: ICommunity | null;
+  defaultCommunity?: ICommunity;
 }
 
 const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
@@ -23,6 +25,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
   options,
   searchTerm,
   setSearchTerm,
+  selected,
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -57,7 +60,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
         <input
           className='dropdown_input'
           placeholder='Select Community'
-          value={searchTerm}
+          value={selected ? selected.username : searchTerm}
           onChange={handleSearch}
           onFocus={handleFocus}
           onBlur={handleBlur}

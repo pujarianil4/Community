@@ -8,6 +8,7 @@ export interface IUser {
   username: string;
   name: string;
   img: IImsg;
+  isFollowed?: boolean; // TODO: remove option after api update
   sts?: number;
   cta?: string;
   uta?: string;
@@ -23,6 +24,7 @@ export interface ICommunity {
   username: string;
   name: string;
   ticker: string;
+  isFollowed?: boolean; // TODO: remove option after api update
   img: IImsg;
   metadata: string;
   pCount: number;
@@ -38,6 +40,7 @@ export interface IPost {
   uid: number;
   cid: number;
   text: string;
+  isVoted?: boolean;
   up: number;
   down: number;
   ccount: number;
@@ -54,6 +57,7 @@ export interface IComment {
   pid: number;
   pcid: number | null;
   content: string;
+  isVoted?: boolean;
   up: number;
   down: number;
   rCount: number | null;
