@@ -12,6 +12,7 @@ import "./index.scss";
 import FeedPostLoader from "../common/loaders/Feedpost";
 import CFilter from "../common/Filter";
 import { IPost } from "@/utils/types/types";
+import VirtualList from "../common/virtualList";
 
 const getFunctionByMethod = {
   allPosts: getPosts,
@@ -106,39 +107,39 @@ export default function FeedList({ method, id, sortby, order }: IFeedList) {
           />
         </>
       )}
-      {method == "allPosts" ? (
-        <>
-          <Virtuoso
-            data={posts}
-            // totalCount={200} // add this if we know total count of posts and remove below condition
-            endReached={() => {
-              if (
-                !isLoading &&
-                posts.length % limit === 0 &&
-                posts.length / limit === page
-              ) {
-                setPage((prevPage) => prevPage + 1);
-              }
-            }}
-            itemContent={(index, post) => <FeedPost key={index} post={post} />}
-            className='virtuoso'
-          />
-          {isLoading && page > 1 && <FeedPostLoader />}
-          {!isLoading && posts.length === 0 && <EmptyData />}
-        </>
-      ) : (
-        <div className='feedlist'>
-          {!isLoading && posts ? (
-            posts.length > 0 ? (
-              posts?.map((post: any) => <FeedPost key={post.id} post={post} />)
-            ) : (
-              <EmptyData />
-            )
-          ) : (
-            loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />)
-          )}
-        </div>
-      )}
+
+      {/* <Virtuoso
+        data={posts}
+        // totalCount={200} // add this if we know total count of posts and remove below condition
+        endReached={() => {
+          if (
+            !isLoading &&
+            posts.length % limit === 0 &&
+            posts.length / limit === page
+          ) {
+            setPage((prevPage) => prevPage + 1);
+          }
+        }}
+        itemContent={(index, post) => <FeedPost key={index} post={post} />}
+        className='virtuoso'
+        style={{ overflow: "hidden" }}
+        customScrollParent={
+          document.querySelector(".main_panel_container") as HTMLElement
+        }
+        // components={ {FeedPostLoader }}
+      /> */}
+      <VirtualList
+        listData={posts}
+        isLoading={isLoading}
+        page={page}
+        setPage={setPage}
+        limit={limit}
+        renderComponent={(index: number, post: IPost) => (
+          <FeedPost key={index} post={post} />
+        )}
+      />
+
+      {isLoading && page > 1 && <FeedPostLoader />}
     </>
   );
 }

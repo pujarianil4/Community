@@ -7,6 +7,7 @@ import { IProposal } from "@/utils/types/types";
 import EmptyData from "../common/Empty";
 import ProposalItemLoader from "./proposalItemLoader";
 import { Virtuoso } from "react-virtuoso";
+import VirtualList from "../common/virtualList";
 
 interface IProps {
   cid: number;
@@ -68,7 +69,7 @@ export default function ProposalList({
           .fill(() => 0)
           .map((_, i) => <ProposalItemLoader key={i} />)
       )} */}
-      <Virtuoso
+      {/* <Virtuoso
         data={proposals}
         // totalCount={200} // add this if we know total count of posts and remove below condition
         endReached={() => {
@@ -84,6 +85,16 @@ export default function ProposalList({
           <ProposalItem key={proposal.id} proposal={proposal} />
         )}
         className='virtuoso'
+      /> */}
+      <VirtualList
+        listData={proposals}
+        isLoading={isLoading}
+        page={page}
+        setPage={setPage}
+        limit={limit}
+        renderComponent={(index: number, proposal: IProposal) => (
+          <ProposalItem key={proposal.id} proposal={proposal} />
+        )}
       />
       {isLoading && page > 1 && <ProposalItemLoader />}
       {!isLoading && proposals.length === 0 && <EmptyData />}

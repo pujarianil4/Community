@@ -1,21 +1,10 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import "./index.scss";
-import CreatePost from "../createPost/CreatePost";
-import FeedCard from "../feedPost/feedPost";
-import UserHead from "../userHead/UserHead";
 
-export default function MainPanel({ children, hideScroll }: any) {
-  console.log("hideScroll", hideScroll);
+interface IProps {
+  children: ReactNode;
+}
 
-  return (
-    <div
-      style={hideScroll ? { overflow: "hidden" } : { overflow: "auto" }}
-      className='main_panel_container'
-    >
-      {/* <CreatePost />
-      <FeedCard />
-      <UserHead /> */}
-      {children}
-    </div>
-  );
+export default function MainPanel({ children }: IProps) {
+  return <main className='main_panel_container'>{children}</main>;
 }
