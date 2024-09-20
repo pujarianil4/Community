@@ -128,12 +128,12 @@ export default function Navbar() {
         token: "",
         img: "",
       };
-      router.push("/");
+
       dispatch(actions.setUserData(initialState));
       // Add a short delay before reloading the page
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 100);
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
       // window?.location?.reload();
     } catch (error) {
       deleteClientSideCookie("authToken");
@@ -145,12 +145,12 @@ export default function Navbar() {
         token: "",
         img: "",
       };
-      router.push("/");
+
       dispatch(actions.setUserData(initialState));
       // Add a short delay before reloading the page
       setTimeout(() => {
-        window.location.reload();
-      }, 100);
+        router.push("/");
+      }, 1000);
       //  window?.location?.reload();
     }
   };
