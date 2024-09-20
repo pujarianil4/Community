@@ -8,6 +8,7 @@ export interface IUser {
   username: string;
   name: string;
   img: IImsg;
+  isFollowed?: boolean; // TODO: remove option after api update
   sts?: number;
   cta?: string;
   uta?: string;
@@ -23,6 +24,7 @@ export interface ICommunity {
   username: string;
   name: string;
   ticker: string;
+  isFollowed?: boolean; // TODO: remove option after api update
   img: IImsg;
   metadata: string;
   pCount: number;
@@ -38,6 +40,7 @@ export interface IPost {
   uid: number;
   cid: number;
   text: string;
+  isVoted?: boolean;
   up: number;
   down: number;
   ccount: number;
@@ -54,6 +57,7 @@ export interface IComment {
   pid: number;
   pcid: number | null;
   content: string;
+  isVoted?: boolean;
   up: number;
   down: number;
   rCount: number | null;
@@ -133,4 +137,40 @@ export interface IVotePayload {
   typ: string;
   cntId: number;
   voteTyp: "up" | "down" | "";
+}
+
+export interface ICreateProposalPayload {
+  title: string;
+  desc: string;
+  cid: number;
+  validity: string;
+}
+
+export interface IVoteProposalPayload {
+  pid: number;
+  value: number;
+}
+
+export interface IProposalForm {
+  title: string;
+  desc: string;
+  cid: number;
+  validity: string;
+}
+
+export interface IProposal {
+  id: number;
+  sts: number;
+  title: string;
+  cid: number;
+  uid: number;
+  desc: string;
+  validity: string;
+  up: number;
+  down: number;
+  cta: string;
+  uta: string;
+  isVoted: true;
+  user: IUser;
+  community: ICommunity;
 }

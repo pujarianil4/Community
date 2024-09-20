@@ -9,8 +9,6 @@ interface ICHead {
 }
 
 export default function CHead({ community }: ICHead) {
-  console.log("community", community);
-
   return (
     <div className='chead'>
       <Image

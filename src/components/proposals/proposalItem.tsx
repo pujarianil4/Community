@@ -6,49 +6,21 @@ import React from "react";
 import CButton from "../common/Button";
 import MarkdownRenderer from "../common/MarkDownRender";
 import { useRouter } from "next/navigation";
+import { IProposal } from "@/utils/types/types";
 
-export default function ProposalItem() {
+interface IProps {
+  proposal: IProposal;
+}
+
+export default function ProposalItem({ proposal }: IProps) {
   // TODO: create seperate component for USER_HEAD
   // TODO: update community and user data
-  const proposalId = 1;
+
+  const { id, cta: time, title, desc, up, down, user, community } = proposal;
   const isActive = true;
-  const time = "2024-08-28T12:54:59.918Z";
-  const community = {
-    id: 1,
-    username: "UnilendOfficial",
-    name: "Unilend",
-    ticker: "UNO",
-    logo: "https://picsum.photos/200/300",
-    metadata: "This is our official community.",
-    pCount: 6,
-    followers: 0,
-    tSupply: 0,
-    sts: 1,
-    cta: "2024-08-28T12:43:06.494Z",
-    uta: "2024-08-28T12:43:06.494Z",
-  };
-
-  const user = {
-    id: 1,
-    username: "im_mangesh",
-    name: "Mangesh",
-    img: "https://picsum.photos/200/300",
-    pcount: 6,
-    tid: null,
-    did: null,
-    desc: null,
-    sts: 1,
-    cta: "2024-08-28T12:41:03.323Z",
-    uta: "2024-08-28T12:41:03.323Z",
-  };
-  const yesCount = 452;
-  const noCount = 124;
-  const content =
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.";
-
   const router = useRouter();
   const handleRedirect = () => {
-    router.push(`/p/${proposalId}`);
+    router.push(`/p/${id}`);
   };
   return (
     <>
@@ -60,7 +32,7 @@ export default function ProposalItem() {
             className='community_logo'
           >
             <Image
-              src={getImageSource(user.img, "u")}
+              src={getImageSource(user?.img?.pro, "u")}
               alt={user.username || "user"}
               width={52}
               height={52}
@@ -90,10 +62,12 @@ export default function ProposalItem() {
 
         <div className='proposal_data' onClick={handleRedirect}>
           <div className='content'>
-            <MarkdownRenderer markdownContent={content} />
+            <h3>{title}</h3>
+            <MarkdownRenderer markdownContent={desc} limit={4} />
             <div className='stats'>
+              {/* TODO: on going show as per activity */}
               <p>On going</p>
-              <p>452 WUFT</p>
+              <p>{up} WUFT</p>
               <p>Started on January 12,2023</p>
             </div>
           </div>
@@ -101,16 +75,16 @@ export default function ProposalItem() {
             <div className='range_bar_data'>
               <div className='range_data'>
                 <p>Yes</p>
-                <p className='yes'>{yesCount} WUFT</p>
+                <p className='yes'>{up}</p>
               </div>
-              <RangeBar total={yesCount + noCount} current={yesCount} />
+              <RangeBar total={up + down} current={up} />
             </div>
             <div className='range_bar_data'>
               <div className='range_data'>
                 <p>No</p>
-                <p className='no'>{noCount} WUFT</p>
+                <p className='no'>{down}</p>
               </div>
-              <RangeBar total={yesCount + noCount} current={noCount} />
+              <RangeBar total={up + down} current={down} />
             </div>
           </div>
         </div>

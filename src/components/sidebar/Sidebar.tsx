@@ -124,7 +124,6 @@ const SideBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [recentCommunities, setRecentCommunities] = useState([]);
 
-  console.log("recentCommunities", recentCommunities);
   const refetchCommunitySelector = (state: RootState) =>
     state.common.refetch.community;
   const [{ dispatch, actions }, [comminityRefetch]] = useRedux([
@@ -191,6 +190,19 @@ const SideBar: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const extractNextString = (input: string) => {
+    const startIndex = input.indexOf("c/");
+    if (startIndex !== -1) {
+      const endIndex = input.indexOf("/", startIndex + 2);
+      if (endIndex !== -1) {
+        return input.substring(startIndex, endIndex);
+      } else {
+        return input.substring(startIndex);
+      }
+    }
+    return input;
+  };
+
   const onClick: MenuProps["onClick"] = (e) => {
     if (e.key == "createCommunity") {
       const user = getClientSideCookie("authToken");
@@ -198,6 +210,9 @@ const SideBar: React.FC = () => {
         showModal();
       } else {
       }
+    } else if (e.key[0] === "c" && e.key[1] === "/") {
+      const path = extractNextString(e.key);
+      router.push(`/${path}`);
     } else if (!["popular"].includes(e.key)) {
       router.push(`/${e.key}`);
     }
@@ -241,11 +256,13 @@ const SideBar: React.FC = () => {
     let prevCommunities = [];
     prevCommunities = value ? JSON.parse(value) : [];
     if (prevCommunities?.length > 0) {
-      const updateData = prevCommunities?.map((item: ICommunity) => ({
-        key: `c/${item.username}`,
-        label: <CHead community={item} />,
-      }));
-      setRecentCommunities(updateData);
+      const updateData = prevCommunities?.map(
+        (item: ICommunity, index: number) => ({
+          key: `c/${item.username}/${index}`,
+          label: <CHead community={item} />,
+        })
+      );
+      setRecentCommunities(updateData.reverse());
     } else {
       setRecentCommunities([]);
     }
@@ -409,27 +426,6 @@ const CreateCommunityModal = ({
   };
 
   const debouncedCheckUsername = debounce(async (username: string) => {
-    // try {
-    //   if (username === "") {
-    //     setUsernameError("");
-    //     return;
-    //   }
-    //   const user = await fetchCommunityByCname(username);
-    //   if (user?.username) {
-    //     const isAvailable = user?.username === username;
-
-    //     if (isAvailable) {
-    //       setUsernameError("Username already exists");
-    //     } else {
-    //       setUsernameError("Username is available");
-    //     }
-    //   }
-    // } catch (error: any) {
-    //   if (username && error == "Error: user not available") {
-    //     setUsernameError("Username is available");
-    //   } else {
-    //     setUsernameError("");
-    //   }
     try {
       if (username == "") {
         setUsernameError({ type: "error", msg: "" });

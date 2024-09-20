@@ -163,7 +163,7 @@ export default function Post({ post }: Iprops) {
       <div className='actions'>
         <div className='up_down'>
           <PiArrowFatUpDuotone
-            className={vote.type == "up" ? "active" : ""}
+            className={vote.type == "up" || post?.isVoted ? "active" : ""}
             onClick={() => handleVote("up")}
             size={18}
           />

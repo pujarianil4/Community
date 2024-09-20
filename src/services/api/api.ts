@@ -4,11 +4,13 @@ import { PublicKey } from "@solana/web3.js";
 import axios, { AxiosInstance } from "axios";
 import { store } from "@contexts/store";
 import {
+  ICreateProposalPayload,
   IFollowAPI,
   IFollowersAPI,
   IPostCommentAPI,
   IUser,
   IVotePayload,
+  IVoteProposalPayload,
 } from "@/utils/types/types";
 
 const url = "https://community-slr7.onrender.com"; //process.env.BASE_API_URL;
@@ -17,6 +19,7 @@ const api: AxiosInstance = axios.create({
 });
 // TODO create seperate file for each catogery
 // UI for notification
+
 const updateAuthorizationHeader = () => {
   const token = store.getState().user?.token;
 
@@ -77,7 +80,6 @@ export const handleSignup = async (
       pubKey,
     });
     console.log("==============userSignUp=================", response);
-    // setToLocalStorage("userSession", response.data);
     return response.data;
   } catch (error) {
     console.error("SIGNUP_ERROR ", error);
@@ -109,20 +111,22 @@ export const handlePostToCommunity = async (data: any) => {
 };
 
 export const fetchUser = async (username: string) => {
+  const uid = store.getState().user?.uid;
   if (!username) {
     return null;
   }
   try {
-    const response = await api.get(`/users/uname/${username}`);
-    const isFollowed = await isUserFollowed({
-      fwid: response?.data?.id,
-      type: "u",
-    });
-
-    return {
-      ...response.data,
-      isFollowed,
-    };
+    const response = await api.get(`/users/uname/${username}?uid=${uid}`);
+    return response.data[0];
+    // const isFollowed = await isUserFollowed({
+    //   fwid: response?.data?.id,
+    //   type: "u",
+    // });
+    // console.log("CHECK_U", response.data);
+    // return {
+    //   ...response.data,
+    //   isFollowed,
+    // };
   } catch (error) {
     console.error("Fetch User ", error);
     throw error;
@@ -152,11 +156,11 @@ export const updateUser = async (payload: Partial<IUser>) => {
 };
 
 export const fetchCommunities = async (sortby: string) => {
+  const uid = store.getState().user?.uid;
   try {
     const response = await api.get(
-      `/community?sortBy=${sortby}&order=DESC&page=1&limit=20`
+      `/community?sortBy=${sortby}&order=DESC&page=1&limit=20&uid=${uid}`
     );
-
     return response.data;
   } catch (error) {
     console.error("Fetch Communities ", error);
@@ -175,27 +179,27 @@ export const createCommunity = async (data: any) => {
 };
 
 export const fetchCommunityByCname = async (cName: string) => {
+  const uid = store.getState().user?.uid;
   if (!cName) {
     return null;
   }
   try {
-    const response = await api.get(`/community/cname/${cName}`);
-    let isFollowed = false;
-
-    if (response.data) {
-      if (response?.data?.id) {
-        isFollowed = await isUserFollowed({
-          fwid: response?.data?.id,
-          type: "c",
-        });
-      }
-      return {
-        ...response.data,
-        isFollowed,
-      };
-    } else {
-      throw new Error("user not available");
-    }
+    const response = await api.get(`/community/cname/${cName}?uid=${uid}`);
+    return response.data[0];
+    // if (response.data) {
+    //   if (response?.data?.id) {
+    //     isFollowed = await isUserFollowed({
+    //       fwid: response?.data?.id,
+    //       type: "c",
+    //     });
+    //   }
+    //   return {
+    //     ...response.data,
+    //     isFollowed,
+    //   };
+    // } else {
+    //   throw new Error("user not available");
+    // }
   } catch (error) {
     console.error("Fetch Communities ", error);
     throw error;
@@ -213,11 +217,11 @@ export const getPosts = async ({
   page: number;
   limit: number;
 }) => {
-  console.log("sortBy", sortby);
+  const uid = store.getState().user?.uid;
 
   try {
     const response = await api.get(
-      `/posts?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}`
+      `/posts?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}`
     );
     console.log("============Fetched all posts=============", response.data);
     return response.data;
@@ -236,11 +240,12 @@ export const getPostsBycName = async ({
   page: number;
   limit: number;
 }) => {
+  const uid = store.getState().user?.uid;
   try {
     const response = await api.get(
-      `/posts/community/cname/${nameId}?page=${page}&limit=${limit}`
+      `/posts/community/cname/${nameId}?page=${page}&limit=${limit}&uid=${uid}`
     );
-    console.log("============Fetched all posts=============", response.data);
+    console.log("=========Fetched all posts By Cname=========", response.data);
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
@@ -257,11 +262,12 @@ export const getPostsByuName = async ({
   page: number;
   limit: number;
 }) => {
+  const uid = store.getState().user?.uid;
   try {
     const response = await api.get(
-      `/posts/username/${nameId}?page=${page}&limit=${limit}`
+      `/posts/username/${nameId}?page=${page}&limit=${limit}&uid=${uid}`
     );
-    console.log("============Fetched all posts=============", response.data);
+    console.log("=========Fetched all posts By Uname==========", response.data);
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
@@ -270,8 +276,9 @@ export const getPostsByuName = async ({
 };
 
 export const getPostsByPostId = async (postId: string) => {
+  const uid = store.getState().user?.uid;
   try {
-    const response = await api.get(`/posts/${postId}`);
+    const response = await api.get(`/posts/${postId}?uid=${uid}`);
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);
@@ -330,8 +337,11 @@ export const followApi = async (data: IFollowAPI) => {
 };
 
 export const fetchComments = async (postId: string) => {
+  const uid = store.getState().user?.uid;
   try {
-    const response = await api.get(`/comments/post/${postId}?page=1&limit=100`);
+    const response = await api.get(
+      `/comments/post/${postId}?page=1&limit=100&uid=${uid}`
+    );
     return response.data;
   } catch (error) {
     console.error("COMMENTS_ERROR: ", error);
@@ -380,8 +390,6 @@ export const isUserFollowed = async ({
 }) => {
   const uid = store.getState().user?.uid;
 
-  console.log("UID", uid);
-
   try {
     const response = await api.get(
       `/followers/isFollow/${uid}?fwid=${fwid}&typ=${type}`
@@ -393,9 +401,15 @@ export const isUserFollowed = async ({
   }
 };
 
-export const UnFollowAPI = async (id: string) => {
+export const UnFollowAPI = async ({
+  fwid,
+  type,
+}: {
+  fwid: string;
+  type: string;
+}) => {
   try {
-    const response = await api.delete(`/followers/${id}`);
+    const response = await api.delete(`/followers/${fwid}?typ=${type}`);
     return response.data;
   } catch (error) {
     console.error("POSTS_ERROR: ", error);
@@ -450,64 +464,7 @@ export const uploadMultipleFile = async (files: FileList) => {
   }
 };
 
-// export const uploadMultipleFile = async (files: FileList) => {
-//   try {
-//     console.log("BEFORE", files);
-//     const formData = new FormData();
-
-//     // Append each file to the form data
-//     // Array.from(files).forEach((file, index) => {
-//     //   formData.append(`files[]`, file);
-//     // });
-
-//     for (let i = 0; i < files.length; i++) {
-//       console.log("CURRENT_FILE", files[i]);
-//       formData.append("files[]", files[i]);
-//     }
-//     console.log("UPLOAD_FILES", formData);
-
-//     const response = await api.post("/upload/multi", files, {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//       },
-//     });
-
-//     console.log("Files uploaded successfully", response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error uploading files", error);
-//     throw error;
-//   }
-// };
-
-// export const uploadMultipleFile = async (files: FileList) => {
-//   try {
-//     console.log("Selected Files:", files);
-
-//     const formData = new FormData();
-
-//     for (let i = 0; i < files.length; i++) {
-//       formData.append(`files${i}`, fs.createReadStream(files[i]));
-//     }
-
-//     console.log("FormData before upload:", formData);
-
-//     const response = await api.post("/upload/multi", formData, {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//       },
-//     });
-
-//     console.log("Files uploaded successfully", response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error uploading files", error);
-//     throw error;
-//   }
-// };
-
 //fetch sessions
-
 export const getSession = async () => {
   try {
     const response = await api.get("/users/sessions");
@@ -535,6 +492,78 @@ export const sendVote = async (payload: IVotePayload) => {
     return response.data;
   } catch (error) {
     throw error;
+  }
+};
+
+//GOVERNANCE
+export const createProposal = async (payload: ICreateProposalPayload) => {
+  try {
+    const { data } = await api.post(`/governance/proposal`, payload);
+    console.log("=====New Proposal Created=====");
+    return data;
+  } catch (error) {
+    console.error("Proposal_Error", error);
+  }
+};
+
+export const fetchAllProposals = async ({
+  page = 1,
+  limit = 10,
+}: {
+  page: number;
+  limit: number;
+}) => {
+  const uid = store.getState().user?.uid;
+  try {
+    const { data } = await api.get(
+      `/governance/proposal?page=${page}&limit=${limit}&uid=${uid}`
+    );
+    return data;
+  } catch (error) {
+    console.error("Fetch_Proposals_Error", error);
+  }
+};
+
+export const fetchProposalsByCId = async ({
+  cid,
+  page = 1,
+  limit = 10,
+}: {
+  cid: number;
+  page: number;
+  limit: number;
+}) => {
+  const uid = store.getState().user?.uid;
+  try {
+    const { data } = await api.get(
+      `/governance/proposal/c/${cid}?page=${page}&limit=${limit}&uid=${uid}`
+    );
+    return data;
+  } catch (error) {
+    console.error("Fetch_Proposals_Error", error);
+  }
+};
+
+export const fetchProposalByID = async (proposalId: number) => {
+  const uid = store.getState().user?.uid;
+  try {
+    const { data } = await api.get(
+      `/governance/proposal/${proposalId}?uid=${uid}`
+    );
+
+    return data[0];
+  } catch (error) {
+    console.error("Fetch_ProposalByID_Error", error);
+  }
+};
+
+export const voteToProposal = async (payload: IVoteProposalPayload) => {
+  try {
+    const { data } = await api.post(`/governance/vote`, payload);
+    console.log("=====Proposal Vote=====");
+    return data;
+  } catch (error) {
+    console.error("Vote Proposal Error", error);
   }
 };
 

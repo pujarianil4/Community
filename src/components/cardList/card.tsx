@@ -4,8 +4,8 @@ import { ICommunity, IUser } from "@/utils/types/types";
 import Image from "next/image";
 import CButton from "@/components/common/Button";
 import { getImageSource, numberWithCommas } from "@/utils/helpers";
-import CommunityFollowButton from "../communityFollowBtn";
-import UserFollowButton from "../communityFollowBtn/userFollowbtn";
+import CommunityFollowButton from "../FollowBtn/communityFollowBtn";
+import UserFollowButton from "../FollowBtn/userFollowbtn";
 import { useRouter } from "next/navigation";
 
 interface IUserCardProps {
@@ -71,14 +71,15 @@ export default function Card({ cardData, type = "u" }: IProps) {
                 {numberWithCommas((cardData as ICommunity)?.followers) || 0}
                 &nbsp; Members <br /> <span>569 Online</span>
               </p>
-              <CommunityFollowButton
-                communityId={(cardData as ICommunity).username}
-              />
+              <CommunityFollowButton communityData={cardData as ICommunity} />
             </>
           ) : (
             <>
               <p>2.5k Followers</p>
-              <UserFollowButton userId={(cardData as IUser).username} />
+              <UserFollowButton
+                userData={cardData as IUser}
+                // userId={(cardData as IUser).username}
+              />
             </>
           )}
         </div>

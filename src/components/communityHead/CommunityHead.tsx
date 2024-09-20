@@ -1,10 +1,6 @@
 "use client";
 import useAsync from "@/hooks/useAsync";
-import {
-  fetchCommunityByCname,
-  followApi,
-  UnFollowAPI,
-} from "@/services/api/api";
+import { fetchCommunityByCname } from "@/services/api/api";
 import React, { useEffect, useState } from "react";
 import CButton from "../common/Button";
 import { useParams, usePathname } from "next/navigation";
@@ -12,13 +8,9 @@ import "./index.scss";
 import UandCHeadLoader from "../common/loaders/UandCHead";
 import CTabs from "../common/Tabs";
 import FeedList from "../feedPost/feedList";
-import { RootState } from "@/contexts/store";
-import useRedux from "@/hooks/useRedux";
 import Followers from "../userHead/followers/Followers";
-import Followings from "../userHead/Followings/Followings";
 import {
   getImageSource,
-  getRandomImageLink,
   numberWithCommas,
   setToLocalStorage,
 } from "@/utils/helpers";
@@ -29,10 +21,10 @@ import {
   TwitterIcon,
 } from "@/assets/icons";
 import Image from "next/image";
-import Link from "next/link";
 import Proposals from "../proposals";
 import MarkdownRenderer from "../common/MarkDownRender";
 import { ICommunity } from "@/utils/types/types";
+import CommunityFollowButton from "../FollowBtn/communityFollowBtn";
 import { Modal } from "antd";
 import CreatePost from "../createPost/CreatePost";
 export default function CommunityHead() {
@@ -42,27 +34,7 @@ export default function CommunityHead() {
   const pathArray = pathname.split("/");
   const communityId = id || pathArray[pathArray.length - 1];
 
-  const { isLoading, data, refetch } = useAsync(
-    fetchCommunityByCname,
-    communityId
-  );
-  const userNameSelector = (state: RootState) => state?.user;
-  const refetchRoute = (state: RootState) => state?.common.refetch;
-  const [{ dispatch, actions }, [user, refetchData]] = useRedux([
-    userNameSelector,
-    refetchRoute,
-  ]);
-  const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
-
-  const {
-    isLoading: isLoadingFollow,
-    data: followResponse,
-    callFunction,
-  } = useAsync();
-
-  useEffect(() => {
-    refetch();
-  }, [communityId]);
+  const { data } = useAsync(fetchCommunityByCname, communityId);
 
   const addItemToRecentCommunity = (
     data: ICommunity[],
@@ -92,34 +64,6 @@ export default function CommunityHead() {
     }
   }, [data]);
 
-  useEffect(() => {
-    setIsFollowed(data?.isFollowed);
-
-    if (refetchData?.user == true) {
-      refetch();
-      dispatch(actions.resetRefetch());
-    }
-  }, [refetchData]);
-  //const data = await fetchCommunityByCname("nifty50");
-
-  const handleFollow = async () => {
-    try {
-      if (!isFollowed) {
-        const data1 = await callFunction(followApi, {
-          typ: "c",
-          fwid: data.id,
-        });
-
-        dispatch(actions.setRefetchUser(true));
-        setIsFollowed(true);
-      } else {
-        await UnFollowAPI(data.id);
-        dispatch(actions.setRefetchUser(true));
-        setIsFollowed(false);
-      }
-    } catch (error) {}
-  };
-
   const handleCancel = () => {
     setIsPostModalOpen(false);
   };
@@ -129,11 +73,6 @@ export default function CommunityHead() {
     console.log("CREATE_POST");
     setIsPostModalOpen(true);
   };
-
-  useEffect(() => {
-    setIsFollowed(data?.isFollowed);
-    console.log("User", data);
-  }, [data]);
 
   return (
     <>
@@ -189,13 +128,7 @@ export default function CommunityHead() {
                 </div>
 
                 <div className='social_bx'>
-                  <CButton
-                    loading={isLoadingFollow}
-                    onClick={handleFollow}
-                    className='follow_btn'
-                  >
-                    {isFollowed ? "Joined" : "Join"}
-                  </CButton>
+                  <CommunityFollowButton communityData={data} />
                   <div className='socials'>
                     <div className='disabled'>
                       <DiscordIcon />
@@ -244,7 +177,7 @@ export default function CommunityHead() {
               {
                 key: "4",
                 label: "Proposals",
-                content: <Proposals />,
+                content: <Proposals cid={data.id} cname={data.name} />,
               },
             ]}
           />
