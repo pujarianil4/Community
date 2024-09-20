@@ -307,38 +307,10 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
           )}
           <MarkdownRenderer markdownContent={comment?.content} />
         </div>
-        {/* <div className='actions'>
-          <div className='up_down'>
-            <PiArrowFatUpDuotone
-              // className={vote.type == "up" ? "active" : ""}
-              // onClick={() => handleVote("up")}
-              size={18}
-            />
-            <span>{vote.value}</span>
-            <PiArrowFatDownDuotone
-              // className={vote.type == "down" ? "active" : ""}
-              // onClick={() => handleVote("down")}
-              size={18}
-            />
-          </div>
-          <div className='comments'>
-            <GoComment size={18} />
-            <span>{post?.ccount > 0 ? post.ccount : "comments"}</span>
-          </div>
-
-          <div className='share'>
-            <ShareIcon width={18} />
-            <span>Share</span>
-          </div>
-          <div className='save'>
-            <SaveIcon width={16} height={16} />
-            <span>Save</span>
-          </div>
-        </div> */}
         <div className='actions'>
           <div className='up_down'>
             <PiArrowFatUpDuotone
-              className={vote.type == "up" ? "active" : ""}
+              className={vote.type == "up" || comment?.isVoted ? "active" : ""}
               onClick={() => handleVote("up")}
               size={18}
             />

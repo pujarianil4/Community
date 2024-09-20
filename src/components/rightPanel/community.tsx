@@ -12,68 +12,69 @@ import {
 } from "@/services/api/api";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
+import CommunityFollowButton from "../FollowBtn/communityFollowBtn";
 import CHead from "../common/chead";
 interface IProps {
   community: ICommunity;
 }
 export default function Community({ community }: IProps) {
-  const communityId = community?.username;
+  // const communityId = community?.username;
   // console.log("COMMUNITY____", community);
-  const { isLoading, data, refetch } = useAsync(
-    fetchCommunityByCname,
-    communityId
-  );
+  // const { isLoading, data, refetch } = useAsync(
+  //   fetchCommunityByCname,
+  //   communityId
+  // );
+
+  // console.log("CHECK1", data);
+  // console.log("CHECK2", community);
+
   // console.log("COMMUNIYT_DATA", data);
-  const userNameSelector = (state: RootState) => state?.user;
-  const refetchRoute = (state: RootState) => state?.common.refetch;
-  const [{ dispatch, actions }, [user, refetchData]] = useRedux([
-    userNameSelector,
-    refetchRoute,
-  ]);
-  const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
+  // const userNameSelector = (state: RootState) => state?.user;
+  // const refetchRoute = (state: RootState) => state?.common.refetch;
+  // const [{ dispatch, actions }, [user, refetchData]] = useRedux([
+  //   userNameSelector,
+  //   refetchRoute,
+  // ]);
+  // const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
+  // console.log("isFollowed", isFollowed);
+  // const {
+  //   isLoading: isLoadingFollow,
+  //   data: followResponse,
+  //   callFunction,
+  // } = useAsync();
 
-  const {
-    isLoading: isLoadingFollow,
-    data: followResponse,
-    callFunction,
-  } = useAsync();
+  // const handleFollow = async () => {
+  //   try {
+  //     if (!isFollowed) {
+  //       const data1 = await callFunction(followApi, {
+  //         typ: "c",
+  //         fwid: data.id,
+  //       });
 
-  useEffect(() => {
-    console.log("follow", isFollowed);
-  }, [isFollowed]);
+  //       dispatch(actions.setRefetchUser(true));
+  //       setIsFollowed(true);
+  //     } else {
+  //       await UnFollowAPI(data.id);
+  //       dispatch(actions.setRefetchUser(true));
+  //       setIsFollowed(false);
+  //     }
+  //   } catch (error) {}
+  // };
+  // useEffect(() => {
+  //   refetch();
+  // }, [communityId]);
 
-  const handleFollow = async () => {
-    try {
-      if (!isFollowed) {
-        const data1 = await callFunction(followApi, {
-          typ: "c",
-          fwid: data.id,
-        });
+  // useEffect(() => {
+  //   setIsFollowed(data?.isFollowed);
 
-        dispatch(actions.setRefetchUser(true));
-        setIsFollowed(true);
-      } else {
-        await UnFollowAPI(data.id);
-        dispatch(actions.setRefetchUser(true));
-        setIsFollowed(false);
-      }
-    } catch (error) {}
-  };
-  useEffect(() => {
-    refetch();
-  }, [communityId]);
-
-  useEffect(() => {
-    setIsFollowed(data?.isFollowed);
-
-    if (refetchData?.user == true) {
-      refetch();
-      dispatch(actions.resetRefetch());
-    }
-  }, [refetchData]);
-  useEffect(() => {
-    setIsFollowed(data?.isFollowed);
-  }, [data]);
+  //   if (refetchData?.user == true) {
+  //     refetch();
+  //     dispatch(actions.resetRefetch());
+  //   }
+  // }, [refetchData]);
+  // useEffect(() => {
+  //   setIsFollowed(data?.isFollowed);
+  // }, [data]);
   return (
     <div key={community?.id} className='card_heading'>
       <Link
@@ -92,13 +93,14 @@ export default function Community({ community }: IProps) {
         <CHead community={community} />
       </Link>
       <div className='community_join'>
-        <CButton
+        {/* <CButton
           loading={isLoadingFollow}
           onClick={handleFollow}
           className='follow_btn'
         >
           {isFollowed ? "Joined" : "Join"}
-        </CButton>
+        </CButton> */}
+        <CommunityFollowButton communityData={community} />
         {/* <span className='comm_icon'>Join</span> */}
       </div>
     </div>

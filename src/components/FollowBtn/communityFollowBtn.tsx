@@ -1,50 +1,53 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CButton from "@/components/common/Button";
-import {
-  fetchCommunityByCname,
-  followApi,
-  UnFollowAPI,
-} from "@/services/api/api";
+import { followApi, UnFollowAPI } from "@/services/api/api";
 import useRedux from "@/hooks/useRedux";
 import useAsync from "@/hooks/useAsync";
 import "./index.scss";
+import { ICommunity } from "@/utils/types/types";
 
 interface IProps {
-  communityId: string;
+  communityData: ICommunity;
 }
 
-export default function CommunityFollowButton({ communityId }: IProps) {
+export default function CommunityFollowButton({ communityData }: IProps) {
   const { isLoading: isLoadingFollow, callFunction } = useAsync();
-  const { isLoading, data } = useAsync(fetchCommunityByCname, communityId);
   const [{ dispatch, actions }] = useRedux();
-
-  const [isFollowed, setIsFollowed] = useState<boolean>(data?.isFollowed);
+  const [isFollowed, setIsFollowed] = useState<boolean>(
+    communityData?.isFollowed as boolean
+  );
+  const [isUnfollowLoading, setIsUnFollowLoading] = useState<boolean>(false);
 
   const handleFollowToggle = async () => {
     try {
       if (!isFollowed) {
-        await callFunction(followApi, { typ: "c", fwid: data?.id });
+        await callFunction(followApi, { typ: "c", fwid: communityData?.id });
         dispatch(actions.setRefetchUser(true));
         setIsFollowed(true);
       } else {
-        await UnFollowAPI(data?.id);
+        setIsUnFollowLoading(true);
+        await UnFollowAPI({
+          type: "c",
+          fwid: communityData?.id?.toString() as string,
+        });
         dispatch(actions.setRefetchUser(true));
         setIsFollowed(false);
+        setIsUnFollowLoading(false);
       }
     } catch (error) {
       console.error("Error handling follow:", error);
     }
   };
-  useEffect(() => {
-    setIsFollowed(data?.isFollowed);
-  }, [data]);
+  // useEffect(() => {
+  //   setIsFollowed(data?.isFollowed);
+  // }, [data]);
 
   return (
     <div onClick={(event) => event.stopPropagation()}>
       <CButton
         className='follow_btn'
-        loading={isLoadingFollow || isLoading}
+        loading={isLoadingFollow || isUnfollowLoading}
         onClick={handleFollowToggle}
       >
         {isFollowed ? "Joined" : "Join"}
