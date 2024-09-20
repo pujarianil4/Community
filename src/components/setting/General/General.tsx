@@ -23,27 +23,23 @@ export default function General() {
   return (
     <>
       <div className='general_container'>
-        <div>
-          <div>
-            <Collapse accordion style={{ marginTop: "16px" }}>
-              <Panel
-                header='Social Connections'
-                key='1'
-                extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
-              >
-                <TelegramConnect />
-                <Discord />
-                <TwitterConnect />
-              </Panel>
-            </Collapse>
+        <Collapse accordion style={{ marginTop: "16px" }}>
+          <Panel
+            header='Social Connections'
+            key='1'
+            extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
+          >
+            <TelegramConnect />
+            <Discord />
+            <TwitterConnect />
+          </Panel>
+        </Collapse>
 
-            {/* Link Your Wallet Accordion */}
+        {/* Link Your Wallet Accordion */}
 
-            <LinkAddress />
-            {/* Session Accordion */}
-            <Session />
-          </div>
-        </div>
+        <LinkAddress />
+        {/* Session Accordion */}
+        <Session />
       </div>
     </>
   );

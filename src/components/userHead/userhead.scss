@@ -202,17 +202,26 @@
         color: var(--primary) !important;
         font-size: 14px !important;
       }
+      .about {
+        padding: 10px;
+      }
+      .social_bx {
+        text-align: end;
+        margin-top: 0.75rem;
+      }
     }
 
     .socials {
       width: 120px;
-      /* height: 28px; */
-      padding: 4px 0.75rem 0.75rem;
+      height: 28px;
+      /* padding: 10px; */
       margin-left: auto;
       display: flex;
       gap: 24px;
       align-items: center;
       justify-content: flex-end;
+      padding: 5px 0px 0px 5px;
+      margin-top: 11px;
 
       div {
         cursor: pointer;

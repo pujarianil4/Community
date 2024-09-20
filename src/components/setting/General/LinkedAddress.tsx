@@ -81,8 +81,8 @@ const linkAddress = () => {
     }
   }, [userAccount.isConnected, user]);
 
-  const removeAddress = async (address: any) => {
-    removeAddress({ address })
+  const remove = async (address: string) => {
+    removeAddress(address)
       .then(() => {
         refetch();
         NotificationMessage("success", "Address Removed Successfully");
@@ -118,7 +118,7 @@ const linkAddress = () => {
                     </span>
                   </div>
                   <div>
-                    <span onClick={() => removeAddress(wallet.address)}>
+                    <span onClick={() => remove(wallet.address)}>
                       <DeleteIcon />
                     </span>
                   </div>

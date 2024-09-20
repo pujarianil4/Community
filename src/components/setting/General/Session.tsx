@@ -1,8 +1,7 @@
 import React from "react";
 import useAsync from "@/hooks/useAsync";
-import { updateUser } from "@/services/api/api";
 import NotificationMessage from "@/components/common/Notification";
-
+import { getClientSideCookie } from "@/utils/helpers";
 import {
   DeleteIcon,
   DesktopIcon,
@@ -17,11 +16,14 @@ import { getSession, removeSession } from "@/services/api/api";
 const session = () => {
   const { isLoading, refetch, data } = useAsync(getSession);
   console.log("session", data);
-  const removeSession = () => {
-    updateUser({ did: null })
+  const cookiesData: any = getClientSideCookie("authToken");
+  console.log("cookiesData", cookiesData);
+
+  const handleRemoveSession = (id: string) => {
+    removeSession(id)
       .then(() => {
         refetch();
-        NotificationMessage("success", "Sessin Removed Successfully");
+        NotificationMessage("success", "Session Removed Successfully");
       })
       .catch(() => {
         refetch();
@@ -36,16 +38,16 @@ const session = () => {
         key='1'
         extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
       >
-        {data?.map((session: { ip: string; uid: string }) => (
-          <div key={session.uid} className='s_m_bx'>
-            <span>
-              <MobileIcon />
-            </span>
+        {data?.map((session: { ip: string; id: string }) => (
+          <div key={session.id} className='s_m_bx'>
+            <DesktopIcon />
             <div className='u_bx'>
               <span className='u_txt'>{session.ip}</span>{" "}
-              <span onClick={removeSession}>
-                <DeleteIcon />
-              </span>
+              {session.id !== cookiesData.sid && (
+                <span onClick={() => handleRemoveSession(session.id)}>
+                  <DeleteIcon />
+                </span>
+              )}
             </div>
           </div>
         ))}
