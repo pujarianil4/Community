@@ -9,7 +9,7 @@ export default function MainPanel({ children, hideScroll }: any) {
 
   return (
     <div
-      style={hideScroll ? { overflow: "hidden" } : { overflow: "scroll" }}
+      style={hideScroll ? { overflow: "hidden" } : { overflow: "auto" }}
       className='main_panel_container'
     >
       {/* <CreatePost />
