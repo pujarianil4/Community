@@ -39,7 +39,8 @@ import { Pagination } from "antd";
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPostModalOpen: boolean;
-  post: IPost;
+  post?: IPost;
+  defaultCommunity?: ICommunity;
 }
 
 export const Img: React.FC<{
@@ -123,6 +124,7 @@ const refetchCommunitySelector = (state: RootState) =>
 const CreatePost: React.FC<Props> = ({
   isPostModalOpen,
   setIsPostModalOpen,
+  defaultCommunity,
 }) => {
   const [{ dispatch, actions }, [user, comminityRefetch]] = useRedux([
     userNameSelector,
@@ -281,6 +283,12 @@ const CreatePost: React.FC<Props> = ({
   }, [comminityRefetch]);
 
   useEffect(() => {
+    if (defaultCommunity?.id) {
+      setSelectedOption(defaultCommunity);
+    }
+  }, [defaultCommunity]);
+
+  useEffect(() => {
     setISDisabled(!content || !selectedOption);
     console.log("DIS", !content || !selectedOption);
   }, [content, selectedOption]);
@@ -405,6 +413,7 @@ const CreatePost: React.FC<Props> = ({
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               selected={selectedOption}
+              defaultCommunity={defaultCommunity}
             />
             <div className='post_editor'>
               <FocusableDiv>

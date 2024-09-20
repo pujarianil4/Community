@@ -17,6 +17,7 @@ interface DropdownWithSearchProps {
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   selected: ICommunity | null;
+  defaultCommunity?: ICommunity;
 }
 
 const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({

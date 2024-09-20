@@ -4,9 +4,14 @@ import CreatePost from "../createPost/CreatePost";
 import FeedCard from "../feedPost/feedPost";
 import UserHead from "../userHead/UserHead";
 
-export default function MainPanel({ children }: any) {
+export default function MainPanel({ children, hideScroll }: any) {
+  console.log("hideScroll", hideScroll);
+
   return (
-    <div className='main_panel_container'>
+    <div
+      style={hideScroll ? { overflow: "hidden" } : { overflow: "scroll" }}
+      className='main_panel_container'
+    >
       {/* <CreatePost />
       <FeedCard />
       <UserHead /> */}
