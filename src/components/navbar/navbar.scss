@@ -174,15 +174,42 @@
     gap: 10px;
     width: 100%;
     padding: 10px;
+
     h4 {
       font-size: 20px;
       margin: 0 0 20px;
     }
     input {
       margin: 12px 0 0;
+      border-radius: 12px;
+      padding: 10px;
+      border: 1px solid var(--tertiary) !important;
+      box-shadow: none !important;
+      &:focus {
+        border: 1px solid var(--primary-border) !important;
+      }
     }
-    button {
+    .login_btn {
+      height: 46px !important;
+      border-radius: 12px;
+    }
+    .signup_btn {
       margin: 20px 0 0;
+      height: 48px !important;
+      border-radius: 12px !important;
+      border: 1px solid var(--tertiary-border) !important;
+      background-color: var(--secondary-bg) !important;
+      color: var(--primary) !important;
+      &:hover {
+        background-color: var(--tertiary) !important;
+        // color: var(--primary-text) !important;
+      }
+      &:disabled {
+        background-color: var(--secondary-bg) !important;
+        color: var(--label-text) !important;
+        opacity: 0.9;
+        cursor: not-allowed !important;
+      }
     }
 
     p {
@@ -248,6 +275,36 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-top: 1.3rem;
+    .ant-collapse {
+      border: 1px solid var(--tertiary-bg);
+      border-radius: 12px;
+      padding: 5px 13px;
+      margin-top: 1rem;
+      background-color: var(--secondary-bg);
+      .ant-collapse-item {
+        .ant-collapse-header {
+          .ant-collapse-expand-icon {
+            display: none;
+          }
+          .ant-collapse-header-text {
+            color: var(--black);
+          }
+          .ant-collapse-extra {
+          }
+        }
+        .ant-collapse-content {
+          border-top: none;
+          background-color: var(--secondary-bg);
+          color: var(--black);
+
+          .ant-collapse-content-box {
+            padding: 0px 13px;
+          }
+        }
+      }
+    }
+
     button {
       padding: 7px 15px;
       background-color: var(--primary);
@@ -302,15 +359,18 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+  margin-top: 1rem;
   .wallet {
     display: flex;
     gap: 10px;
     border: 1px solid var(--primary-border);
-
-    border-radius: 5px;
+    margin-bottom: 10px;
+    border-radius: 12px;
     padding: 10px;
+    align-items: center;
+    cursor: pointer;
     &:hover {
-      background-color: var(--secondary-hov);
+      background-color: var(--tertiary-bg);
     }
   }
 }

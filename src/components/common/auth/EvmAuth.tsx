@@ -15,6 +15,10 @@ import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import NotificationMessage from "../Notification";
+
+import { DropdownLowIcon } from "@/assets/icons";
+import { Collapse } from "antd";
+const { Panel } = Collapse;
 export interface ISignupData {
   username: string;
   name: string;
@@ -119,18 +123,24 @@ export default function EvmAuthComponent({
   }, [isConnected, signUserMessage]);
 
   return (
-    <div className='eth_wallets'>
-      <h2>Ethereum Wallets</h2>
-      <div className='wallet' onClick={openConnectModal}>
-        <Image
-          src='https://www.rainbowkit.com/rainbow.svg'
-          alt=''
-          width={25}
-          height={25}
-        />
-        <span>Rainbowkit</span>
-      </div>
-      {/* {connectors.map((connector) => {
+    <>
+      <Collapse accordion style={{ marginTop: "10px" }}>
+        <Panel
+          header='Ethereum Wallet'
+          key='1'
+          extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
+        >
+          <div className='eth_wallets'>
+            <div className='wallet' onClick={openConnectModal}>
+              <Image
+                src='https://www.rainbowkit.com/rainbow.svg'
+                alt=''
+                width={25}
+                height={25}
+              />
+              <span>Rainbowkit</span>
+            </div>
+            {/* {connectors.map((connector) => {
         return (
           <div onClick={() => connect({ connector })}>
             {" "}
@@ -143,6 +153,9 @@ export default function EvmAuthComponent({
           </div>
         );
       })} */}
-    </div>
+          </div>
+        </Panel>
+      </Collapse>
+    </>
   );
 }
