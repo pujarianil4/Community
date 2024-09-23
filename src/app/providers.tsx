@@ -9,6 +9,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { Provider } from "react-redux";
 import { store } from "@/contexts/store";
 import { SolanaProvider } from "@/config/solanaWallet/SolanaProvider";
+import { CosmosProvider } from "@/config/cosmos/CosmosProvider";
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -17,9 +18,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider modalSize='compact'>
           <SolanaProvider>
-            <AntdRegistry>
-              <Provider store={store}>{children}</Provider>
-            </AntdRegistry>
+            <CosmosProvider>
+              <AntdRegistry>
+                <Provider store={store}>{children}</Provider>
+              </AntdRegistry>
+            </CosmosProvider>
           </SolanaProvider>
         </RainbowKitProvider>
       </QueryClientProvider>

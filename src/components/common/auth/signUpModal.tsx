@@ -14,6 +14,7 @@ import CInput from "../Input";
 import EvmAuthComponent from "./EvmAuth";
 import SolanaAuthComponent from "./SolanaAuth";
 import { Modal } from "antd";
+import CosmosAuthComponent from "./CosmosAuth";
 
 interface ISignUpModal {
   handleCancel: () => void;
@@ -185,6 +186,11 @@ export const SignUpModal = ({
               setUserAuthData={handleUserAuthData}
             />
             <SolanaAuthComponent
+              isSignUp={isSignUp}
+              signUpData={signUpData}
+              setUserAuthData={handleUserAuthData}
+            />
+            <CosmosAuthComponent
               isSignUp={isSignUp}
               signUpData={signUpData}
               setUserAuthData={handleUserAuthData}
