@@ -178,7 +178,6 @@
 
 .cfilter_container {
   width: 120px;
-  margin-bottom: 1.5rem;
   .cfilter {
     // border: 1px solid var(--primary-border);
     color: var(--primary);
@@ -272,5 +271,5 @@
 // Virtual-List
 .virtuoso {
   height: 1100px;
-  overflow: hidden;
+  overflow: auto;
 }

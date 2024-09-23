@@ -95,6 +95,7 @@ export default function ProposalList({
         renderComponent={(index: number, proposal: IProposal) => (
           <ProposalItem key={proposal.id} proposal={proposal} />
         )}
+        footerHeight={80}
       />
       {isLoading && page > 1 && <ProposalItemLoader />}
       {!isLoading && proposals.length === 0 && <EmptyData />}

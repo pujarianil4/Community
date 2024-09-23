@@ -10,6 +10,7 @@ interface IProps {
   renderComponent: any;
   customScrollSelector?: string;
   totalCount?: number;
+  footerHeight?: number;
 }
 export default function VirtualList({
   listData,
@@ -19,6 +20,7 @@ export default function VirtualList({
   limit,
   renderComponent,
   customScrollSelector = "main_panel_container",
+  footerHeight = 50,
 }: IProps) {
   return (
     <Virtuoso
@@ -39,6 +41,10 @@ export default function VirtualList({
       customScrollParent={
         document.querySelector(`.${customScrollSelector}`) as HTMLElement
       }
+      components={{
+        Footer: () => <div style={{ height: `${footerHeight}px` }}></div>,
+      }}
+      followOutput={true}
     />
   );
 }
