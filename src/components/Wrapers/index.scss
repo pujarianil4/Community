@@ -2,7 +2,8 @@
 .main_panel_container {
   flex: 2;
   max-width: 756px;
-  overflow-y: scroll;
+  height: 100%;
+  overflow-y: auto;
   min-width: 370px;
   padding: 20px;
   margin-left: calc((100vw - 1400px) / 2);
