@@ -19,6 +19,8 @@ import NotificationMessage from "../Notification";
 import { DropdownLowIcon } from "@/assets/icons";
 import { Collapse } from "antd";
 const { Panel } = Collapse;
+import { walletIcons } from "@/utils/constants/walletIcons";
+
 export interface ISignupData {
   username: string;
   name: string;
@@ -35,6 +37,8 @@ export default function EvmAuthComponent({
   setUserAuthData,
 }: IEvmAuthComponent) {
   const { isConnected, address } = useAccount();
+  const { connectors, connect, error } = useConnect();
+  console.log("conectors", connectors);
   const { disconnect } = useDisconnect();
   const [{ dispatch, actions }] = useRedux();
   const walletRoute = useSelector(
@@ -131,28 +135,27 @@ export default function EvmAuthComponent({
           extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
         >
           <div className='eth_wallets'>
-            <div className='wallet' onClick={openConnectModal}>
-              <Image
-                src='https://www.rainbowkit.com/rainbow.svg'
-                alt=''
-                width={25}
-                height={25}
-              />
-              <span>Rainbowkit</span>
-            </div>
-            {/* {connectors.map((connector) => {
-        return (
-          <div onClick={() => connect({ connector })}>
-            {" "}
-            <Image
-              src='https://www.rainbowkit.com/rainbow.svg'
-              alt=''
-              width={25}
-              height={25}
-            />{" "}
-          </div>
-        );
-      })} */}
+            {connectors.map((connector: any) => {
+              const rkDetails = connector.rkDetails || {};
+              const connectorName = rkDetails.name || connector.name;
+              const connectorIconUrl =
+                walletIcons[connector.id] || connector.icon;
+              return (
+                <div
+                  key={connector.id}
+                  className='wallet'
+                  onClick={() => connect({ connector })}
+                >
+                  <Image
+                    src={connectorIconUrl}
+                    alt={`${connectorName} logo`}
+                    width={30}
+                    height={30}
+                  />
+                  <span>{connectorName}</span>
+                </div>
+              );
+            })}
           </div>
         </Panel>
       </Collapse>

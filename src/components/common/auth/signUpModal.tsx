@@ -37,9 +37,8 @@ export const SignUpModal = ({
   const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
-    setModalTab(3);
+    setModalTab(1);
     console.log("modal", modalTab, isModalOpen);
-
     return () => setModalTab(3);
   }, [isModalOpen]);
 

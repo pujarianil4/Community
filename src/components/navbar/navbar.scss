@@ -370,7 +370,10 @@
     align-items: center;
     cursor: pointer;
     &:hover {
-      background-color: var(--tertiary-bg);
+      background-color: var(--tertiary-bg) !important;
+    }
+    img {
+      border-radius: 10px;
     }
   }
 }
