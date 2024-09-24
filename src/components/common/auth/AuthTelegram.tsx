@@ -61,7 +61,7 @@ const TelegramAuth = () => {
                 return;
               }
 
-              updateUser({ [data?.id]: String(data.id) })
+              updateUser({ telegram: String(data.id) })
                 .then(() => {
                   refetch();
                   NotificationMessage("success", " Telegram Profile linked.");
@@ -90,7 +90,7 @@ const TelegramAuth = () => {
   };
 
   const handleRemove = () => {
-    updateUser({ tid: null })
+    updateUser({ telegram: null })
       .then(() => {
         refetch();
         NotificationMessage("success", "Telegram Profile unlinked.");
@@ -104,9 +104,9 @@ const TelegramAuth = () => {
     <div className='social-connections'>
       <div className='s_m_bx'>
         <TelegramIcon />
-        {userData?.tid ? (
+        {userData?.telegram ? (
           <div className='u_bx'>
-            <span className='u_txt'>@{userData?.tid}</span>
+            <span className='u_txt'>@{userData?.telegram}</span>
             <span onClick={handleRemove}>
               <DeleteIcon />
             </span>

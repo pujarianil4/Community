@@ -27,7 +27,7 @@ const discordAuth = () => {
   console.log("userdata", userData);
 
   const handleRemove = () => {
-    updateUser({ did: null })
+    updateUser({ discord: null })
       .then(() => {
         refetch();
         NotificationMessage("success", "Discord Profile unlinked.");
@@ -42,9 +42,9 @@ const discordAuth = () => {
     <div className='social-connections'>
       <div className='s_m_bx'>
         <DiscordIcon />
-        {userData?.did ? (
+        {userData?.discord ? (
           <div className='u_bx'>
-            <span className='u_txt'>@{userData?.did}</span>
+            <span className='u_txt'>@{userData?.discord}</span>
             <span onClick={handleRemove}>
               <DeleteIcon />
             </span>

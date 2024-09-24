@@ -13,7 +13,7 @@ const discord = () => {
     if (code) {
       fetchDiscordData(code)
         .then((user) => {
-          updateUser({ did: String(user.id) })
+          updateUser({ discord: String(user.id) })
             .then((res) => {
               NotificationMessage("success", "Discord Profile linked.");
             })

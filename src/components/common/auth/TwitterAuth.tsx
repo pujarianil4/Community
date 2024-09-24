@@ -37,7 +37,7 @@ const twitterAuth = () => {
   console.log("userdata", userData);
 
   const handleRemove = () => {
-    updateUser({ xid: null })
+    updateUser({ x: null })
       .then(() => {
         refetch();
         NotificationMessage("success", "X (Twitter) Profile unlinked.");
@@ -51,9 +51,9 @@ const twitterAuth = () => {
     <div className='social-connections'>
       <div className='s_m_bx'>
         <TwitterIcon />
-        {userData?.xid ? (
+        {userData?.x ? (
           <div className='u_bx'>
-            <span className='u_txt'>@{userData?.xid}</span>
+            <span className='u_txt'>@{userData?.x}</span>
             <span onClick={handleRemove}>
               <DeleteIcon />
             </span>
