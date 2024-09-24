@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     const clientId = process.env.NEXT_PUBLIC_TWITTER_ID as string;
     const clientSecret = process.env.NEXT_PUBLIC_TWITTER_SECRET as string;
     // const redirectUri = encodeURI(`${currentDomain}/api/twitter`);
-    const redirectUri = "https://app-community.vercel.app//api/twitter"; // Todo
+    const redirectUri = "https://app-community.vercel.app/api/twitter"; // Todo
     console.log("redirect", redirectUri);
     const codeVerifier = process.env.NEXT_PUBLIC_X_CODEVERIFIER as string;
 
