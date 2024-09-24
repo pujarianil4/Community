@@ -22,7 +22,7 @@ export default function PageWraper({
       <Navbar />
       <Wraper>
         <SideBar />
-        <MainPanel hideScroll={hideScroll}>{children}</MainPanel>
+        <MainPanel>{children}</MainPanel>
         {!hideRightPanel && <RightPanel />}
       </Wraper>
     </div>

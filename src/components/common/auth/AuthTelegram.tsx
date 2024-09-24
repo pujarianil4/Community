@@ -36,7 +36,6 @@ declare global {
 
 const TelegramAuth = () => {
   const botID = process.env.NEXT_PUBLIC_TELEGRAM_BOT_ID;
-
   const {
     isLoading: userDataLoading,
     data: userData,
