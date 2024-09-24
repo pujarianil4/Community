@@ -63,7 +63,7 @@ const TelegramAuth = () => {
 
               // Ensure that data.id and data.username are defined and valid
               if (
-                typeof data.id === "string" &&
+                typeof data.id === "number" &&
                 typeof data.username === "string"
               ) {
                 updateUser({
