@@ -11,4 +11,5 @@ export const walletIcons: Record<string, string> = {
   walletConnect: walletIcon,
   trust: trustIcon,
   coin98: coin98,
+  coinbaseWalletSDK: coinbaseIcon,
 };

@@ -5,6 +5,7 @@ import {
   coin98Wallet,
   metaMaskWallet,
   coinbaseWallet,
+  walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { createConfig, http } from "wagmi";
 import {
@@ -15,6 +16,7 @@ import {
   polygon,
   sepolia,
 } from "wagmi/chains";
+
 // import { coinbaseWallet, metaMask } from 'wagmi/connectors';
 
 const projectId = "YOUR_PROJECT_ID";
@@ -27,6 +29,7 @@ const connectors = connectorsForWallets(
       wallets: [
         metaMaskWallet,
         coinbaseWallet,
+        walletConnectWallet,
         rabbyWallet,
         coin98Wallet,
         trustWallet,
