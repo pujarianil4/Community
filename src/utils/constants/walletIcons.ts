@@ -7,7 +7,7 @@ import metamask from "@/assets/walletIcon/metamask.svg";
 export const walletIcons: Record<string, string> = {
   rabby: rabbyIcon,
   metaMask: metamask,
-  coinbaseWalletSDK: coinbaseIcon,
+  coinbase: coinbaseIcon,
   walletConnect: walletIcon,
   trust: trustIcon,
   coin98: coin98,

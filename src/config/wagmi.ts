@@ -1,4 +1,12 @@
-import { getDefaultConfig, getDefaultWallets } from "@rainbow-me/rainbowkit";
+import { connectorsForWallets } from "@rainbow-me/rainbowkit";
+import {
+  rabbyWallet,
+  trustWallet,
+  coin98Wallet,
+  metaMaskWallet,
+  coinbaseWallet,
+} from "@rainbow-me/rainbowkit/wallets";
+import { createConfig, http } from "wagmi";
 import {
   arbitrum,
   base,
@@ -7,37 +15,40 @@ import {
   polygon,
   sepolia,
 } from "wagmi/chains";
+// import { coinbaseWallet, metaMask } from 'wagmi/connectors';
 
-import {
-  rabbyWallet,
-  trustWallet,
-  coin98Wallet,
-  metaMaskWallet,
-  coinbaseWallet,
-} from "@rainbow-me/rainbowkit/wallets";
+const projectId = "YOUR_PROJECT_ID";
+const appName = "RainbowKit demo";
 
-export const wagmiConfig = getDefaultConfig({
-  appName: "RainbowKit demo",
-  projectId: "YOUR_PROJECT_ID",
-  chains: [
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [sepolia] : []),
-  ],
-  wallets: [
+const connectors = connectorsForWallets(
+  [
     {
-      groupName: "Recommended",
+      groupName: "Popular",
       wallets: [
         metaMaskWallet,
         coinbaseWallet,
         rabbyWallet,
+        coin98Wallet,
         trustWallet,
-        // coin98Wallet,
       ],
     },
   ],
+  {
+    projectId,
+    appName,
+  }
+);
+
+export const wagmiConfig = createConfig({
+  connectors: [...connectors],
+  chains: [mainnet, polygon, optimism, arbitrum, base],
+  transports: {
+    [mainnet.id]: http(),
+    [polygon.id]: http(),
+    [optimism.id]: http(),
+    [arbitrum.id]: http(),
+    [base.id]: http(),
+  },
+  multiInjectedProviderDiscovery: false,
   ssr: true,
 });
