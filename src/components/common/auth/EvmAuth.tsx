@@ -138,8 +138,9 @@ export default function EvmAuthComponent({
             {connectors.map((connector: any) => {
               const rkDetails = connector.rkDetails || {};
               const connectorName = rkDetails.name || connector.name;
+              const connectorId = rkDetails.id || connector.id;
               const connectorIconUrl =
-                walletIcons[connector.id] || connector.icon;
+                walletIcons[connectorId] || connector.icon;
               return (
                 <div
                   key={connector.id}
