@@ -150,7 +150,7 @@ export default function EvmAuthComponent({
     <>
       <Collapse accordion style={{ marginTop: "10px" }}>
         <Panel
-          header='Ethereum Wallet'
+          header='Ethereum Wallets'
           key='1'
           extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
         >
@@ -176,9 +176,7 @@ export default function EvmAuthComponent({
                       width={30}
                       height={30}
                     />
-                    <span>
-                      {connectorName} {i}
-                    </span>
+                    <span>{connectorName}</span>
                   </div>
                 );
               })}

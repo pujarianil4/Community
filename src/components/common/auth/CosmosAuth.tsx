@@ -8,13 +8,16 @@ import {
 } from "@/services/api/api";
 import { sigMsg } from "@/utils/constants";
 import { setClientSideCookie } from "@/utils/helpers";
-import { useChain, useWallet } from "@cosmos-kit/react";
+import { useChain, useChainWallet, useWallet } from "@cosmos-kit/react";
 import Image from "next/image";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { wallets } from "@cosmos-kit/keplr";
 
+import { DropdownLowIcon } from "@/assets/icons";
 import NotificationMessage from "../Notification";
+import { Collapse } from "antd";
+import { cosmosWallets } from "@/config/cosmos/CosmosProvider";
+const { Panel } = Collapse;
 export interface ISignupData {
   username: string;
   name: string;
@@ -31,6 +34,7 @@ export default function CosmosAuthComponent({
   setUserAuthData,
 }: ICosmosAuthComponent) {
   const chainContext = useChain("cosmoshub");
+  const context1 = useChainWallet("cosmoshub", "keplr-extension", true);
 
   const {
     status,
@@ -43,14 +47,19 @@ export default function CosmosAuthComponent({
     wallet,
     signArbitrary,
     isWalletConnected,
-  } = chainContext;
+  } = context1;
+  const ref = useRef<any>(null);
+  ref.current = context1;
   const [{ dispatch, actions }] = useRedux();
   const walletRoute = useSelector(
     (state: RootState) => state.common.walletRoute
   );
   const [signature, setSignature] = useState<string | null>(null);
 
+  const [isConnected, setIsConnected] = useState(false);
+
   const signUserMessage = useCallback(async () => {
+    console.log("signedMessage", address, isWalletConnected);
     if (address && isWalletConnected) {
       try {
         const { signature: signedMessage } = await signArbitrary(
@@ -119,6 +128,7 @@ export default function CosmosAuthComponent({
         }
 
         disconnect();
+        setIsConnected(false);
       } catch (error: any) {
         disconnect();
         console.error("Error signing the message:", error);
@@ -138,50 +148,54 @@ export default function CosmosAuthComponent({
         // NotificationMessage("error", msg);
       }
     }
-  }, [isWalletConnected]);
+  }, [isWalletConnected, isConnected]);
 
-  // const handleConnect = async () => {
-  //   try {
-  //     await wallets[0].connect();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // const handleWalletSelect = (wallet: any) => {
-  //   wallet
-  //     .connect() // Connect using wallet name
-  //     .then((res) => {
-  //       console.log(`Connected to ${wallet}`, res);
-  //     })
-  //     .catch((err) => {
-  //       console.error(`Failed to connect to ${wallet.name}:`, err);
-  //     });
-  // };
+  const handleConnect = async () => {
+    try {
+      if (isWalletConnected) {
+        await signUserMessage();
+      } else {
+        console.log("isWalletConnected", isWalletConnected, ref.current);
+        await disconnect();
+        console.log("isWalletConnected1", isWalletConnected, ref.current);
+        await connect();
+        console.log("isWalletConnected2", isWalletConnected, ref.current);
+        setIsConnected(true);
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
 
   React.useEffect(() => {
-    console.log("wallets", wallets[0]);
-
-    if (isWalletConnected) {
+    if (isConnected) {
       signUserMessage();
     }
-  }, [isWalletConnected, signUserMessage]);
+  }, [isConnected, signUserMessage]);
 
   return (
-    <div className='eth_wallets'>
-      <button onClick={connect}>{wallets[0].walletInfo.prettyName}</button>
-      {/* <ul>
-        {wallets.map((wallet: any) => (
-          <li key={wallet.name}>
-            <button onClick={() => handleWalletSelect(wallet)}>
-              {wallet.logo && (
-                <img src={wallet.logo} alt={wallet.name} width='30' />
-              )}
-              {wallet.walletInfo.prettyName}
-            </button>
-          </li>
-        ))}
-      </ul> */}
+    <div>
+      <Collapse accordion style={{ marginTop: "10px" }}>
+        <Panel
+          header='Cosmos Wallets'
+          key='1'
+          extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
+        >
+          <div className='solana_wallets'>
+            <div key={address} className='wallet' onClick={handleConnect}>
+              <Image
+                alt={wallet.prettyName}
+                src={wallet.logo || ""}
+                width={30}
+                height={30}
+              />
+              <span>{wallet.prettyName}</span>
+            </div>
+
+            {/* <SolanaWalletButton /> */}
+          </div>
+        </Panel>
+      </Collapse>
     </div>
   );
 }

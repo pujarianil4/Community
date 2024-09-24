@@ -143,7 +143,7 @@ const SolanaAuthComponent = ({
     <>
       <Collapse accordion style={{ marginTop: "10px" }}>
         <Panel
-          header='Solana Wallet'
+          header='Solana Wallets'
           key='1'
           extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
         >
