@@ -270,59 +270,6 @@
       opacity: 0.95;
     }
   }
-
-  .wallet_modal {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 1.3rem;
-    .ant-collapse {
-      border: 1px solid var(--tertiary-bg);
-      border-radius: 12px;
-      padding: 5px 13px;
-      margin-top: 1rem;
-      background-color: var(--secondary-bg);
-      .ant-collapse-item {
-        .ant-collapse-header {
-          .ant-collapse-expand-icon {
-            display: none;
-          }
-          .ant-collapse-header-text {
-            color: var(--black);
-          }
-          .ant-collapse-extra {
-          }
-        }
-        .ant-collapse-content {
-          border-top: none;
-          background-color: var(--secondary-bg);
-          color: var(--black);
-
-          .ant-collapse-content-box {
-            padding: 0px 13px;
-          }
-        }
-      }
-    }
-
-    button {
-      padding: 7px 15px;
-      background-color: var(--primary);
-      border: 0px;
-      border-radius: 5px;
-      color: var(--primary-text);
-      font-weight: 500;
-      font-size: 18px;
-      cursor: pointer;
-      &:hover {
-        background-color: var(--primary-hover);
-      }
-      &:disabled {
-        cursor: not-allowed;
-        opacity: 0.95;
-      }
-    }
-  }
 }
 
 .user_popover {
@@ -525,6 +472,58 @@
 
     span {
       width: fit-content;
+    }
+  }
+}
+.wallet_modal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 1.3rem;
+  .ant-collapse {
+    border: 1px solid var(--tertiary-bg);
+    border-radius: 12px;
+    padding: 5px 13px;
+    margin-top: 1rem;
+    background-color: var(--secondary-bg);
+    .ant-collapse-item {
+      .ant-collapse-header {
+        .ant-collapse-expand-icon {
+          display: none;
+        }
+        .ant-collapse-header-text {
+          color: var(--black);
+        }
+        .ant-collapse-extra {
+        }
+      }
+      .ant-collapse-content {
+        border-top: none;
+        background-color: var(--secondary-bg);
+        color: var(--black);
+
+        .ant-collapse-content-box {
+          padding: 0px 13px;
+        }
+      }
+    }
+  }
+
+  button {
+    padding: 7px 15px;
+    background-color: var(--primary);
+    border: 0px;
+    border-radius: 5px;
+    color: var(--primary-text);
+    font-weight: 500;
+    font-size: 18px;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--primary-hover);
+    }
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.95;
     }
   }
 }

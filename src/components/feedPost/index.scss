@@ -9,23 +9,32 @@
   margin: 1.5rem 0 0 0;
   color: var(--primary-text);
   box-sizing: border-box;
-
+  @include lessThan(sm) {
+    padding: 16px 16px;
+  }
   .content {
     margin: 12px 0 12px 56px;
     padding-bottom: 8px;
     border-bottom: 1px solid var(--primary-border);
     cursor: pointer;
+    @include lessThan(sm) {
+      border-bottom: none;
+      margin: 8px 0 8px 56px;
+    }
     .post_image {
       position: relative;
       width: 100%;
       aspect-ratio: 1;
     }
     p {
-      font-size: 15px;
+      font-size: $font-size-md;
       text-align: left;
       word-spacing: 1px;
       line-height: 1.2;
       margin-bottom: 4px;
+      @include lessThan(sm) {
+        font-size: $font-size-sm;
+      }
     }
     li {
       margin: 4px 0;

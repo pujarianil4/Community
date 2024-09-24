@@ -1,3 +1,4 @@
+@import "/src/styles";
 .carousel-container {
   position: relative;
   overflow: hidden;
@@ -8,6 +9,10 @@
   margin: 12px 0;
   max-width: 560px;
   border-radius: 8px;
+
+  @include lessThan(sm) {
+    height: 225px;
+  }
 }
 
 .carousel {

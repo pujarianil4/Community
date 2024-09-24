@@ -16,7 +16,7 @@
     gap: 1.5rem;
   }
   @include lessThan(sm) {
-    gap: 0.8rem;
+    gap: 1rem;
   }
 
   a {

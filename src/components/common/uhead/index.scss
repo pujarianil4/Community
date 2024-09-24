@@ -1,3 +1,4 @@
+@import "/src/styles";
 .user_head {
   display: flex;
   align-items: center;
@@ -23,15 +24,21 @@
   a,
   p {
     font-size: 15px;
+    @include lessThan(sm) {
+      font-size: $font-size-xxsm;
+    }
   }
 
   .names {
     display: flex;
     flex-direction: column;
     .user_name {
-      font-size: 20px;
-      font-weight: 500;
+      font-size: $font-size-md;
+      font-weight: $font-weight-semi-bold;
       color: var(--primary-text);
+      @include lessThan(sm) {
+        font-size: $font-size-xsm;
+      }
     }
 
     .community_name {
@@ -46,12 +53,19 @@
     margin-bottom: auto;
     margin-top: 8px;
     color: var(--label-text);
+    @include lessThan(sm) {
+      margin-bottom: 13px;
+      margin-top: 0px;
+    }
   }
   .more {
     margin-left: auto;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    @include lessThan(sm) {
+      gap: 1px;
+    }
     svg {
       fill: var(--label-text);
     }
@@ -64,9 +78,13 @@
       display: flex;
       align-items: center;
       gap: 5px;
+
       span {
         color: var(--label-text);
         font-size: 10px;
+        @include lessThan(sm) {
+          font-size: $font-size-xxsm;
+        }
       }
     }
   }
