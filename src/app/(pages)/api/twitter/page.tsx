@@ -15,7 +15,12 @@ export default function TwitterCallback() {
         .post("/api/callback/twitter", { code })
         .then((response) => {
           console.log("x data", response.data.user);
-          updateUser({ x: String(response.data.user.id) })
+          updateUser({
+            x: {
+              id: response.data.user.id,
+              username: response.data.user.username,
+            },
+          })
             .then((res) => {
               NotificationMessage("success", "Twitter Profile linked.");
             })

@@ -51,9 +51,9 @@ const twitterAuth = () => {
     <div className='social-connections'>
       <div className='s_m_bx'>
         <TwitterIcon />
-        {userData?.x ? (
+        {userData?.x?.id ? (
           <div className='u_bx'>
-            <span className='u_txt'>@{userData?.x}</span>
+            <span className='u_txt'>@{userData?.x?.username}</span>
             <span onClick={handleRemove}>
               <DeleteIcon />
             </span>

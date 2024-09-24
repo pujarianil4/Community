@@ -13,9 +13,9 @@ export interface IUser {
   cta?: string;
   uta?: string;
   desc?: string;
-  telegram?: string | null;
-  discord?: string | null;
-  x?: string | null;
+  telegram?: { id: number; username: string } | string | null;
+  discord?: { id: string; username: string } | string | null;
+  x?: { id: string; username: string } | string | null;
   token?: string;
 }
 

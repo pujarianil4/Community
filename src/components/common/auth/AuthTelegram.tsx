@@ -61,18 +61,31 @@ const TelegramAuth = () => {
                 return;
               }
 
-              updateUser({ telegram: String(data.id) })
-                .then(() => {
-                  refetch();
-                  NotificationMessage("success", " Telegram Profile linked.");
+              // Ensure that data.id and data.username are defined and valid
+              if (
+                typeof data.id === "string" &&
+                typeof data.username === "string"
+              ) {
+                updateUser({
+                  telegram: { id: data.id, username: data.username },
                 })
-                .catch((err) => {
-                  console.error(`Failed to link Telgram Profile:`, err);
-                  NotificationMessage(
-                    "error",
-                    "Failed to link Telegram Profile."
-                  );
-                });
+                  .then(() => {
+                    refetch();
+                    NotificationMessage("success", "Telegram Profile linked.");
+                  })
+                  .catch((err) => {
+                    console.error("Failed to link Telegram Profile:", err);
+                    NotificationMessage(
+                      "error",
+                      "Failed to link Telegram Profile."
+                    );
+                  });
+              } else {
+                console.error("Invalid Telegram data received:", data);
+                NotificationMessage("error", "Invalid Telegram data.");
+                reject("Invalid Telegram data");
+                return;
+              }
 
               console.log("Telegram data:", data);
               resolve(data);
@@ -104,9 +117,9 @@ const TelegramAuth = () => {
     <div className='social-connections'>
       <div className='s_m_bx'>
         <TelegramIcon />
-        {userData?.telegram ? (
+        {userData?.telegram?.id ? (
           <div className='u_bx'>
-            <span className='u_txt'>@{userData?.telegram}</span>
+            <span className='u_txt'>@{userData?.telegram?.id}</span>
             <span onClick={handleRemove}>
               <DeleteIcon />
             </span>
