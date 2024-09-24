@@ -4,12 +4,12 @@ import { getUserData } from "@/services/api/api";
 import { updateUser } from "@/services/api/api";
 import NotificationMessage from "@/components/common/Notification";
 import { AddIcon, TwitterIcon, DeleteIcon } from "@/assets/icons";
-
+import { getCurrentDomain } from "@/utils/helpers";
 async function handleTwitterLogin() {
+  const currentDomain = getCurrentDomain();
   const rootUrl = "https://twitter.com/i/oauth2/authorize";
-
   const clientId = process.env.NEXT_PUBLIC_TWITTER_ID as string;
-  const redirectUri = process.env.NEXT_PUBLIC_X_REDIRECT_URL as string;
+  const redirectUri = `${currentDomain}/api/twitter`;
   const state = "state";
   const codeChallenge = process.env.NEXT_PUBLIC_X_CODEVERIFIER as string;
 

@@ -4,15 +4,17 @@ import { getUserData } from "@/services/api/api";
 import { DiscordIcon, AddIcon, DeleteIcon } from "@/assets/icons";
 import { updateUser } from "@/services/api/api";
 import NotificationMessage from "@/components/common/Notification";
+import { getCurrentDomain } from "@/utils/helpers";
 
 async function handleDiscordLogin() {
+  const currentDomain = getCurrentDomain();
   const clientId = process.env.NEXT_PUBLIC_DISCORD_ID ?? "default_client_id";
   const redirectUri = encodeURIComponent(
-    process.env.NEXT_PUBLIC_REDIRECT_URL ??
-      "http://localhost:3000/api/callback/discord"
+    `${currentDomain}/api/callback/discord`
   );
   const oauthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=identify`;
 
+  // Redirect to Discord OAuth
   window.location.href = oauthUrl;
 }
 
