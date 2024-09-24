@@ -135,27 +135,29 @@ export default function EvmAuthComponent({
           extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
         >
           <div className='eth_wallets'>
-            {connectors.map((connector: any) => {
-              const rkDetails = connector.rkDetails || {};
-              const connectorName = rkDetails.name || connector.name;
-              const connectorIconUrl =
-                walletIcons[connector.id] || connector.icon;
-              return (
-                <div
-                  key={connector.id}
-                  className='wallet'
-                  onClick={() => connect({ connector })}
-                >
-                  <Image
-                    src={connectorIconUrl}
-                    alt={`${connectorName} logo`}
-                    width={30}
-                    height={30}
-                  />
-                  <span>{connectorName}</span>
-                </div>
-              );
-            })}
+            {connectors
+              .filter((cn: any, i: number) => i != 0)
+              .map((connector: any) => {
+                const rkDetails = connector.rkDetails || {};
+                const connectorName = rkDetails.name || connector.name;
+                const connectorIconUrl =
+                  walletIcons[connector.id] || connector.icon;
+                return (
+                  <div
+                    key={connector.id}
+                    className='wallet'
+                    onClick={() => connect({ connector })}
+                  >
+                    <Image
+                      src={connectorIconUrl}
+                      alt={`${connectorName} logo`}
+                      width={30}
+                      height={30}
+                    />
+                    <span>{connectorName}</span>
+                  </div>
+                );
+              })}
           </div>
         </Panel>
       </Collapse>

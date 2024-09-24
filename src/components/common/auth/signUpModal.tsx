@@ -37,8 +37,8 @@ export const SignUpModal = ({
   const [isSignUp, setIsSignUp] = useState(false);
 
   useEffect(() => {
-    setModalTab(1);
-    console.log("modal", modalTab, isModalOpen);
+    setModalTab(3);
+
     return () => setModalTab(3);
   }, [isModalOpen]);
 
@@ -87,7 +87,7 @@ export const SignUpModal = ({
       setModalTab(2);
     } else if (user.error) {
       setSignUpData({ username: "", name: "" });
-      setModalTab(1);
+      setModalTab(3);
       setIsSignUp(false);
       handleCancel();
     } else {
@@ -96,7 +96,7 @@ export const SignUpModal = ({
       // dispatch(actions.setUserData(user));
       // dispatch(actions.setRefetchUser(true));
       setSignUpData({ username: "", name: "" });
-      setModalTab(1);
+      setModalTab(3);
       setIsSignUp(false);
       handleCancel();
     }
@@ -167,7 +167,7 @@ export const SignUpModal = ({
             </CButton>
             <p>
               Already have account?{" "}
-              <span onClick={() => setModalTab(1)}>LogIn</span>
+              <span onClick={() => setModalTab(3)}>LogIn</span>
             </p>
           </div>
         )}
