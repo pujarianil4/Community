@@ -61,13 +61,15 @@ const TelegramAuth = () => {
                 return;
               }
 
-              // Ensure that data.id and data.username are defined and valid
               if (
                 typeof data.id === "number" &&
                 typeof data.username === "string"
               ) {
                 updateUser({
-                  telegram: { id: data.id, username: data.username },
+                  telegram: {
+                    id: String(data.id),
+                    username: data.username,
+                  },
                 })
                   .then(() => {
                     refetch();
