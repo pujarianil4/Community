@@ -39,7 +39,7 @@ const ShareButton: React.FC<ShareModalProps> = ({
 
   // Copy link function
   const handleCopyLink = () => {
-    navigator.clipboard
+    window.navigator.clipboard
       .writeText(postUrl)
       .then(() => {
         message.success("Link copied to clipboard!");
