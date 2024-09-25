@@ -117,7 +117,7 @@ export const fetchUser = async (username: string) => {
   }
   try {
     const response = await api.get(`/users/uname/${username}?uid=${uid}`);
-    return response.data[0];
+    return response.data;
     // const isFollowed = await isUserFollowed({
     //   fwid: response?.data?.id,
     //   type: "u",
@@ -180,12 +180,14 @@ export const createCommunity = async (data: any) => {
 
 export const fetchCommunityByCname = async (cName: string) => {
   const uid = store.getState().user?.uid;
+
+  
   if (!cName) {
     return null;
   }
   try {
     const response = await api.get(`/community/cname/${cName}?uid=${uid}`);
-    return response.data[0];
+    return response.data;
     // if (response.data) {
     //   if (response?.data?.id) {
     //     isFollowed = await isUserFollowed({

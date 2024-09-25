@@ -48,12 +48,14 @@ export default function EvmAuthComponent({
   const [signature, setSignature] = useState<string | null>(null);
 
   const signUserMessage = useCallback(async () => {
-    console.log("signedMessage", "tiger", isConnected);
-    if (isConnected) {
+    console.log("signedMessage", "tiger", isConnected, walletRoute, isSignUp);
+    if (true) {
       try {
         const signedMessage = await getSignMessage(sigMsg);
         console.log("signedMessage", signedMessage);
         setSignature(signedMessage || "");
+        disconnect();
+        localStorage.clear();
         let response;
         if (walletRoute == "auth" && isSignUp) {
           response = await handleSignup(
@@ -97,39 +99,52 @@ export default function EvmAuthComponent({
           });
           setUserAuthData(response);
         }
-
-        disconnect();
       } catch (error: any) {
         disconnect();
+        localStorage.clear();
         console.error("Error signing the message:", error);
         const msg = error.response.data.message;
         const code = error.response.data.statusCode;
-        console.log(
-          "error",
-          msg,
-          code,
-          msg == "User not Registered!",
-          code == 404
-        );
 
         if (msg == "User not Registered!" && code == 404) {
           setUserAuthData({ notRegistered: true });
+        } else {
+          setUserAuthData({ error: msg });
         }
         // NotificationMessage("error", msg);
       }
     }
   }, [isConnected]);
 
-  React.useEffect(() => {
-    if (isConnected) {
-      signUserMessage();
-    }
-  }, [isConnected, signUserMessage]);
+  const handleWalletClick = useCallback(
+    async (connector: any) => {
+      try {
+        connect(
+          { connector },
+          {
+            onSuccess: async (data) => {
+              console.log("datasuccess", data);
+              await signUserMessage();
+              return;
+            },
+          }
+        );
+        if (isConnected) {
+          await signUserMessage();
+        }
+        // After successful connection, sign the message
+      } catch (error) {
+        console.error("Error connecting wallet or signing message:", error);
+      }
+    },
+    [connect, signUserMessage, isConnected]
+  );
 
-  interface WalletItem {
-    rkDetails?: { id: string }; // Define as per your actual structure
-    [key: string]: any; // Add more specific types if needed
-  }
+  // React.useEffect(() => {
+  //   if (isConnected) {
+  //     signUserMessage();
+  //   }
+  // }, [isConnected, signUserMessage]);
 
   function filterDuplicates(walletArray: any) {
     const seenIds = new Set<string>();
@@ -150,7 +165,7 @@ export default function EvmAuthComponent({
     <>
       <Collapse accordion style={{ marginTop: "10px" }}>
         <Panel
-          header='Ethereum Wallet'
+          header='Ethereum Wallets'
           key='1'
           extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
         >
@@ -166,9 +181,9 @@ export default function EvmAuthComponent({
                   connector.icon;
                 return (
                   <div
-                    key={connector.id}
+                    key={rkDetails?.id}
                     className='wallet'
-                    onClick={() => connect({ connector })}
+                    onClick={() => handleWalletClick(connector)}
                   >
                     <Image
                       src={connectorIconUrl}

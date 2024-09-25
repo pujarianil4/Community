@@ -13,6 +13,13 @@ import CInput from "../Input";
 import EvmAuthComponent from "./EvmAuth";
 import SolanaAuthComponent from "./SolanaAuth";
 import { Modal } from "antd";
+
+import dynamic from "next/dynamic";
+
+// Dynamically import TronAuthComponent, disabling SSR
+const TronAuthComponent = dynamic(() => import("./TronAuth"), {
+  ssr: false,
+});
 interface ISignUpModal {
   handleCancel: () => void;
   isModalOpen: boolean;
@@ -180,6 +187,12 @@ export const SignUpModal = ({
             />
 
             <SolanaAuthComponent
+              isSignUp={isSignUp}
+              signUpData={signUpData}
+              setUserAuthData={handleUserAuthData}
+            />
+
+            <TronAuthComponent
               isSignUp={isSignUp}
               signUpData={signUpData}
               setUserAuthData={handleUserAuthData}

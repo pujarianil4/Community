@@ -24,8 +24,11 @@ import { GoUnlink } from "react-icons/go";
 
 // const maxCharCount = 300;
 
-const extensions = [
+const createExtensions = (placeHolder: string) => [
   StarterKit,
+  Placeholder.configure({
+    placeholder: "type here...",
+  }),
   Link.configure({
     openOnClick: true,
     autolink: true,
@@ -37,9 +40,6 @@ const extensions = [
       rel: "noopener noreferrer",
       target: "_blank",
     },
-  }),
-  Placeholder.configure({
-    placeholder: "type here...",
   }),
 ];
 
@@ -67,7 +67,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   const [selectedText, setSelectedText] = useState<string>("");
 
   const editor = useEditor({
-    extensions,
+    extensions: createExtensions(placeHolder),
     content: content,
     onUpdate: ({ editor }) => {
       const currentText = editor.getText();
