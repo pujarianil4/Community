@@ -1,3 +1,4 @@
+@import "/src/styles";
 .CButton {
   padding: 7px 15px !important;
   background-color: var(--primary) !important;
@@ -178,6 +179,9 @@
 
 .cfilter_container {
   width: 120px;
+  @include lessThan(sm) {
+    width: 100px;
+  }
   .cfilter {
     // border: 1px solid var(--primary-border);
     color: var(--primary);
@@ -188,9 +192,14 @@
     padding-right: 25px;
     position: relative;
     background: var(--secondary-bg);
+    display: flex;
+
     span {
       text-transform: capitalize;
-      font-size: 14px;
+      font-size: $font-size-sm;
+      @include lessThan(sm) {
+        font-size: $font-size-xsm;
+      }
     }
     &:hover {
       span {
@@ -204,6 +213,10 @@
   svg {
     position: absolute;
     right: 5px;
+    @include lessThan(sm) {
+      width: 16px;
+      height: 16px;
+    }
   }
 }
 
@@ -227,6 +240,12 @@
       background-color: var(--tertiary-bg);
       .ant-popover-inner-content {
         color: var(--primary-text);
+        @include lessThan(md) {
+          font-size: $font-size-sm;
+        }
+        @include lessThan(sm) {
+          font-size: $font-size-xsm;
+        }
       }
     }
   }
@@ -272,4 +291,8 @@
 .virtuoso {
   height: 1100px;
   overflow: auto;
+
+  @include lessThan(md) {
+    margin-top: -15px;
+  }
 }

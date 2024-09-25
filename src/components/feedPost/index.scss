@@ -12,14 +12,19 @@
   @include lessThan(sm) {
     padding: 16px 16px;
   }
+  @media only screen and (max-width: 350px) {
+    width: 94%;
+  }
   .content {
     margin: 12px 0 12px 56px;
     padding-bottom: 8px;
     border-bottom: 1px solid var(--primary-border);
     cursor: pointer;
-    @include lessThan(sm) {
+    @include lessThan(md) {
       border-bottom: none;
-      margin: 8px 0 8px 56px;
+    }
+    @include lessThan(sm) {
+      margin: 8px 0 8px 38px;
     }
     .post_image {
       position: relative;
@@ -32,6 +37,9 @@
       word-spacing: 1px;
       line-height: 1.2;
       margin-bottom: 4px;
+      @include lessThan(lg) {
+        font-size: $font-size-md;
+      }
       @include lessThan(sm) {
         font-size: $font-size-sm;
       }
@@ -41,9 +49,12 @@
       margin-left: 16px;
     }
 
-    @include lessThan(xl) {
-      margin-left: 0;
-    }
+    // @include lessThan(xl) {
+    //   margin-left: 0;
+    // }
+    // @include lessThan(md) {
+    //   margin-left: 40px;
+    // }
   }
 }
 
@@ -58,6 +69,9 @@
   display: flex;
   justify-content: center;
   position: relative;
+  @include lessThan(md) {
+    height: auto;
+  }
 
   .imgbg {
     position: absolute;

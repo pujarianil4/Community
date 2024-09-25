@@ -4,29 +4,42 @@
   justify-content: space-between;
 
   // justify-content: space-between;
-
   width: 80%;
   margin: auto;
   margin-top: 16px;
+  // @include lessThan(xl) {
+  //   margin-left: 0;
+  // }
   @include lessThan(xl) {
-    margin-left: 0;
+    gap: 12px;
   }
-
   @include lessThan(lg) {
-    gap: 1.5rem;
-  }
-  @include lessThan(sm) {
     gap: 1rem;
   }
-
+  @include lessThan(sm) {
+    margin-top: 4px;
+    gap: 1.2rem;
+  }
+  @media only screen and (max-width: 350px) {
+    gap: 0.8rem;
+  }
   a {
     .comments {
       display: flex;
       align-items: center;
       gap: 5px;
+      svg {
+        @include lessThan(xl) {
+          width: 14px;
+          height: 14px;
+        }
+      }
       span {
-        font-size: 12px;
+        font-size: $font-size-sm;
         color: var(--light-tx) !important;
+        @include lessThan(xl) {
+          font-size: $font-size-xsm;
+        }
       }
       color: var(--primary-text);
       cursor: pointer;
@@ -50,9 +63,18 @@
     color: var(--primary-text);
     cursor: pointer;
     transition: color 0.3s ease;
+    svg {
+      @include lessThan(xl) {
+        width: 14px;
+        height: 14px;
+      }
+    }
     span {
-      font-size: 12px;
+      font-size: $font-size-xsm;
       color: var(--light-tx) !important;
+      @include lessThan(xl) {
+        font-size: $font-size-xxsm;
+      }
     }
 
     &:hover {
@@ -114,10 +136,17 @@
     align-items: center;
     gap: 5px;
     span {
-      font-size: 12px;
+      font-size: $font-size-xsm;
+      @include lessThan(xl) {
+        font-size: $font-size-xxsm;
+      }
     }
     svg {
       cursor: pointer;
+      @include lessThan(xl) {
+        width: 14px;
+        height: 14px;
+      }
       path {
         &:first-child {
           fill: transparent;

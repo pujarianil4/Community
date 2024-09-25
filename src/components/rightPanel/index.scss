@@ -12,6 +12,7 @@
   right: 0px;
   padding: 10px;
   padding: 10px 0.5rem 0px 10px;
+
   @include lessThan(md) {
     display: none;
   }
@@ -29,6 +30,9 @@
     padding: 10px 0px;
     h2 {
       color: var(--primary-text);
+      @include lessThan(xl) {
+        font-size: $font-size-lg;
+      }
     }
     span {
       color: var(--primary);
@@ -36,6 +40,9 @@
       display: flex;
       gap: 5px;
       align-items: center;
+      @include lessThan(xl) {
+        font-size: $font-size-xsm;
+      }
     }
     .community_join {
       cursor: pointer;
@@ -46,7 +53,10 @@
       height: 32px;
       background-color: var(--tertiary);
       border-radius: 8px;
-
+      @include lessThan(xl) {
+        width: 45px;
+        height: 28px;
+      }
       .follow_btn {
         background-color: var(--tertiary-bg) !important;
         padding: 5px 10px !important;

@@ -50,7 +50,11 @@ export default function Profile() {
   };
   const [content, setContent] = useState<string>("");
   const turndownService = new TurndownService();
-  const markDownDesc = turndownService.turndown(content);
+  if (content) {
+    var markDownDesc = turndownService.turndown(content);
+  } else {
+    var markDownDesc = "";
+  }
 
   const [user, setUser] = useState<any>({
     username: "",

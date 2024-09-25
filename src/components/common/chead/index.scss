@@ -1,3 +1,4 @@
+@import "/src/styles";
 .chead {
   min-width: 200px;
   width: 100%;
@@ -24,6 +25,9 @@
       margin: 0;
       padding: 0;
       color: var(--primary-text);
+      @include lessThan(xl) {
+        font-size: $font-size-xsm;
+      }
     }
 
     span {

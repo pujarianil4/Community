@@ -15,7 +15,7 @@
   //   margin-left: 200px;
   // }
   @include lessThan(sm) {
-    padding: 20px 10px;
+    padding: 10px 10px;
   }
 }
 .wraper {
