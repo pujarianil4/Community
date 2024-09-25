@@ -178,7 +178,7 @@ export default function EvmAuthComponent({
                   connector.icon;
                 return (
                   <div
-                    key={connector.id}
+                    key={rkDetails?.id}
                     className='wallet'
                     onClick={() => handleConnect(connector)}
                   >
