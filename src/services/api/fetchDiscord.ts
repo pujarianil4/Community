@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { getCurrentDomain } from "@/utils/helpers";
 export default async function fetchDiscordData(code: string) {
   try {
     console.log("fetch code works");
@@ -7,9 +7,10 @@ export default async function fetchDiscordData(code: string) {
       throw new Error("Authorization code is missing");
     }
 
+    const currentDomain = getCurrentDomain();
+    const redirectUri = `${currentDomain}/api/callback/discord`;
     const secretCode = process.env.NEXT_PUBLIC_DISCORD_ID;
     const clientSecret = process.env.NEXT_PUBLIC_DISCORD_SECRET;
-    const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URL;
     if (!secretCode || !clientSecret || !redirectUri) {
       throw new Error("Discord client ID or secret is missing");
     }

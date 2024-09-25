@@ -8,13 +8,11 @@ import { fetchUserByUserName } from "@/services/api/api";
 import { RootState } from "@/contexts/store";
 import { debounce, setClientSideCookie } from "@/utils/helpers";
 
-import { TelegramAuthData } from "@/utils/types/types";
 import CButton from "../Button";
 import CInput from "../Input";
 import EvmAuthComponent from "./EvmAuth";
 import SolanaAuthComponent from "./SolanaAuth";
 import { Modal } from "antd";
-
 interface ISignUpModal {
   handleCancel: () => void;
   isModalOpen: boolean;
@@ -40,7 +38,6 @@ export const SignUpModal = ({
 
   useEffect(() => {
     setModalTab(3);
-    console.log("modal", modalTab, isModalOpen);
 
     return () => setModalTab(3);
   }, [isModalOpen]);
@@ -90,7 +87,7 @@ export const SignUpModal = ({
       setModalTab(2);
     } else if (user.error) {
       setSignUpData({ username: "", name: "" });
-      setModalTab(1);
+      setModalTab(3);
       setIsSignUp(false);
       handleCancel();
     } else {
@@ -99,7 +96,7 @@ export const SignUpModal = ({
       // dispatch(actions.setUserData(user));
       // dispatch(actions.setRefetchUser(true));
       setSignUpData({ username: "", name: "" });
-      setModalTab(1);
+      setModalTab(3);
       setIsSignUp(false);
       handleCancel();
     }
@@ -110,9 +107,6 @@ export const SignUpModal = ({
     //   //setUserSession(user);
     // }
   };
-  const handleTelegramAuth = (user: TelegramAuthData) => {
-    console.log("User authenticated:", user);
-  };
 
   return (
     <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
@@ -120,18 +114,16 @@ export const SignUpModal = ({
         {modalTab === 1 && (
           <div className='login'>
             <h4>Log In</h4>
-            <CButton auth='auth' onClick={() => handleAuth(false)}>
+            <CButton
+              auth='auth'
+              onClick={() => handleAuth(false)}
+              className='login_btn'
+            >
               Connect Wallet
             </CButton>
-            {/* <button>
-            <TelegramLogin
-              botUsername={"communitysetupbot"}
-              onAuthCallback={handleTelegramAuth}
-            />
-          </button> */}
             <p>
               Don&apos;t have account?
-              <span onClick={() => setModalTab(2)}>SignUp</span>
+              <span onClick={() => setModalTab(2)}> SignUp</span>
             </p>
           </div>
         )}
@@ -169,11 +161,13 @@ export const SignUpModal = ({
               }
               onClick={() => handleAuth()}
               size={18}
+              className='signup_btn'
             >
               Sign Up
             </CButton>
             <p>
-              have account? <span onClick={() => setModalTab(1)}>LogIn</span>
+              Already have account?{" "}
+              <span onClick={() => setModalTab(3)}>LogIn</span>
             </p>
           </div>
         )}
@@ -184,6 +178,7 @@ export const SignUpModal = ({
               signUpData={signUpData}
               setUserAuthData={handleUserAuthData}
             />
+
             <SolanaAuthComponent
               isSignUp={isSignUp}
               signUpData={signUpData}

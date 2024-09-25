@@ -15,6 +15,12 @@ import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import NotificationMessage from "../Notification";
+
+import { DropdownLowIcon } from "@/assets/icons";
+import { Collapse } from "antd";
+const { Panel } = Collapse;
+import { walletIcons } from "@/utils/constants/walletIcons";
+
 export interface ISignupData {
   username: string;
   name: string;
@@ -31,6 +37,8 @@ export default function EvmAuthComponent({
   setUserAuthData,
 }: IEvmAuthComponent) {
   const { isConnected, address } = useAccount();
+  const { connectors, connect, error } = useConnect();
+
   const { disconnect } = useDisconnect();
   const [{ dispatch, actions }] = useRedux();
   const walletRoute = useSelector(
@@ -118,31 +126,65 @@ export default function EvmAuthComponent({
     }
   }, [isConnected, signUserMessage]);
 
+  interface WalletItem {
+    rkDetails?: { id: string }; // Define as per your actual structure
+    [key: string]: any; // Add more specific types if needed
+  }
+
+  function filterDuplicates(walletArray: any) {
+    const seenIds = new Set<string>();
+
+    return walletArray.filter((wallet: any) => {
+      const id = wallet.rkDetails?.id; // Check if `rkDetails` and `id` exist
+      if (id && !seenIds.has(id)) {
+        seenIds.add(id);
+        return true;
+      }
+      return false; // Filter out duplicates
+    });
+  }
+
+  const filteredConnectors = filterDuplicates(connectors);
+  console.log("conectors", connectors, filteredConnectors);
   return (
-    <div className='eth_wallets'>
-      <h2>Ethereum Wallets</h2>
-      <div className='wallet' onClick={openConnectModal}>
-        <Image
-          src='https://www.rainbowkit.com/rainbow.svg'
-          alt=''
-          width={25}
-          height={25}
-        />
-        <span>Rainbowkit</span>
-      </div>
-      {/* {connectors.map((connector) => {
-        return (
-          <div onClick={() => connect({ connector })}>
-            {" "}
-            <Image
-              src='https://www.rainbowkit.com/rainbow.svg'
-              alt=''
-              width={25}
-              height={25}
-            />{" "}
+    <>
+      <Collapse accordion style={{ marginTop: "10px" }}>
+        <Panel
+          header='Ethereum Wallet'
+          key='1'
+          extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
+        >
+          <div className='eth_wallets'>
+            {filteredConnectors
+              // .filter((cn: any, i: number) => i != 3)
+              .map((connector: any, i: number) => {
+                const rkDetails = connector.rkDetails || {};
+                const connectorName = rkDetails.name || connector.name;
+                const connectorIconUrl =
+                  walletIcons[rkDetails.id] ||
+                  walletIcons[connector.id] ||
+                  connector.icon;
+                return (
+                  <div
+                    key={connector.id}
+                    className='wallet'
+                    onClick={() => connect({ connector })}
+                  >
+                    <Image
+                      src={connectorIconUrl}
+                      alt={`${connectorName} logo`}
+                      width={30}
+                      height={30}
+                    />
+                    <span>
+                      {connectorName} {i}
+                    </span>
+                  </div>
+                );
+              })}
           </div>
-        );
-      })} */}
-    </div>
+        </Panel>
+      </Collapse>
+    </>
   );
 }

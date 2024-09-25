@@ -4,12 +4,12 @@ import { getUserData } from "@/services/api/api";
 import { updateUser } from "@/services/api/api";
 import NotificationMessage from "@/components/common/Notification";
 import { AddIcon, TwitterIcon, DeleteIcon } from "@/assets/icons";
-
+import { getCurrentDomain } from "@/utils/helpers";
 async function handleTwitterLogin() {
+  const currentDomain = getCurrentDomain();
   const rootUrl = "https://twitter.com/i/oauth2/authorize";
-
   const clientId = process.env.NEXT_PUBLIC_TWITTER_ID as string;
-  const redirectUri = process.env.NEXT_PUBLIC_X_REDIRECT_URL as string;
+  const redirectUri = `${currentDomain}/api/twitter`;
   const state = "state";
   const codeChallenge = process.env.NEXT_PUBLIC_X_CODEVERIFIER as string;
 
@@ -37,7 +37,7 @@ const twitterAuth = () => {
   console.log("userdata", userData);
 
   const handleRemove = () => {
-    updateUser({ xid: null })
+    updateUser({ x: null })
       .then(() => {
         refetch();
         NotificationMessage("success", "X (Twitter) Profile unlinked.");
@@ -51,9 +51,9 @@ const twitterAuth = () => {
     <div className='social-connections'>
       <div className='s_m_bx'>
         <TwitterIcon />
-        {userData?.xid ? (
+        {userData?.x?.id ? (
           <div className='u_bx'>
-            <span className='u_txt'>@{userData?.xid}</span>
+            <span className='u_txt'>@{userData?.x?.username}</span>
             <span onClick={handleRemove}>
               <DeleteIcon />
             </span>

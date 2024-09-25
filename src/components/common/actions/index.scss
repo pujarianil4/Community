@@ -15,6 +15,9 @@
   @include lessThan(lg) {
     gap: 1.5rem;
   }
+  @include lessThan(sm) {
+    gap: 0.8rem;
+  }
 
   a {
     .comments {

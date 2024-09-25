@@ -40,8 +40,8 @@
           color: var(--label-text) !important;
         }
         .user_name {
-          font-size: 16px;
-          font-weight: $font-weight-medium;
+          font-size: $font-size-md;
+          font-weight: $font-weight-semi-bold;
         }
         .community_name {
           font-size: 12px;
@@ -51,6 +51,11 @@
       .post_time {
         font-size: $font-size-xsm;
         margin-top: 12px;
+      }
+      @include lessThan(sm) {
+        .user_name {
+          font-size: $font-size-xsm;
+        }
       }
     }
   }

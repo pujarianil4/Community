@@ -192,3 +192,9 @@ export function countLettersDigitsAndURLs(inputString: string) {
   // Return the total count of letters, digits, and URL lengths
   return alphanumericOnly.length + urlLength;
 }
+
+export function getCurrentDomain() {
+  return typeof window !== "undefined"
+    ? window.location.origin
+    : "http://localhost:3000";
+}
