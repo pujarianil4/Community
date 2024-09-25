@@ -1,3 +1,4 @@
+@import "/src/styles";
 .carousel-container {
   position: relative;
   overflow: hidden;
@@ -8,6 +9,12 @@
   margin: 12px 0;
   max-width: 560px;
   border-radius: 8px;
+  @include lessThan(xl) {
+    height: 320px;
+  }
+  @include lessThan(md) {
+    height: auto;
+  }
 }
 
 .carousel {
@@ -22,6 +29,12 @@
   aspect-ratio: 3/2;
   object-fit: contain;
   cursor: pointer;
+  @include lessThan(lg) {
+    aspect-ratio: 2/1.5;
+  }
+  @include lessThan(xs) {
+    aspect-ratio: 3/2;
+  }
 }
 
 .dots {
@@ -87,7 +100,14 @@
   transition: background-color 0.3s ease;
   color: var(--primary-text);
   z-index: 20;
-
+  @include lessThan(sm) {
+    width: 25px;
+    height: 25px;
+    svg {
+      width: 13px;
+      height: 13px;
+    }
+  }
   &.prev {
     left: 10px;
   }
