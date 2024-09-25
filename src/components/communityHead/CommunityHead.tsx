@@ -34,7 +34,7 @@ export default function CommunityHead() {
   const pathArray = pathname.split("/");
   const communityId = id || pathArray[pathArray.length - 1];
 
-  const { data } = useAsync(fetchCommunityByCname, communityId);
+  const { data, refetch } = useAsync(fetchCommunityByCname, communityId);
 
   const addItemToRecentCommunity = (
     data: ICommunity[],
@@ -56,6 +56,12 @@ export default function CommunityHead() {
   };
 
   useEffect(() => {
+    refetch();
+  }, []);
+
+  useEffect(() => {
+    console.log("data", data);
+
     if (data) {
       const value = localStorage?.getItem("recentCommunity");
       const prevCommunities: any = value ? JSON.parse(value) : [];
