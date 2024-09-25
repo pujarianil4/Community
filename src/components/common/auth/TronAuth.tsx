@@ -1,4 +1,11 @@
-import { getSignMessage } from "@/config/ethers";
+"use client";
+
+import React, { useCallback, useMemo, useState } from "react";
+import {
+  TronLinkAdapter,
+  OkxWalletAdapter,
+  BitKeepAdapter,
+} from "@tronweb3/tronwallet-adapters";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import {
@@ -9,51 +16,81 @@ import {
 } from "@/services/api/api";
 import { sigMsg } from "@/utils/constants";
 import { setClientSideCookie } from "@/utils/helpers";
-import { useConnectModal } from "@rainbow-me/rainbowkit";
-import Image from "next/image";
-import React, { useCallback, useState } from "react";
-import { useSelector } from "react-redux";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
-import NotificationMessage from "../Notification";
 
+import Image from "next/image";
+
+import { useSelector } from "react-redux";
 import { DropdownLowIcon } from "@/assets/icons";
+import NotificationMessage from "../Notification";
 import { Collapse } from "antd";
 const { Panel } = Collapse;
-import { walletIcons } from "@/utils/constants/walletIcons";
+
+type WalletAdapter = TronLinkAdapter | OkxWalletAdapter | BitKeepAdapter;
+
+interface Wallet {
+  name: string;
+  adapter: WalletAdapter;
+}
 
 export interface ISignupData {
   username: string;
   name: string;
 }
-interface IEvmAuthComponent {
+interface ITronAuthComponent {
   isSignUp: boolean;
   signUpData: ISignupData | null;
   setUserAuthData: (user: any) => void;
 }
 
-export default function EvmAuthComponent({
+const wallets: Wallet[] = [
+  { name: "TronLink", adapter: new TronLinkAdapter() },
+  { name: "OKX Wallet", adapter: new OkxWalletAdapter() },
+  { name: "Bitkeep Wallet", adapter: new BitKeepAdapter() },
+];
+
+const TronAuthComponent = ({
   isSignUp,
   signUpData,
   setUserAuthData,
-}: IEvmAuthComponent) {
-  const { isConnected, address } = useAccount();
-  const { connectors, connect, error } = useConnect();
+}: ITronAuthComponent) => {
+  const [isMounted, setIsMounted] = useState(false);
 
-  const { disconnect } = useDisconnect();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   const [{ dispatch, actions }] = useRedux();
   const walletRoute = useSelector(
     (state: RootState) => state.common.walletRoute
   );
-  const { openConnectModal } = useConnectModal();
   const [signature, setSignature] = useState<string | null>(null);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [address, setAddress] = useState("");
+  const [selectedAdapter, setSelectedAdapter] = useState<WalletAdapter>(
+    wallets[0].adapter
+  );
 
+  React.useEffect(() => {
+    setIsMounted(true); // Detects if the component is mounted in the browser
+  }, []);
+  const connectWallet = async (adapter: WalletAdapter) => {
+    try {
+      await adapter.connect();
+      setSelectedAdapter(adapter);
+      const address = adapter.address;
+      console.log(address);
+      setAddress(address || "");
+      setIsWalletConnected(true);
+    } catch (error) {
+      console.error("Connection or signing error:", error);
+    } finally {
+      // adapter.disconnect();
+    }
+  };
   const signUserMessage = useCallback(async () => {
-    console.log("signedMessage", "tiger", isConnected);
-    if (isConnected && isWalletConnected) {
+    if (isWalletConnected) {
       try {
-        const signedMessage = await getSignMessage(sigMsg);
+        const signedMessage = await selectedAdapter.signMessage(sigMsg);
         console.log("signedMessage", signedMessage);
+
         setSignature(signedMessage || "");
         let response;
         if (walletRoute == "auth" && isSignUp) {
@@ -61,7 +98,8 @@ export default function EvmAuthComponent({
             signUpData?.username,
             signUpData?.name,
             signedMessage,
-            sigMsg
+            sigMsg,
+            address
           );
           const userdata = await fetchUserById(response?.uid);
           const user = {
@@ -77,7 +115,11 @@ export default function EvmAuthComponent({
           dispatch(actions.setRefetchUser(true));
           setUserAuthData(user);
         } else if (walletRoute == "auth" && !isSignUp) {
-          response = await handleLogIn({ sig: signedMessage, msg: sigMsg });
+          response = await handleLogIn({
+            sig: signedMessage,
+            msg: sigMsg,
+            pubKey: address,
+          });
           const userdata = await fetchUserById(response?.uid);
           const user = {
             username: userdata.username,
@@ -95,13 +137,14 @@ export default function EvmAuthComponent({
           const response = await linkAddress({
             sig: signedMessage,
             msg: sigMsg,
+            pubKey: address,
           });
           setUserAuthData(response);
         }
-
-        disconnect();
+        setIsWalletConnected(false);
+        await selectedAdapter.disconnect();
       } catch (error: any) {
-        disconnect();
+        await selectedAdapter.disconnect();
         console.error("Error signing the message:", error);
         const msg = error.response.data.message;
         const code = error.response.data.statusCode;
@@ -119,84 +162,55 @@ export default function EvmAuthComponent({
         // NotificationMessage("error", msg);
       }
     }
-  }, [isConnected, isWalletConnected]);
-
-  const handleConnect = async (connector: any) => {
-    try {
-      if (isConnected) {
-        signUserMessage();
-      } else {
-        connect({ connector });
-        setIsWalletConnected(true);
-      }
-    } catch (error) {}
-  };
+  }, [isWalletConnected]);
 
   React.useEffect(() => {
+    console.log("trigger", isWalletConnected);
     if (isWalletConnected) {
+      console.log("trigger1", isWalletConnected);
+
       signUserMessage();
     }
   }, [isWalletConnected, signUserMessage]);
 
-  interface WalletItem {
-    rkDetails?: { id: string }; // Define as per your actual structure
-    [key: string]: any; // Add more specific types if needed
+  if (!isMounted) {
+    return null; // Prevents rendering on the server
   }
 
-  function filterDuplicates(walletArray: any) {
-    const seenIds = new Set<string>();
-
-    return walletArray.filter((wallet: any) => {
-      const id = wallet.rkDetails?.id; // Check if `rkDetails` and `id` exist
-      if (id && !seenIds.has(id)) {
-        seenIds.add(id);
-        return true;
-      }
-      return false; // Filter out duplicates
-    });
-  }
-
-  const filteredConnectors = filterDuplicates(connectors);
-  console.log("conectors", connectors, filteredConnectors);
   return (
     <>
-      <Collapse accordion style={{ marginTop: "10px" }}>
-        <Panel
-          header='Ethereum Wallets'
-          key='1'
-          extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
-        >
-          <div className='eth_wallets'>
-            {filteredConnectors
-              // .filter((cn: any, i: number) => i != 3)
-              .map((connector: any, i: number) => {
-                const rkDetails = connector.rkDetails || {};
-                const connectorName = rkDetails.name || connector.name;
-                const connectorIconUrl =
-                  walletIcons[rkDetails.id] ||
-                  walletIcons[connector.id] ||
-                  connector.icon;
-                return (
-                  <div
-                    key={connector.id}
-                    className='wallet'
-                    onClick={() => handleConnect(connector)}
-                  >
-                    <Image
-                      src={connectorIconUrl}
-                      alt={`${connectorName} logo`}
-                      width={30}
-                      height={30}
-                    />
-                    <span>
-                      {connectorName} {i}
-                    </span>
-                  </div>
-                );
-              })}
-          </div>
-        </Panel>
-      </Collapse>
+      {window?.navigator && (
+        <Collapse accordion style={{ marginTop: "10px" }}>
+          <Panel
+            header='Tron Wallets'
+            key='1'
+            extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
+          >
+            <div className='solana_wallets'>
+              {/* <button>Solana Wallets</button> */}
+              {wallets?.map((wallet, i) => (
+                <div
+                  key={i}
+                  className='wallet'
+                  onClick={() => connectWallet(wallet.adapter)}
+                >
+                  <Image
+                    alt={wallet.adapter.name}
+                    src={wallet.adapter.icon}
+                    width={30}
+                    height={30}
+                  />
+                  <span>{wallet.adapter.name}</span>
+                </div>
+              ))}
+
+              {/* <SolanaWalletButton /> */}
+            </div>
+          </Panel>
+        </Collapse>
+      )}
     </>
   );
-}
+};
+
+export default TronAuthComponent;

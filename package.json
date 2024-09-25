@@ -23,6 +23,7 @@
     "@tiptap/pm": "^2.6.6",
     "@tiptap/react": "^2.6.6",
     "@tiptap/starter-kit": "^2.6.6",
+    "@tronweb3/tronwallet-adapters": "^1.2.3",
     "antd": "^5.19.3",
     "axios": "^1.7.2",
     "discord.js": "^14.15.3",
