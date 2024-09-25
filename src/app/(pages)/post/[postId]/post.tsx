@@ -10,12 +10,7 @@ import { IPost, IVotePayload } from "@/utils/types/types";
 import MarkdownRenderer from "@/components/common/MarkDownRender";
 import SwipeCarousel from "@/components/common/carousel";
 import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
-import {
-  DropdownLowIcon,
-  DropdownUpIcon,
-  SaveIcon,
-  ShareIcon,
-} from "@/assets/icons";
+import { SaveIcon, ShareIcon } from "@/assets/icons";
 import PostPageLoader from "@/components/common/loaders/postPage";
 import { sendVote } from "@/services/api/api";
 

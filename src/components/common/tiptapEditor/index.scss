@@ -96,6 +96,7 @@
     padding: 8px;
     height: fit-content;
     min-height: 90px;
+    cursor: text;
   }
 }
 
@@ -163,4 +164,12 @@ a.link {
   &.outOfLimit {
     color: var(--error);
   }
+}
+
+.editor_content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--label-text);
+  pointer-events: none;
+  height: 0;
 }
