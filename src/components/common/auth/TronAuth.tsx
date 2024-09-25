@@ -89,7 +89,7 @@ const TronAuthComponent = ({
     if (isWalletConnected) {
       try {
         const signedMessage = await selectedAdapter.signMessage(sigMsg);
-        console.log("signedMessage", signedMessage);
+        console.log("signedMessage", sigMsg, signedMessage);
 
         setSignature(signedMessage || "");
         let response;
