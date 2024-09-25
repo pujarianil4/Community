@@ -162,15 +162,24 @@
         padding: 7px 19px;
         margin-right: 1rem;
         border-radius: 8px;
-        font-size: 15px;
+        font-size: $font-size-sm;
         font-weight: 600;
         border: 1px solid var(--tertiary-border);
         cursor: pointer;
+        @include lessThan(xl) {
+          font-size: $font-size-xsm;
+          font-weight: $font-weight-semi-bold;
+        }
       }
       .ant-tabs-tab-active {
         background: var(--secondary-bg);
         border: 2px solid var(--secondary-bg);
       }
+    }
+  }
+  .ant-tabs-content-holder {
+    @include lessThan(md) {
+      margin-top: 2.7rem;
     }
   }
 }

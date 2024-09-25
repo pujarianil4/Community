@@ -11,6 +11,9 @@
   //   width: 200px;
   //   left: 0px;
   // }
+  @include lessThan(xl) {
+    width: 250px;
+  }
   @include lessThan(lg) {
     position: absolute;
     left: -300px;

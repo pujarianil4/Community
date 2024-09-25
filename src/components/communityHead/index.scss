@@ -6,7 +6,9 @@
     height: 372px;
     position: relative;
     margin-bottom: 24px;
-
+    @include lessThan(md) {
+      height: 270px;
+    }
     .cover_photo {
       width: 100%;
       height: 220px;
@@ -14,7 +16,9 @@
       border-radius: 0 0 1rem 1rem;
       overflow: hidden;
       z-index: 1;
-
+      @include lessThan(md) {
+        height: 120px;
+      }
       .imgbg {
         position: absolute;
         width: 100%;
@@ -43,6 +47,8 @@
       @include lessThan(md) {
         width: 96%;
         left: 2%;
+        top: 88px;
+        height: 185px;
       }
       .detailed_data {
         max-width: 700px;
@@ -52,6 +58,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        @include lessThan(md) {
+          height: 85px;
+        }
         .box {
           display: flex;
           justify-content: center;
@@ -61,7 +70,7 @@
         }
 
         .user {
-          flex: 0.5;
+          flex: 0.7 1;
           justify-content: flex-start;
           margin-left: 1rem;
           .avatar {
@@ -73,21 +82,31 @@
               border-radius: 0.5rem;
               object-fit: cover;
             }
+            @include lessThan(md) {
+              width: 45px;
+            }
           }
           h4 {
             color: var(--primary-text);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-weight: $font-weight-semi-bold;
+            @include lessThan(md) {
+              font-size: $font-size-sm;
+            }
           }
 
           .username {
             margin-top: 2px;
-            font-size: 12px;
+            font-size: $font-size-xsm;
             color: var(--label-text);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            @include lessThan(md) {
+              font-size: $font-size-xxsm;
+            }
           }
         }
 
@@ -96,13 +115,20 @@
           border-left: 1px solid var(--primary-border);
           flex-direction: column;
           p {
-            font-size: 12px;
+            font-size: $font-size-xsm;
             color: var(--primary-text);
             margin-bottom: 4px;
+            @include lessThan(md) {
+              font-size: $font-size-xxsm;
+            }
           }
           h4 {
             font-size: 16px;
             color: var(--primary-text);
+            @include lessThan(md) {
+              font-size: $font-size-sm;
+              font-weight: $font-weight-semi-bold;
+            }
           }
         }
       }
@@ -113,14 +139,16 @@
         align-items: flex-start;
         padding: 0.75rem 0.75rem 0;
         height: fit-content;
-
+        @include lessThan(md) {
+          padding: 0.3rem 0.2rem 0;
+        }
         p {
           font-size: 14px;
           color: var(--primary-text);
           @include lessThan(lg) {
             font-size: 12px;
           }
-          @include lessThan(sm) {
+          @include lessThan(md) {
             font-size: 9px;
           }
         }
@@ -128,7 +156,11 @@
         .follow_btn {
           background: var(--tertiary-bg) !important;
           color: var(--primary) !important;
-          font-size: 14px !important;
+          font-size: $font-size-sm !important;
+          @include lessThan(md) {
+            height: 22px !important;
+            font-size: $font-size-xxsm !important;
+          }
         }
 
         .desc_bx {
@@ -151,14 +183,22 @@
         justify-content: flex-end;
         padding: 5px 0px 0px 5px;
         margin-top: 11px;
+        @include lessThan(md) {
+          gap: 1rem;
+        }
         div {
           cursor: pointer;
         }
 
         .disabled {
           cursor: default;
+
           svg {
             opacity: 0.7;
+            // @include lessThan(md) {
+            //   width: 13px;
+            //   height: auto;
+            // }
           }
         }
       }
@@ -175,13 +215,22 @@
     align-items: center;
     gap: 8px;
     z-index: 1;
-
+    @include lessThan(xl) {
+      margin-top: -4px;
+    }
+    @include lessThan(sm) {
+      margin-top: 3rem;
+      right: 8px;
+    }
     .btn {
       padding: 8px !important;
       background: var(--tertiary-bg) !important;
       color: var(--primary) !important;
       font-size: 14px !important;
       cursor: pointer;
+      @include lessThan(xl) {
+        font-size: $font-size-xsm !important;
+      }
     }
   }
 }
