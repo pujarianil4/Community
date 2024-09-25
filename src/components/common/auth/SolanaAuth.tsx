@@ -66,6 +66,7 @@ const SolanaAuthComponent = ({
 
       setSignature(signedMessage);
       disconnect();
+      localStorage.clear();
       let response;
       if (walletRoute == "auth" && isSignUp) {
         response = await handleSignup(
@@ -118,6 +119,7 @@ const SolanaAuthComponent = ({
       }
     } catch (error) {
       disconnect();
+      localStorage.clear();
       setUserAuthData({ error: true });
       console.error("Error signing the message:", error);
     }

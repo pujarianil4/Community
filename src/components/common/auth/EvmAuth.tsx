@@ -46,15 +46,16 @@ export default function EvmAuthComponent({
   );
   const { openConnectModal } = useConnectModal();
   const [signature, setSignature] = useState<string | null>(null);
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
 
   const signUserMessage = useCallback(async () => {
-    console.log("signedMessage", "tiger", isConnected);
-    if (isConnected && isWalletConnected) {
+    console.log("signedMessage", "tiger", isConnected, walletRoute, isSignUp);
+    if (isConnected) {
       try {
         const signedMessage = await getSignMessage(sigMsg);
         console.log("signedMessage", signedMessage);
         setSignature(signedMessage || "");
+        disconnect();
+        localStorage.clear();
         let response;
         if (walletRoute == "auth" && isSignUp) {
           response = await handleSignup(
@@ -98,10 +99,9 @@ export default function EvmAuthComponent({
           });
           setUserAuthData(response);
         }
-
-        disconnect();
       } catch (error: any) {
         disconnect();
+        localStorage.clear();
         console.error("Error signing the message:", error);
         const msg = error.response.data.message;
         const code = error.response.data.statusCode;
@@ -119,24 +119,24 @@ export default function EvmAuthComponent({
         // NotificationMessage("error", msg);
       }
     }
-  }, [isConnected, isWalletConnected]);
+  }, [isConnected]);
 
-  const handleConnect = async (connector: any) => {
-    try {
-      if (isConnected) {
-        signUserMessage();
-      } else {
-        connect({ connector });
-        setIsWalletConnected(true);
-      }
-    } catch (error) {}
-  };
+  // const handleConnect = async (connector: any) => {
+  //   try {
+  //     if (isConnected) {
+  //       signUserMessage();
+  //     } else {
+  //       connect({ connector });
+  //       setIsWalletConnected(true);
+  //     }
+  //   } catch (error) {}
+  // };
 
   React.useEffect(() => {
-    if (isWalletConnected) {
+    if (isConnected) {
       signUserMessage();
     }
-  }, [isWalletConnected, signUserMessage]);
+  }, [isConnected, signUserMessage]);
 
   interface WalletItem {
     rkDetails?: { id: string }; // Define as per your actual structure
@@ -180,7 +180,7 @@ export default function EvmAuthComponent({
                   <div
                     key={rkDetails?.id}
                     className='wallet'
-                    onClick={() => handleConnect(connector)}
+                    onClick={() => connect({ connector })}
                   >
                     <Image
                       src={connectorIconUrl}
