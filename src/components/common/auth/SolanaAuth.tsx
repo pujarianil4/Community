@@ -66,6 +66,7 @@ const SolanaAuthComponent = ({
 
       setSignature(signedMessage);
       disconnect();
+      localStorage.clear();
       let response;
       if (walletRoute == "auth" && isSignUp) {
         response = await handleSignup(
@@ -116,10 +117,19 @@ const SolanaAuthComponent = ({
         });
         setUserAuthData(response);
       }
-    } catch (error) {
+    } catch (error: any) {
       disconnect();
-      setUserAuthData({ error: true });
+      localStorage.clear();
+
       console.error("Error signing the message:", error);
+      const msg = error.response.data.message;
+      const code = error.response.data.statusCode;
+
+      if (msg == "User not Registered!" && code == 404) {
+        setUserAuthData({ notRegistered: true });
+      } else {
+        setUserAuthData({ error: msg });
+      }
     }
   }, [publicKey, signMessage]);
 

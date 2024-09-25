@@ -92,6 +92,8 @@ const TronAuthComponent = ({
         console.log("signedMessage", sigMsg, signedMessage);
 
         setSignature(signedMessage || "");
+        await selectedAdapter.disconnect();
+        localStorage.clear();
         let response;
         if (walletRoute == "auth" && isSignUp) {
           response = await handleSignup(
@@ -142,9 +144,9 @@ const TronAuthComponent = ({
           setUserAuthData(response);
         }
         setIsWalletConnected(false);
-        await selectedAdapter.disconnect();
       } catch (error: any) {
         await selectedAdapter.disconnect();
+        localStorage.clear();
         console.error("Error signing the message:", error);
         const msg = error.response.data.message;
         const code = error.response.data.statusCode;
