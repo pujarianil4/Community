@@ -46,10 +46,11 @@ export default function EvmAuthComponent({
   );
   const { openConnectModal } = useConnectModal();
   const [signature, setSignature] = useState<string | null>(null);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
 
   const signUserMessage = useCallback(async () => {
     console.log("signedMessage", "tiger", isConnected);
-    if (isConnected) {
+    if (isConnected && isWalletConnected) {
       try {
         const signedMessage = await getSignMessage(sigMsg);
         console.log("signedMessage", signedMessage);
@@ -118,13 +119,24 @@ export default function EvmAuthComponent({
         // NotificationMessage("error", msg);
       }
     }
-  }, [isConnected]);
+  }, [isConnected, isWalletConnected]);
+
+  const handleConnect = async (connector: any) => {
+    try {
+      if (isConnected) {
+        signUserMessage();
+      } else {
+        connect({ connector });
+        setIsWalletConnected(true);
+      }
+    } catch (error) {}
+  };
 
   React.useEffect(() => {
-    if (isConnected) {
+    if (isWalletConnected) {
       signUserMessage();
     }
-  }, [isConnected, signUserMessage]);
+  }, [isWalletConnected, signUserMessage]);
 
   interface WalletItem {
     rkDetails?: { id: string }; // Define as per your actual structure
@@ -150,7 +162,7 @@ export default function EvmAuthComponent({
     <>
       <Collapse accordion style={{ marginTop: "10px" }}>
         <Panel
-          header='Ethereum Wallet'
+          header='Ethereum Wallets'
           key='1'
           extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
         >
@@ -168,7 +180,7 @@ export default function EvmAuthComponent({
                   <div
                     key={connector.id}
                     className='wallet'
-                    onClick={() => connect({ connector })}
+                    onClick={() => handleConnect(connector)}
                   >
                     <Image
                       src={connectorIconUrl}

@@ -431,3 +431,11 @@
     visibility: hidden;
   }
 }
+
+//modal
+.ant-modal-mask {
+  z-index: 50 !important;
+}
+.ant-modal-wrap {
+  z-index: 50 !important;
+}
