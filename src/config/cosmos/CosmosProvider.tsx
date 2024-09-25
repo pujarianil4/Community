@@ -10,8 +10,6 @@ import "@interchain-ui/react/styles";
 
 export const cosmosWallets = [...wallets.extension];
 
-console.log("cosmosWallets", cosmosWallets);
-
 export function CosmosProvider({ children }: any) {
   return (
     <ChainProvider

@@ -35,7 +35,7 @@ export default function CosmosAuthComponent({
 }: ICosmosAuthComponent) {
   const chainContext = useChain("cosmoshub");
   const context1 = useChainWallet("cosmoshub", "keplr-extension", true);
-
+  console.log("cosmosWallets", cosmosWallets);
   const {
     status,
     username,
