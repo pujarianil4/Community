@@ -150,16 +150,11 @@ const TronAuthComponent = ({
         console.error("Error signing the message:", error);
         const msg = error.response.data.message;
         const code = error.response.data.statusCode;
-        console.log(
-          "error",
-          msg,
-          code,
-          msg == "User not Registered!",
-          code == 404
-        );
 
         if (msg == "User not Registered!" && code == 404) {
           setUserAuthData({ notRegistered: true });
+        } else {
+          setUserAuthData({ error: msg });
         }
         // NotificationMessage("error", msg);
       }
@@ -167,10 +162,7 @@ const TronAuthComponent = ({
   }, [isWalletConnected]);
 
   React.useEffect(() => {
-    console.log("trigger", isWalletConnected);
     if (isWalletConnected) {
-      console.log("trigger1", isWalletConnected);
-
       signUserMessage();
     }
   }, [isWalletConnected, signUserMessage]);

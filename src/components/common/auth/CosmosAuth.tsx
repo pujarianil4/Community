@@ -35,7 +35,7 @@ export default function CosmosAuthComponent({
   setUserAuthData,
 }: ICosmosAuthComponent) {
   const chainContext = useChain("cosmoshub");
-  const context1 = useChainWallet("cosmoshub", "keplr-extension", true);
+  const context1 = useChainWallet("cosmoshub", "keplr-extension", false);
 
   const {
     status,
@@ -48,9 +48,10 @@ export default function CosmosAuthComponent({
     wallet,
     signArbitrary,
     isWalletConnected,
-  } = chainContext;
+  } = context1;
   const ref = useRef<any>(null);
-  ref.current = context1;
+  console.log("cosmosWallets", cosmosWallets);
+
   const [{ dispatch, actions }] = useRedux();
   const walletRoute = useSelector(
     (state: RootState) => state.common.walletRoute
@@ -66,6 +67,7 @@ export default function CosmosAuthComponent({
           address,
           sigMsg
         );
+        console.log("CosmosSignature", sigMsg, signedMessage);
 
         setSignature(signedMessage || "");
         let response;
@@ -128,6 +130,8 @@ export default function CosmosAuthComponent({
 
         if (msg == "User not Registered!" && code == 404) {
           setUserAuthData({ notRegistered: true });
+        } else {
+          setUserAuthData({ error: msg });
         }
         // NotificationMessage("error", msg);
       }
