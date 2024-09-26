@@ -15,6 +15,7 @@ import SolanaAuthComponent from "./SolanaAuth";
 import { Modal } from "antd";
 
 import dynamic from "next/dynamic";
+import CosmosAuthComponent from "./CosmosAuth";
 
 // Dynamically import TronAuthComponent, disabling SSR
 const TronAuthComponent = dynamic(() => import("./TronAuth"), {
@@ -193,6 +194,11 @@ export const SignUpModal = ({
             />
 
             <TronAuthComponent
+              isSignUp={isSignUp}
+              signUpData={signUpData}
+              setUserAuthData={handleUserAuthData}
+            />
+            <CosmosAuthComponent
               isSignUp={isSignUp}
               signUpData={signUpData}
               setUserAuthData={handleUserAuthData}

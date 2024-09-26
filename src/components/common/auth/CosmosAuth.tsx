@@ -1,11 +1,3 @@
-"use client";
-
-import React, { useCallback, useMemo, useState } from "react";
-import {
-  TronLinkAdapter,
-  OkxWalletAdapter,
-  BitKeepAdapter,
-} from "@tronweb3/tronwallet-adapters";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import {
@@ -16,84 +8,68 @@ import {
 } from "@/services/api/api";
 import { sigMsg } from "@/utils/constants";
 import { setClientSideCookie } from "@/utils/helpers";
-
+import { useChain, useChainWallet, useWallet } from "@cosmos-kit/react";
 import Image from "next/image";
-
+import React, { useCallback, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+
 import { DropdownLowIcon } from "@/assets/icons";
 import NotificationMessage from "../Notification";
 import { Collapse } from "antd";
+import { cosmosWallets } from "@/config/cosmos/cosmos";
+
 const { Panel } = Collapse;
-
-type WalletAdapter = TronLinkAdapter | OkxWalletAdapter | BitKeepAdapter;
-
-interface Wallet {
-  name: string;
-  adapter: WalletAdapter;
-}
-
 export interface ISignupData {
   username: string;
   name: string;
 }
-interface ITronAuthComponent {
+interface ICosmosAuthComponent {
   isSignUp: boolean;
   signUpData: ISignupData | null;
   setUserAuthData: (user: any) => void;
 }
 
-const wallets: Wallet[] = [
-  { name: "TronLink", adapter: new TronLinkAdapter() },
-  { name: "OKX Wallet", adapter: new OkxWalletAdapter() },
-  { name: "Bitkeep Wallet", adapter: new BitKeepAdapter() },
-];
-
-const TronAuthComponent = ({
+export default function CosmosAuthComponent({
   isSignUp,
   signUpData,
   setUserAuthData,
-}: ITronAuthComponent) => {
-  const [isMounted, setIsMounted] = useState(false);
+}: ICosmosAuthComponent) {
+  const chainContext = useChain("cosmoshub");
+  const context1 = useChainWallet("cosmoshub", "keplr-extension", false);
 
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const {
+    status,
+    username,
+    address,
+    message,
+    connect,
+    disconnect,
+    chainWallet,
+    wallet,
+    signArbitrary,
+    isWalletConnected,
+  } = context1;
+  const ref = useRef<any>(null);
+  console.log("cosmosWallets", cosmosWallets);
 
   const [{ dispatch, actions }] = useRedux();
   const walletRoute = useSelector(
     (state: RootState) => state.common.walletRoute
   );
   const [signature, setSignature] = useState<string | null>(null);
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const [address, setAddress] = useState("");
-  const [selectedAdapter, setSelectedAdapter] = useState<WalletAdapter>(
-    wallets[0].adapter
-  );
 
-  React.useEffect(() => {
-    setIsMounted(true); // Detects if the component is mounted in the browser
-  }, []);
-  const connectWallet = async (adapter: WalletAdapter) => {
-    try {
-      await adapter.connect();
-      setSelectedAdapter(adapter);
-      const address = adapter.address;
-      console.log(address);
-      setAddress(address || "");
-      setIsWalletConnected(true);
-    } catch (error) {
-      console.error("Connection or signing error:", error);
-    } finally {
-      // adapter.disconnect();
-    }
-  };
+  const [isConnected, setIsConnected] = useState(false);
+
   const signUserMessage = useCallback(async () => {
-    if (isWalletConnected) {
+    if (address && isWalletConnected) {
       try {
-        const signedMessage = await selectedAdapter.signMessage(sigMsg);
-        console.log("signedMessage", sigMsg, signedMessage);
+        const { signature: signedMessage } = await signArbitrary(
+          address,
+          sigMsg
+        );
+        console.log("CosmosSignature", sigMsg, signedMessage);
 
         setSignature(signedMessage || "");
-        await selectedAdapter.disconnect();
-        localStorage.clear();
         let response;
         if (walletRoute == "auth" && isSignUp) {
           response = await handleSignup(
@@ -143,10 +119,11 @@ const TronAuthComponent = ({
           });
           setUserAuthData(response);
         }
-        setIsWalletConnected(false);
+
+        disconnect();
+        setIsConnected(false);
       } catch (error: any) {
-        await selectedAdapter.disconnect();
-        localStorage.clear();
+        disconnect();
         console.error("Error signing the message:", error);
         const msg = error.response.data.message;
         const code = error.response.data.statusCode;
@@ -159,52 +136,71 @@ const TronAuthComponent = ({
         // NotificationMessage("error", msg);
       }
     }
-  }, [isWalletConnected]);
+  }, [isWalletConnected, isConnected]);
+
+  const handleConnect = async () => {
+    try {
+      if (isWalletConnected) {
+        await signUserMessage();
+      } else {
+        // console.log("isWalletConnected", isWalletConnected, ref.current);
+        // await disconnect();
+        // console.log("isWalletConnected1", isWalletConnected, ref.current);
+        await connect();
+
+        setIsConnected(true);
+      }
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
 
   React.useEffect(() => {
-    if (isWalletConnected) {
+    if (isConnected) {
       signUserMessage();
     }
-  }, [isWalletConnected, signUserMessage]);
-
-  if (!isMounted) {
-    return null; // Prevents rendering on the server
-  }
+  }, [isConnected, signUserMessage]);
 
   return (
-    <>
-      {window?.navigator && (
-        <Collapse accordion style={{ marginTop: "10px" }}>
-          <Panel
-            header='Tron Wallets'
-            key='1'
-            extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
-          >
-            <div className='solana_wallets'>
-              {/* <button>Solana Wallets</button> */}
-              {wallets?.map((wallet, i) => (
-                <div
-                  key={i}
-                  className='wallet'
-                  onClick={() => connectWallet(wallet.adapter)}
-                >
+    <div>
+      <Collapse accordion style={{ marginTop: "10px" }}>
+        <Panel
+          header='Cosmos Wallets'
+          key='1'
+          extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
+        >
+          {/* <div className='solana_wallets'>
+            <div key={address} className='wallet' onClick={handleConnect}>
+              <Image
+                alt={wallet.prettyName}
+                src={wallet.logo || ""}
+                width={30}
+                height={30}
+              />
+              <span>{wallet.prettyName}</span>
+            </div>
+
+
+          </div> */}
+          {cosmosWallets.map((wallet: any) => {
+            return (
+              <div className='solana_wallets'>
+                <div key={address} className='wallet' onClick={handleConnect}>
                   <Image
-                    alt={wallet.adapter.name}
-                    src={wallet.adapter.icon}
+                    alt={wallet.walletInfo.prettyName}
+                    src={wallet.walletInfo.logo}
                     width={30}
                     height={30}
                   />
-                  <span>{wallet.adapter.name}</span>
+                  <span>{wallet.walletInfo.prettyName}</span>
                 </div>
-              ))}
+              </div>
+            );
+          })}
 
-              {/* <SolanaWalletButton /> */}
-            </div>
-          </Panel>
-        </Collapse>
-      )}
-    </>
+          {}
+        </Panel>
+      </Collapse>
+    </div>
   );
-};
-
-export default TronAuthComponent;
+}
