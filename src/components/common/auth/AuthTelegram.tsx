@@ -41,7 +41,6 @@ const TelegramAuth = () => {
     data: userData,
     refetch,
   } = useAsync(getUserData);
-  console.log("userdata", userData);
 
   const handleTelegramAuth = (): Promise<any> => {
     return new Promise((resolve, reject) => {

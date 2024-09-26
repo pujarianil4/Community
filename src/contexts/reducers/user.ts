@@ -14,7 +14,7 @@ const cookies = parseCookies();
 const auth = cookies?.authToken;
 
 const userData: any = auth && JSON.parse(auth);
-console.log("userdata", userData);
+
 //TODO update Later
 const initialState: User = {
   username: userData?.username || "",
