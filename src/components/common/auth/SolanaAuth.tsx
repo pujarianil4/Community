@@ -84,6 +84,8 @@ const SolanaAuthComponent = ({
           token: response?.token || "",
           img: userdata?.img.pro,
           sid: response?.id || "",
+          netWrth: userdata?.netWrth || 0,
+          effectiveNetWrth: userdata?.effectiveNetWrth || 0,
         };
 
         setClientSideCookie("authToken", JSON.stringify(user));
@@ -104,6 +106,8 @@ const SolanaAuthComponent = ({
           token: response?.token || "",
           img: userdata?.img.pro,
           sid: response?.id || "",
+          netWrth: userdata?.netWrth || 0,
+          effectiveNetWrth: userdata?.effectiveNetWrth || 0,
         };
         setClientSideCookie("authToken", JSON.stringify(user));
         dispatch(actions.setUserData(user));
