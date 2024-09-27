@@ -44,7 +44,7 @@ export default function VirtualList({
       components={{
         Footer: () => <div style={{ height: `${footerHeight}px` }}></div>,
       }}
-      followOutput={true}
+      // followOutput={true}
     />
   );
 }
