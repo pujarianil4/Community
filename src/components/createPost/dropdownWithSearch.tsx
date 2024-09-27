@@ -12,12 +12,20 @@ import ProfilelistLoader from "../common/loaders/profilelist";
 import { IoSearch } from "react-icons/io5";
 
 interface DropdownWithSearchProps {
-  onSelect: (value: ICommunity) => void;
-  options: ICommunity[];
+  // onSelect: (value: ICommunity) => void;
+  // options: ICommunity[];
+  // searchTerm: string;
+  // setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  // selected: ICommunity | null;
+  // defaultSearch?: ICommunity;
+  onSelect: (value: any) => void;
+  options: any[];
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
-  selected: ICommunity | null;
-  defaultCommunity?: ICommunity;
+  selected: any | null;
+  defaultSearch?: any;
+  isUser?: boolean;
+  placeholder?: string;
 }
 
 const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
@@ -26,6 +34,8 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
   searchTerm,
   setSearchTerm,
   selected,
+  isUser = false,
+  placeholder = "Select Community",
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -59,7 +69,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
         <IoSearch className='s_icon' />
         <input
           className='dropdown_input'
-          placeholder='Select Community'
+          placeholder={placeholder}
           value={selected ? selected.username : searchTerm}
           onChange={handleSearch}
           onFocus={handleFocus}
@@ -73,7 +83,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
               className='dropdown_list'
               dataSource={options?.filter((option) =>
                 option?.username
-                  .toLowerCase()
+                  ?.toLowerCase()
                   .includes(searchTerm.toLowerCase())
               )}
               renderItem={(item) => (
@@ -100,7 +110,11 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
 
                     <div className='u_bx'>
                       <span className='u_txt'>{item.username}</span>
-                      <span className='u_follow'>{item.followers} Members</span>
+                      {!isUser && (
+                        <span className='u_follow'>
+                          {item.followers} Members
+                        </span>
+                      )}
                     </div>
                   </div>
                 </List.Item>

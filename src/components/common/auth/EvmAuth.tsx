@@ -72,6 +72,8 @@ export default function EvmAuthComponent({
             token: response?.token || "",
             img: userdata?.img?.pro,
             sid: response?.id || "",
+            netWrth: userdata?.netWrth || 0,
+            effectiveNetWrth: userdata?.effectiveNetWrth || 0,
           };
           setClientSideCookie("authToken", JSON.stringify(user));
           dispatch(actions.setUserData(user));
@@ -80,6 +82,7 @@ export default function EvmAuthComponent({
         } else if (walletRoute == "auth" && !isSignUp) {
           response = await handleLogIn({ sig: signedMessage, msg: sigMsg });
           const userdata = await fetchUserById(response?.uid);
+          console.log("USER", userdata);
           const user = {
             username: userdata.username,
             name: userdata?.name || "",
@@ -87,6 +90,8 @@ export default function EvmAuthComponent({
             token: response?.token || "",
             img: userdata?.img?.pro,
             sid: response?.id || "",
+            netWrth: userdata?.netWrth || 0,
+            effectiveNetWrth: userdata?.effectiveNetWrth || 0,
           };
           setClientSideCookie("authToken", JSON.stringify(user));
           dispatch(actions.setUserData(user));

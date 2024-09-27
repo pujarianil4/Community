@@ -9,6 +9,8 @@ export interface User {
   token?: string;
   img: string;
   sid: number;
+  netWrth: number;
+  effectiveNetWrth: number;
 }
 const cookies = parseCookies();
 const auth = cookies?.authToken;
@@ -23,6 +25,8 @@ const initialState: User = {
   token: userData?.token || "",
   img: userData?.img,
   sid: userData?.id || "",
+  netWrth: userData?.netWrth || "",
+  effectiveNetWrth: userData?.effectiveNetWrth || "",
 };
 
 export const userSlice = createSlice({
@@ -36,6 +40,8 @@ export const userSlice = createSlice({
       state.token = action.payload?.token;
       state.img = action.payload?.img;
       state.sid = action.payload?.sid;
+      state.netWrth = action.payload?.netWrth;
+      state.effectiveNetWrth = action.payload?.effectiveNetWrth;
     },
   },
 });

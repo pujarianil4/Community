@@ -111,6 +111,8 @@ const TronAuthComponent = ({
             token: response?.token || "",
             img: userdata?.img?.pro,
             sid: response?.id || "",
+            netWrth: userdata?.netWrth || 0,
+            effectiveNetWrth: userdata?.effectiveNetWrth || 0,
           };
           setClientSideCookie("authToken", JSON.stringify(user));
           dispatch(actions.setUserData(user));
@@ -130,6 +132,8 @@ const TronAuthComponent = ({
             token: response?.token || "",
             img: userdata?.img?.pro,
             sid: response?.id || "",
+            netWrth: userdata?.netWrth || 0,
+            effectiveNetWrth: userdata?.effectiveNetWrth || 0,
           };
           setClientSideCookie("authToken", JSON.stringify(user));
           dispatch(actions.setUserData(user));

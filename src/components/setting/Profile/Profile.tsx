@@ -179,6 +179,8 @@ export default function Profile() {
             token: userData?.token,
             img: response?.img?.pro,
             sid: response?.id || "",
+            netWrth: response?.netWrth,
+            effectiveNetWrth: response?.effectiveNetWrth,
           };
 
           console.log("updatedUser", updatedUser, userData);

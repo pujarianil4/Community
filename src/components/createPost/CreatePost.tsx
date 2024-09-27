@@ -413,7 +413,7 @@ const CreatePost: React.FC<Props> = ({
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               selected={selectedOption}
-              defaultCommunity={defaultCommunity}
+              defaultSearch={defaultCommunity}
             />
             <div className='post_editor'>
               <FocusableDiv>

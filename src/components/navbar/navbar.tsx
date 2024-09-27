@@ -128,6 +128,8 @@ export default function Navbar() {
         token: "",
         img: "",
         sid: "",
+        netWrth: 0,
+        effectiveNetWrth: 0,
       };
 
       dispatch(actions.setUserData(initialState));
@@ -146,6 +148,8 @@ export default function Navbar() {
         token: "",
         img: "",
         sid: "",
+        netWrth: 0,
+        effectiveNetWrth: 0,
       };
 
       dispatch(actions.setUserData(initialState));
@@ -190,10 +194,11 @@ export default function Navbar() {
         token: userData1?.token,
         img: response?.img?.pro,
         sid: response?.id || "",
+        netWrth: response?.netWrth,
+        effectiveNetWrth: response?.effectiveNetWrth,
       };
       setUserSession(user);
       console.log("user", user);
-
       setClientSideCookie("authToken", JSON.stringify(user));
       dispatch(actions.setUserData(userData));
     }
