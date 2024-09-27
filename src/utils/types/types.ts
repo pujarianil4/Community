@@ -13,6 +13,9 @@ export interface IUser {
   cta?: string;
   uta?: string;
   desc?: string;
+  sid?: string;
+  netWrth?: number;
+  effectiveNetWrth?: number;
   telegram?: { id: string; username: string } | string | null;
   discord?: { id: string; username: string } | string | null;
   x?: { id: string; username: string } | string | null;
@@ -148,7 +151,7 @@ export interface ICreateProposalPayload {
 
 export interface IVoteProposalPayload {
   pid: number;
-  value: number;
+  typ: string;
 }
 
 export interface IProposalForm {

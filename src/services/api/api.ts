@@ -116,8 +116,8 @@ export const fetchUser = async (username: string) => {
     return null;
   }
   try {
-    const response = await api.get(`/users/uname/${username}?uid=${uid}`);
-    return response.data;
+    const { data } = await api.get(`/users/uname/${username}?uid=${uid}`);
+    return Array.isArray(data) ? data[0] : data;
     // const isFollowed = await isUserFollowed({
     //   fwid: response?.data?.id,
     //   type: "u",
@@ -181,13 +181,12 @@ export const createCommunity = async (data: any) => {
 export const fetchCommunityByCname = async (cName: string) => {
   const uid = store.getState().user?.uid;
 
-  
   if (!cName) {
     return null;
   }
   try {
-    const response = await api.get(`/community/cname/${cName}?uid=${uid}`);
-    return response.data;
+    const { data } = await api.get(`/community/cname/${cName}?uid=${uid}`);
+    return Array.isArray(data) ? data[0] : data;
     // if (response.data) {
     //   if (response?.data?.id) {
     //     isFollowed = await isUserFollowed({
@@ -461,8 +460,8 @@ export const uploadMultipleFile = async (files: FileList) => {
     console.log("Upload successful:", response.data);
     return response.data;
   } catch (error) {
-    throw error;
     console.error("Upload failed:", error);
+    throw error;
   }
 };
 
@@ -505,6 +504,7 @@ export const createProposal = async (payload: ICreateProposalPayload) => {
     return data;
   } catch (error) {
     console.error("Proposal_Error", error);
+    throw error;
   }
 };
 
@@ -523,6 +523,7 @@ export const fetchAllProposals = async ({
     return data;
   } catch (error) {
     console.error("Fetch_Proposals_Error", error);
+    throw error;
   }
 };
 
@@ -543,6 +544,7 @@ export const fetchProposalsByCId = async ({
     return data;
   } catch (error) {
     console.error("Fetch_Proposals_Error", error);
+    throw error;
   }
 };
 
@@ -553,9 +555,10 @@ export const fetchProposalByID = async (proposalId: number) => {
       `/governance/proposal/${proposalId}?uid=${uid}`
     );
 
-    return data[0];
+    return Array.isArray(data) ? data[0] : data;
   } catch (error) {
     console.error("Fetch_ProposalByID_Error", error);
+    throw error;
   }
 };
 
@@ -566,6 +569,45 @@ export const voteToProposal = async (payload: IVoteProposalPayload) => {
     return data;
   } catch (error) {
     console.error("Vote Proposal Error", error);
+    throw error;
+  }
+};
+
+export const delegateNetWorth = async (userId: number) => {
+  try {
+    const response = await api.post(`/governance/delegate/${userId}`);
+    console.log("=====Delegate Successful=====");
+  } catch (error) {
+    console.error("Delegate Error", error);
+    throw error;
+  }
+};
+
+export const undoDelegateNetWorth = async (delegateId: number) => {
+  try {
+    const response = await api.post(`/governance/delegate/undo/${delegateId}`);
+    console.log("=====Undo Delegate Successful=====");
+  } catch (error) {
+    console.error("Delegate Error", error);
+    throw error;
+  }
+};
+
+export const fetchDelegatesByUname = async (payload: {
+  username: string;
+  type: "dgte" | "dgtr";
+  page: number;
+  limit: number;
+}) => {
+  const { username, type, page, limit } = payload;
+  try {
+    const { data } = await api.get(
+      `/governance/delegate/${username}?page=${page}&limit=${limit}&typ=${type}`
+    );
+    return data;
+  } catch (error) {
+    console.error("Fetch_Proposals_Error", error);
+    throw error;
   }
 };
 
