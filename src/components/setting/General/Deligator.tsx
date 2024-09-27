@@ -22,9 +22,6 @@ export default function Deligator() {
   };
   const { isLoading, data } = useAsync(fetchDelegatesByUname, payload);
 
-  // if (data?.length === 0) {
-  //   return <EmptyData />;
-  // }
   return (
     <Collapse accordion style={{ marginTop: "16px" }}>
       <Panel
@@ -32,19 +29,6 @@ export default function Deligator() {
         key='1'
         extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
       >
-        {/* {data?.map((session: { ip: string; id: string }) => (
-      <div key={session.id} className='s_m_bx'>
-        <DesktopIcon />
-        <div className='u_bx'>
-          <span className='u_txt'>{session.ip}</span>{" "}
-          {session.id !== cookiesData.sid && (
-            <span onClick={() => handleRemoveSession(session.id)}>
-              <DeleteIcon />
-            </span>
-          )}
-        </div>
-      </div>
-    ))} */}
         <>
           {isLoading ? (
             <p>Loading...</p>

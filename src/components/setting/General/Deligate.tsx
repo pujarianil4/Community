@@ -51,12 +51,6 @@ export default function Deligate() {
     await undoDelegateNetWorth(id);
     refetch();
   };
-  // useEffect(() => {
-  //   if (data) {
-  //     refetch();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [data]);
   return (
     <Collapse accordion style={{ marginTop: "16px" }}>
       <Panel
@@ -95,7 +89,7 @@ export default function Deligate() {
                 <div className='delegate_container'>
                   <DropdownWithSearch
                     onSelect={setSelectedUser}
-                    options={userData} // Array of ICommunity objects
+                    options={userData}
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
                     selected={selectedUser}
