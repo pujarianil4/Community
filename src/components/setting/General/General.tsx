@@ -16,6 +16,8 @@ import TelegramConnect from "@/components/common/auth/AuthTelegram";
 import Session from "./Session";
 //
 import LinkAddress from "./LinkedAddress";
+import Deligate from "./Deligate";
+import Deligator from "./Deligator";
 
 const { Panel } = Collapse;
 
@@ -40,6 +42,10 @@ export default function General() {
         <LinkAddress />
         {/* Session Accordion */}
         <Session />
+        {/* Governance */}
+        {/* <Governance /> */}
+        <Deligate />
+        <Deligator />
       </div>
     </>
   );

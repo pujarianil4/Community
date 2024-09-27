@@ -564,6 +564,42 @@ export const voteToProposal = async (payload: IVoteProposalPayload) => {
     return data;
   } catch (error) {
     console.error("Vote Proposal Error", error);
+    throw error;
+  }
+};
+
+export const delegateNetWorth = async (userId: number) => {
+  try {
+    const response = await api.post(`/governance/delegate/${userId}`);
+    console.log("=====Delegate Successful=====");
+  } catch (error) {
+    console.error("Delegate Error", error);
+  }
+};
+
+export const undoDelegateNetWorth = async (delegateId: number) => {
+  try {
+    const response = await api.post(`/governance/delegate/undo/${delegateId}`);
+    console.log("=====Undo Delegate Successful=====");
+  } catch (error) {
+    console.error("Delegate Error", error);
+  }
+};
+
+export const fetchDelegatesByUname = async (payload: {
+  username: string;
+  type: "dgte" | "dgtr";
+  page: number;
+  limit: number;
+}) => {
+  const { username, type, page, limit } = payload;
+  try {
+    const { data } = await api.get(
+      `/governance/delegate/${username}?page=${page}&limit=${limit}&typ=${type}`
+    );
+    return data;
+  } catch (error) {
+    console.error("Fetch_Proposals_Error", error);
   }
 };
 

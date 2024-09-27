@@ -6,10 +6,11 @@ import { voteToProposal } from "@/services/api/api";
 import { IVoteProposalPayload } from "@/utils/types/types";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
+import NotificationMessage from "../common/Notification";
 
 export default function VoteSection() {
   const { proposalId } = useParams<{ proposalId: string }>();
-  const [value, setValue] = useState<number>(0);
+  const [value, setValue] = useState<string>("yes");
 
   const proposalVote = (state: RootState) => state?.common.proposalVote;
   const [{ dispatch, actions }, [proposalVoteData]] = useRedux([proposalVote]);
@@ -17,23 +18,27 @@ export default function VoteSection() {
   const handleVote = async () => {
     const payload: IVoteProposalPayload = {
       pid: +proposalId,
-      value: 1,
+      typ: value,
     };
-    await voteToProposal(payload);
-    dispatch(actions.setProposalVote(value == 1 ? true : false));
+    try {
+      await voteToProposal(payload);
+      dispatch(actions.setProposalVote(value == "yes" ? true : false));
+    } catch (error: any) {
+      NotificationMessage("error", error.response.data.message);
+    }
   };
   return (
     <section className='vote_section'>
       <p>Cast ypur Vote</p>
       <CButton
-        className={`option ${value == 1 ? "yes" : ""}`}
-        onClick={() => setValue(1)}
+        className={`option ${value == "yes" ? "yes" : ""}`}
+        onClick={() => setValue("yes")}
       >
         Yes
       </CButton>
       <CButton
-        className={`option ${value == -1 ? "no" : ""}`}
-        onClick={() => setValue(-1)}
+        className={`option ${value == "no" ? "no" : ""}`}
+        onClick={() => setValue("no")}
       >
         No
       </CButton>

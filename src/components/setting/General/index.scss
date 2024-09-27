@@ -95,3 +95,39 @@
     }
   }
 }
+
+.deligat_item {
+  display: flex;
+  border: 1px solid var(--tertiary-border);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  padding: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+
+  p {
+    &:nth-child(1) {
+      flex: 0.35;
+    }
+    &:nth-child(2) {
+      flex: 0.3;
+    }
+    &:nth-child(3) {
+      flex: 0.35;
+    }
+  }
+}
+
+.delegate_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .dropdown_with_search {
+    width: 300px;
+    .search_input {
+      width: 100%;
+    }
+  }
+}
