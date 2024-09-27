@@ -1,98 +1,12 @@
-// .userhead_cotainer {
-//   width: 100%;
-
-//   border: 1px solid var(--secondary-bg);
-//   border-radius: 10px;
-//   margin: 20px 0px;
-//   .info {
-//     display: flex;
-//     border-radius: 10px 10px 0px 0px;
-//     justify-content: space-between;
-//     align-content: center;
-//     height: 50px;
-//     align-items: center;
-//     background-color: var(--secondary-bg);
-//     position: relative;
-//     padding: 10px;
-
-//     img {
-//       width: 80px;
-//       height: 80px;
-//       background-color: var(--secondary-bg);
-//       border-radius: 50%;
-//       margin: 0px 20px;
-//       margin-right: 0px;
-//       left: -5px;
-//       top: -15px;
-//       position: absolute;
-//       padding: 10px;
-//       object-fit: cover;
-//     }
-
-//     .head {
-//       display: flex;
-//       justify-content: space-between;
-//       width: 100%;
-
-//       .names {
-//         margin-left: 100px;
-//         width: 45%;
-//       }
-
-//       h4 {
-//         color: var(--primary-text);
-//         white-space: nowrap;
-//         overflow: hidden;
-//         text-overflow: ellipsis;
-//       }
-
-//       .username {
-//         margin-top: 2px;
-//         font-size: 12px;
-//         color: var(--label-text);
-//         white-space: nowrap;
-//         overflow: hidden;
-//         text-overflow: ellipsis;
-//       }
-//       .followed {
-//         background-color: transparent;
-//         border: 1px solid var(--primary);
-//         color: var(--primary);
-//       }
-//     }
-//   }
-
-//   .content {
-//     padding: 20px;
-//     .statics {
-//       display: flex;
-//       gap: 20px;
-//       margin: 10px;
-//       div {
-//         text-align: center;
-//         span {
-//           font-size: 12px;
-//           color: var(--label-text);
-//         }
-//         h4 {
-//           font-size: 15px;
-//         }
-//       }
-//     }
-//     .overview {
-//       p {
-//         font-size: 15px;
-//       }
-//     }
-//   }
-// }
-
+@import "/src/styles";
 .userhead_cotainer {
   width: 100%;
   height: 372px;
   position: relative;
   margin-bottom: 24px;
-
+  @include lessThan(md) {
+    height: 270px;
+  }
   .cover_photo {
     width: 100%;
     height: 220px;
@@ -100,7 +14,9 @@
     border-radius: 0 0 1rem 1rem;
     overflow: hidden;
     z-index: 1;
-
+    @include lessThan(md) {
+      height: 120px;
+    }
     .imgbg {
       position: absolute;
       width: 100%;
@@ -112,7 +28,7 @@
     .cover_img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
     }
   }
 
@@ -125,13 +41,24 @@
     z-index: 2;
     background-color: var(--primary-bg);
     border-radius: 0.75rem;
-
+    // padding: 0.5rem;
+    @include lessThan(md) {
+      width: 96%;
+      left: 2%;
+      top: 88px;
+      height: 185px;
+    }
     .detailed_data {
+      max-width: 700px;
+      width: 100%;
       height: 128px;
       border-bottom: 1px solid var(--primary-border);
       display: flex;
       justify-content: center;
       align-items: center;
+      @include lessThan(md) {
+        height: 85px;
+      }
       .box {
         display: flex;
         justify-content: center;
@@ -141,7 +68,9 @@
       }
 
       .user {
-        flex: 0.4;
+        flex: 0.7 1;
+        justify-content: flex-start;
+        margin-left: 1rem;
         .avatar {
           position: relative;
           width: 72px;
@@ -149,7 +78,15 @@
           margin-right: 1rem;
           img {
             border-radius: 0.5rem;
-            object-fit: cover !important;
+            object-fit: cover;
+            @include lessThan(md) {
+              width: 45px;
+              height: 45px;
+            }
+          }
+          @include lessThan(md) {
+            width: 45px;
+            height: 45px;
           }
         }
         h4 {
@@ -157,30 +94,44 @@
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          font-weight: $font-weight-semi-bold;
+          @include lessThan(md) {
+            font-size: $font-size-sm;
+          }
         }
 
         .username {
           margin-top: 2px;
-          font-size: 12px;
+          font-size: $font-size-xsm;
           color: var(--label-text);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          @include lessThan(md) {
+            font-size: $font-size-xxsm;
+          }
         }
       }
 
       .stats {
-        flex: 0.2;
+        flex: 0.25;
         border-left: 1px solid var(--primary-border);
         flex-direction: column;
         p {
-          font-size: 12px;
+          font-size: $font-size-xsm;
           color: var(--primary-text);
           margin-bottom: 4px;
+          @include lessThan(md) {
+            font-size: $font-size-xxsm;
+          }
         }
         h4 {
           font-size: 16px;
           color: var(--primary-text);
+          @include lessThan(md) {
+            font-size: $font-size-sm;
+            font-weight: $font-weight-semi-bold;
+          }
         }
       }
     }
@@ -190,24 +141,36 @@
       justify-content: space-between;
       align-items: flex-start;
       padding: 0.75rem 0.75rem 0;
-      height: 86px;
-
+      height: fit-content;
+      @include lessThan(md) {
+        padding: 0.3rem 0.2rem 0;
+      }
       p {
         font-size: 14px;
         color: var(--primary-text);
+        @include lessThan(lg) {
+          font-size: 12px;
+        }
+        @include lessThan(md) {
+          font-size: 9px;
+        }
       }
 
       .follow_btn {
         background: var(--tertiary-bg) !important;
         color: var(--primary) !important;
-        font-size: 14px !important;
+        font-size: $font-size-sm !important;
+        @include lessThan(md) {
+          height: 22px !important;
+          font-size: $font-size-xxsm !important;
+        }
       }
-      .about {
+
+      .desc_bx {
         padding: 10px;
       }
       .social_bx {
         text-align: end;
-        margin-top: 0.75rem;
       }
     }
 
@@ -222,15 +185,22 @@
       justify-content: flex-end;
       padding: 5px 0px 0px 5px;
       margin-top: 11px;
-
+      @include lessThan(md) {
+        gap: 1rem;
+      }
       div {
         cursor: pointer;
       }
 
       .disabled {
         cursor: default;
+
         svg {
           opacity: 0.7;
+          // @include lessThan(md) {
+          //   width: 13px;
+          //   height: auto;
+          // }
         }
       }
     }

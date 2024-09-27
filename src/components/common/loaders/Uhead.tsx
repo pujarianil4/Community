@@ -21,6 +21,10 @@ export default function UandCHeadLoader() {
             <p className='skeleton'></p>
             <h4 className='skeleton'></h4>
           </div>
+          <div className='stats box'>
+            <p className='skeleton'></p>
+            <h4 className='skeleton'></h4>
+          </div>
         </div>
         <div className='activity'>
           <p className='skeleton'></p>

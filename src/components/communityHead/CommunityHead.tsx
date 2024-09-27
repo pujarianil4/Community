@@ -169,7 +169,7 @@ export default function CommunityHead() {
               {
                 key: "2",
                 label: "Members",
-                content: <Followers uid={data.id} entityType='c' />,
+                content: <Followers uid={data?.id} entityType='c' />,
               },
               // {
               //   key: "3",
@@ -179,7 +179,7 @@ export default function CommunityHead() {
               {
                 key: "4",
                 label: "Proposals",
-                content: <Proposals cid={data.id} cname={data.name} />,
+                content: <Proposals cid={data?.id} cname={data?.name} />,
               },
             ]}
           />

@@ -169,6 +169,12 @@
         @include lessThan(xl) {
           font-size: $font-size-xsm;
           font-weight: $font-weight-semi-bold;
+          padding: 7px 12px;
+        }
+        @include lessThan(md) {
+          font-size: $font-size-xxsm;
+          font-weight: $font-weight-semi-bold;
+          padding: 7px 10px;
         }
       }
       .ant-tabs-tab-active {

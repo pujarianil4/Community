@@ -454,8 +454,13 @@ const CreatePost: React.FC<Props> = ({
                   <FileInput onChange={handleUploadFile}>
                     <LuImagePlus color='#636466' size={20} />
                   </FileInput>
-                  <LinkIcon />
-                  <MdEmojiEmotions color='#636466' size={20} />
+                  <div>
+                    <LinkIcon />
+                  </div>
+                  <div>
+                    <MdEmojiEmotions color='#636466' size={20} />
+                  </div>
+
                   <span className={uploadMsg.type}>{uploadMsg?.msg}</span>
                 </div>
               </FocusableDiv>
