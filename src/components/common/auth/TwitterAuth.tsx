@@ -34,7 +34,6 @@ const twitterAuth = () => {
     data: userData,
     refetch,
   } = useAsync(getUserData);
-  console.log("userdata", userData);
 
   const handleRemove = () => {
     updateUser({ x: null })

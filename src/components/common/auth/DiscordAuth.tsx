@@ -25,7 +25,6 @@ const discordAuth = () => {
     data: userData,
     refetch,
   } = useAsync(getUserData);
-  console.log("userdata", userData);
 
   const handleRemove = () => {
     updateUser({ discord: null })

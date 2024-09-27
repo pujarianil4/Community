@@ -180,6 +180,7 @@ export const createCommunity = async (data: any) => {
 
 export const fetchCommunityByCname = async (cName: string) => {
   const uid = store.getState().user?.uid;
+
   if (!cName) {
     return null;
   }
