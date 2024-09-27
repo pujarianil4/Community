@@ -217,9 +217,10 @@
     @include lessThan(xl) {
       margin-top: -4px;
     }
-    @include lessThan(sm) {
-      margin-top: 3rem;
+    @include lessThan(md) {
+      margin-top: -7px;
       right: 8px;
+      width: 100px;
     }
     .btn {
       padding: 8px !important;
@@ -227,8 +228,17 @@
       color: var(--primary) !important;
       font-size: 14px !important;
       cursor: pointer;
+
       @include lessThan(xl) {
-        font-size: $font-size-xsm !important;
+        font-size: $font-size-sm !important;
+      }
+      @include lessThan(md) {
+        font-size: $font-size-xxsm !important;
+      }
+      svg {
+        @include lessThan(md) {
+          width: 12px;
+        }
       }
     }
   }

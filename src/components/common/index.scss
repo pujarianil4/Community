@@ -152,6 +152,9 @@
 
 .ant-tabs {
   .ant-tabs-nav {
+    @include lessThan(md) {
+      margin: 0 0 6px 0;
+    }
     .ant-tabs-nav-wrap:before {
       position: relative;
     }
@@ -185,7 +188,7 @@
   }
   .ant-tabs-content-holder {
     @include lessThan(md) {
-      margin-top: 2.7rem;
+      margin-top: 0.1rem;
     }
   }
 }
