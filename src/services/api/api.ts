@@ -116,8 +116,8 @@ export const fetchUser = async (username: string) => {
     return null;
   }
   try {
-    const response = await api.get(`/users/uname/${username}?uid=${uid}`);
-    return response.data[0];
+    const { data } = await api.get(`/users/uname/${username}?uid=${uid}`);
+    return Array.isArray(data) ? data[0] : data;
     // const isFollowed = await isUserFollowed({
     //   fwid: response?.data?.id,
     //   type: "u",
@@ -184,8 +184,8 @@ export const fetchCommunityByCname = async (cName: string) => {
     return null;
   }
   try {
-    const response = await api.get(`/community/cname/${cName}?uid=${uid}`);
-    return response.data[0];
+    const { data } = await api.get(`/community/cname/${cName}?uid=${uid}`);
+    return Array.isArray(data) ? data[0] : data;
     // if (response.data) {
     //   if (response?.data?.id) {
     //     isFollowed = await isUserFollowed({
@@ -459,8 +459,8 @@ export const uploadMultipleFile = async (files: FileList) => {
     console.log("Upload successful:", response.data);
     return response.data;
   } catch (error) {
-    throw error;
     console.error("Upload failed:", error);
+    throw error;
   }
 };
 
@@ -503,6 +503,7 @@ export const createProposal = async (payload: ICreateProposalPayload) => {
     return data;
   } catch (error) {
     console.error("Proposal_Error", error);
+    throw error;
   }
 };
 
@@ -521,6 +522,7 @@ export const fetchAllProposals = async ({
     return data;
   } catch (error) {
     console.error("Fetch_Proposals_Error", error);
+    throw error;
   }
 };
 
@@ -541,6 +543,7 @@ export const fetchProposalsByCId = async ({
     return data;
   } catch (error) {
     console.error("Fetch_Proposals_Error", error);
+    throw error;
   }
 };
 
@@ -551,9 +554,10 @@ export const fetchProposalByID = async (proposalId: number) => {
       `/governance/proposal/${proposalId}?uid=${uid}`
     );
 
-    return data[0];
+    return Array.isArray(data) ? data[0] : data;
   } catch (error) {
     console.error("Fetch_ProposalByID_Error", error);
+    throw error;
   }
 };
 
@@ -574,6 +578,7 @@ export const delegateNetWorth = async (userId: number) => {
     console.log("=====Delegate Successful=====");
   } catch (error) {
     console.error("Delegate Error", error);
+    throw error;
   }
 };
 
@@ -583,6 +588,7 @@ export const undoDelegateNetWorth = async (delegateId: number) => {
     console.log("=====Undo Delegate Successful=====");
   } catch (error) {
     console.error("Delegate Error", error);
+    throw error;
   }
 };
 
@@ -600,6 +606,7 @@ export const fetchDelegatesByUname = async (payload: {
     return data;
   } catch (error) {
     console.error("Fetch_Proposals_Error", error);
+    throw error;
   }
 };
 
