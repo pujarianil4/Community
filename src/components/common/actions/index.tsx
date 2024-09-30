@@ -59,7 +59,7 @@ export default function Actions({
       if (vote.type === "down") {
         newVote = { value: vote.value + 2, type: "up" };
       } else if (vote.type === "up") {
-        newVote = { value: vote.value - 1, type: "" };
+        newVote = { value: vote.value - 1, type: "up" };
       } else {
         newVote = { value: vote.value + 1, type: "up" };
       }
@@ -67,7 +67,7 @@ export default function Actions({
       if (vote.type === "up") {
         newVote = { value: vote.value - 2, type: "down" };
       } else if (vote.type === "down") {
-        newVote = { value: vote.value + 1, type: "" };
+        newVote = { value: vote.value + 1, type: "down" };
       } else {
         newVote = { value: vote.value - 1, type: "down" };
       }
