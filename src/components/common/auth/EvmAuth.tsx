@@ -196,9 +196,7 @@ export default function EvmAuthComponent({
                       width={30}
                       height={30}
                     />
-                    <span>
-                      {connectorName} {i}
-                    </span>
+                    <span>{connectorName}</span>
                   </div>
                 );
               })}

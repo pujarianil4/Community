@@ -211,9 +211,13 @@ export default function Profile() {
         console.log("IMGURL", imgURL);
         setUser({ ...user, img: { ...user.img, pro: imgURL } });
         setIsUploadingAvatar(false);
+        //reset value to select same image again
+        event.target.value = "";
       } catch (error) {
         setIsUploadingAvatar(false);
         NotificationMessage("error", "Uploading failed");
+        //reset value to select same image again
+        event.target.value = "";
       }
 
       //setImgSrc(imgURL);
@@ -228,9 +232,13 @@ export default function Profile() {
         console.log("IMGURL", imgURL);
         setUser({ ...user, img: { ...user.img, cvr: imgURL } });
         setIsUploadingCover(false);
+        //reset value to select same image again
+        event.target.value = "";
       } catch (error) {
         setIsUploadingCover(false);
         NotificationMessage("error", "Uploading failed");
+        //reset value to select same image again
+        event.target.value = "";
       }
 
       //setImgSrc(imgURL);

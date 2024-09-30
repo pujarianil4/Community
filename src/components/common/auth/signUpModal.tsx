@@ -83,7 +83,10 @@ export const SignUpModal = ({
   };
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setSignUpData({ ...signUpData, username: value.trim() });
+    setSignUpData({
+      ...signUpData,
+      username: value.trim().toLocaleLowerCase(),
+    });
     debouncedCheckUsername(value);
   };
 
@@ -171,7 +174,7 @@ export const SignUpModal = ({
               size={18}
               className='signup_btn'
             >
-              Sign Up
+              Connect Wallet
             </CButton>
             <p>
               Already have account?{" "}
@@ -203,6 +206,10 @@ export const SignUpModal = ({
               signUpData={signUpData}
               setUserAuthData={handleUserAuthData}
             />
+            <p>
+              Don&apos;t have account?
+              <span onClick={() => setModalTab(2)}> SignUp</span>
+            </p>
           </div>
         )}
       </div>
