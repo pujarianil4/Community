@@ -66,7 +66,7 @@ function Setting() {
   );
 
   return (
-    <div>
+    <div className='setting_bx'>
       <h1>Settings</h1>
       <CTabs
         activeKey={activeTab}

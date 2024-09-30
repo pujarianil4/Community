@@ -12,6 +12,10 @@
   }
   .ant-modal-close {
     color: var(--black) !important;
+    @include lessThan(md) {
+      top: 5px !important;
+      width: 18px;
+    }
   }
   // button {
   //   color: var(--black) !important;
@@ -91,17 +95,29 @@
       font-size: $font-size-sm;
       color: var(--primary-text);
       font-weight: $font-weight-semi-bold;
+      @include lessThan(md) {
+        font-size: $font-size-xsm;
+      }
     }
     svg {
       width: 30px;
+      @include lessThan(md) {
+        width: 18px;
+      }
+      @include lessThan(sm) {
+        width: 16px;
+      }
     }
   }
   .ant-menu-submenu {
     .ant-menu-submenu-title {
       .ant-menu-title-content {
-        font-size: 20px;
+        font-size: $font-size-xlg;
         color: var(--primary-text);
         font-weight: $font-weight-semi-bold;
+        @include lessThan(md) {
+          font-size: $font-size-md;
+        }
       }
     }
     ul {
@@ -434,8 +450,9 @@
 
 //modal
 .ant-modal-mask {
-  z-index: 80 !important;
+  z-index: 1000 !important;
 }
+
 .ant-modal-wrap {
-  z-index: 80 !important;
+  z-index: 1000 !important;
 }

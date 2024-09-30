@@ -4,7 +4,9 @@
   height: 372px;
   position: relative;
   margin-bottom: 24px;
-
+  @include lessThan(md) {
+    height: 270px;
+  }
   .cover_photo {
     width: 100%;
     height: 220px;
@@ -24,12 +26,21 @@
     background-color: var(--primary-bg);
     border-radius: 0.75rem;
 
+    @include lessThan(md) {
+      width: 96%;
+      left: 2%;
+      top: 88px;
+      height: 185px;
+    }
     .detailed_data {
       height: 128px;
       border-bottom: 1px solid var(--primary-border);
       display: flex;
       justify-content: center;
       align-items: center;
+      @include lessThan(md) {
+        height: 85px;
+      }
       .box {
         display: flex;
         justify-content: center;
@@ -39,12 +50,19 @@
       }
 
       .user {
-        flex: 0.4;
+        flex: 0.7 1;
+        justify-content: flex-start;
+        margin-left: 1rem;
         .avatar {
           width: 72px;
           height: 72px;
           margin-right: 1rem;
           border-radius: 0.5rem;
+
+          @include lessThan(md) {
+            width: 45px;
+            height: 45px;
+          }
         }
 
         .user_name {
@@ -53,9 +71,15 @@
           p {
             width: 80px !important;
             height: 16px !important;
+            @include lessThan(xl) {
+              width: 30px !important;
+            }
           }
           h4 {
             margin-bottom: 8px;
+            // @include lessThan(md) {
+            //   font-size: $font-size-sm;
+            // }
           }
         }
       }
@@ -69,6 +93,9 @@
         p {
           width: 72px;
           height: 16px;
+          @include lessThan(xl) {
+            width: 30px !important;
+          }
         }
 
         p {
@@ -83,7 +110,9 @@
       align-items: flex-start;
       padding: 0.75rem 0.75rem 0;
       height: 86px;
-
+      @include lessThan(md) {
+        padding: 0.3rem 0.2rem 0;
+      }
       p {
         width: 100%;
         height: 16px;
@@ -99,21 +128,28 @@
         height: 32px;
       }
     }
+    .social_bx {
+      text-align: end;
 
-    .socials {
-      width: 120px;
-      height: 28px;
-      padding: 0 0.75rem 0.75rem;
-      margin-left: auto;
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      justify-content: flex-end;
-      cursor: pointer;
-
-      .logo {
-        width: 20px;
-        // height: 16px;
+      .socials {
+        width: 120px;
+        height: 28px;
+        padding: 0 0.75rem 0.75rem;
+        // margin-left: auto;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        justify-content: flex-end;
+        align-items: center;
+        cursor: pointer;
+        margin-top: 11px;
+        @include lessThan(md) {
+          gap: 10px;
+        }
+        .logo {
+          width: 20px;
+          // height: 16px;
+        }
       }
     }
   }

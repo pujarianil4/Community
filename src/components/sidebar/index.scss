@@ -11,10 +11,16 @@
   //   width: 200px;
   //   left: 0px;
   // }
+  @include lessThan(xl) {
+    width: 250px;
+  }
   @include lessThan(lg) {
     position: absolute;
     left: -300px;
     width: 250px;
+  }
+  @include lessThan(md) {
+    width: 210px;
   }
 }
 
@@ -54,6 +60,14 @@
     color: var(--primary) !important;
     background: transparent !important;
     padding: 0px !important;
+    @include lessThan(md) {
+      font-size: $font-size-xsm !important;
+    }
+    svg {
+      @include lessThan(md) {
+        width: 10px;
+      }
+    }
   }
 }
 
@@ -167,6 +181,12 @@
     // height: 700px;
     padding: 10px 15px;
     // background: var(--black);
+
+    @include lessThan(md) {
+      width: 100%;
+      padding: 10px 8px 8px 8px;
+      margin-top: 1rem;
+    }
     .cover_bx {
       background-color: var(--primary-disable);
       display: flex;
@@ -176,6 +196,9 @@
       height: 160px;
       border-bottom-right-radius: 10px;
       border-bottom-left-radius: 10px;
+      @include lessThan(md) {
+        height: 90px;
+      }
       .label {
         font-size: 12px;
         color: var(--label-text);
@@ -218,6 +241,11 @@
       margin-top: -53px;
       margin-left: 2rem;
       border-radius: 8px;
+      @include lessThan(md) {
+        width: 60px;
+        height: 60px;
+        margin-top: -36px;
+      }
       .label {
         font-size: 12px;
         color: var(--label-text);
@@ -258,6 +286,12 @@
         color: var(--black);
         margin-bottom: 0.4rem;
         font-weight: 600;
+        @include lessThan(md) {
+          font-size: $font-size-xsm;
+        }
+        @include lessThan(xsm) {
+          font-size: $font-size-xxsm;
+        }
       }
       input {
         padding: 12px 16px;
@@ -266,6 +300,9 @@
         border-radius: 8px;
         color: var(--primary-text);
         outline: none;
+        @include lessThan(md) {
+          padding: 10px 12px;
+        }
         &:focus {
           border: 1px solid var(--black);
         }
