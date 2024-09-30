@@ -50,6 +50,7 @@ import { useRouter } from "next/navigation";
 
 import { SignUpModal } from "../common/auth/signUpModal";
 import Searchbar from "./searchbar";
+import { IoMdArrowBack } from "react-icons/io";
 export interface ISignupData {
   username: string;
   name: string;
@@ -243,72 +244,77 @@ export default function Navbar() {
     </div>
   );
 
-  // return <></>;
-
   return (
     <>
-      <nav className='nav_container'>
-        <div className='first_child'>
-          <div>
-            <Link href='#'>
-              <h2>Numity</h2>
-            </Link>
-          </div>
-          <div className='hidesearchbar'>
+      {showSearchBar ? (
+        <div className='mobile_search_container'>
+          <div className='mobile_search'>
+            <IoMdArrowBack onClick={() => setShowSearchBar(false)} />
             <Searchbar />
           </div>
         </div>
-
-        <div className='signin'>
-          {userSession?.token ? (
-            <div className='user_actions'>
-              <div className='search'>
-                {showSearchBar && (
-                  <div className='absolute_searchbar'>
-                    <Searchbar />
-                  </div>
-                )}
-                <IoSearch onClick={() => setShowSearchBar(true)} />
-              </div>
-              <CButton className='create_post' onClick={showCreatePost}>
-                <AddIcon />
-                <span>Create Post</span>
-              </CButton>
-              <FaRegBell className='notification' size={25} />
-              <div className='user_icon'>
-                <Popover
-                  placement='bottomRight'
-                  content={content}
-                  trigger='click'
-                >
-                  {userSession?.img ? (
-                    <Image
-                      width={50}
-                      height={50}
-                      loading='lazy'
-                      className='avatar'
-                      src={userSession?.img}
-                      alt='avatar'
-                    />
-                  ) : (
-                    <PiUserCircleDuotone
-                      color='var(--primary-text)'
-                      size={40}
-                    />
-                  )}
-                  {/* <GoChevronDown className='downarrow' size={20} /> */}
-                </Popover>
-              </div>
+      ) : (
+        <nav className='nav_container'>
+          <div className='first_child'>
+            <div className='logo'>
+              <Link href='#'>
+                <h2>Numity</h2>
+              </Link>
             </div>
-          ) : userSession?.userAvailable == false ? (
-            <CButton auth='auth' onClick={showModal}>
-              LogIn
-            </CButton>
-          ) : (
-            <div></div>
-          )}
-        </div>
-      </nav>
+            <div className='hidesearchbar'>
+              <Searchbar />
+            </div>
+          </div>
+
+          <div className='signin'>
+            {userSession?.token ? (
+              <div className='user_actions'>
+                {!showSearchBar && (
+                  <IoSearch
+                    className='mobile_search_icon'
+                    onClick={() => setShowSearchBar(true)}
+                  />
+                )}
+                <CButton className='create_post' onClick={showCreatePost}>
+                  <AddIcon />
+                  <span>Create Post</span>
+                </CButton>
+                <FaRegBell className='notification' size={25} />
+                <div className='user_icon'>
+                  <Popover
+                    placement='bottomRight'
+                    content={content}
+                    trigger='click'
+                  >
+                    {userSession?.img ? (
+                      <Image
+                        width={50}
+                        height={50}
+                        loading='lazy'
+                        className='avatar'
+                        src={userSession?.img}
+                        alt='avatar'
+                      />
+                    ) : (
+                      <PiUserCircleDuotone
+                        color='var(--primary-text)'
+                        size={40}
+                      />
+                    )}
+                    {/* <GoChevronDown className='downarrow' size={20} /> */}
+                  </Popover>
+                </div>
+              </div>
+            ) : userSession?.userAvailable == false ? (
+              <CButton auth='auth' onClick={showModal}>
+                LogIn
+              </CButton>
+            ) : (
+              <div></div>
+            )}
+          </div>
+        </nav>
+      )}
 
       <SignUpModal
         modalTab={modalTab}

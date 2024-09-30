@@ -8,6 +8,7 @@
     align-items: center;
     margin-bottom: 1rem;
     .search_container {
+      min-width: 240px;
       width: 40%;
       background: var(--tertiary-bg);
       border-radius: 8px;
