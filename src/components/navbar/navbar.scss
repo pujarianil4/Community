@@ -526,4 +526,12 @@
       opacity: 0.95;
     }
   }
+  p {
+    width: 100%;
+    text-align: center;
+    span {
+      color: var(--primary);
+      cursor: pointer;
+    }
+  }
 }
