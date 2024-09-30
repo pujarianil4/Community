@@ -1,9 +1,13 @@
 import { Modal } from "antd";
+import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import CosmosAuthComponent from "./CosmosAuth";
 import EvmAuthComponent from "./EvmAuth";
 import SolanaAuthComponent from "./SolanaAuth";
-import TronAuthComponent from "./TronAuth";
+
+const TronAuthComponent = dynamic(() => import("./TronAuth"), {
+  ssr: false,
+});
 
 interface IAuthModal {
   visible: boolean;
