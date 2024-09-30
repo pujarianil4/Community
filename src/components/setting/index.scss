@@ -1,4 +1,19 @@
-h1 {
-  color: var(--black);
-  margin-bottom: 1rem;
+@import "/src/styles";
+.setting_bx {
+  h1 {
+    color: var(--black);
+    margin-bottom: 1rem;
+
+    @include lessThan(md) {
+      font-size: $font-size-xlg;
+      margin-bottom: 0.4rem;
+    }
+    @include lessThan(xs) {
+      font-size: $font-size-sm !important;
+    }
+  }
+
+  @include lessThan(xs) {
+    width: 92%;
+  }
 }

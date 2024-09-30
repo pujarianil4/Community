@@ -56,7 +56,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   content = "",
   setContent,
   showToolbar = true,
-  placeHolder = "type here...",
+  placeHolder = "Type here...",
   autoFocus = false,
   maxCharCount = 2000,
 }) => {

@@ -12,7 +12,9 @@
       background: var(--tertiary-bg);
       border-radius: 8px;
       min-width: 240px;
-
+      @include lessThan(md) {
+        min-width: 160px;
+      }
       .search {
         padding: 8px 12px;
         width: 100%;
@@ -25,6 +27,10 @@
         }
         svg {
           color: rgba(255, 255, 255, 0.6);
+          @include lessThan(md) {
+            width: 15px;
+            height: auto;
+          }
         }
       }
     }
@@ -33,8 +39,11 @@
       padding: 8px !important;
       background: var(--tertiary-bg) !important;
       color: var(--primary) !important;
-      font-size: 14px !important;
+      font-size: $font-size-sm !important;
       cursor: pointer;
+      @include lessThan(md) {
+        font-size: $font-size-xsm !important;
+      }
     }
   }
 }

@@ -152,6 +152,9 @@
 
 .ant-tabs {
   .ant-tabs-nav {
+    @include lessThan(md) {
+      margin: 0 0 6px 0;
+    }
     .ant-tabs-nav-wrap:before {
       position: relative;
     }
@@ -162,15 +165,30 @@
         padding: 7px 19px;
         margin-right: 1rem;
         border-radius: 8px;
-        font-size: 15px;
+        font-size: $font-size-sm;
         font-weight: 600;
         border: 1px solid var(--tertiary-border);
         cursor: pointer;
+        @include lessThan(xl) {
+          font-size: $font-size-xsm;
+          font-weight: $font-weight-semi-bold;
+          padding: 7px 12px;
+        }
+        @include lessThan(md) {
+          font-size: $font-size-xxsm;
+          font-weight: $font-weight-semi-bold;
+          padding: 7px 10px;
+        }
       }
       .ant-tabs-tab-active {
         background: var(--secondary-bg);
         border: 2px solid var(--secondary-bg);
       }
+    }
+  }
+  .ant-tabs-content-holder {
+    @include lessThan(md) {
+      margin-top: 0.1rem;
     }
   }
 }

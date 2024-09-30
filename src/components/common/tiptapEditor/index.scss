@@ -1,6 +1,9 @@
+@import "/src/styles";
 .tiptap_editor_container {
   background: transparent;
-
+  @include lessThan(md) {
+    padding: 4px 4px 0px 4px;
+  }
   .hide_toolbar {
     display: none !important;
   }
@@ -12,6 +15,9 @@
     gap: 4px;
     max-width: 500px;
     flex-wrap: wrap;
+    @include lessThan(md) {
+      justify-content: flex-start;
+    }
     .icon {
       padding: 4px 8px;
       width: fit-content;
@@ -24,7 +30,17 @@
       border-radius: 4px;
       background-color: transparent;
       color: var(--primary-text);
-
+      svg {
+        color: var(--secondary-text);
+      }
+      @include lessThan(md) {
+        padding: 2px 4px;
+        height: 25px;
+        svg {
+          width: 12px;
+          height: 12px;
+        }
+      }
       &:hover {
         background-color: var(--tertiary-bg);
         color: var(--primary);
@@ -70,6 +86,9 @@
     blockquote,
     strong {
       color: var(--primary-text) !important;
+      @include lessThan(md) {
+        font-size: $font-size-xsm;
+      }
     }
 
     blockquote {
