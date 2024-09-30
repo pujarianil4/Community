@@ -11,50 +11,59 @@ import { debounce, getImageSource, numberWithCommas } from "@/utils/helpers";
 import { CloseIcon } from "@/assets/icons";
 
 // TODO: UPDATE WITH API DATA
-// const communityList: ICommunity[] = [
-//   {
-//     id: 1,
-//     username: "Unilend",
-//     name: "Unilend",
-//     ticker: "UFT",
-//     logo: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
-//     metadata: "unilend",
-//     pCount: 5,
-//     followers: 3,
-//     tSupply: 0,
-//     sts: 1,
-//     cta: "2024-09-03T07:09:26.687Z",
-//     uta: "2024-09-03T07:09:26.687Z",
-//   },
-//   {
-//     id: 2,
-//     username: "Unilend2",
-//     name: "Unilend",
-//     ticker: "UFT",
-//     logo: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
-//     metadata: "unilend",
-//     pCount: 5,
-//     followers: 3,
-//     tSupply: 0,
-//     sts: 1,
-//     cta: "2024-09-03T07:09:26.687Z",
-//     uta: "2024-09-03T07:09:26.687Z",
-//   },
-//   {
-//     id: 3,
-//     username: "Unilend3",
-//     name: "Unilend",
-//     ticker: "UFT",
-//     logo: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
-//     metadata: "unilend",
-//     pCount: 5,
-//     followers: 3,
-//     tSupply: 0,
-//     sts: 1,
-//     cta: "2024-09-03T07:09:26.687Z",
-//     uta: "2024-09-03T07:09:26.687Z",
-//   },
-// ];
+const communityList: ICommunity[] = [
+  {
+    id: 1,
+    username: "Unilend",
+    name: "Unilend",
+    ticker: "UFT",
+    img: {
+      pro: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
+      cvr: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
+    },
+    metadata: "unilend",
+    pCount: 5,
+    followers: 3,
+    tSupply: 0,
+    sts: 1,
+    cta: "2024-09-03T07:09:26.687Z",
+    uta: "2024-09-03T07:09:26.687Z",
+  },
+  {
+    id: 2,
+    username: "Unilend2",
+    name: "Unilend",
+    ticker: "UFT",
+    img: {
+      pro: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
+      cvr: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
+    },
+    metadata: "unilend",
+    pCount: 5,
+    followers: 3,
+    tSupply: 0,
+    sts: 1,
+    cta: "2024-09-03T07:09:26.687Z",
+    uta: "2024-09-03T07:09:26.687Z",
+  },
+  {
+    id: 3,
+    username: "Unilend3",
+    name: "Unilend",
+    ticker: "UFT",
+    img: {
+      pro: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
+      cvr: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
+    },
+    metadata: "unilend",
+    pCount: 5,
+    followers: 3,
+    tSupply: 0,
+    sts: 1,
+    cta: "2024-09-03T07:09:26.687Z",
+    uta: "2024-09-03T07:09:26.687Z",
+  },
+];
 
 export default function Searchbar() {
   const router = useRouter();
@@ -131,7 +140,7 @@ export default function Searchbar() {
       setSuggestions([]);
       return;
     }
-    // setSuggestions(communityList);
+    setSuggestions(communityList);
   }, [searchVal]);
   return (
     <div className='search_container'>
