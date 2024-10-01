@@ -16,10 +16,15 @@ interface List {
 
 export default function Posts() {
   //TODO: change getPosts method to get searchPosts
-  const { isLoading, data: posts, refetch, callFunction } = useAsync(getPosts);
+  const {
+    isLoading,
+    data: posts,
+    refetch,
+    callFunction,
+  } = useAsync(getPosts, { sortby: "ccount" });
 
   const handleFilter = (filter: List) => {
-    callFunction(getPosts, { sortby: filter.value });
+    callFunction(getPosts, { sortby: filter?.value });
   };
 
   if (posts?.length === 0 && !isLoading) {
