@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import "./index.scss";
+import FollowListLoader from "@/components/common/loaders/followList";
 
 interface IFollowers {
   uid: string;
@@ -66,6 +67,8 @@ export default function Followers({ uid, entityType }: IFollowers) {
             </Link>
           );
         })
+      ) : isLoading ? (
+        <FollowListLoader />
       ) : (
         <EmptyData />
       )}
