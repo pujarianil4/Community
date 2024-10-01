@@ -1,33 +1,22 @@
 "use client";
 // @ts-nocheck
-import { getSignMessage } from "@/config/ethers";
 import { useAccount } from "wagmi";
-// import { useSigner } from 'wagmi';
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import React, { useEffect, useRef, useState, ChangeEvent } from "react";
-import { Modal, Divider, Popover } from "antd";
+import React, { useEffect, useRef, useState, ChangeEvent, memo } from "react";
+import { Modal, Popover } from "antd";
 import { useDisconnect } from "wagmi";
 import { PiUserCircleDuotone } from "react-icons/pi";
 
-import { AiOutlinePlus } from "react-icons/ai";
 import { IoLogOutOutline } from "react-icons/io5";
 import "./navbar.scss";
 import CButton from "../common/Button";
-import { GoChevronDown } from "react-icons/go";
 import { FaRegBell } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 
-import { NotificationIcon, AddIcon, DropdownLowIcon } from "@/assets/icons";
+import { AddIcon } from "@/assets/icons";
 
-import axios from "axios";
 import useRedux from "@/hooks/useRedux";
-import {
-  fetchUserById,
-  fetchUserByUserName,
-  handleLogIn,
-  handleLogOut,
-  handleSignup,
-} from "@/services/api/api";
+import { fetchUserById, handleLogOut } from "@/services/api/api";
 
 import CreatePost from "../createPost/CreatePost";
 import { RootState } from "@/contexts/store";
@@ -35,7 +24,6 @@ import {
   debounce,
   deleteClientSideCookie,
   getClientSideCookie,
-  getImageSource,
   setClientSideCookie,
 } from "@/utils/helpers";
 import Link from "next/link";
@@ -43,9 +31,7 @@ import Link from "next/link";
 import { sigMsg } from "@/utils/constants";
 import { IoSettingsOutline } from "react-icons/io5";
 
-import CInput from "../common/Input";
 import Image from "next/image";
-import NotificationMessage from "../common/Notification";
 import { useRouter } from "next/navigation";
 
 import { SignUpModal } from "../common/auth/signUpModal";
@@ -62,9 +48,8 @@ const commonSelector = (state: RootState) => state?.common;
 const userNameSelector = (state: RootState) => state?.user;
 
 const tgBotName = process.env.TG_BOT_NAME;
-export default function Navbar() {
+function Navbar() {
   const secretCode = process.env.NEXT_PUBLIC_DISCORD_ID;
-
   const userAccount = useAccount();
 
   const [{ dispatch, actions }, [user, common]] = useRedux([
@@ -340,3 +325,5 @@ export default function Navbar() {
     </>
   );
 }
+
+export default memo(Navbar);

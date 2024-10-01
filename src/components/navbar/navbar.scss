@@ -32,6 +32,10 @@
     }
     .logo {
       width: 260px;
+
+      @include lessThan(xl) {
+        width: 220px;
+      }
     }
     .hidesearchbar {
       width: 64%;
