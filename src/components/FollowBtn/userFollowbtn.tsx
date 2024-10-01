@@ -93,7 +93,7 @@ export default function UserFollowButton({ userData }: IProps) {
           loading={isLoadingFollow || isUnfollowLoading}
           onClick={handleFollowToggle}
         >
-          {isFollowed ? "Joined" : "Join"}
+          {isFollowed ? "Followed" : "Follow"}
         </CButton>
       )}
     </div>
