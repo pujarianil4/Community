@@ -22,8 +22,8 @@
     @include lessThan(md) {
       border-bottom: none;
     }
-    @include lessThan(sm) {
-      margin: 8px 0 0px 38px;
+    @include lessThan(xl) {
+      margin: 8px 0 0px 0px;
     }
     .post_image {
       position: relative;

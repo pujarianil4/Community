@@ -25,7 +25,7 @@ export default function General() {
   return (
     <>
       <div className='general_container'>
-        <Collapse accordion style={{ marginTop: "16px" }}>
+        <Collapse defaultActiveKey={["1"]} style={{ marginTop: "16px" }}>
           <Panel
             header='Social Connections'
             key='1'

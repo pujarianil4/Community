@@ -255,7 +255,7 @@
     margin-left: 54px;
     width: 90%;
     @include lessThan(lg) {
-      margin-left: 43px;
+      // margin-left: 43px;
     }
   }
 }
