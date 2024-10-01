@@ -1,9 +1,14 @@
 "use client";
 import useAsync from "@/hooks/useAsync";
 import { fetchCommunityByCname } from "@/services/api/api";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import CButton from "../common/Button";
-import { useParams, usePathname } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import "./index.scss";
 import UandCHeadLoader from "../common/loaders/UandCHead";
 import CTabs from "../common/Tabs";
@@ -27,14 +32,78 @@ import { ICommunity } from "@/utils/types/types";
 import CommunityFollowButton from "../FollowBtn/communityFollowBtn";
 import { Modal } from "antd";
 import CreatePost from "../createPost/CreatePost";
+import ProposalItemLoader from "../proposals/proposalItemLoader";
+import FollowListLoader from "../common/loaders/followList";
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const pathArray = pathname.split("/");
   const communityId = id || pathArray[pathArray.length - 1];
+  const { isLoading, data, refetch } = useAsync(
+    fetchCommunityByCname,
+    communityId
+  );
+  console.log("isLoading", isLoading);
+  const tabsList = useMemo(() => {
+    const baseTabs = [
+      {
+        key: "1",
+        label: "Posts",
+        content: <FeedList method='byCName' id={communityId} />,
+      },
+      {
+        key: "2",
+        label: "Members",
+        content: <Followers uid={data?.id} entityType='c' />,
+      },
+      // {
+      //   key: "3",
+      //   label: "Voters",
+      //   content: <Followings uid={data.id} />,
+      // },
+      {
+        key: "4",
+        label: "Proposals",
+        content: <Proposals cid={data?.id} cname={data?.name} />,
+      },
+    ];
 
-  const { data, refetch } = useAsync(fetchCommunityByCname, communityId);
+    return baseTabs;
+  }, []);
+
+  const labelToKeyMap = Object.fromEntries(
+    tabsList.map((tab) => [tab.label.toLocaleLowerCase(), tab.key])
+  );
+  const initialLabel = searchParams.get("type")?.toLocaleLowerCase() || "posts";
+  const [activeType, setActiveType] = useState(
+    labelToKeyMap[initialLabel] || "1"
+  );
+
+  useEffect(() => {
+    const currentLabel = searchParams.get("type")?.toLocaleLowerCase();
+    if (currentLabel && labelToKeyMap[currentLabel]) {
+      setActiveType(labelToKeyMap[currentLabel]);
+    } else {
+      // Handle default behavior when type parameter is missing or invalid
+      router.replace(`${pathname}?type=posts`);
+    }
+  }, [searchParams, pathname, router, labelToKeyMap]);
+
+  const handleTabChange = useCallback(
+    (key: string) => {
+      const selectedLabel = tabsList
+        .find((tab) => tab.key === key)
+        ?.label.toLocaleLowerCase();
+      setActiveType(key);
+      if (selectedLabel) {
+        router.push(`${pathname}?type=${encodeURIComponent(selectedLabel)}`);
+      }
+    },
+    [pathname, router, searchParams, tabsList]
+  );
 
   const addItemToRecentCommunity = (
     data: ICommunity[],
@@ -60,8 +129,6 @@ export default function CommunityHead() {
   }, []);
 
   useEffect(() => {
-    console.log("data", data);
-
     if (data) {
       const value = localStorage?.getItem("recentCommunity");
       const prevCommunities: any = value ? JSON.parse(value) : [];
@@ -159,7 +226,11 @@ export default function CommunityHead() {
               <AddIcon /> Create Post
             </CButton>
           </div>
+          (
           <CTabs
+            activeKey={activeType}
+            defaultActiveKey='1'
+            onChange={handleTabChange}
             items={[
               {
                 key: "1",
@@ -169,7 +240,12 @@ export default function CommunityHead() {
               {
                 key: "2",
                 label: "Members",
-                content: <Followers uid={data?.id} entityType='c' />,
+                content:
+                  isLoading || !data ? (
+                    <FollowListLoader />
+                  ) : (
+                    <Followers uid={data?.id} entityType='c' />
+                  ),
               },
               // {
               //   key: "3",
@@ -179,10 +255,22 @@ export default function CommunityHead() {
               {
                 key: "4",
                 label: "Proposals",
-                content: <Proposals cid={data?.id} cname={data?.name} />,
+                content:
+                  isLoading || !data ? (
+                    <>
+                      {Array(3)
+                        .fill(() => 0)
+                        .map((_: any, i: number) => (
+                          <ProposalItemLoader key={i} />
+                        ))}
+                    </>
+                  ) : (
+                    <Proposals cid={data?.id} cname={data?.name} />
+                  ),
               },
             ]}
           />
+          )
         </div>
       )}
 

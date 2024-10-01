@@ -170,37 +170,6 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
         <MarkdownRenderer markdownContent={text} />
         {media && media?.length > 0 && <SwipeCarousel assets={media} />}
       </div>
-
-      {/* <div className='actions'>
-        <div className='up_down'>
-          <PiArrowFatUpDuotone
-            className={vote.type == "up" ? "active" : ""}
-            onClick={() => handleVote("up")}
-            size={18}
-          />
-          <span>{vote.value}</span>
-          <PiArrowFatDownDuotone
-            className={vote.type == "down" ? "active" : ""}
-            onClick={() => handleVote("down")}
-            size={18}
-          />
-        </div>
-        <div className='comments'>
-          <Link href={`post/${id}`} as={`/post/${id}`}>
-            <GoComment size={18} />
-            <span>{numberWithCommas(ccount) || "comments"}</span>
-          </Link>
-        </div>
-
-        <div className='share'>
-          <ShareIcon width={18} />
-          <span>Share</span>
-        </div>
-        <div className='save'>
-          <SaveIcon width={16} height={16} />
-          <span>Save</span>
-        </div>
-      </div> */}
       <Actions type='p' post={post} showSave showShare />
     </div>
   );
