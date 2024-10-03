@@ -15,7 +15,7 @@ interface IProps {
 
 export default function SearchPostItem({ post }: IProps) {
   const router = useRouter();
-  const { id, user, community, time, text, media } = post;
+  const { id, user, community, cta, text, media } = post;
   const firstMediaIsImage =
     media && media.length > 0 && identifyMediaType(media[0]) === "image";
 
@@ -32,7 +32,7 @@ export default function SearchPostItem({ post }: IProps) {
   return (
     <article onClick={handleClick} className='search_post_item'>
       <div className='content'>
-        <UHead user={user} community={community} time={time} />
+        <UHead user={user} community={community} time={cta} />
         <MarkdownRenderer markdownContent={text} limit={2} />
         <Actions post={post} type='p' />
       </div>

@@ -45,7 +45,7 @@ export default function General() {
         {/* Governance */}
         {/* <Governance /> */}
         <Deligate />
-        <Deligator />
+        {/* <Deligator /> */}
       </div>
     </>
   );

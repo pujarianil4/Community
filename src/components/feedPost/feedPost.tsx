@@ -2,21 +2,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
-import { GoComment } from "react-icons/go";
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getImageSource, numberWithCommas, timeAgo } from "@/utils/helpers";
 import { IPost, IVotePayload } from "@/utils/types/types";
 import SwipeCarousel from "../common/carousel";
-import { IoIosMore } from "react-icons/io";
-import {
-  DropdownLowIcon,
-  DropdownUpIcon,
-  SaveIcon,
-  ShareIcon,
-} from "@/assets/icons";
-import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 import PostPageLoader from "../common/loaders/postPage";
 import { sendVote } from "@/services/api/api";
 import { useIntersectionObserver } from "@/hooks/useIntersection";
@@ -39,7 +27,7 @@ interface Vote {
 
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post, overlayClassName }: IProps) {
-  const { text, up, down, time, media, user, community, id, ccount } = post;
+  const { text, up, down, cta, media, user, community, id, ccount } = post;
   const postRef = useRef<HTMLDivElement | null>(null);
   const stayTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isViewed = useIntersectionObserver(postRef);
@@ -155,7 +143,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
         <UHead
           user={post.user}
           community={post.community}
-          time={post.time}
+          time={post.cta}
           showMore
         />
       )}
