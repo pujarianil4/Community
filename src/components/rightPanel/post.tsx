@@ -8,6 +8,7 @@ import Image from "next/image";
 import MarkdownRenderer from "../common/MarkDownRender";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { PiArrowFatUpDuotone } from "react-icons/pi";
 
 interface IProps {
   post: IPost;
@@ -63,7 +64,7 @@ export default function Post({ post }: IProps) {
             </div>
             <div className='post_comment'>
               <span>
-                <DropdownUpIcon width={12} height={12} /> {post.up || 0}
+                <PiArrowFatUpDuotone size={15} /> {post.up || 0}
               </span>
 
               <span>

@@ -29,8 +29,6 @@ export default function CardList({
     return <EmptyData />;
   }
   return (
-    //community Filters :['pCount','followers','tSupply','sts','cta', 'uta']
-
     <main>
       {showFilters && (
         <section className='filters'>

@@ -25,7 +25,8 @@ async function handleTwitterLogin() {
 
   const qs = new URLSearchParams(options).toString();
   const authUrl = `${rootUrl}?${qs}`;
-  window.location.href = authUrl;
+  // window.location.href = authUrl;
+  window.open(authUrl, "_blank");
 }
 
 const twitterAuth = () => {

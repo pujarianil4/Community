@@ -13,6 +13,7 @@
   // }
   @include lessThan(xl) {
     gap: 12px;
+    width: 94%;
   }
   @include lessThan(lg) {
     gap: 1rem;

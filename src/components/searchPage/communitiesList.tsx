@@ -8,22 +8,12 @@ import { ICommunity } from "@/utils/types/types";
 
 export default function Communities() {
   const { isLoading, data, refetch } = useAsync(fetchCommunities, "followers");
-  const dummyData = data?.length > 0 && [
-    ...data,
-    ...data,
-    ...data,
-    ...data,
-    ...data,
-    ...data,
-    ...data,
-  ];
+
   return (
-    <>
-      <CardList
-        cardListData={dummyData as ICommunity[]}
-        type='c'
-        isLoading={isLoading}
-      />
-    </>
+    <CardList
+      cardListData={data as ICommunity[]}
+      type='c'
+      isLoading={isLoading}
+    />
   );
 }

@@ -50,7 +50,6 @@ export default function SearchPageComponent({ isComment = true }: IProps) {
   const labelToKeyMap = Object.fromEntries(
     tabsList.map((tab) => [tab.label.toLocaleLowerCase(), tab.key])
   );
-
   const initialLabel = searchParams.get("type")?.toLocaleLowerCase() || "posts";
   const [activeType, setActiveType] = useState(
     labelToKeyMap[initialLabel] || "1"
@@ -86,28 +85,6 @@ export default function SearchPageComponent({ isComment = true }: IProps) {
     },
     [pathname, router, searchParams, tabsList]
   );
-
-  // useEffect(() => {
-  //   const currentLabel = searchParams.get("type")?.toLocaleLowerCase();
-  //   if (currentLabel && labelToKeyMap[currentLabel]) {
-  //     setActiveType(labelToKeyMap[currentLabel]);
-  //   } else {
-  //     // router.replace(`${pathname}?type=posts`);
-  //   }
-  // }, [searchParams, pathname, router, labelToKeyMap]);
-
-  // const handleTabChange = useCallback(
-  //   (key: string) => {
-  //     const selectedLabel = tabsList
-  //       .find((tab) => tab.key === key)
-  //       ?.label.toLocaleLowerCase();
-  //     setActiveType(key);
-  //     if (selectedLabel) {
-  //       router.push(`${pathname}?type=${selectedLabel}`);
-  //     }
-  //   },
-  //   [pathname, router, tabsList]
-  // );
 
   return (
     <main className='search_page_container'>

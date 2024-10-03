@@ -276,7 +276,7 @@ const CreatePost: React.FC<Props> = ({
       setContent("");
       setPics([]);
       setUploadedImg([]);
-      setSearchTerm("");
+      setSearchTerm(defaultCommunity?.username || "");
       setUploadMsg({
         msg: "",
         type: "",
@@ -305,7 +305,6 @@ const CreatePost: React.FC<Props> = ({
 
   useEffect(() => {
     setISDisabled(!content || !selectedOption);
-    console.log("DIS", !content || !selectedOption);
   }, [content, selectedOption]);
 
   const handleEditPost = async (post: any) => {
@@ -421,16 +420,12 @@ const CreatePost: React.FC<Props> = ({
         <section className='create_post_form'>
           <div className='inputArea'>
             <DropdownWithSearch
-              // onSelect={setSelectedOption}
-              // options={communityList}
-              // searchTerm={searchTerm}
-              // setSearchTerm={setSearchTerm}
               onSelect={setSelectedOption}
-              options={communityList} // Array of ICommunity objects
+              options={communityList}
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               selected={selectedOption}
-              defaultSearch={defaultCommunity}
+              // defaultSearch={defaultCommunity?.username}
             />
             <div className='post_editor'>
               <FocusableDiv>

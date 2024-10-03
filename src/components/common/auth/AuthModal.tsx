@@ -1,7 +1,13 @@
 import { Modal } from "antd";
+import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
+import CosmosAuthComponent from "./CosmosAuth";
 import EvmAuthComponent from "./EvmAuth";
 import SolanaAuthComponent from "./SolanaAuth";
+
+const TronAuthComponent = dynamic(() => import("./TronAuth"), {
+  ssr: false,
+});
 
 interface IAuthModal {
   visible: boolean;
@@ -36,6 +42,16 @@ export default function AuthModal({
           setUserAuthData={handleCallBack}
         />
         <SolanaAuthComponent
+          isSignUp={false}
+          signUpData={null}
+          setUserAuthData={handleCallBack}
+        />
+        <TronAuthComponent
+          isSignUp={false}
+          signUpData={null}
+          setUserAuthData={handleCallBack}
+        />
+        <CosmosAuthComponent
           isSignUp={false}
           signUpData={null}
           setUserAuthData={handleCallBack}
