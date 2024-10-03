@@ -145,7 +145,7 @@ const CreatePost: React.FC<Props> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMsg, setUploadMsg] = useState({ msg: "", type: "" });
-  const [isDraft, setIsDraft] = useState(false); // State to switch between draft and create post sections
+  const [isDraft, setIsDraft] = useState(false);
 
   const {
     isLoading: isLoadingPostData,
@@ -153,7 +153,7 @@ const CreatePost: React.FC<Props> = ({
     refetch: refetchPost,
   } = useAsync(getPosts, { sortby: "pCount" });
 
-  const [isEditingPost, setIsEditingPost] = useState(false); // State to check if we're editing a post
+  const [isEditingPost, setIsEditingPost] = useState(false);
 
   // add pagination for draft posts
   const [currentPage, setCurrentPage] = useState(1);
@@ -173,27 +173,33 @@ const CreatePost: React.FC<Props> = ({
     const markDownContent = turndownService.turndown(content);
     try {
       setIsLoadingPost(true);
-
       const data = {
         cid: selectedOption?.id,
         text: markDownContent,
-        media: uploadedImg ? uploadedImg : null,
+        // ...(uploadedImg && { media: uploadedImg }),
+        // media: uploadedImg ? uploadedImg : null,
+        media: uploadedImg.length > 0 ? uploadedImg : null,
       };
-
+      console.log("data", data);
       await handlePostToCommunity(data);
       setIsLoadingPost(false);
-      NotificationMessage("success", "Post Updated");
+      setIsPostModalOpen(false);
+      NotificationMessage("success", "Post Created Succesfuly");
+      dispatch(actions.setRefetchPost(true));
+      // dispatch(actions.setRefetchCommunity(true));
       resetPostForm();
     } catch (error: any) {
-      NotificationMessage("error", error?.message);
+      console.log("error", error);
+      NotificationMessage("error", error?.response?.data?.message);
       setIsLoadingPost(false);
-      resetPostForm();
+      // setIsPostModalOpen(false);
+      // resetPostForm();
     }
   };
 
   const saveDraft = async (draftData: any) => {
     try {
-      console.log("save drasft api calll");
+      console.log("save draft api calll");
     } catch (error) {
       throw new Error("Error saving draft");
     }
@@ -207,17 +213,19 @@ const CreatePost: React.FC<Props> = ({
       const draftData = {
         cid: selectedOption?.id,
         text: markDownContent,
-        media: uploadedImg ? uploadedImg : null,
+        // media: uploadedImg ? uploadedImg : null,
+        media: uploadedImg.length > 0 ? uploadedImg : null,
         isDraft: true, // Mark this post as a draft
       };
 
       await saveDraft(draftData); // function to save draft
       setIsLoadingPost(false);
-      NotificationMessage("success", "Draft Saved");
+      setIsPostModalOpen(false);
+      NotificationMessage("success", "Post save in Draft");
       resetPostForm();
       setIsDraft(true); // Switch to the draft section
     } catch (error: any) {
-      NotificationMessage("error", error?.message);
+      NotificationMessage("error", error?.response?.data?.message);
       setIsLoadingPost(false);
     }
   };
@@ -287,6 +295,11 @@ const CreatePost: React.FC<Props> = ({
       setSelectedOption(defaultCommunity);
     }
   }, [defaultCommunity]);
+
+  // useEffect(() => {
+  //   console.log("post created new");
+  //   refetchPost;
+  // }, [posts]);
 
   useEffect(() => {
     setISDisabled(!content || !selectedOption);
@@ -376,6 +389,7 @@ const CreatePost: React.FC<Props> = ({
                       height={128}
                     />
                   )}
+
                   <div className='hover_bx'>
                     <CButton
                       onClick={() => handleEditPost(post)}
@@ -481,7 +495,7 @@ const CreatePost: React.FC<Props> = ({
               onClick={handlePost}
               className='create_btn'
             >
-              {isEditingPost ? "Update Post" : "Post"}
+              Post
             </CButton>
           </div>
         </section>

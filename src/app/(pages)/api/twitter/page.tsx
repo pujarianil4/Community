@@ -25,7 +25,7 @@ export default function TwitterCallback() {
               NotificationMessage("success", "Twitter Profile linked.");
             })
             .catch((err) => {
-              router.push("/settings");
+              NotificationMessage("error", err?.response?.data?.message);
               throw err;
             });
           router.push("/settings");

@@ -13,6 +13,7 @@
   // }
   @include lessThan(xl) {
     gap: 12px;
+    width: 94%;
   }
   @include lessThan(lg) {
     gap: 1rem;
@@ -20,6 +21,7 @@
   @include lessThan(sm) {
     margin-top: 4px;
     gap: 0.9rem;
+    min-width: 300px;
   }
   @media only screen and (max-width: 350px) {
     gap: 0.4rem;

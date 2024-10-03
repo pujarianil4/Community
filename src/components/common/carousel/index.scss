@@ -7,7 +7,7 @@
   align-items: center;
   height: 400px;
   margin: 12px 0;
-  max-width: 560px;
+  // max-width: 560px;
   border-radius: 8px;
   @include lessThan(xl) {
     height: 320px;
