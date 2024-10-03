@@ -211,9 +211,13 @@ export default function Profile() {
         console.log("IMGURL", imgURL);
         setUser({ ...user, img: { ...user.img, pro: imgURL } });
         setIsUploadingAvatar(false);
+        //reset value to select same image again
+        event.target.value = "";
       } catch (error) {
         setIsUploadingAvatar(false);
         NotificationMessage("error", "Uploading failed");
+        //reset value to select same image again
+        event.target.value = "";
       }
 
       //setImgSrc(imgURL);
@@ -228,9 +232,13 @@ export default function Profile() {
         console.log("IMGURL", imgURL);
         setUser({ ...user, img: { ...user.img, cvr: imgURL } });
         setIsUploadingCover(false);
+        //reset value to select same image again
+        event.target.value = "";
       } catch (error) {
         setIsUploadingCover(false);
         NotificationMessage("error", "Uploading failed");
+        //reset value to select same image again
+        event.target.value = "";
       }
 
       //setImgSrc(imgURL);
@@ -248,7 +256,7 @@ export default function Profile() {
   return (
     <div className='profile_container'>
       <div className='cover_bx'>
-        {!user?.img?.cvr ? (
+        {isUploadingCover || !user?.img?.cvr ? (
           <ProfileAvatar />
         ) : (
           <img
@@ -271,10 +279,10 @@ export default function Profile() {
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploadingCover && <span className='cvrmsg'>uploading...</span>}
+        {/* {isUploadingCover && <span className='cvrmsg'>uploading...</span>} */}
       </div>
       <div className='avatar'>
-        {!user?.img?.pro ? (
+        {isUploadingAvatar || !user?.img?.pro ? (
           <Avatar />
         ) : (
           <img
@@ -300,7 +308,7 @@ export default function Profile() {
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploadingAvatar && <span className='msg'>Uploading...</span>}
+        {/* {isUploadingAvatar && <span className='msg'>Uploading...</span>} */}
       </div>
 
       <div className='info'>

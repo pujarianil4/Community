@@ -232,7 +232,7 @@
     gap: 8px;
     flex-direction: row;
     margin-bottom: 8px;
-    height: 56px;
+    height: 46px;
     .img {
       width: 48px;
       height: 48px;
@@ -255,7 +255,93 @@
     margin-left: 54px;
     width: 90%;
     @include lessThan(lg) {
-      margin-left: 43px;
+      // margin-left: 43px;
+    }
+  }
+}
+
+.feedpost_container {
+  width: 100%;
+  padding: 24px 20px;
+  height: max-content;
+  border-radius: 8px;
+  background-color: var(--secondary-bg);
+  margin: 1.5rem 0 0;
+  color: var(--primary-text);
+  box-sizing: border-box;
+
+  .user_head {
+    display: flex;
+    // align-items: center;
+    gap: 8px;
+    flex-direction: row;
+    margin-bottom: 8px;
+    height: 56px;
+    .user_avatar {
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      @include lessThan(md) {
+        width: 35px;
+        height: 35px;
+      }
+    }
+    .names {
+      display: flex;
+      flex-direction: column;
+      width: 120px;
+      @include lessThan(md) {
+        width: 80px;
+      }
+      .user_name {
+      }
+      .community_name {
+        margin-top: 5px;
+      }
+    }
+    .post_time {
+      width: 52px;
+      height: 20px;
+      @include lessThan(md) {
+        width: 40px;
+      }
+    }
+    .more {
+      margin-left: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      .options {
+        width: 50px;
+        @include lessThan(md) {
+          width: 30px;
+        }
+      }
+      .views {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        span {
+          width: 50px;
+          @include lessThan(md) {
+            width: 30px;
+          }
+        }
+      }
+    }
+  }
+  div {
+    &:nth-child(3) {
+      height: 400px;
+    }
+  }
+  .content {
+    margin-left: 54px;
+    margin-top: 10px;
+    width: 92%;
+    @include lessThan(xl) {
+      margin-left: 0px;
+      width: 100%;
     }
   }
 }

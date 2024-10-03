@@ -6,6 +6,12 @@
       color: var(--primary-title);
       font-weight: $font-weight-medium;
       font-size: $font-size-lg-3;
+      @include lessThan(md) {
+        font-size: $font-size-xxxlg;
+      }
+      @include lessThan(xs) {
+        font-size: $font-size-xxlg;
+      }
     }
     .proposal_section {
       background-color: var(--secondary-bg);
@@ -23,6 +29,12 @@
           color: var(--primary-title);
           font-weight: $font-weight-medium;
           font-size: $font-size-lg-2;
+          @include lessThan(md) {
+            font-size: $font-size-xxlg;
+          }
+          @include lessThan(xs) {
+            font-size: $font-size-xlg;
+          }
         }
 
         button {
@@ -34,13 +46,20 @@
         .active {
           background-color: var(--success) !important;
           border: none !important;
+          @include lessThan(md) {
+            font-size: 12px !important;
+            height: 30px !important;
+          }
         }
 
         .post_time {
           width: fit-content;
-          margin: 8px 0 0 auto;
+          margin: 8px auto;
           color: var(--label-text);
-          font-size: 12px;
+          font-size: $font-size-xxsm;
+          @include lessThan(md) {
+            font-size: $font-size-xxxsm;
+          }
         }
       }
 
@@ -68,12 +87,27 @@
 
             p {
               color: var(--primary-text);
+              @include lessThan(md) {
+                font-size: $font-size-xsm;
+              }
             }
           }
         }
-        button {
+        .share_btn {
           background-color: transparent !important;
           color: var(--label-text) !important;
+          span {
+            font-size: $font-size-sm;
+          }
+          @include lessThan(md) {
+            svg {
+              width: 16px;
+              height: 16px;
+            }
+            span {
+              font-size: $font-size-xsm;
+            }
+          }
         }
       }
     }

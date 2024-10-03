@@ -16,10 +16,19 @@
   }
   @include lessThan(lg) {
     gap: 1rem;
+    width: 94%;
+  }
+  @include lessThan(md) {
+    margin-top: 4px;
+    gap: 1rem;
+    min-width: 300px;
+    width: 80%;
   }
   @include lessThan(sm) {
     margin-top: 4px;
-    gap: 0.9rem;
+    gap: 1rem;
+    min-width: 300px;
+    width: 95%;
   }
   @media only screen and (max-width: 350px) {
     gap: 0.4rem;

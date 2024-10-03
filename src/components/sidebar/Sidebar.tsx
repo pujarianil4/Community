@@ -48,6 +48,8 @@ import TurndownService from "turndown";
 import { ICommunity } from "@/utils/types/types";
 import Image from "next/image";
 import CHead from "../common/chead";
+import Avatar from "@/components/common/loaders/userAvatar";
+import ProfileAvatar from "@/components/common/loaders/profileAvatar";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -348,7 +350,7 @@ const CreateCommunityModal = ({
   });
 
   const [usernameError, setUsernameError] = useState({
-    type: "error",
+    type: "",
     msg: "",
   });
   const { isLoading, callFunction, data } = useAsync();
@@ -376,9 +378,13 @@ const CreateCommunityModal = ({
           img: { ...prevForm.img, pro: imgURL },
         }));
         setIsUploadingAvatar(false);
+        //reset value to select same image again
+        event.target.value = "";
       } catch (error) {
         NotificationMessage("error", "Avatar uploading failed");
         setIsUploadingAvatar(false);
+        //reset value to select same image again
+        event.target.value = "";
       }
     }
   };
@@ -426,26 +432,34 @@ const CreateCommunityModal = ({
   };
 
   const debouncedCheckUsername = debounce(async (username: string) => {
+    if (username === "") {
+      console.log("COMMUNITY", username);
+      setUsernameError({ type: "", msg: "" });
+      return;
+    }
     try {
-      if (username == "") {
-        setUsernameError({ type: "error", msg: "" });
-        return;
-      }
       const community = await fetchCommunityByCname(username);
-      console.log("COMMUNITY", community);
+
       if (community) {
-        const isAvailable = community?.username === username;
-        if (isAvailable) {
+        // If a community with the same username is found, show an error
+        if (community.username === username) {
           setUsernameError({ type: "error", msg: "Community already exists" });
         } else {
           setUsernameError({ type: "success", msg: "Community is available" });
         }
+      } else {
+        // If no community is found, the username is available
+        setUsernameError({ type: "success", msg: "Community is available" });
       }
     } catch (error) {
+      console.log("COMMUNITY error", error);
+
       if (username && error == "Error: user not available") {
+        // If the API error indicates the username is not available in the database
         setUsernameError({ type: "success", msg: "Community is available" });
       } else {
-        setUsernameError({ type: "error", msg: "" });
+        // Handle any other errors from the API
+        setUsernameError({ type: "error", msg: "Error checking availability" });
       }
     }
   }, 500);
@@ -460,26 +474,35 @@ const CreateCommunityModal = ({
       | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if (name == "username" && !checkWhitespace(value)) {
-      console.log("form", name, value, !checkWhitespace(value));
-      debouncedCheckUsername(value);
-      setForm((prevForm) => ({ ...prevForm, [name]: value }));
-    } else if (name !== "username") {
+
+    if (name === "username") {
+      // If the user clears the field, ensure the success message is cleared
+      if (value === "") {
+        setUsernameError({ type: "", msg: "" });
+        setForm((prevForm) => ({ ...prevForm, [name]: value }));
+      } else {
+        debouncedCheckUsername(value);
+        if (!checkWhitespace(value)) {
+          setForm((prevForm) => ({ ...prevForm, [name]: value }));
+        }
+      }
+    } else {
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
     }
   };
 
   const isFormValid = () => {
-    const bool =
+    const isFilled =
       form.name?.trim() !== "" &&
       form.username?.trim() !== "" &&
       form.ticker?.trim() !== "" &&
       markDownContent?.trim() !== "";
-    console.log("isFormValid", bool);
-    if (usernameError.type == "error") {
-      return false;
-    }
-    return bool;
+
+    // Check if the usernameError is not an error and all fields are filled
+    const isUsernameValid =
+      usernameError.type === "success" || usernameError.msg === "";
+
+    return isFilled && isUsernameValid;
   };
 
   const handleCreateCommunity = async () => {
@@ -516,8 +539,8 @@ const CreateCommunityModal = ({
   return (
     <div className='create_community_container'>
       <div className='cover_bx'>
-        {!imgSrcCover ? (
-          <span>Loading...</span>
+        {isUploadingCover || !imgSrcCover ? (
+          <ProfileAvatar />
         ) : (
           <img
             loading='lazy'
@@ -533,6 +556,13 @@ const CreateCommunityModal = ({
           }
           className='upload'
         >
+          {/* {isUploadingCover ? (
+            <div className='loader'></div>
+          ) : (
+            <>
+              <UploadIcon />
+            </>
+          )} */}
           <UploadIcon />
           <input
             ref={fileRefs.cover}
@@ -543,11 +573,11 @@ const CreateCommunityModal = ({
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploadingCover && <span className='cvrmsg'>uploading...</span>}
+        {/* {isUploadingCover && <span className='cvrmsg'>uploading...</span>} */}
       </div>
       <div className='avatar'>
-        {!imgSrc ? (
-          <span>Loading...</span>
+        {isUploadingAvatar || !imgSrc ? (
+          <Avatar />
         ) : (
           <img
             loading='lazy'
@@ -563,6 +593,13 @@ const CreateCommunityModal = ({
           }
           className='upload'
         >
+          {/* {isUploadingAvatar ? (
+            <div className='loader'></div>
+          ) : (
+            <>
+              <UploadIcon />
+            </>
+          )} */}
           <UploadIcon />
           <input
             ref={fileRefs.avatar}
@@ -573,7 +610,7 @@ const CreateCommunityModal = ({
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploadingAvatar && <span className='msg'>uploading...</span>}
+        {/* {isUploadingAvatar && <span className='msg'>uploading...</span>} */}
       </div>
 
       <div className='info'>

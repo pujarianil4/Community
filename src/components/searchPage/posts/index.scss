@@ -15,8 +15,13 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-
+  @include lessThan(md) {
+    padding: 0px 8px;
+  }
   .content {
+    @include lessThan(md) {
+      width: 70%;
+    }
     .markdown_container {
       max-height: 44px;
       font-size: $font-size-md;
@@ -33,6 +38,10 @@
       img {
         width: 32px;
         height: 32px;
+        @include lessThan(md) {
+          width: 25px;
+          height: 25px;
+        }
       }
 
       .names {
@@ -46,15 +55,18 @@
         .community_name {
           font-size: 12px;
         }
+        @include lessThan(md) {
+          .user_name {
+            font-size: $font-size-xsm;
+          }
+        }
       }
 
       .post_time {
         font-size: $font-size-xsm;
         margin-top: 12px;
-      }
-      @include lessThan(sm) {
-        .user_name {
-          font-size: $font-size-xsm;
+        @include lessThan(md) {
+          margin-top: 0px;
         }
       }
     }
@@ -71,6 +83,18 @@
     .post_img {
       max-width: 120px;
       max-height: 96px;
+    }
+  }
+  @include lessThan(md) {
+    .post_img {
+      width: 100px;
+      height: 72px;
+    }
+  }
+  @include lessThan(sm) {
+    .post_img {
+      width: 92px;
+      height: 72px;
     }
   }
 }

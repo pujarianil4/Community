@@ -1,6 +1,9 @@
 @import "/src/styles";
 .user_container {
   position: relative;
+  @include lessThan(xs) {
+    width: 94%;
+  }
   .userhead_cotainer {
     width: 100%;
     height: 372px;

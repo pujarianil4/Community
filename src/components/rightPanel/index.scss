@@ -12,7 +12,9 @@
   right: 0px;
   padding: 10px;
   padding: 10px 0.5rem 0px 10px;
-
+  @include lessThan(xl) {
+    max-width: 250px;
+  }
   @include lessThan(md) {
     display: none;
   }
@@ -20,6 +22,9 @@
   .card {
     max-width: 300px;
     padding: 12px;
+    // @include lessThan(xl) {
+    //   max-width: 240px;
+    // }
   }
 
   .card_heading {
@@ -86,6 +91,11 @@
         // width: 50px;
         border-radius: 50%;
         object-fit: cover;
+      }
+      .chead {
+        @include lessThan(xl) {
+          min-width: 150px;
+        }
       }
 
       span {
@@ -168,7 +178,9 @@
           overflow: hidden;
           height: 68px;
           cursor: pointer;
-          // width: 160px;
+          @include lessThan(xl) {
+            width: 110px;
+          }
           p,
           h1,
           h2,
@@ -182,10 +194,13 @@
           pre,
           blockquote,
           strong {
-            font-size: 12px;
+            font-size: $font-size-xsm;
             color: var(--primary-text) !important;
             max-width: 100%; // Ensure the content does not exceed the parent’s width
             box-sizing: border-box;
+            @include lessThan(xl) {
+              font-size: $font-size-xxsm;
+            }
           }
         }
       }
@@ -199,10 +214,19 @@
         gap: 50px;
         align-items: center;
         padding-top: 0.5rem;
+
         span {
           font-size: 10px !important;
           color: var(--primary-text) !important;
           cursor: pointer;
+        }
+
+        @include lessThan(xl) {
+          justify-content: flex-start;
+          gap: 5px;
+          span {
+            font-size: 8px !important;
+          }
         }
       }
     }

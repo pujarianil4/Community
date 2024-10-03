@@ -71,7 +71,7 @@ export default function ProposalDetails({ proposalId }: IProps) {
                     <p>{proposalData?.user?.username}</p>
                   </Link>
                 </div>
-                <CButton>
+                <CButton className='share_btn'>
                   <ShareIcon />
                   Share
                 </CButton>
