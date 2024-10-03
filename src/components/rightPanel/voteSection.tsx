@@ -1,20 +1,28 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import CButton from "../common/Button";
-import { voteToProposal } from "@/services/api/api";
+import { fetchProposalByID, voteToProposal } from "@/services/api/api";
 import { IVoteProposalPayload } from "@/utils/types/types";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import NotificationMessage from "../common/Notification";
+import { RangeBar } from "../proposals/proposalItem";
+import useAsync from "@/hooks/useAsync";
 
 export default function VoteSection() {
   const { proposalId } = useParams<{ proposalId: string }>();
+  const {
+    isLoading,
+    data: proposalData,
+    refetch,
+  } = useAsync(fetchProposalByID, proposalId);
 
-  const proposalVote = (state: RootState) => state?.common.proposalVote;
+  const proposalVote = (state: RootState) => state?.common?.proposal;
   const [{ dispatch, actions }, [proposalVoteData]] = useRedux([proposalVote]);
-  console.log("vote_section", proposalVoteData);
-  const [value, setValue] = useState<string>(proposalVoteData && "yes");
+  // const { isVoted, yes, no } = proposalVoteData;
+  // const { isVoted, up: yes, down: no } = proposalData;
+  const [value, setValue] = useState<string>(proposalData?.isVoted && "yes");
 
   const handleVote = async (value: string) => {
     const payload: IVoteProposalPayload = {
@@ -23,11 +31,19 @@ export default function VoteSection() {
     };
     try {
       await voteToProposal(payload);
-      dispatch(actions.setProposalVote(value == "yes" ? true : false));
+      dispatch(
+        actions.setProposalData(
+          value == "yes"
+            ? { isVoted: true, yes: proposalData?.yes, no: proposalData?.no }
+            : { isVoted: false, yes: proposalData?.yes, no: proposalData?.no }
+        )
+      );
+      refetch();
     } catch (error: any) {
       NotificationMessage("error", error.response.data.message);
     }
   };
+
   return (
     <section className='vote_section'>
       <p>Cast ypur Vote</p>
@@ -55,6 +71,42 @@ export default function VoteSection() {
       {/* <CButton className='vote_btn' onClick={handleVote}>
         Vote
       </CButton> */}
+      {/* {isLoading ? (
+        <div className='votes'>
+          <div className='range_bar_data skeleton'></div>
+          <div className='range_bar_data skeleton'></div>
+        </div>
+      ) :(  */}
+      <div className='votes'>
+        <div className='range_bar_data'>
+          <div className='range_data'>
+            <p>Yes</p>
+            <p className='yes'>
+              {proposalData?.up || 0}
+              {proposalData?.up < 2 ? `vote` : ` votes`}
+            </p>
+          </div>
+          <RangeBar
+            total={proposalData?.up + proposalData?.down}
+            current={proposalData?.up}
+          />
+        </div>
+        <div className='range_bar_data'>
+          <div className='range_data'>
+            <p>No</p>
+            <p className='no'>
+              {proposalData?.down < 2
+                ? `${proposalData?.down} vote`
+                : `${proposalData?.down} votes`}
+            </p>
+          </div>
+          <RangeBar
+            total={proposalData?.up + proposalData?.down}
+            current={proposalData?.down}
+          />
+        </div>
+      </div>
+      {/* )} */}
     </section>
   );
 }

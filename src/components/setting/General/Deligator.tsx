@@ -23,34 +23,27 @@ export default function Deligator() {
   const { isLoading, data } = useAsync(fetchDelegatesByUname, payload);
 
   return (
-    <Collapse accordion style={{ marginTop: "16px" }}>
-      <Panel
-        header='Deligator'
-        key='1'
-        extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
-      >
+    <main className='delegator_container'>
+      <p className='d_head'>Deligator</p>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : data?.length > 0 ? (
         <>
-          {isLoading ? (
-            <p>Loading...</p>
-          ) : data?.length > 0 ? (
-            <>
-              {data?.map((item: any) => (
-                <div className='deligat_item' key={item.id}>
-                  {/* Required User Details like img */}
-                  <p>user: {item?.delegator?.username}</p>
-                  <p>networth: {numberWithCommas(item?.delegator?.netWrth)}</p>
-                  <p>
-                    effective networth:
-                    {numberWithCommas(item?.delegator?.effectiveNetWrth)}
-                  </p>
-                </div>
-              ))}
-            </>
-          ) : (
-            <EmptyData />
-          )}
+          {data?.map((item: any) => (
+            <div className='deligat_item' key={item.id}>
+              {/* Required User Details like img */}
+              <p>user: {item?.delegator?.username}</p>
+              <p>networth: {numberWithCommas(item?.delegator?.netWrth)}</p>
+              <p>
+                effective networth:
+                {numberWithCommas(item?.delegator?.effectiveNetWrth)}
+              </p>
+            </div>
+          ))}
         </>
-      </Panel>
-    </Collapse>
+      ) : (
+        <EmptyData />
+      )}
+    </main>
   );
 }
