@@ -340,3 +340,22 @@
   width: 100%;
   height: 100%;
 }
+
+.follower_List_Loader {
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid var(--primary-border);
+
+  .img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .name,
+  .username {
+    width: 72px;
+  }
+}

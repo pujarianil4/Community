@@ -208,7 +208,7 @@ export const fetchCommunityByCname = async (cName: string) => {
 };
 
 export const getPosts = async ({
-  sortby,
+  sortby = "time",
   order = "DESC",
   page = 1,
   limit = 20,

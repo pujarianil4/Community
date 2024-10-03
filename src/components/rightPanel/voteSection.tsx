@@ -10,12 +10,13 @@ import NotificationMessage from "../common/Notification";
 
 export default function VoteSection() {
   const { proposalId } = useParams<{ proposalId: string }>();
-  const [value, setValue] = useState<string>("yes");
 
   const proposalVote = (state: RootState) => state?.common.proposalVote;
   const [{ dispatch, actions }, [proposalVoteData]] = useRedux([proposalVote]);
+  console.log("vote_section", proposalVoteData);
+  const [value, setValue] = useState<string>(proposalVoteData && "yes");
 
-  const handleVote = async () => {
+  const handleVote = async (value: string) => {
     const payload: IVoteProposalPayload = {
       pid: +proposalId,
       typ: value,
@@ -32,20 +33,28 @@ export default function VoteSection() {
       <p>Cast ypur Vote</p>
       <CButton
         className={`option ${value == "yes" ? "yes" : ""}`}
-        onClick={() => setValue("yes")}
+        // onClick={() => setValue("yes")}
+        onClick={() => {
+          handleVote("yes");
+          setValue("yes");
+        }}
       >
         Yes
       </CButton>
       <CButton
         className={`option ${value == "no" ? "no" : ""}`}
-        onClick={() => setValue("no")}
+        // onClick={() => setValue("no")}
+        onClick={() => {
+          handleVote("no");
+          setValue("no");
+        }}
       >
         No
       </CButton>
       {/* <CButton className='option abstain'>Abstain</CButton> */}
-      <CButton className='vote_btn' onClick={handleVote}>
+      {/* <CButton className='vote_btn' onClick={handleVote}>
         Vote
-      </CButton>
+      </CButton> */}
     </section>
   );
 }

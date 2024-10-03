@@ -1,8 +1,8 @@
 "use client";
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import useAsync from "@/hooks/useAsync";
 import { fetchUser } from "@/services/api/api";
-import { useParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import "./userhead.scss";
 // import UandCHeadLoader from "../common/loaders/UandCHead";
 import UandCHeadLoader from "../common/loaders/Uhead";
@@ -16,13 +16,73 @@ import Image from "next/image";
 import { DiscordIcon, TelegramIcon, TwitterIcon } from "@/assets/icons";
 import { getImageSource, numberWithCommas } from "@/utils/helpers";
 import UserFollowButton from "../FollowBtn/userFollowbtn";
+import FollowListLoader from "../common/loaders/followList";
 export default function UserHead() {
   const { userId: id } = useParams<{ userId: string }>();
+  const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const pathArray = pathname.split("/");
   const userId = id || pathArray[pathArray.length - 1];
+  const { isLoading, data } = useAsync(fetchUser, userId || id);
 
-  const { data } = useAsync(fetchUser, userId || id);
+  const tabsList = useMemo(() => {
+    const baseTabs = [
+      {
+        key: "1",
+        label: "Posts",
+        content: <FeedList method='byUName' id={userId} />,
+      },
+      {
+        key: "2",
+        label: "Followers",
+        content: <Followers uid={data?.id} entityType='u' />,
+      },
+      {
+        key: "3",
+        label: "Followings",
+        content: <Followings uid={data?.id} entityType='u' />,
+      },
+      {
+        key: "4",
+        label: "Community",
+        content: <Followings uid={data?.id} entityType='c' />,
+      },
+    ];
+
+    return baseTabs;
+  }, []);
+
+  const labelToKeyMap = Object.fromEntries(
+    tabsList.map((tab) => [tab.label.toLocaleLowerCase(), tab.key])
+  );
+  const initialLabel = searchParams.get("type")?.toLocaleLowerCase() || "posts";
+  const [activeType, setActiveType] = useState(
+    labelToKeyMap[initialLabel] || "1"
+  );
+
+  useEffect(() => {
+    const currentLabel = searchParams.get("type")?.toLocaleLowerCase();
+    if (currentLabel && labelToKeyMap[currentLabel]) {
+      setActiveType(labelToKeyMap[currentLabel]);
+    } else {
+      // Handle default behavior when type parameter is missing or invalid
+      router.replace(`${pathname}?type=posts`);
+    }
+  }, [searchParams, pathname, router, labelToKeyMap]);
+
+  const handleTabChange = useCallback(
+    (key: string) => {
+      const selectedLabel = tabsList
+        .find((tab) => tab.key === key)
+        ?.label.toLocaleLowerCase();
+      setActiveType(key);
+      if (selectedLabel) {
+        router.push(`${pathname}?type=${encodeURIComponent(selectedLabel)}`);
+      }
+    },
+    [pathname, router, searchParams, tabsList]
+  );
 
   // const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
   //   e.currentTarget.src =
@@ -92,19 +152,6 @@ export default function UserHead() {
                 </div>
 
                 <div className='social_bx'>
-                  {/* {isSelf ? (
-                    <CButton onClick={handleEdit} className='follow_btn'>
-                      Edit
-                    </CButton>
-                  ) : (
-                    <CButton
-                      loading={isLoadingFollow}
-                      onClick={handleFollow}
-                      className='follow_btn'
-                    >
-                      {isFollowed ? "Unfollow" : "Follow"}
-                    </CButton>
-                  )} */}
                   <UserFollowButton userData={data} />
                   <div className='socials'>
                     <div className='disabled'>
@@ -124,6 +171,10 @@ export default function UserHead() {
           </div>
         )}
         <CTabs
+          activeKey={activeType}
+          defaultActiveKey='1'
+          onChange={handleTabChange}
+          // items={tabsList}
           items={[
             {
               key: "1",
@@ -133,17 +184,32 @@ export default function UserHead() {
             {
               key: "2",
               label: "Followers",
-              content: <Followers uid={data?.id} entityType='u' />,
+              content:
+                isLoading || !data ? (
+                  <FollowListLoader />
+                ) : (
+                  <Followers uid={data?.id} entityType='u' />
+                ),
             },
             {
               key: "3",
               label: "Followings",
-              content: <Followings uid={data?.id} entityType='u' />,
+              content:
+                isLoading || !data ? (
+                  <FollowListLoader />
+                ) : (
+                  <Followings uid={data?.id} entityType='u' />
+                ),
             },
             {
               key: "4",
               label: "Community",
-              content: <Followings uid={data?.id} entityType='c' />,
+              content:
+                isLoading || !data ? (
+                  <FollowListLoader />
+                ) : (
+                  <Followings uid={data?.id} entityType='c' />
+                ),
             },
           ]}
         />
