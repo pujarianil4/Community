@@ -18,7 +18,7 @@ export default function CommentPost() {
     up: 0,
     down: 0,
     ccount: 0,
-    time: "2024-09-03T07:11:57.009Z",
+    cta: "2024-09-03T07:11:57.009Z",
     user: {
       id: 1,
       username: "anil",
@@ -69,18 +69,14 @@ export default function CommentPost() {
   };
   return (
     <article onClick={handleClick} className='comment_post_card'>
-      <UHead user={post?.user} community={post?.community} time={post?.time} />
+      <UHead user={post?.user} community={post?.community} time={post?.cta} />
       <MarkdownRenderer markdownContent={post?.text} limit={2} />
       <div className='comment'>
-        <UHead
-          user={post?.user}
-          community={post?.community}
-          time={post?.time}
-        />
+        <UHead user={post?.user} community={post?.community} time={post?.cta} />
         <MarkdownRenderer markdownContent={post?.text} limit={2} />
-        <Actions post={post} />
+        <Actions post={post} type='c' />
       </div>
-      <Actions post={post} />
+      <Actions post={post} type='c' />
     </article>
   );
 }

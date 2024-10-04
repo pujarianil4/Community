@@ -98,7 +98,7 @@ interface RangeBarProps {
   current: number;
 }
 
-const RangeBar: React.FC<RangeBarProps> = ({ total, current }) => {
+export const RangeBar: React.FC<RangeBarProps> = ({ total, current }) => {
   // Calculate the percentage width
   const percentage = (current / total) * 100;
 
@@ -108,5 +108,3 @@ const RangeBar: React.FC<RangeBarProps> = ({ total, current }) => {
     </div>
   );
 };
-
-// export default RangeBar;
