@@ -17,11 +17,20 @@
   }
   @include lessThan(lg) {
     gap: 1rem;
+    width: 94%;
+    margin-top: 16px;
+    // margin-top: 16px;
+  }
+  @include lessThan(md) {
+    gap: 1rem;
+    min-width: 300px;
+    width: 80%;
+    margin: 0;
   }
   @include lessThan(sm) {
-    margin-top: 4px;
-    gap: 0.9rem;
+    gap: 1rem;
     min-width: 300px;
+    width: 95%;
   }
   @media only screen and (max-width: 350px) {
     gap: 0.4rem;
@@ -136,13 +145,18 @@
 
   .up_down {
     display: flex;
-    align-items: center;
-    gap: 5px;
+    gap: 2rem;
     span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
       font-size: $font-size-xsm;
       @include lessThan(xl) {
         font-size: $font-size-xxsm;
       }
+    }
+    @include lessThan(sm) {
+      gap: 0.5rem;
     }
     svg {
       cursor: pointer;

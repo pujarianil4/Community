@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, memo } from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
+import { Spin } from "antd";
 import {
   MdDeleteOutline,
   MdEmojiEmotions,
@@ -148,6 +149,7 @@ const CreatePost: React.FC<Props> = ({
   const [uploadMsg, setUploadMsg] = useState({ msg: "", type: "" });
   const [isDraft, setIsDraft] = useState(false);
 
+  const [uploadingSkeletons, setUploadingSkeletons] = useState<number[]>([]);
   const {
     isLoading: isLoadingPostData,
     data: posts,
@@ -245,8 +247,11 @@ const CreatePost: React.FC<Props> = ({
     setIsUploading(true);
     setUploadMsg({ msg: "Uploading...", type: "info" });
 
+    const filesArray = Array.from(newPics);
+    const skeletonIds = filesArray.map((_, index) => pics.length + index);
+    setUploadingSkeletons((prev) => [...prev, ...skeletonIds]);
+
     try {
-      const filesArray = Array.from(newPics);
       if (filesArray.length > 5) {
         NotificationMessage("info", "Please select up to 5 media");
         setUploadMsg({ msg: "", type: "" });
@@ -254,16 +259,19 @@ const CreatePost: React.FC<Props> = ({
         const uploadedFiles = await uploadMultipleFile(newPics);
         setPics((prevPics) => [...prevPics, ...filesArray]);
 
-        if (uploadedFiles.length > 0)
-          setUploadedImg((prevPics) => [...prevPics, ...uploadedFiles]);
+        if (uploadedFiles.length > 0) {
+          setUploadedImg((prevImgs) => [...prevImgs, ...uploadedFiles]);
+        }
+
         setUploadMsg({ msg: "Uploaded Successfully", type: "success" });
-        console.log("Uploaded files:", uploadedFiles);
+        setUploadingSkeletons([]);
       }
       setIsUploading(false);
     } catch (error) {
       setIsUploading(false);
       setUploadMsg({ msg: "Failed to Upload", type: "error" });
       NotificationMessage("error", "Error uploading files");
+      setUploadingSkeletons([]);
     }
   };
   useEffect(() => {
@@ -392,6 +400,7 @@ const CreatePost: React.FC<Props> = ({
                   <div className='content'>
                     <MarkdownRenderer markdownContent={post?.text} limit={2} />
                   </div>
+
                   {post?.media?.[0] && (
                     <Image
                       className='post_img'
@@ -445,32 +454,45 @@ const CreatePost: React.FC<Props> = ({
                   autoFocus={true}
                   maxCharCount={300}
                 />
-                {/* {pics?.length > 0 && (
-                  <div className='file_container'>
-                    {pics?.map((picFile, index) => (
-                      <Img
-                        key={index}
-                        index={index}
-                        file={picFile}
-                        onRemove={(rmIndx) =>
-                          setPics(pics.filter((_, idx) => idx !== rmIndx))
-                        }
-                      />
-                    ))}
-                  </div>
-                )} */}
-                {pics?.length > 0 && (
-                  <div className='file_container'>
-                    {pics?.map((picFile, index) => (
-                      <Img
-                        key={index}
-                        index={index}
-                        file={picFile}
-                        onRemove={handleRemoveMedia}
-                      />
-                    ))}
-                  </div>
-                )}
+                {/* <div className='file_container'>
+                  {pics.length > 0 && (
+                    <div className='file_container'>
+                      {pics.map((picFile, index) => (
+                        <Img
+                          key={index}
+                          index={index}
+                          file={picFile}
+                          onRemove={handleRemoveMedia}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {uploadingSkeletons.map((_, index) => (
+                    <div
+                      key={`skeleton-${index}`}
+                      className='skeleton img_loader'
+                    ></div>
+                  ))}
+                </div> */}
+
+                <div className='file_container'>
+                  {pics.map((picFile, index) => (
+                    <Img
+                      key={index}
+                      index={index}
+                      file={picFile}
+                      onRemove={handleRemoveMedia}
+                    />
+                  ))}
+
+                  {uploadingSkeletons.map((_, index) => (
+                    <div
+                      key={`skeleton-${index}`}
+                      className='skeleton img_loader'
+                    ></div>
+                  ))}
+                </div>
 
                 <div className='inputs'>
                   <FileInput onChange={handleUploadFile}>
@@ -483,7 +505,10 @@ const CreatePost: React.FC<Props> = ({
                     <MdEmojiEmotions color='#636466' size={20} />
                   </div>
 
-                  <span className={uploadMsg.type}>{uploadMsg?.msg}</span>
+                  {/* <span className={uploadMsg.type}>{uploadMsg?.msg}</span> */}
+                  {/* <span className={uploadMsg?.type}>
+                    {isUploading ? <div className='loader'></div> : null}
+                  </span> */}
                 </div>
               </FocusableDiv>
             </div>

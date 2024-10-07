@@ -256,7 +256,7 @@ export default function Profile() {
   return (
     <div className='profile_container'>
       <div className='cover_bx'>
-        {!user?.img?.cvr ? (
+        {isUploadingCover || !user?.img?.cvr ? (
           <ProfileAvatar />
         ) : (
           <img
@@ -279,10 +279,10 @@ export default function Profile() {
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploadingCover && <span className='cvrmsg'>uploading...</span>}
+        {/* {isUploadingCover && <span className='cvrmsg'>uploading...</span>} */}
       </div>
       <div className='avatar'>
-        {!user?.img?.pro ? (
+        {isUploadingAvatar || !user?.img?.pro ? (
           <Avatar />
         ) : (
           <img
@@ -308,7 +308,7 @@ export default function Profile() {
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploadingAvatar && <span className='msg'>Uploading...</span>}
+        {/* {isUploadingAvatar && <span className='msg'>Uploading...</span>} */}
       </div>
 
       <div className='info'>

@@ -42,7 +42,7 @@
     background-color: var(--primary-bg);
     border-radius: 0.75rem;
     // padding: 0.5rem;
-    @include lessThan(md) {
+    @include lessThan(xl) {
       width: 96%;
       left: 2%;
       top: 88px;

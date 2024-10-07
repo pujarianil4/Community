@@ -42,18 +42,6 @@ export default function Post({ post }: IProps) {
           </div>
         </div>
         <div className='post_content_bx'>
-          <div className='post_inn_bx' onClick={handleRedirectPost}>
-            {/* TODO: Update for Video too */}
-            {isMedia && post?.media && (
-              <Image
-                src={post?.media[0]}
-                alt='post_img'
-                width={96}
-                height={78}
-                loading='lazy'
-              />
-            )}
-          </div>
           <div className='post_content'>
             <div
               style={{ width: `${isMedia ? "164px" : "276px"}` }}
@@ -72,6 +60,18 @@ export default function Post({ post }: IProps) {
                 <span>Comments</span>
               </span>
             </div>
+          </div>
+          <div className='post_inn_bx' onClick={handleRedirectPost}>
+            {/* TODO: Update for Video too */}
+            {isMedia && post?.media && (
+              <Image
+                src={post?.media[0]}
+                alt='post_img'
+                width={96}
+                height={78}
+                loading='lazy'
+              />
+            )}
           </div>
         </div>
       </div>
