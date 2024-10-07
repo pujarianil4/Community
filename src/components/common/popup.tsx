@@ -27,6 +27,10 @@ export default function CPopup({
   const handleSelect = (lbl: string) => {
     onSelect(lbl);
   };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    onSelect("");
+  };
   const content = (
     <div className='cpopup_content'>
       {list?.map(({ icon: Icon, label }: List) => (
@@ -45,6 +49,7 @@ export default function CPopup({
       content={content}
       trigger={onAction}
       open={open}
+      onOpenChange={handleOpenChange}
     >
       {children}
     </Popover>

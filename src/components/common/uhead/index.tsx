@@ -104,7 +104,7 @@ export default function UHead({
             list={popupList}
             onAction='hover'
           >
-            <div className='options'>
+            <div onClick={() => setOpen(true)} className='options'>
               <IoIosMore />
             </div>
           </CPopup>
