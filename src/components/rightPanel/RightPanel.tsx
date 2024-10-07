@@ -12,6 +12,7 @@ import Community from "./community";
 export default function RightPanel() {
   const pathName = usePathname();
   const isProposalPage = pathName.split("/")[1] == "p" ? true : false;
+  console.log("RightPanel");
 
   const { isLoading: isPostLoading, data: postByComments } = useAsync(
     getPosts,
