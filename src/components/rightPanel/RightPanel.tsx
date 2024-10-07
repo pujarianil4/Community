@@ -11,7 +11,11 @@ import { ICommunity, IPost } from "@/utils/types/types";
 import Community from "./community";
 export default function RightPanel() {
   const pathName = usePathname();
-  const isProposalPage = pathName.split("/")[1] == "p" ? true : false;
+  const isProposalPage =
+    pathName.split("/")[1] === "p" &&
+    pathName.split("/")[2] !== "create-proposal"
+      ? true
+      : false;
 
   const { isLoading: isPostLoading, data: postByComments } = useAsync(
     getPosts,

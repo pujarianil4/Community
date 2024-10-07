@@ -46,7 +46,7 @@ export default function VoteSection() {
 
   return (
     <section className='vote_section'>
-      <p>Cast ypur Vote</p>
+      <p>Cast your Vote</p>
       <CButton
         className={`option ${value == "yes" ? "yes" : ""}`}
         // onClick={() => setValue("yes")}
@@ -95,9 +95,8 @@ export default function VoteSection() {
           <div className='range_data'>
             <p>No</p>
             <p className='no'>
-              {proposalData?.down < 2
-                ? `${proposalData?.down} vote`
-                : `${proposalData?.down} votes`}
+              {proposalData?.down || 0}
+              {proposalData?.down < 2 ? `vote` : ` votes`}
             </p>
           </div>
           <RangeBar
