@@ -1,6 +1,6 @@
 import { Popover } from "antd";
 import { TooltipPlacement } from "antd/es/tooltip";
-import React from "react";
+import React, { useState } from "react";
 import { IoIosMore } from "react-icons/io";
 import "./index.scss";
 interface List {
@@ -13,6 +13,7 @@ interface IPopup {
   onAction?: "click" | "hover";
   position?: TooltipPlacement;
   onSelect: (label: string) => void;
+  open: boolean;
 }
 
 export default function CPopup({
@@ -21,11 +22,19 @@ export default function CPopup({
   onAction = "click",
   position = "bottomRight",
   onSelect,
+  open,
 }: IPopup) {
+  const handleSelect = (lbl: string) => {
+    onSelect(lbl);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    onSelect("");
+  };
   const content = (
     <div className='cpopup_content'>
       {list?.map(({ icon: Icon, label }: List) => (
-        <div onClick={() => onSelect(label)} key={label} className='option'>
+        <div onClick={() => handleSelect(label)} key={label} className='option'>
           {Icon && Icon}
           <span>{label}</span>
         </div>
@@ -39,6 +48,8 @@ export default function CPopup({
       overlayClassName='filter_popover'
       content={content}
       trigger={onAction}
+      open={open}
+      onOpenChange={handleOpenChange}
     >
       {children}
     </Popover>

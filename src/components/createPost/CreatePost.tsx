@@ -40,7 +40,7 @@ import { Pagination } from "antd";
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPostModalOpen: boolean;
-  post?: IPost;
+  editPost?: IPost;
   defaultCommunity?: ICommunity;
 }
 
@@ -126,6 +126,7 @@ const CreatePost: React.FC<Props> = ({
   isPostModalOpen,
   setIsPostModalOpen,
   defaultCommunity,
+  editPost,
 }) => {
   const [{ dispatch, actions }, [user, comminityRefetch]] = useRedux([
     userNameSelector,
@@ -274,21 +275,25 @@ const CreatePost: React.FC<Props> = ({
     }
   };
   useEffect(() => {
-    closeBtn?.addEventListener("click", () => {
-      console.log("close");
-      // Clear states when the modal is closed
-      setIsLoadingPost(false);
-      setSelectedOption(null);
-      setContent("");
-      setPics([]);
-      setUploadedImg([]);
-      setSearchTerm(defaultCommunity?.username || "");
-      setUploadMsg({
-        msg: "",
-        type: "",
-      });
+    if (editPost) {
       setIsPostModalOpen(false);
-    });
+    } else {
+      closeBtn?.addEventListener("click", () => {
+        console.log("close");
+        // Clear states when the modal is closed
+        setIsLoadingPost(false);
+        setSelectedOption(null);
+        setContent("");
+        setPics([]);
+        setUploadedImg([]);
+        setSearchTerm(defaultCommunity?.username || "");
+        setUploadMsg({
+          msg: "",
+          type: "",
+        });
+        setIsPostModalOpen(false);
+      });
+    }
   }, [closeBtn]);
 
   useEffect(() => {
@@ -332,6 +337,14 @@ const CreatePost: React.FC<Props> = ({
 
     setIsDraft(false); // Close draft view
   };
+
+  useEffect(() => {
+    console.log("editPost", "post", editPost);
+    if (editPost) {
+      console.log("editPost", editPost);
+      handleEditPost(editPost);
+    }
+  }, [editPost, isPostModalOpen]);
 
   const handleRemoveMedia = (rmIndx: number) => {
     setPics((prevPics) => prevPics.filter((_, idx) => idx !== rmIndx));
@@ -499,24 +512,37 @@ const CreatePost: React.FC<Props> = ({
               </FocusableDiv>
             </div>
           </div>
-          <div className='media'>
-            <CButton
-              loading={isLoadingPostData}
-              disabled={isDisabled}
-              onClick={handleSaveDraft}
-              className='create_btn'
-            >
-              Save as Draft
-            </CButton>
-            <CButton
-              loading={isLoadingPost}
-              disabled={isDisabled}
-              onClick={handlePost}
-              className='create_btn'
-            >
-              Post
-            </CButton>
-          </div>
+          {editPost ? (
+            <div className='media'>
+              <CButton
+                loading={isLoadingPost}
+                disabled={isDisabled}
+                // onClick={handlePost}
+                className='create_btn'
+              >
+                Update Post
+              </CButton>
+            </div>
+          ) : (
+            <div className='media'>
+              <CButton
+                loading={isLoadingPostData}
+                disabled={isDisabled}
+                onClick={handleSaveDraft}
+                className='create_btn'
+              >
+                Save as Draft
+              </CButton>
+              <CButton
+                loading={isLoadingPost}
+                disabled={isDisabled}
+                onClick={handlePost}
+                className='create_btn'
+              >
+                Post
+              </CButton>
+            </div>
+          )}
         </section>
       )}
     </main>

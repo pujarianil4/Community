@@ -123,7 +123,7 @@ export default function Post({ post }: Iprops) {
         </div>
         <p className='post_time'>
           {/* <GoDotFill /> */}
-          &bull; {timeAgo(post?.time)}
+          &bull; {timeAgo(post?.cta)}
         </p>
         <div className='more'>
           <IoIosMore />

@@ -18,11 +18,16 @@ export default function ProposalDetails({ proposalId }: IProps) {
     fetchProposalByID,
     proposalId
   );
-
   const [{ dispatch, actions }] = useRedux();
 
   useEffect(() => {
-    dispatch(actions.setProposalVote(proposalData?.isVoted));
+    dispatch(
+      actions.setProposalData({
+        isVoted: proposalData?.isVoted,
+        yes: proposalData?.up,
+        no: proposalData?.down,
+      })
+    );
   }, [proposalData]);
 
   return (

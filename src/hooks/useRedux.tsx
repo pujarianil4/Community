@@ -9,7 +9,7 @@ import {
   setRefetchPost,
   setRefetchUser,
   resetRefetch,
-  setProposalVote,
+  setProposalData,
 } from "@/contexts/reducers";
 
 type ActionCreators = {
@@ -19,7 +19,7 @@ type ActionCreators = {
   setRefetchPost: typeof setRefetchPost;
   setRefetchUser: typeof setRefetchUser;
   resetRefetch: typeof resetRefetch;
-  setProposalVote: typeof setProposalVote;
+  setProposalData: typeof setProposalData;
   // Add other actions here if needed
 };
 
@@ -37,7 +37,7 @@ export default function useRedux<T>(selectors?: any): [UseReduxHook, any] {
     setRefetchPost,
     setRefetchUser,
     resetRefetch,
-    setProposalVote,
+    setProposalData,
     // Add other actions here if needed
   };
 
