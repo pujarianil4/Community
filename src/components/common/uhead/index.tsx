@@ -34,6 +34,7 @@ export default function UHead({
   self = false,
   callBack,
 }: IProps) {
+  const [open, setOpen] = useState(false);
   const popupList: Array<List> = [
     {
       label: "Block",
@@ -58,6 +59,7 @@ export default function UHead({
   ];
 
   const handleSelectMore = (label: string) => {
+    setOpen(false);
     if (label === "Edit") {
       callBack && callBack("edit");
     }
@@ -96,7 +98,12 @@ export default function UHead({
       <p className='post_time'>&bull; {timeAgo(time)}</p>
       {showMore && (
         <div className='more'>
-          <CPopup onSelect={handleSelectMore} list={popupList} onAction='hover'>
+          <CPopup
+            onSelect={handleSelectMore}
+            open={open}
+            list={popupList}
+            onAction='hover'
+          >
             <div className='options'>
               <IoIosMore />
             </div>

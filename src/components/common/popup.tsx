@@ -13,6 +13,7 @@ interface IPopup {
   onAction?: "click" | "hover";
   position?: TooltipPlacement;
   onSelect: (label: string) => void;
+  open: boolean;
 }
 
 export default function CPopup({
@@ -21,12 +22,10 @@ export default function CPopup({
   onAction = "click",
   position = "bottomRight",
   onSelect,
+  open,
 }: IPopup) {
-  const [open, setOpen] = useState(false);
-
   const handleSelect = (lbl: string) => {
     onSelect(lbl);
-    setOpen(false);
   };
   const content = (
     <div className='cpopup_content'>

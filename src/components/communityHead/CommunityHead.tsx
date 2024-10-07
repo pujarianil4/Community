@@ -34,9 +34,11 @@ import { Modal } from "antd";
 import CreatePost from "../createPost/CreatePost";
 import ProposalItemLoader from "../proposals/proposalItemLoader";
 import FollowListLoader from "../common/loaders/followList";
+import { CreateCommunityModal } from "../sidebar/CreateCommunityModal";
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [isEditCommunityOpen, setIsEditCommunityOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -139,12 +141,17 @@ export default function CommunityHead() {
 
   const handleCancel = () => {
     setIsPostModalOpen(false);
+    setIsEditCommunityOpen(false);
   };
 
   const handleCreatePost = () => {
     // TODO: Show create post with current community
     console.log("CREATE_POST");
     setIsPostModalOpen(true);
+  };
+
+  const handleEditCommunityCallBack = () => {
+    refetch();
   };
 
   return (
@@ -202,6 +209,9 @@ export default function CommunityHead() {
 
                 <div className='social_bx'>
                   <CommunityFollowButton communityData={data} />
+                  <button onClick={() => setIsEditCommunityOpen(true)}>
+                    Edit
+                  </button>
                   <div className='socials'>
                     <div className='disabled'>
                       <DiscordIcon />
@@ -289,6 +299,13 @@ export default function CommunityHead() {
           />
         )}
       </Modal>
+
+      <CreateCommunityModal
+        isModalOpen={isEditCommunityOpen}
+        onClose={handleCancel}
+        refetchCommunities={handleEditCommunityCallBack}
+        defaultCommunity={data}
+      />
     </>
   );
 }
