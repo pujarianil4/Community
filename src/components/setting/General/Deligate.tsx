@@ -5,17 +5,18 @@ import { DropdownLowIcon } from "@/assets/icons";
 import {
   delegateNetWorth,
   fetchDelegatesByUname,
-  getFollowinsByUserId,
+  getFollowersByUserId,
   undoDelegateNetWorth,
 } from "@/services/api/api";
 import useAsync from "@/hooks/useAsync";
 import CButton from "@/components/common/Button";
 import { numberWithCommas } from "@/utils/helpers";
-import EmptyData from "@/components/common/Empty";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import DropdownWithSearch from "@/components/createPost/dropdownWithSearch";
 import { IUser } from "@/utils/types/types";
+import Deligator from "./Deligator";
+import NotificationMessage from "@/components/common/Notification";
 
 const { Panel } = Collapse;
 
@@ -23,14 +24,14 @@ export default function Deligate() {
   const userNameSelector = (state: RootState) => state?.user;
   const [{}, [user]] = useRedux([userNameSelector]);
   const { isLoading: usersLoading, data: userList } = useAsync(
-    getFollowinsByUserId,
+    getFollowersByUserId,
     {
       userId: user?.uid,
       type: "u",
     }
   );
   const userData = useMemo(() => {
-    return userList?.map((item: any) => item?.followedUser);
+    return userList?.map((item: any) => item?.user);
   }, [userList]);
   const payload = {
     username: user?.username,
@@ -41,13 +42,22 @@ export default function Deligate() {
   const { isLoading, data, refetch } = useAsync(fetchDelegatesByUname, payload);
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [effectiveNetWrth, setEffectiveNetWrth] = useState<number>(
+    user?.effectiveNetWrth || 0
+  );
 
   const handleDelegate = async () => {
-    await delegateNetWorth(selectedUser?.id as number);
-    refetch();
+    try {
+      setEffectiveNetWrth(0);
+      await delegateNetWorth(selectedUser?.id as number);
+      refetch();
+    } catch (error: any) {
+      NotificationMessage("error", error?.response.data.message);
+    }
   };
 
   const handleUndoDelegate = async (id: number) => {
+    setEffectiveNetWrth(user?.effectiveNetWrth);
     await undoDelegateNetWorth(id);
     refetch();
   };
@@ -58,18 +68,18 @@ export default function Deligate() {
         key='1'
         extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
       >
-        <div>
-          <p>networth: {user?.netWrth}</p>
-          <p>effective networth: {user?.effectiveNetWrth}</p>
+        <div className='my_delegate'>
+          <p>Networth: {user?.netWrth}</p>
+          <p>Effective Networth: {effectiveNetWrth}</p>
         </div>
 
         <>
           {isLoading ? (
-            <p>Loading...</p>
+            <div className='delegate_loader skeleton'></div>
           ) : data?.length > 0 ? (
             <>
               {data?.map((item: any) => (
-                <div className='deligat_item' key={item.id}>
+                <div className='delegate_item' key={item.id}>
                   {/* Required User Details like img */}
                   <p>user: {item?.delegatee?.username}</p>
                   <p>networth: {numberWithCommas(item?.delegatee?.netWrth)}</p>
@@ -92,17 +102,20 @@ export default function Deligate() {
                     options={userData}
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
-                    selected={selectedUser}
+                    // selected={selectedUser}
                     isUser
                     placeholder='Select User'
                   />
-                  <CButton onClick={handleDelegate}>Delegate</CButton>
+                  <CButton disabled={!searchTerm} onClick={handleDelegate}>
+                    Delegate
+                  </CButton>
                 </div>
               ) : (
-                <p>Loading...</p>
+                <div className='delegate_loader skeleton'></div>
               )}
             </>
           )}
+          <Deligator />
         </>
       </Panel>
     </Collapse>

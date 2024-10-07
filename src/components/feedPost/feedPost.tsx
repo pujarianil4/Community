@@ -2,21 +2,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
-import { GoComment } from "react-icons/go";
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getImageSource, numberWithCommas, timeAgo } from "@/utils/helpers";
 import { IPost, IVotePayload } from "@/utils/types/types";
 import SwipeCarousel from "../common/carousel";
-import { IoIosMore } from "react-icons/io";
-import {
-  DropdownLowIcon,
-  DropdownUpIcon,
-  SaveIcon,
-  ShareIcon,
-} from "@/assets/icons";
-import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 import PostPageLoader from "../common/loaders/postPage";
 import { sendVote } from "@/services/api/api";
 import { useIntersectionObserver } from "@/hooks/useIntersection";
