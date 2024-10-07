@@ -95,17 +95,22 @@ export default function Actions({
   return (
     <div className='actions'>
       <div className='up_down'>
-        <PiArrowFatUpDuotone
-          className={vote.type == "up" || isVoted ? "active" : ""}
-          onClick={() => handleVote("up")}
-          size={18}
-        />
-        <span>{vote.value}</span>
-        <PiArrowFatDownDuotone
-          className={vote.type == "down" ? "active" : ""}
-          onClick={() => handleVote("down")}
-          size={18}
-        />
+        <span>
+          <PiArrowFatUpDuotone
+            className={vote.type == "up" || isVoted ? "active" : ""}
+            onClick={() => handleVote("up")}
+            size={18}
+          />
+          <span>{vote.value}</span>{" "}
+        </span>
+        <span>
+          <PiArrowFatDownDuotone
+            className={vote.type == "down" ? "active" : ""}
+            onClick={() => handleVote("down")}
+            size={18}
+          />
+          <span> {vote.value}</span>
+        </span>
       </div>
       <Link href={`post/${id}`} as={`/post/${id}`}>
         <div className='comments'>

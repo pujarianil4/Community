@@ -19,7 +19,9 @@
       padding: 1rem;
       margin: 1rem 0 0;
       color: var(--light-tx);
-
+      @include lessThan(md) {
+        padding: 10px;
+      }
       .proposal_head {
         display: flex;
         justify-content: space-between;

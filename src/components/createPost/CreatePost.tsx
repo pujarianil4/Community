@@ -475,6 +475,7 @@ const CreatePost: React.FC<Props> = ({
                     ></div>
                   ))}
                 </div> */}
+
                 <div className='file_container'>
                   {pics.map((picFile, index) => (
                     <Img

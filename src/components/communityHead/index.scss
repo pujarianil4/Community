@@ -169,6 +169,16 @@
         }
         .social_bx {
           text-align: end;
+          .edit_comunity {
+            background: var(--tertiary-bg) !important;
+            color: var(--primary) !important;
+            font-size: $font-size-sm !important;
+            margin-top: 5px;
+            @include lessThan(md) {
+              height: 22px !important;
+              font-size: $font-size-xxsm !important;
+            }
+          }
         }
       }
 

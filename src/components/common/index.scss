@@ -216,7 +216,7 @@
       text-transform: capitalize;
       font-size: $font-size-sm;
       @include lessThan(sm) {
-        font-size: $font-size-xsm;
+        font-size: $font-size-xxsm;
       }
     }
     &:hover {
@@ -247,6 +247,9 @@
     text-transform: capitalize;
     &:hover {
       background: var(--secondary-bg);
+    }
+    @include lessThan(sm) {
+      font-size: $font-size-xxsm;
     }
   }
 }
