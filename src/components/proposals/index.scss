@@ -48,6 +48,12 @@
           width: 12px;
         }
       }
+      @include lessThan(sm) {
+        height: 30px;
+        svg {
+          width: 10px;
+        }
+      }
     }
   }
 }
@@ -180,7 +186,7 @@
           align-items: center;
           margin: 2px 12px;
           @include lessThan(md) {
-            gap: 8rem;
+            gap: 7rem;
             margin: 2px 0px;
           }
           @include lessThan(xs) {

@@ -147,8 +147,8 @@ const CreatePost: React.FC<Props> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMsg, setUploadMsg] = useState({ msg: "", type: "" });
   const [isDraft, setIsDraft] = useState(false);
-  const [uploadCount, setUploadCount] = useState(null);
 
+  const [uploadingSkeletons, setUploadingSkeletons] = useState<number[]>([]);
   const {
     isLoading: isLoadingPostData,
     data: posts,
@@ -246,8 +246,11 @@ const CreatePost: React.FC<Props> = ({
     setIsUploading(true);
     setUploadMsg({ msg: "Uploading...", type: "info" });
 
+    const filesArray = Array.from(newPics);
+    const skeletonIds = filesArray.map((_, index) => pics.length + index);
+    setUploadingSkeletons((prev) => [...prev, ...skeletonIds]);
+
     try {
-      const filesArray = Array.from(newPics);
       if (filesArray.length > 5) {
         NotificationMessage("info", "Please select up to 5 media");
         setUploadMsg({ msg: "", type: "" });
@@ -255,16 +258,19 @@ const CreatePost: React.FC<Props> = ({
         const uploadedFiles = await uploadMultipleFile(newPics);
         setPics((prevPics) => [...prevPics, ...filesArray]);
 
-        if (uploadedFiles.length > 0)
-          setUploadedImg((prevPics) => [...prevPics, ...uploadedFiles]);
+        if (uploadedFiles.length > 0) {
+          setUploadedImg((prevImgs) => [...prevImgs, ...uploadedFiles]);
+        }
+
         setUploadMsg({ msg: "Uploaded Successfully", type: "success" });
-        console.log("Uploaded files:", uploadedFiles);
+        setUploadingSkeletons([]);
       }
       setIsUploading(false);
     } catch (error) {
       setIsUploading(false);
       setUploadMsg({ msg: "Failed to Upload", type: "error" });
       NotificationMessage("error", "Error uploading files");
+      setUploadingSkeletons([]);
     }
   };
   useEffect(() => {
@@ -435,30 +441,8 @@ const CreatePost: React.FC<Props> = ({
                   autoFocus={true}
                   maxCharCount={300}
                 />
-                {/* {pics?.length > 0 && (
-                  <div className='file_container'>
-                    {pics?.map((picFile, index) => (
-                      <Img
-                        key={index}
-                        index={index}
-                        file={picFile}
-                        onRemove={(rmIndx) =>
-                          setPics(pics.filter((_, idx) => idx !== rmIndx))
-                        }
-                      />
-                    ))}
-                  </div>
-                )} */}
-                {isUploading ? (
-                  <div className='file_container'>
-                    {pics.map((picFile, index) => (
-                      <div key={index} className='skeleton img_loader'>
-                        {/* You can add specific styles here to match your skeleton */}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  pics.length > 0 && (
+                {/* <div className='file_container'>
+                  {pics.length > 0 && (
                     <div className='file_container'>
                       {pics.map((picFile, index) => (
                         <Img
@@ -469,18 +453,37 @@ const CreatePost: React.FC<Props> = ({
                         />
                       ))}
                     </div>
-                  )
-                )}
-
-                <div className='inputs'>
-                  {isUploading ? (
-                    <div className='loader'></div>
-                  ) : (
-                    <FileInput onChange={handleUploadFile}>
-                      <LuImagePlus color='#636466' size={20} />
-                    </FileInput>
                   )}
 
+                  {uploadingSkeletons.map((_, index) => (
+                    <div
+                      key={`skeleton-${index}`}
+                      className='skeleton img_loader'
+                    ></div>
+                  ))}
+                </div> */}
+                <div className='file_container'>
+                  {pics.map((picFile, index) => (
+                    <Img
+                      key={index}
+                      index={index}
+                      file={picFile}
+                      onRemove={handleRemoveMedia}
+                    />
+                  ))}
+
+                  {uploadingSkeletons.map((_, index) => (
+                    <div
+                      key={`skeleton-${index}`}
+                      className='skeleton img_loader'
+                    ></div>
+                  ))}
+                </div>
+
+                <div className='inputs'>
+                  <FileInput onChange={handleUploadFile}>
+                    <LuImagePlus color='#636466' size={20} />
+                  </FileInput>
                   <div>
                     <LinkIcon />
                   </div>
