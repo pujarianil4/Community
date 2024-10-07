@@ -22,6 +22,10 @@ import { sendVote } from "@/services/api/api";
 import { useIntersectionObserver } from "@/hooks/useIntersection";
 import UHead from "../common/uhead";
 import Actions from "../common/actions";
+import { useSelector } from "react-redux";
+import { RootState } from "@/contexts/store";
+import CreatePost from "../createPost/CreatePost";
+import { Modal } from "antd";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -39,7 +43,7 @@ interface Vote {
 
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post, overlayClassName }: IProps) {
-  const { text, up, down, time, media, user, community, id, ccount } = post;
+  const { text, up, down, cta, media, user, community, id, ccount } = post;
   const postRef = useRef<HTMLDivElement | null>(null);
   const stayTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isViewed = useIntersectionObserver(postRef);
@@ -48,6 +52,12 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
     value: Number(up) + Number(down),
     type: "",
   });
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const userInfo = useSelector((state: RootState) => state.user);
+
+  console.log("user", user, userInfo);
+  const self = user.id == userInfo.uid;
 
   const handleRedirectPost = () => {
     router.push(`/post/${id}`);
@@ -96,6 +106,13 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
     }
   };
 
+  const moreActionCall = (data: any) => {
+    if (data == "edit") {
+      console.log("edit", post);
+      setIsEditModalOpen(true);
+    }
+  };
+
   useEffect(() => {
     if (isViewed) {
       stayTimerRef.current = setTimeout(() => {
@@ -115,8 +132,9 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
   }
 
   return (
-    <div ref={postRef} className={`postcard_container ${overlayClassName}`}>
-      {/* <div className='user_head'>
+    <>
+      <div ref={postRef} className={`postcard_container ${overlayClassName}`}>
+        {/* <div className='user_head'>
         <Link
           href={`u/${post?.user.username}`}
           as={`/u/${post?.user.username}`}
@@ -151,26 +169,43 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
         </div>
       </div> */}
 
-      {post && (
-        <UHead
-          user={post.user}
-          community={post.community}
-          time={post.time}
-          showMore
-        />
-      )}
+        {post && (
+          <UHead
+            user={post.user}
+            community={post.community}
+            time={post.cta}
+            showMore
+            self={self}
+            callBack={moreActionCall}
+          />
+        )}
 
-      <div
-        className='content'
-        onClick={(event) => {
-          handleRedirectPost();
-          event.stopPropagation();
-        }}
-      >
-        <MarkdownRenderer markdownContent={text} />
-        {media && media?.length > 0 && <SwipeCarousel assets={media} />}
+        <div
+          className='content'
+          onClick={(event) => {
+            handleRedirectPost();
+            event.stopPropagation();
+          }}
+        >
+          <MarkdownRenderer markdownContent={text} />
+          {media && media?.length > 0 && <SwipeCarousel assets={media} />}
+        </div>
+        <Actions type='p' post={post} showSave showShare />
       </div>
-      <Actions type='p' post={post} showSave showShare />
-    </div>
+      <Modal
+        footer={<></>}
+        centered
+        className='create_post_modal'
+        open={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onCancel={() => setIsEditModalOpen(false)}
+      >
+        <CreatePost
+          isPostModalOpen={isEditModalOpen}
+          setIsPostModalOpen={setIsEditModalOpen}
+          editPost={post}
+        />
+      </Modal>
+    </>
   );
 }

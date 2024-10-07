@@ -47,7 +47,7 @@ export interface IPost {
   up: number;
   down: number;
   ccount: number;
-  time: string;
+  cta: string;
   user: IUser;
   media?: string[];
   // img?: string;

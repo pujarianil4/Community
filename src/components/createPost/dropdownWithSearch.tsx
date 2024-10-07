@@ -68,7 +68,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
     if (selected) {
       setSearchTerm(selected?.username);
     }
-  }, []);
+  }, [selected]);
 
   return (
     <main className='dropdown_with_search'>

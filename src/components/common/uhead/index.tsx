@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./index.scss";
 import { getImageSource, timeAgo } from "@/utils/helpers";
 import { BsEye } from "react-icons/bs";
@@ -17,6 +17,8 @@ interface IProps {
   community: ICommunity;
   time: string;
   showMore?: boolean;
+  self?: boolean;
+  callBack?: (data: any) => void;
 }
 
 interface List {
@@ -29,16 +31,9 @@ export default function UHead({
   community,
   time,
   showMore = false,
+  self = false,
+  callBack,
 }: IProps) {
-  const content = (
-    <div className='options_popup'>
-      <div className='option'>
-        <IoIosMore />
-        <span>Block</span>
-      </div>
-    </div>
-  );
-
   const popupList: Array<List> = [
     {
       label: "Block",
@@ -48,9 +43,25 @@ export default function UHead({
       label: "Report",
       icon: <IoFlagOutline />,
     },
+    ...(self
+      ? [
+          {
+            label: "Edit",
+            icon: <IoIosMore />,
+          },
+          {
+            label: "delete",
+            icon: <IoFlagOutline />,
+          },
+        ]
+      : []),
   ];
 
-  const handleSelectMore = () => {};
+  const handleSelectMore = (label: string) => {
+    if (label === "Edit") {
+      callBack && callBack("edit");
+    }
+  };
 
   return (
     <div className='user_head'>
