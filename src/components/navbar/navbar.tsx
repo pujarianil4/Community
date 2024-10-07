@@ -16,7 +16,8 @@ import { IoSearch } from "react-icons/io5";
 import { AddIcon } from "@/assets/icons";
 
 import useRedux from "@/hooks/useRedux";
-import { fetchUserById } from "@/services/api/api";
+
+import { fetchUserById } from "@services/api/userApi";
 
 import CreatePost from "../createPost/CreatePost";
 import { RootState } from "@/contexts/store";

@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import useAsync from "@/hooks/useAsync";
-import { fetchUser } from "@/services/api/api";
+import { fetchUser } from "@/services/api/userApi";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import "./userhead.scss";
 // import UandCHeadLoader from "../common/loaders/UandCHead";

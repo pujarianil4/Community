@@ -47,3 +47,15 @@ export const handleSignup = async (
     throw error;
   }
 };
+
+export const linkAddress = async (payload: {
+  sig: `0x${string}` | string | undefined;
+  msg: string;
+  pubKey?: PublicKey | string;
+}) => {
+  const response = await api.post("/users/address", payload);
+
+  console.log("LOGIN_RES", response);
+  // setToLocalStorage("userSession", response.data);
+  return response.data;
+};

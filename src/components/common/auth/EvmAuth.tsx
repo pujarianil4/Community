@@ -1,7 +1,8 @@
 import { getSignMessage } from "@/config/ethers";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
-import { fetchUserById, linkAddress } from "@/services/api/api";
+import { linkAddress } from "@/services/api/authapi";
+import { fetchUserById } from "@services/api/userApi";
 import { sigMsg } from "@/utils/constants";
 import { setClientSideCookie } from "@/utils/helpers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";

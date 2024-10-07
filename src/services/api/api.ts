@@ -41,19 +41,6 @@ const updateAuthorizationHeader = () => {
 updateAuthorizationHeader();
 store.subscribe(updateAuthorizationHeader);
 
-export const fetchUserByUserName = async (username: string) => {
-  try {
-    const response = await api.get(`/users/uname/${username}`);
-    console.log("response", response.data);
-    if (response.data) {
-      return response.data;
-    }
-    throw new Error("user not available");
-  } catch (error) {
-    console.error("FETCH_BY_NAME_ERROR", error);
-    throw error;
-  }
-};
 
 export const handlePostToCommunity = async (data: any) => {
   try {
@@ -64,50 +51,11 @@ export const handlePostToCommunity = async (data: any) => {
   }
 };
 
-export const fetchUser = async (username: string) => {
-  const uid = store.getState().user?.uid;
-  if (!username) {
-    return null;
-  }
-  try {
-    const { data } = await api.get(`/users/uname/${username}?uid=${uid}`);
-    return Array.isArray(data) ? data[0] : data;
-    // const isFollowed = await isUserFollowed({
-    //   fwid: response?.data?.id,
-    //   type: "u",
-    // });
-    // console.log("CHECK_U", response.data);
-    // return {
-    //   ...response.data,
-    //   isFollowed,
-    // };
-  } catch (error) {
-    console.error("Fetch User ", error);
-    throw error;
-  }
-};
 
-export const fetchUserById = async (id: string) => {
-  try {
-    const response = await api.get(`/users/${id}`);
 
-    return response.data;
-  } catch (error) {
-    console.error("Fetch User ", error);
-    throw error;
-  }
-};
 
-export const updateUser = async (payload: Partial<IUser>) => {
-  try {
-    const response = await api.patch("/users", payload);
 
-    return response.data;
-  } catch (error) {
-    console.error("UpdateUser ", error);
-    throw error;
-  }
-};
+
 
 export const fetchCommunities = async (sortby: string) => {
   const uid = store.getState().user?.uid;
@@ -261,25 +209,7 @@ export const patchPost = async (data: any) => {
   }
 };
 
-export const getFollowinsByUserId = async ({ userId, type }: any) => {
-  try {
-    const response = await api.get(`/followers/fwng/${userId}?typ=${type}`);
-    return response.data;
-  } catch (error) {
-    console.error("getFollowinsByUserId", error);
-    throw error;
-  }
-};
 
-export const getFollowersByUserId = async ({ userId, type }: IFollowersAPI) => {
-  try {
-    const response = await api.get(`/followers/fwrs/${userId}?typ=${type}`);
-    return response.data;
-  } catch (error) {
-    console.error("getFollowinsByUserId", error);
-    throw error;
-  }
-};
 
 export const followApi = async (data: IFollowAPI) => {
   try {
@@ -311,30 +241,8 @@ export const postComments = async (data: IPostCommentAPI) => {
     console.error("POST_COMMENT_ERROR: ", error);
   }
 };
-export const linkAddress = async (payload: {
-  sig: `0x${string}` | string | undefined;
-  msg: string;
-  pubKey?: PublicKey | string;
-}) => {
-  const response = await api.post("/users/address", payload);
 
-  console.log("LOGIN_RES", response);
-  // setToLocalStorage("userSession", response.data);
-  return response.data;
-};
 
-export const getAddressesByUserId = async (userId: string) => {
-  if (userId == "0") {
-    return null;
-  }
-  try {
-    const response = await api.get(`/users/address/${userId}`);
-    return response.data;
-  } catch (error) {
-    console.error("getFollowinsByUserId", error);
-    throw error;
-  }
-};
 
 export const isUserFollowed = async ({
   fwid,
@@ -420,25 +328,9 @@ export const uploadMultipleFile = async (files: FileList) => {
 };
 
 //fetch sessions
-export const getSession = async () => {
-  try {
-    const response = await api.get("/users/sessions");
-    return response.data;
-  } catch (error) {
-    console.error("POSTS_ERROR: ", error);
-    throw error;
-  }
-};
 
-export const getUserData = async () => {
-  try {
-    const response = await api.patch("/users");
-    return response.data;
-  } catch (error) {
-    console.error("POSTS_ERROR: ", error);
-    throw error;
-  }
-};
+
+
 
 export const sendVote = async (payload: IVotePayload) => {
   try {
@@ -527,62 +419,10 @@ export const voteToProposal = async (payload: IVoteProposalPayload) => {
   }
 };
 
-export const delegateNetWorth = async (userId: number) => {
-  try {
-    const response = await api.post(`/governance/delegate/${userId}`);
-    console.log("=====Delegate Successful=====");
-  } catch (error) {
-    console.error("Delegate Error", error);
-    throw error;
-  }
-};
 
-export const undoDelegateNetWorth = async (delegateId: number) => {
-  try {
-    const response = await api.post(`/governance/delegate/undo/${delegateId}`);
-    console.log("=====Undo Delegate Successful=====");
-  } catch (error) {
-    console.error("Delegate Error", error);
-    throw error;
-  }
-};
 
-export const fetchDelegatesByUname = async (payload: {
-  username: string;
-  type: "dgte" | "dgtr";
-  page: number;
-  limit: number;
-}) => {
-  const { username, type, page, limit } = payload;
-  try {
-    const { data } = await api.get(
-      `/governance/delegate/${username}?page=${page}&limit=${limit}&typ=${type}`
-    );
-    return data;
-  } catch (error) {
-    console.error("Fetch_Proposals_Error", error);
-    throw error;
-  }
-};
 
-// remove Address
-export const removeAddress = async (address: string) => {
-  try {
-    const response = await api.patch("/users/address/remove", {
-      address: address,
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
 
-//remove Session
-export const removeSession = async (sessionId: string) => {
-  try {
-    const response = await api.patch(`/users/session/${sessionId}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+
+
+

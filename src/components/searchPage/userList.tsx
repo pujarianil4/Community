@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import "./index.scss";
 import useAsync from "@/hooks/useAsync";
-import { getFollowersByUserId } from "@/services/api/api";
+import { getFollowersByUserId } from "@/services/api/userApi";
 import CardList from "../cardList";
 import { IUser } from "@/utils/types/types";
 

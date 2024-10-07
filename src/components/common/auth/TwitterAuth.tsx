@@ -1,7 +1,7 @@
 import React from "react";
 import useAsync from "@/hooks/useAsync";
-import { getUserData } from "@/services/api/api";
-import { updateUser } from "@/services/api/api";
+import { getUserData } from "@/services/api/userApi";
+import { updateUser } from "@/services/api/userApi";
 import NotificationMessage from "@/components/common/Notification";
 import { AddIcon, TwitterIcon, DeleteIcon } from "@/assets/icons";
 import { getCurrentDomain } from "@/utils/helpers";

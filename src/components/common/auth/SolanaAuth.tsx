@@ -7,7 +7,8 @@ import {
 } from "@/config/solanaWallet/SolanaProvider";
 import Image from "next/image";
 import { sigMsg } from "@/utils/constants";
-import { fetchUserById, linkAddress } from "@/services/api/api";
+import { linkAddress } from "@/services/api/authapi";
+import { fetchUserById } from "@services/api/userApi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/contexts/store";
 import { setClientSideCookie } from "@/utils/helpers";
