@@ -6,6 +6,7 @@ import Navbar from "../navbar/navbar";
 import RightPanel from "../rightPanel/RightPanel";
 import SideBar from "../sidebar/Sidebar";
 import "./index.scss";
+import RightPanelWrapper from "./RightSideWrapper";
 interface PageWrapperProps {
   children: ReactNode;
   hideRightPanel?: boolean;
@@ -23,7 +24,8 @@ export default function PageWraper({
       <Wraper>
         <SideBar />
         <MainPanel>{children}</MainPanel>
-        {!hideRightPanel && <RightPanel />}
+        {/* {!hideRightPanel && <RightPanel />} */}
+        <RightPanelWrapper hideRightPanel={hideRightPanel} />
       </Wraper>
     </div>
   );
