@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./index.scss";
 import { getImageSource, timeAgo } from "@/utils/helpers";
 import { BsEye } from "react-icons/bs";
@@ -17,6 +17,8 @@ interface IProps {
   community: ICommunity;
   time: string;
   showMore?: boolean;
+  self?: boolean;
+  callBack?: (data: any) => void;
 }
 
 interface List {
@@ -29,16 +31,10 @@ export default function UHead({
   community,
   time,
   showMore = false,
+  self = false,
+  callBack,
 }: IProps) {
-  const content = (
-    <div className='options_popup'>
-      <div className='option'>
-        <IoIosMore />
-        <span>Block</span>
-      </div>
-    </div>
-  );
-
+  const [open, setOpen] = useState(false);
   const popupList: Array<List> = [
     {
       label: "Block",
@@ -48,9 +44,26 @@ export default function UHead({
       label: "Report",
       icon: <IoFlagOutline />,
     },
+    ...(self
+      ? [
+          {
+            label: "Edit",
+            icon: <IoIosMore />,
+          },
+          {
+            label: "delete",
+            icon: <IoFlagOutline />,
+          },
+        ]
+      : []),
   ];
 
-  const handleSelectMore = () => {};
+  const handleSelectMore = (label: string) => {
+    setOpen(false);
+    if (label === "Edit") {
+      callBack && callBack("edit");
+    }
+  };
 
   return (
     <div className='user_head'>
@@ -85,8 +98,13 @@ export default function UHead({
       <p className='post_time'>&bull; {timeAgo(time)}</p>
       {showMore && (
         <div className='more'>
-          <CPopup onSelect={handleSelectMore} list={popupList} onAction='hover'>
-            <div className='options'>
+          <CPopup
+            onSelect={handleSelectMore}
+            open={open}
+            list={popupList}
+            onAction='hover'
+          >
+            <div onClick={() => setOpen(true)} className='options'>
               <IoIosMore />
             </div>
           </CPopup>
