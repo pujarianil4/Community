@@ -16,7 +16,7 @@ import { IoSearch } from "react-icons/io5";
 import { AddIcon } from "@/assets/icons";
 
 import useRedux from "@/hooks/useRedux";
-import { fetchUserById, handleLogOut } from "@/services/api/api";
+import { fetchUserById } from "@/services/api/api";
 
 import CreatePost from "../createPost/CreatePost";
 import { RootState } from "@/contexts/store";
@@ -37,6 +37,7 @@ import { useRouter } from "next/navigation";
 import { SignUpModal } from "../common/auth/signUpModal";
 import Searchbar from "./searchbar";
 import { IoMdArrowBack } from "react-icons/io";
+import { handleLogOut } from "@/services/api/authapi";
 export interface ISignupData {
   username: string;
   name: string;

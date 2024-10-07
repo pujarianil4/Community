@@ -8,12 +8,7 @@ import {
 } from "@tronweb3/tronwallet-adapters";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
-import {
-  fetchUserById,
-  handleLogIn,
-  handleSignup,
-  linkAddress,
-} from "@/services/api/api";
+import { fetchUserById, linkAddress } from "@/services/api/api";
 import { sigMsg } from "@/utils/constants";
 import { setClientSideCookie } from "@/utils/helpers";
 
@@ -23,6 +18,7 @@ import { useSelector } from "react-redux";
 import { DropdownLowIcon } from "@/assets/icons";
 import NotificationMessage from "../Notification";
 import { Collapse } from "antd";
+import { handleLogIn, handleSignup } from "@/services/api/authapi";
 const { Panel } = Collapse;
 
 type WalletAdapter = TronLinkAdapter | OkxWalletAdapter | BitKeepAdapter;

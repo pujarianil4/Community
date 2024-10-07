@@ -7,12 +7,7 @@ import {
 } from "@/config/solanaWallet/SolanaProvider";
 import Image from "next/image";
 import { sigMsg } from "@/utils/constants";
-import {
-  fetchUserById,
-  handleLogIn,
-  handleSignup,
-  linkAddress,
-} from "@/services/api/api";
+import { fetchUserById, linkAddress } from "@/services/api/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/contexts/store";
 import { setClientSideCookie } from "@/utils/helpers";
@@ -20,6 +15,7 @@ import useRedux from "@/hooks/useRedux";
 
 import { DropdownLowIcon } from "@/assets/icons";
 import { Collapse } from "antd";
+import { handleLogIn, handleSignup } from "@/services/api/authapi";
 const { Panel } = Collapse;
 
 interface ISignupData {

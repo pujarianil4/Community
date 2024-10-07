@@ -1,12 +1,7 @@
 import { getSignMessage } from "@/config/ethers";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
-import {
-  fetchUserById,
-  handleLogIn,
-  handleSignup,
-  linkAddress,
-} from "@/services/api/api";
+import { fetchUserById, linkAddress } from "@/services/api/api";
 import { sigMsg } from "@/utils/constants";
 import { setClientSideCookie } from "@/utils/helpers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
@@ -20,6 +15,7 @@ import { DropdownLowIcon } from "@/assets/icons";
 import { Collapse } from "antd";
 const { Panel } = Collapse;
 import { walletIcons } from "@/utils/constants/walletIcons";
+import { handleLogIn, handleSignup } from "@/services/api/authapi";
 
 export interface ISignupData {
   username: string;
