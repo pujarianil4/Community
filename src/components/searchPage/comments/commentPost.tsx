@@ -69,10 +69,10 @@ export default function CommentPost() {
   };
   return (
     <article onClick={handleClick} className='comment_post_card'>
-      <UHead user={post?.user} community={post?.community} time={post?.cta} />
+      <UHead post={post} />
       <MarkdownRenderer markdownContent={post?.text} limit={2} />
       <div className='comment'>
-        <UHead user={post?.user} community={post?.community} time={post?.cta} />
+        <UHead post={post} />
         <MarkdownRenderer markdownContent={post?.text} limit={2} />
         <Actions post={post} type='c' />
       </div>

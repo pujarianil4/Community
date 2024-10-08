@@ -111,9 +111,20 @@ export const getPostsForMeta = async (postId: string) => {
 };
 
 // update post
-export const patchPost = async (postId: string | number ,data: any) => {
+export const patchPost = async (postId: number ,data: any) => {
   try {
     const response = await api.patch(`/posts/${postId}`, data);
+    return response.data;
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+    throw error;
+  }
+};
+
+// update post
+export const deletePost = async (postId: string | number ) => {
+  try {
+    const response = await api.delete(`/posts/${postId}`);
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);

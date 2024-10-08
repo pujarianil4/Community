@@ -363,11 +363,13 @@ const CreatePost: React.FC<Props> = ({
         media: uploadedImg.length > 0 ? uploadedImg : null,
       };
       console.log("data", data);
-      await patchPost(post?.id, data);
-      setIsLoadingPost(false);
-      setIsPostModalOpen(false);
-      NotificationMessage("success", "Post updated Succesfuly");
-      dispatch(actions.setRefetchPost(true));
+      if (post?.id) {
+        await patchPost(post?.id, data);
+        setIsLoadingPost(false);
+        setIsPostModalOpen(false);
+        NotificationMessage("success", "Post updated Succesfuly");
+        dispatch(actions.setRefetchPost(true));
+      }
       // dispatch(actions.setRefetchCommunity(true));
       // resetPostForm();
     } catch (error: any) {
