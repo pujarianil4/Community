@@ -52,6 +52,7 @@ export interface IPost {
   media?: string[];
   // img?: string;
   community: ICommunity;
+  sts: string;
 }
 
 export interface IComment {

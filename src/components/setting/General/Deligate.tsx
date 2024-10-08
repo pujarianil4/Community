@@ -62,62 +62,54 @@ export default function Deligate() {
     refetch();
   };
   return (
-    <Collapse accordion style={{ marginTop: "16px" }}>
-      <Panel
-        header='Deligate'
-        key='1'
-        extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
-      >
-        <div className='my_delegate'>
-          <p>Networth: {user?.netWrth}</p>
-          <p>Effective Networth: {effectiveNetWrth}</p>
-        </div>
+    <>
+      <div className='my_delegate'>
+        <p>Networth: {user?.netWrth}</p>
+        <p>Effective Networth: {effectiveNetWrth}</p>
+      </div>
 
+      {isLoading ? (
+        <div className='delegate_loader skeleton'></div>
+      ) : data?.length > 0 ? (
         <>
-          {isLoading ? (
-            <div className='delegate_loader skeleton'></div>
-          ) : data?.length > 0 ? (
-            <>
-              {data?.map((item: any) => (
-                <div className='delegate_item' key={item.id}>
-                  {/* Required User Details like img */}
-                  <p>user: {item?.delegatee?.username}</p>
-                  <p>networth: {numberWithCommas(item?.delegatee?.netWrth)}</p>
-                  <p>
-                    effective networth:
-                    {numberWithCommas(item?.delegatee?.effectiveNetWrth)}
-                  </p>
-                  <CButton onClick={() => handleUndoDelegate(item?.dgte)}>
-                    Undo
-                  </CButton>
-                </div>
-              ))}
-            </>
-          ) : (
-            <>
-              {!usersLoading ? (
-                <div className='delegate_container'>
-                  <DropdownWithSearch
-                    onSelect={setSelectedUser}
-                    options={userData}
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
-                    // selected={selectedUser}
-                    isUser
-                    placeholder='Select User'
-                  />
-                  <CButton disabled={!searchTerm} onClick={handleDelegate}>
-                    Delegate
-                  </CButton>
-                </div>
-              ) : (
-                <div className='delegate_loader skeleton'></div>
-              )}
-            </>
-          )}
-          <Deligator />
+          {data?.map((item: any) => (
+            <div className='delegate_item' key={item.id}>
+              {/* Required User Details like img */}
+              <p>user: {item?.delegatee?.username}</p>
+              <p>networth: {numberWithCommas(item?.delegatee?.netWrth)}</p>
+              <p>
+                effective networth:
+                {numberWithCommas(item?.delegatee?.effectiveNetWrth)}
+              </p>
+              <CButton onClick={() => handleUndoDelegate(item?.dgte)}>
+                Undo
+              </CButton>
+            </div>
+          ))}
         </>
-      </Panel>
-    </Collapse>
+      ) : (
+        <>
+          {!usersLoading ? (
+            <div className='delegate_container'>
+              <DropdownWithSearch
+                onSelect={setSelectedUser}
+                options={userData}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                // selected={selectedUser}
+                isUser
+                placeholder='Select User'
+              />
+              <CButton disabled={!searchTerm} onClick={handleDelegate}>
+                Delegate
+              </CButton>
+            </div>
+          ) : (
+            <div className='delegate_loader skeleton'></div>
+          )}
+        </>
+      )}
+      <Deligator />
+    </>
   );
 }

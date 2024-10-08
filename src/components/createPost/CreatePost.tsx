@@ -158,12 +158,14 @@ const CreatePost: React.FC<Props> = ({
 
   const [isEditingPost, setIsEditingPost] = useState(false);
 
+  const draftPosts = posts?.filter((post: IPost) => post.sts === "draft") || [];
+
   // add pagination for draft posts
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 4;
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts?.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = draftPosts?.slice(indexOfFirstPost, indexOfLastPost);
 
   const handlePaginationChange = (page: number) => {
     setCurrentPage(page);
@@ -182,6 +184,7 @@ const CreatePost: React.FC<Props> = ({
         // ...(uploadedImg && { media: uploadedImg }),
         // media: uploadedImg ? uploadedImg : null,
         media: uploadedImg.length > 0 ? uploadedImg : null,
+        sts: "published",
       };
       console.log("data", data);
       await handlePostToCommunity(data);
@@ -216,12 +219,12 @@ const CreatePost: React.FC<Props> = ({
       const draftData = {
         cid: selectedOption?.id,
         text: markDownContent,
-        // media: uploadedImg ? uploadedImg : null,
-        media: uploadedImg.length > 0 ? uploadedImg : null,
-        isDraft: true, // Mark this post as a draft
-      };
 
-      await saveDraft(draftData); // function to save draft
+        media: uploadedImg.length > 0 ? uploadedImg : null,
+        sts: "draft",
+      };
+      await handlePostToCommunity(draftData);
+      // await saveDraft(draftData); // function to save draft
       setIsLoadingPost(false);
       setIsPostModalOpen(false);
       NotificationMessage("success", "Post save in Draft");
