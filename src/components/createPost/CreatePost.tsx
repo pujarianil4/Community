@@ -273,11 +273,11 @@ const CreatePost: React.FC<Props> = ({
     }
   };
   useEffect(() => {
-    if (editPost) {
-      setIsPostModalOpen(false);
-    } else {
-      closeBtn?.addEventListener("click", () => {
-        console.log("close");
+    closeBtn?.addEventListener("click", () => {
+      console.log("close");
+      if (editPost) {
+        setIsPostModalOpen(false);
+      } else {
         // Clear states when the modal is closed
         setIsLoadingPost(false);
         setSelectedOption(null);
@@ -290,8 +290,8 @@ const CreatePost: React.FC<Props> = ({
           type: "",
         });
         setIsPostModalOpen(false);
-      });
-    }
+      }
+    });
   }, [closeBtn]);
 
   useEffect(() => {
