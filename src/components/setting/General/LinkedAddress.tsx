@@ -4,7 +4,7 @@ import { getSignMessage } from "@/config/ethers";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
-import { getAddressesByUserId, removeAddress } from "@/services/api/api";
+import { getAddressesByUserId, removeAddress } from "@/services/api/userApi";
 import { sigMsg } from "@/utils/constants";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import React, { useEffect, useRef, useState } from "react";

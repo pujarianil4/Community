@@ -6,7 +6,8 @@ import { RightUpIcon } from "@/assets/icons";
 import VoteSection from "./voteSection";
 import { usePathname } from "next/navigation";
 import useAsync from "@/hooks/useAsync";
-import { fetchCommunities, getPosts } from "@/services/api/api";
+import { getPosts } from "@/services/api/postApi";
+import { fetchCommunities } from "@/services/api/communityApi";
 import { ICommunity, IPost } from "@/utils/types/types";
 import Community from "./community";
 export default function RightPanel() {

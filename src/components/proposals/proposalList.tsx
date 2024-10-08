@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import ProposalItem from "./proposalItem";
 import useAsync from "@/hooks/useAsync";
-import { fetchProposalsByCId } from "@/services/api/api";
+import { fetchProposalsByCId } from "@/services/api/proposalApi";
 import { IProposal } from "@/utils/types/types";
 import EmptyData from "../common/Empty";
 import ProposalItemLoader from "./proposalItemLoader";

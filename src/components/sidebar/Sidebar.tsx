@@ -15,12 +15,8 @@ import { MdOutlineTopic, MdContentPaste } from "react-icons/md";
 import TiptapEditor from "../common/tiptapEditor";
 import "./index.scss";
 import CButton from "../common/Button";
-import {
-  createCommunity,
-  fetchCommunities,
-  fetchCommunityByCname,
-  uploadSingleFile,
-} from "@/services/api/api";
+
+import { fetchCommunities } from "@/services/api/communityApi";
 import { RxHamburgerMenu } from "react-icons/rx";
 import useAsync from "@/hooks/useAsync";
 import NotificationMessage from "../common/Notification";

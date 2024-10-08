@@ -3,7 +3,7 @@ import type { Metadata, ResolvingMetadata } from "next";
 import React from "react";
 import PageWraper from "@/components/Wrapers/PageWraper";
 import "./index.scss";
-import { getPostsByPostId, getPostsForMeta } from "@/services/api/api";
+import { getPostsByPostId, getPostsForMeta } from "@/services/api/postApi";
 
 //markdown render
 import markdownToTxt from "markdown-to-txt";

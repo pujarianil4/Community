@@ -1,11 +1,7 @@
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
-import {
-  fetchUserById,
-  handleLogIn,
-  handleSignup,
-  linkAddress,
-} from "@/services/api/api";
+import { linkAddress } from "@/services/api/authapi";
+import { fetchUserById } from "@services/api/userApi";
 import { sigMsg } from "@/utils/constants";
 import { setClientSideCookie } from "@/utils/helpers";
 import { useChain, useChainWallet, useWallet } from "@cosmos-kit/react";
@@ -17,6 +13,9 @@ import { DropdownLowIcon } from "@/assets/icons";
 import NotificationMessage from "../Notification";
 import { Collapse } from "antd";
 import { cosmosWallets } from "@/config/cosmos/cosmos";
+import { handleLogIn, handleSignup } from "@/services/api/authapi";
+import { IUser } from "@/utils/types/types";
+import { User } from "@/contexts/reducers/user";
 
 const { Panel } = Collapse;
 export interface ISignupData {
@@ -80,13 +79,15 @@ export default function CosmosAuthComponent({
             address
           );
           const userdata = await fetchUserById(response?.uid);
-          const user = {
+          const user: User = {
             username: userdata.username,
             name: userdata?.name || "",
             uid: response?.uid || 0,
             token: response?.token || "",
             img: userdata?.img?.pro,
+            netWrth: userdata?.netWrth || 0,
             sid: response?.id || "",
+            effectiveNetWrth: userdata?.effectiveNetWrth || 0,
           };
           setClientSideCookie("authToken", JSON.stringify(user));
           dispatch(actions.setUserData(user));
@@ -99,13 +100,15 @@ export default function CosmosAuthComponent({
             pubKey: address,
           });
           const userdata = await fetchUserById(response?.uid);
-          const user = {
+          const user: User = {
             username: userdata.username,
             name: userdata?.name || "",
             uid: response?.uid || 0,
             token: response?.token || "",
             img: userdata?.img?.pro,
             sid: response?.id || "",
+            netWrth: userdata?.netWrth || 0,
+            effectiveNetWrth: userdata?.effectiveNetWrth || 0,
           };
           setClientSideCookie("authToken", JSON.stringify(user));
           dispatch(actions.setUserData(user));

@@ -11,7 +11,7 @@ import {
 
 import { Collapse } from "antd";
 const { Panel } = Collapse;
-import { getSession, removeSession } from "@/services/api/api";
+import { getSession, removeSession } from "@/services/api/userApi";
 
 const session = () => {
   const { isLoading, refetch, data } = useAsync(getSession);

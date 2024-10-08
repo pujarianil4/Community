@@ -3,7 +3,7 @@
 import React, { useEffect, useState, ChangeEvent } from "react";
 
 import useRedux from "@/hooks/useRedux";
-import { fetchUserByUserName } from "@/services/api/api";
+import { fetchUserByUserName } from "@/services/api/userApi";
 
 import { RootState } from "@/contexts/store";
 import { debounce, setClientSideCookie } from "@/utils/helpers";

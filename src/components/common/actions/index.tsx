@@ -7,7 +7,7 @@ import { GoComment } from "react-icons/go";
 import { numberWithCommas } from "@/utils/helpers";
 import { SaveIcon, ShareIcon } from "@/assets/icons";
 import { IPost, IVotePayload } from "@/utils/types/types";
-import { sendVote } from "@/services/api/api";
+import { sendVote } from "@/services/api/userApi";
 import ShareButton from "../shareButton";
 import { PiBookmarkSimpleDuotone } from "react-icons/pi";
 import CPopup from "../popup";

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import CButton from "../common/Button";
-import { fetchProposalByID, voteToProposal } from "@/services/api/api";
+import { fetchProposalByID, voteToProposal } from "@/services/api/proposalApi";
 import { IVoteProposalPayload } from "@/utils/types/types";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";

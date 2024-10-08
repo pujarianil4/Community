@@ -1,8 +1,8 @@
 import React from "react";
 import useAsync from "@/hooks/useAsync";
-import { getUserData } from "@/services/api/api";
+import { getUserData } from "@/services/api/userApi";
 import { TelegramIcon, AddIcon, DeleteIcon } from "@/assets/icons";
-import { updateUser } from "@/services/api/api";
+import { updateUser } from "@/services/api/userApi";
 import NotificationMessage from "@/components/common/Notification";
 
 interface TelegramLoginData {

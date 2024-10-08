@@ -13,7 +13,7 @@ interface IPopup {
   onAction?: "click" | "hover";
   position?: TooltipPlacement;
   onSelect: (label: string) => void;
-  open: boolean;
+  open?: boolean;
 }
 
 export default function CPopup({
@@ -48,7 +48,7 @@ export default function CPopup({
       overlayClassName='filter_popover'
       content={content}
       trigger={onAction}
-      open={open}
+      {...(open !== undefined && { open: open })}
       onOpenChange={handleOpenChange}
     >
       {children}

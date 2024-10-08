@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import useAsync from "@/hooks/useAsync";
-import { getUserData } from "@/services/api/api";
+import { getUserData } from "@/services/api/userApi";
 import { DiscordIcon, AddIcon, DeleteIcon } from "@/assets/icons";
-import { updateUser } from "@/services/api/api";
+import { updateUser } from "@/services/api/userApi";
 import NotificationMessage from "@/components/common/Notification";
 import { getCurrentDomain } from "@/utils/helpers";
 

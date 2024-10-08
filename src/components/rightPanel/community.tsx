@@ -5,11 +5,6 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import CButton from "../common/Button";
 import useAsync from "@/hooks/useAsync";
-import {
-  fetchCommunityByCname,
-  followApi,
-  UnFollowAPI,
-} from "@/services/api/api";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import CommunityFollowButton from "../FollowBtn/communityFollowBtn";

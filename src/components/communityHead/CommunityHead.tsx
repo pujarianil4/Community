@@ -1,6 +1,6 @@
 "use client";
 import useAsync from "@/hooks/useAsync";
-import { fetchCommunityByCname } from "@/services/api/api";
+import { fetchCommunityByCname } from "@/services/api/communityApi";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import CButton from "../common/Button";
 import {
