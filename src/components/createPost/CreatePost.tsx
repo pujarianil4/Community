@@ -27,7 +27,7 @@ import TurndownService from "turndown";
 import { BackIcon, LinkIcon } from "@/assets/icons";
 import FocusableDiv from "../common/focusableDiv";
 
-import { getPosts } from "@/services/api/postApi";
+import { getPosts, patchPost } from "@/services/api/postApi";
 import { IPost } from "@/utils/types/types";
 import PostLoader from "./postLoader";
 import MarkdownRenderer from "../common/MarkDownRender";
@@ -145,6 +145,7 @@ const CreatePost: React.FC<Props> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMsg, setUploadMsg] = useState({ msg: "", type: "" });
   const [isDraft, setIsDraft] = useState(false);
+  const [post, setPost] = useState<IPost>();
 
   const [uploadingSkeletons, setUploadingSkeletons] = useState<number[]>([]);
   const {
@@ -317,6 +318,7 @@ const CreatePost: React.FC<Props> = ({
 
   const handleEditPost = async (post: any) => {
     console.log("Editing post:", post);
+    setPost(post);
     setIsEditingPost(true); // Enable editing mode
 
     setContent(post.text); // Set post content
@@ -346,6 +348,35 @@ const CreatePost: React.FC<Props> = ({
   const handleRemoveMedia = (rmIndx: number) => {
     setPics((prevPics) => prevPics.filter((_, idx) => idx !== rmIndx));
     setUploadedImg((prevImg) => prevImg.filter((_, idx) => idx !== rmIndx)); // If applicable, also update uploadedImg state
+  };
+
+  const handleUpdatePost = async () => {
+    const turndownService = new TurndownService();
+    const markDownContent = turndownService.turndown(content);
+    try {
+      setIsLoadingPost(true);
+      const data = {
+        cid: selectedOption?.id,
+        text: markDownContent,
+        // ...(uploadedImg && { media: uploadedImg }),
+        // media: uploadedImg ? uploadedImg : null,
+        media: uploadedImg.length > 0 ? uploadedImg : null,
+      };
+      console.log("data", data);
+      await patchPost(post?.id, data);
+      setIsLoadingPost(false);
+      setIsPostModalOpen(false);
+      NotificationMessage("success", "Post updated Succesfuly");
+      dispatch(actions.setRefetchPost(true));
+      // dispatch(actions.setRefetchCommunity(true));
+      // resetPostForm();
+    } catch (error: any) {
+      console.log("error", error);
+      NotificationMessage("error", error?.response?.data?.message);
+      setIsLoadingPost(false);
+      // setIsPostModalOpen(false);
+      // resetPostForm();
+    }
   };
 
   return (
@@ -515,7 +546,7 @@ const CreatePost: React.FC<Props> = ({
               <CButton
                 loading={isLoadingPost}
                 disabled={isDisabled}
-                // onClick={handlePost}
+                onClick={handleUpdatePost}
                 className='create_btn'
               >
                 Update Post

@@ -51,7 +51,7 @@ export default function UHead({
             icon: <IoIosMore />,
           },
           {
-            label: "delete",
+            label: "Delete",
             icon: <IoFlagOutline />,
           },
         ]
@@ -60,9 +60,7 @@ export default function UHead({
 
   const handleSelectMore = (label: string) => {
     setOpen(false);
-    if (label === "Edit") {
-      callBack && callBack("edit");
-    }
+    callBack && callBack(String(label).toLowerCase());
   };
 
   return (

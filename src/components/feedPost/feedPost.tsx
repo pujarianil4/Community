@@ -97,6 +97,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
     if (data == "edit") {
       console.log("edit", post);
       setIsEditModalOpen(true);
+    } else if (data == "delete") {
     }
   };
 
