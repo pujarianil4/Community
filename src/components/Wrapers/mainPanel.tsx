@@ -3,8 +3,11 @@ import "./index.scss";
 
 interface IProps {
   children: ReactNode;
+  className?: string;
 }
 
-export default function MainPanel({ children }: IProps) {
-  return <main className='main_panel_container'>{children}</main>;
+export default function MainPanel({ children, className }: IProps) {
+  return (
+    <main className={`main_panel_container ${className}`}>{children}</main>
+  );
 }

@@ -44,6 +44,8 @@ import TurndownService from "turndown";
 import { ICommunity } from "@/utils/types/types";
 import Image from "next/image";
 import CHead from "../common/chead";
+import Avatar from "@/components/common/loaders/userAvatar";
+import ProfileAvatar from "@/components/common/loaders/profileAvatar";
 import { CreateCommunityModal } from "./CreateCommunityModal";
 
 type MenuItem = Required<MenuProps>["items"][number];

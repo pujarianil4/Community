@@ -5,20 +5,21 @@ import CInput from "../common/Input";
 import { IoSearch } from "react-icons/io5";
 import CButton from "../common/Button";
 import { AddIcon } from "@/assets/icons";
-import { Modal } from "antd";
-import CreateProposal from "./createProposal";
+// import { Modal } from "antd";
+// import CreateProposal from "./createProposal";
 import ProposalList from "./proposalList";
+import Link from "next/link";
 
 interface IPrpos {
   cid: number;
   cname: string;
 }
 export default function Proposals({ cid, cname }: IPrpos) {
-  const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
+  // const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
   const [refetchProposal, setRefetchProposal] = useState(false);
-  const handleCreateProposal = () => {
-    setIsProposalModalOpen(true);
-  };
+  // const handleCreateProposal = () => {
+  //   setIsProposalModalOpen(true);
+  // };
   return (
     <>
       <main className='proposal_container'>
@@ -30,9 +31,16 @@ export default function Proposals({ cid, cname }: IPrpos) {
               className='search'
             />
           </div>
-          <CButton onClick={handleCreateProposal}>
-            <AddIcon /> Create Proposal
-          </CButton>
+          <Link
+            href={`p/create-proposal?community=${cname}&id=${cid}`}
+            as={`/p/create-proposal?community=${cname}&id=${cid}`}
+          >
+            <CButton
+            //  onClick={handleCreateProposal}
+            >
+              <AddIcon /> Create Proposal
+            </CButton>
+          </Link>
         </section>
         <ProposalList
           cid={cid}
@@ -40,7 +48,7 @@ export default function Proposals({ cid, cname }: IPrpos) {
           setRefetchProposal={setRefetchProposal}
         />
       </main>
-      <Modal
+      {/* <Modal
         className='create_proposal_modal'
         open={isProposalModalOpen}
         onCancel={() => setIsProposalModalOpen(false)}
@@ -53,7 +61,7 @@ export default function Proposals({ cid, cname }: IPrpos) {
           cid={cid}
           setRefetchProposal={setRefetchProposal}
         />
-      </Modal>
+      </Modal> */}
     </>
   );
 }

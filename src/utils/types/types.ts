@@ -142,13 +142,6 @@ export interface IVotePayload {
   voteTyp: "up" | "down" | "";
 }
 
-export interface ICreateProposalPayload {
-  title: string;
-  desc: string;
-  cid: number;
-  validity: string;
-}
-
 export interface IVoteProposalPayload {
   pid: number;
   typ: string;
@@ -158,7 +151,11 @@ export interface IProposalForm {
   title: string;
   desc: string;
   cid: number;
-  validity: string;
+  // validity: string;
+  validity: {
+    start: string;
+    end: string;
+  };
 }
 
 export interface IProposal {

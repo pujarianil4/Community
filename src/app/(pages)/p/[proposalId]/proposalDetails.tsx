@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ShareIcon } from "@/assets/icons";
 import CButton from "@/components/common/Button";
 import MarkdownRenderer from "@/components/common/MarkDownRender";
@@ -9,7 +9,7 @@ import Link from "next/link";
 import useRedux from "@/hooks/useRedux";
 import useAsync from "@/hooks/useAsync";
 import { fetchProposalByID } from "@/services/api/proposalApi";
-
+import Vote from "@components/rightPanel/voteSection";
 interface IProps {
   proposalId: string;
 }
@@ -19,6 +19,18 @@ export default function ProposalDetails({ proposalId }: IProps) {
     proposalId
   );
   const [{ dispatch, actions }] = useRedux();
+
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 767);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     dispatch(
@@ -76,7 +88,7 @@ export default function ProposalDetails({ proposalId }: IProps) {
                     <p>{proposalData?.user?.username}</p>
                   </Link>
                 </div>
-                <CButton>
+                <CButton className='share_btn'>
                   <ShareIcon />
                   Share
                 </CButton>
@@ -84,6 +96,11 @@ export default function ProposalDetails({ proposalId }: IProps) {
               <MarkdownRenderer markdownContent={proposalData?.desc} />
             </section>
           </section>
+          {isMobileView && (
+            <section>
+              <Vote />
+            </section>
+          )}
         </main>
       )}
     </>

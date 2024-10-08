@@ -10,22 +10,23 @@ import RightPanelWrapper from "./RightSideWrapper";
 interface PageWrapperProps {
   children: ReactNode;
   hideRightPanel?: boolean;
-  hideScroll?: boolean;
+  // mainPanelClass?: string;
 }
 
 export default function PageWraper({
   children,
   hideRightPanel,
-  hideScroll,
-}: PageWrapperProps) {
+}: // mainPanelClass,
+PageWrapperProps) {
   return (
     <div className='pagewraper'>
       <Navbar />
       <Wraper>
         <SideBar />
-        <MainPanel>{children}</MainPanel>
-        {/* {!hideRightPanel && <RightPanel />} */}
-        <RightPanelWrapper hideRightPanel={hideRightPanel} />
+        <MainPanel className={`${hideRightPanel ? "hidden_right_panel" : ""}`}>
+          {children}
+        </MainPanel>
+        {!hideRightPanel && <RightPanel />}
       </Wraper>
     </div>
   );

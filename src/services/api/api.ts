@@ -1,7 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { store } from "@contexts/store";
 
-
 const url = "https://community-slr7.onrender.com"; //process.env.BASE_API_URL;
 export const api: AxiosInstance = axios.create({
   baseURL: url,
@@ -20,20 +19,4 @@ const updateAuthorizationHeader = () => {
 
 updateAuthorizationHeader();
 store.subscribe(updateAuthorizationHeader);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

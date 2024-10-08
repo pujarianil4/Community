@@ -22,6 +22,9 @@ import {
   fetchCommunityByCname,
 } from "@/services/api/communityApi";
 
+import Avatar from "@/components/common/loaders/userAvatar";
+import ProfileAvatar from "@/components/common/loaders/profileAvatar";
+
 interface ICommunityForm {
   name?: string;
   username?: string;
@@ -303,8 +306,8 @@ export const CreateCommunity = ({
   return (
     <div className='create_community_container'>
       <div className='cover_bx'>
-        {!imgSrcCover ? (
-          <span>Loading...</span>
+        {isUploadingCover || !imgSrcCover ? (
+          <ProfileAvatar />
         ) : (
           <img
             loading='lazy'
@@ -313,7 +316,6 @@ export const CreateCommunity = ({
             alt='Avatar'
           />
         )}
-
         <div
           onClick={() =>
             fileRefs.cover.current?.click && fileRefs.cover.current?.click()
@@ -330,11 +332,11 @@ export const CreateCommunity = ({
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploadingCover && <span className='cvrmsg'>uploading...</span>}
+        {/* {isUploadingCover && <span className='cvrmsg'>uploading...</span>} */}
       </div>
       <div className='avatar'>
-        {!imgSrc ? (
-          <span>Loading...</span>
+        {isUploadingAvatar || !imgSrc ? (
+          <Avatar />
         ) : (
           <img
             loading='lazy'
@@ -360,7 +362,7 @@ export const CreateCommunity = ({
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploadingAvatar && <span className='msg'>uploading...</span>}
+        {/* {isUploadingAvatar && <span className='msg'>uploading...</span>} */}
       </div>
 
       <div className='info'>
