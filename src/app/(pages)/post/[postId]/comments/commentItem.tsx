@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import { IComment, IVotePayload } from "@/utils/types/types";
-import { sendVote } from "@/services/api/api";
+import { sendVote } from "@/services/api/userApi";
 import Link from "next/link";
 import Image from "next/image";
 import { getImageSource, timeAgo } from "@/utils/helpers";

@@ -2,6 +2,53 @@ import { api } from "./api";
 import { store } from "@contexts/store";
 import { IFollowersAPI, IUser } from '@/utils/types/types';
 import { PublicKey } from '@solana/web3.js';
+
+
+import { IFollowAPI, IPostCommentAPI, IVotePayload } from "@/utils/types/types";
+import { getClientSideCookie } from "@/utils/helpers";
+
+
+// Follow API
+export const followApi = async (data: IFollowAPI) => {
+  try {
+    const response = await api.post("/followers", data);
+    return response.data;
+  } catch (error) {
+    console.error("Follow API Error: ", error);
+    throw error;
+  }
+};
+
+// unfollow api
+export const UnFollowAPI = async ({
+  fwid,
+  type,
+}: {
+  fwid: string;
+  type: string;
+}) => {
+  try {
+    const response = await api.delete(`/followers/${fwid}?typ=${type}`);
+    return response.data;
+  } catch (error) {
+    console.error("POSTS_ERROR: ", error);
+    throw error;
+  }
+};
+
+
+// Vote
+export const sendVote = async (payload: IVotePayload) => {
+  try {
+    const user = getClientSideCookie("authToken");
+    const response = await api.post("/vote", { ...payload, uid: user?.uid });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 export const fetchUserByUserName = async (username: string) => {
   try {
     const response = await api.get(`/users/uname/${username}`);
@@ -173,6 +220,27 @@ export const delegateNetWorth = async (userId: number) => {
     console.log("=====Delegate Successful=====");
   } catch (error) {
     console.error("Delegate Error", error);
+    throw error;
+  }
+};
+
+
+export const isUserFollowed = async ({
+  fwid,
+  type,
+}: {
+  fwid: string;
+  type: string;
+}) => {
+  const uid = store.getState().user?.uid;
+
+  try {
+    const response = await api.get(
+      `/followers/isFollow/${uid}?fwid=${fwid}&typ=${type}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("getFollowinsByUserId", error);
     throw error;
   }
 };

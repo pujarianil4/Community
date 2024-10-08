@@ -12,7 +12,7 @@ import SwipeCarousel from "@/components/common/carousel";
 import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 import { SaveIcon, ShareIcon } from "@/assets/icons";
 import PostPageLoader from "@/components/common/loaders/postPage";
-import { sendVote } from "@/services/api/api";
+import { sendVote } from "@/services/api/userApi";
 
 interface Iprops {
   post: IPost;

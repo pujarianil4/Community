@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { IPost, IVotePayload } from "@/utils/types/types";
 import SwipeCarousel from "../common/carousel";
 import PostPageLoader from "../common/loaders/postPage";
-import { sendVote } from "@/services/api/api";
+import { sendVote } from "@/services/api/userApi";
 import { useIntersectionObserver } from "@/hooks/useIntersection";
 import UHead from "../common/uhead";
 import Actions from "../common/actions";

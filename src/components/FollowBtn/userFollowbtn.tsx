@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import CButton from "@/components/common/Button";
-import { followApi, UnFollowAPI } from "@/services/api/api";
+import { followApi, UnFollowAPI } from "@/services/api/userApi";
 import { fetchUser } from "@/services/api/userApi";
 import useRedux from "@/hooks/useRedux";
 import useAsync from "@/hooks/useAsync";

@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./index.scss";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { uploadSingleFile } from "@/services/api/api";
+import { uploadSingleFile } from "@/services/api/commonApi";
 import { fetchUserById, updateUser } from "@services/api/userApi";
 
 import { fetchUserByUserName } from "@/services/api/userApi";

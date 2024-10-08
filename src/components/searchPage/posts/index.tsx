@@ -3,7 +3,7 @@ import React from "react";
 import "./index.scss";
 import CFilter from "@/components/common/Filter";
 import useAsync from "@/hooks/useAsync";
-import { getPosts } from "@/services/api/api";
+import { getPosts } from "@/services/api/postApi";
 import SearchPostItem from "./post";
 import { IPost } from "@/utils/types/types";
 import PostLoader from "./postLoader";

@@ -9,12 +9,8 @@ import {
   MdEmojiEmotions,
   MdOutlineGifBox,
 } from "react-icons/md";
-import {
-  fetchCommunities,
-  handlePostToCommunity,
-  uploadMultipleFile,
-  uploadSingleFile,
-} from "@/services/api/api";
+import { uploadMultipleFiles } from "@/services/api/commonApi";
+import { fetchCommunities } from "@/services/api/communityApi";
 // import { LocalStore } from "@/utils/helpers";
 import Image from "next/image";
 import useRedux from "@/hooks/useRedux";
@@ -30,12 +26,13 @@ import TurndownService from "turndown";
 import { BackIcon, LinkIcon } from "@/assets/icons";
 import FocusableDiv from "../common/focusableDiv";
 
-import { getPosts } from "@/services/api/api";
+import { getPosts } from "@/services/api/postApi";
 import { IPost } from "@/utils/types/types";
 import PostLoader from "./postLoader";
 import MarkdownRenderer from "../common/MarkDownRender";
 import { identifyMediaType } from "@/utils/helpers";
 import { Pagination } from "antd";
+import { createPost } from "@/services/api/postApi";
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPostModalOpen: boolean;
@@ -182,7 +179,7 @@ const CreatePost: React.FC<Props> = ({
         media: uploadedImg.length > 0 ? uploadedImg : null,
       };
       console.log("data", data);
-      await handlePostToCommunity(data);
+      await createPost(data);
       setIsLoadingPost(false);
       setIsPostModalOpen(false);
       NotificationMessage("success", "Post Created Succesfuly");
@@ -251,7 +248,7 @@ const CreatePost: React.FC<Props> = ({
         NotificationMessage("info", "Please select up to 5 media");
         setUploadMsg({ msg: "", type: "" });
       } else {
-        const uploadedFiles = await uploadMultipleFile(newPics);
+        const uploadedFiles = await uploadMultipleFiles(newPics);
         setPics((prevPics) => [...prevPics, ...filesArray]);
 
         if (uploadedFiles.length > 0)

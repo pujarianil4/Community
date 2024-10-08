@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Virtuoso } from "react-virtuoso";
 
 import useAsync from "@/hooks/useAsync";
-import { getPosts, getPostsBycName, getPostsByuName } from "@/services/api/api";
+import {
+  getPosts,
+  getPostsBycName,
+  getPostsByuName,
+} from "@/services/api/postApi";
 import { useParams } from "next/navigation";
 
 import FeedPost from "./feedPost";
