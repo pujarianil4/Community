@@ -29,6 +29,7 @@
     "antd": "^5.19.3",
     "axios": "^1.7.2",
     "chain-registry": "^1.63.102",
+    "dayjs": "^1.11.13",
     "discord.js": "^14.15.3",
     "encoding": "^0.1.13",
     "ethers": "^6.13.1",

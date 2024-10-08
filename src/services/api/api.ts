@@ -4,10 +4,10 @@ import { PublicKey } from "@solana/web3.js";
 import axios, { AxiosInstance } from "axios";
 import { store } from "@contexts/store";
 import {
-  ICreateProposalPayload,
   IFollowAPI,
   IFollowersAPI,
   IPostCommentAPI,
+  IProposalForm,
   IUser,
   IVotePayload,
   IVoteProposalPayload,
@@ -497,9 +497,16 @@ export const sendVote = async (payload: IVotePayload) => {
 };
 
 //GOVERNANCE
-export const createProposal = async (payload: ICreateProposalPayload) => {
+export const createProposal = async (payload: IProposalForm) => {
   try {
-    const { data } = await api.post(`/governance/proposal`, payload);
+    // TODO: pass direct payload after API update
+    const tempData = {
+      title: payload.title,
+      desc: payload.desc,
+      cid: payload.cid,
+      validity: payload.validity?.end,
+    };
+    const { data } = await api.post(`/governance/proposal`, tempData);
     console.log("=====New Proposal Created=====");
     return data;
   } catch (error) {

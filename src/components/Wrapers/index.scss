@@ -18,6 +18,17 @@
     padding: 10px 10px;
   }
 }
+.hidden_right_panel {
+  margin-left: calc((100vw - 1000px) / 2);
+
+  @include lessThan(lg) {
+    margin-left: calc((100vw - 756px) / 2);
+  }
+
+  @include lessThan(md) {
+    margin: auto;
+  }
+}
 .wraper {
   width: 100%;
   margin: auto;
