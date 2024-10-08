@@ -32,7 +32,7 @@ export default function SearchPostItem({ post }: IProps) {
   return (
     <article onClick={handleClick} className='search_post_item'>
       <div className='content'>
-        <UHead user={user} community={community} time={cta} />
+        <UHead post={post} />
         <MarkdownRenderer markdownContent={text} limit={2} />
         <Actions post={post} type='p' />
       </div>

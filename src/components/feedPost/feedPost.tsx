@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/contexts/store";
 import CreatePost from "../createPost/CreatePost";
 import { Modal } from "antd";
+import { deletePost } from "@/services/api/postApi";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -31,7 +32,7 @@ interface Vote {
 
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post, overlayClassName }: IProps) {
-  const { text, up, down, cta, media, user, community, id, ccount } = post;
+  const { text, up, down, cta, media, user, community, id, ccount, sts } = post;
   const postRef = useRef<HTMLDivElement | null>(null);
   const stayTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isViewed = useIntersectionObserver(postRef);
@@ -93,10 +94,14 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
     }
   };
 
-  const moreActionCall = (data: any) => {
-    if (data == "edit") {
-      console.log("edit", post);
-      setIsEditModalOpen(true);
+  const moreActionCall = async (data: any) => {
+    if (sts != "archived") {
+      if (data == "edit") {
+        console.log("edit", post);
+        setIsEditModalOpen(true);
+      } else if (data == "delete" && id) {
+        await deletePost(id);
+      }
     }
   };
 
@@ -157,14 +162,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
       </div> */}
 
         {post && (
-          <UHead
-            user={post.user}
-            community={post.community}
-            time={post.cta}
-            showMore
-            self={self}
-            callBack={moreActionCall}
-          />
+          <UHead post={post} showMore self={self} callBack={moreActionCall} />
         )}
 
         <div
