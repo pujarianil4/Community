@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import CosmosAuthComponent from "./CosmosAuth";
 import EvmAuthComponent from "./EvmAuth";
 import SolanaAuthComponent from "./SolanaAuth";
-
+import { Collapse } from "antd";
 const TronAuthComponent = dynamic(() => import("./TronAuth"), {
   ssr: false,
 });
@@ -33,28 +33,95 @@ export default function AuthModal({
     callBack && callBack(data);
   };
 
+  const evmAuthItems = [
+    {
+      key: "1",
+      label: "Ethereum Wallets",
+      children: (
+        <>
+          <EvmAuthComponent
+            isSignUp={false}
+            signUpData={null}
+            setUserAuthData={handleCallBack}
+          />
+        </>
+      ),
+    },
+  ];
+
+  const solanaAuthItems = [
+    {
+      key: "2",
+      label: "Solana Wallets",
+      children: (
+        <>
+          <SolanaAuthComponent
+            isSignUp={false}
+            signUpData={null}
+            setUserAuthData={handleCallBack}
+          />
+        </>
+      ),
+    },
+  ];
+  const tronAuthItems = [
+    {
+      key: "3",
+      label: "Tron Wallets",
+      children: (
+        <>
+          <TronAuthComponent
+            isSignUp={false}
+            signUpData={null}
+            setUserAuthData={handleCallBack}
+          />
+        </>
+      ),
+    },
+  ];
+  const cosmosAuthItems = [
+    {
+      key: "4",
+      label: "Cosmos Wallets",
+      children: (
+        <>
+          <CosmosAuthComponent
+            isSignUp={false}
+            signUpData={null}
+            setUserAuthData={handleCallBack}
+          />
+        </>
+      ),
+    },
+  ];
+
   return (
     <Modal open={visible} onCancel={handleCancel} footer={<></>}>
       <div className='wallet_modal'>
-        <EvmAuthComponent
-          isSignUp={false}
-          signUpData={null}
-          setUserAuthData={handleCallBack}
+        <Collapse
+          items={evmAuthItems}
+          accordion
+          expandIconPosition='end'
+          className='accordion_bx'
         />
-        <SolanaAuthComponent
-          isSignUp={false}
-          signUpData={null}
-          setUserAuthData={handleCallBack}
+
+        <Collapse
+          items={solanaAuthItems}
+          accordion
+          expandIconPosition='end'
+          className='accordion_bx'
         />
-        <TronAuthComponent
-          isSignUp={false}
-          signUpData={null}
-          setUserAuthData={handleCallBack}
+        <Collapse
+          items={tronAuthItems}
+          accordion
+          expandIconPosition='end'
+          className='accordion_bx'
         />
-        <CosmosAuthComponent
-          isSignUp={false}
-          signUpData={null}
-          setUserAuthData={handleCallBack}
+        <Collapse
+          items={cosmosAuthItems}
+          accordion
+          expandIconPosition='end'
+          className='accordion_bx'
         />
       </div>
     </Modal>

@@ -156,12 +156,14 @@ const CreatePost: React.FC<Props> = ({
 
   const [isEditingPost, setIsEditingPost] = useState(false);
 
+  const draftPosts = posts?.filter((post: IPost) => post.sts === "draft") || [];
+
   // add pagination for draft posts
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 4;
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts?.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = draftPosts?.slice(indexOfFirstPost, indexOfLastPost);
 
   const handlePaginationChange = (page: number) => {
     setCurrentPage(page);
@@ -169,7 +171,7 @@ const CreatePost: React.FC<Props> = ({
 
   const closeBtn = document.querySelector(".ant-modal-close");
 
-  const handlePost = async () => {
+  const handlePost = async (postStatus: "draft" | "published") => {
     const turndownService = new TurndownService();
     const markDownContent = turndownService.turndown(content);
     console.log("handlePost", selectedOption, defaultCommunity);
@@ -179,15 +181,25 @@ const CreatePost: React.FC<Props> = ({
       const data = {
         cid: selectedOption?.id || defaultCommunity?.id,
         text: markDownContent,
-        // ...(uploadedImg && { media: uploadedImg }),
-        // media: uploadedImg ? uploadedImg : null,
         media: uploadedImg.length > 0 ? uploadedImg : null,
+        sts: postStatus,
       };
       console.log("data", data);
-      await createPost(data);
+      // await createPost(data);
+      if (isEditingPost && post?.id) {
+        // If editing an existing post, update it
+        console.log("data draft", data);
+        await patchPost(post?.id, data);
+        NotificationMessage("success", `Post ${postStatus} successfully`);
+        // NotificationMessage("success", "Post published successfully");
+      } else {
+        // Otherwise, create a new post
+        await createPost(data);
+        NotificationMessage("success", "Post Created Succesfuly");
+      }
+
       setIsLoadingPost(false);
       setIsPostModalOpen(false);
-      NotificationMessage("success", "Post Created Succesfuly");
       dispatch(actions.setRefetchPost(true));
       // dispatch(actions.setRefetchCommunity(true));
       resetPostForm();
@@ -197,39 +209,6 @@ const CreatePost: React.FC<Props> = ({
       setIsLoadingPost(false);
       // setIsPostModalOpen(false);
       // resetPostForm();
-    }
-  };
-
-  const saveDraft = async (draftData: any) => {
-    try {
-      console.log("save draft api calll");
-    } catch (error) {
-      throw new Error("Error saving draft");
-    }
-  };
-
-  const handleSaveDraft = async () => {
-    const turndownService = new TurndownService();
-    const markDownContent = turndownService.turndown(content);
-    try {
-      setIsLoadingPost(true);
-      const draftData = {
-        cid: selectedOption?.id,
-        text: markDownContent,
-        // media: uploadedImg ? uploadedImg : null,
-        media: uploadedImg.length > 0 ? uploadedImg : null,
-        isDraft: true, // Mark this post as a draft
-      };
-
-      await saveDraft(draftData); // function to save draft
-      setIsLoadingPost(false);
-      setIsPostModalOpen(false);
-      NotificationMessage("success", "Post save in Draft");
-      resetPostForm();
-      setIsDraft(true); // Switch to the draft section
-    } catch (error: any) {
-      NotificationMessage("error", error?.response?.data?.message);
-      setIsLoadingPost(false);
     }
   };
 
@@ -389,6 +368,33 @@ const CreatePost: React.FC<Props> = ({
     }
   };
 
+  const draftPost = async (post: IPost) => {
+    try {
+      setIsLoadingPost(true);
+      const data = {
+        cid: post?.cid,
+        text: post?.text,
+        media: post.media,
+        sts: "published",
+      };
+      if (post?.id) {
+        await patchPost(post?.id, data);
+        setIsLoadingPost(false);
+        setIsPostModalOpen(false);
+        NotificationMessage("success", "Post created Succesfuly");
+        dispatch(actions.setRefetchPost(true));
+      }
+      // dispatch(actions.setRefetchCommunity(true));
+      // resetPostForm();
+    } catch (error: any) {
+      console.log("error", error);
+      NotificationMessage("error", error?.response?.data?.message);
+      setIsLoadingPost(false);
+      // setIsPostModalOpen(false);
+      // resetPostForm();
+    }
+  };
+
   return (
     <main className='create_post_container'>
       <span className='back_btn' onClick={() => setIsDraft(!isDraft)}>
@@ -448,7 +454,6 @@ const CreatePost: React.FC<Props> = ({
                       height={128}
                     />
                   )}
-
                   <div className='hover_bx'>
                     <CButton
                       onClick={() => handleEditPost(post)}
@@ -456,7 +461,11 @@ const CreatePost: React.FC<Props> = ({
                     >
                       Edit
                     </CButton>
-                    <CButton onClick={handlePost} className='hvr_postBtn'>
+
+                    <CButton
+                      onClick={() => draftPost(post)}
+                      className='hvr_postBtn'
+                    >
                       Post
                     </CButton>
                   </div>
@@ -567,7 +576,7 @@ const CreatePost: React.FC<Props> = ({
               <CButton
                 loading={isLoadingPostData}
                 disabled={isDisabled}
-                onClick={handleSaveDraft}
+                onClick={() => handlePost("draft")}
                 className='create_btn'
               >
                 Save as Draft
@@ -575,7 +584,7 @@ const CreatePost: React.FC<Props> = ({
               <CButton
                 loading={isLoadingPost}
                 disabled={isDisabled}
-                onClick={handlePost}
+                onClick={() => handlePost("published")}
                 className='create_btn'
               >
                 Post

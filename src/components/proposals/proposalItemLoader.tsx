@@ -21,22 +21,8 @@ export default function ProposalItemLoader() {
         </div>
       </div>
 
-      <div className='proposal_data'>
-        <div className='content'>
-          <div className='content skeleton'> </div>
-        </div>
-      </div>
-      <div className='votes'>
-        <div className='range_bar_data'>
-          <div className='range_data'>
-            <div className=' skeleton'> </div>
-          </div>
-        </div>
-        <div className='range_bar_data'>
-          <div className='range_data'>
-            <div className=' skeleton'> </div>
-          </div>
-        </div>
+      <div className='proposal_data skeleton'>
+        {/* <div className='content skeleton'></div> */}
       </div>
     </section>
   );

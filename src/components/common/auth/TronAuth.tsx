@@ -16,11 +16,10 @@ import { setClientSideCookie } from "@/utils/helpers";
 import Image from "next/image";
 
 import { useSelector } from "react-redux";
-import { DropdownLowIcon } from "@/assets/icons";
+
 import NotificationMessage from "../Notification";
-import { Collapse } from "antd";
+
 import { handleLogIn, handleSignup } from "@/services/api/authapi";
-const { Panel } = Collapse;
 
 type WalletAdapter = TronLinkAdapter | OkxWalletAdapter | BitKeepAdapter;
 
@@ -157,7 +156,7 @@ const TronAuthComponent = ({
         } else {
           setUserAuthData({ error: msg });
         }
-        // NotificationMessage("error", msg);
+        NotificationMessage("error", msg);
       }
     }
   }, [isWalletConnected]);
@@ -175,34 +174,26 @@ const TronAuthComponent = ({
   return (
     <>
       {window?.navigator && (
-        <Collapse accordion style={{ marginTop: "10px" }}>
-          <Panel
-            header='Tron Wallets'
-            key='1'
-            extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
-          >
-            <div className='solana_wallets'>
-              {/* <button>Solana Wallets</button> */}
-              {wallets?.map((wallet, i) => (
-                <div
-                  key={i}
-                  className='wallet'
-                  onClick={() => connectWallet(wallet.adapter)}
-                >
-                  <Image
-                    alt={wallet.adapter.name}
-                    src={wallet.adapter.icon}
-                    width={30}
-                    height={30}
-                  />
-                  <span>{wallet.adapter.name}</span>
-                </div>
-              ))}
-
-              {/* <SolanaWalletButton /> */}
+        <div className='solana_wallets'>
+          {/* <button>Solana Wallets</button> */}
+          {wallets?.map((wallet, i) => (
+            <div
+              key={i}
+              className='wallet'
+              onClick={() => connectWallet(wallet.adapter)}
+            >
+              <Image
+                alt={wallet.adapter.name}
+                src={wallet.adapter.icon}
+                width={30}
+                height={30}
+              />
+              <span>{wallet.adapter.name}</span>
             </div>
-          </Panel>
-        </Collapse>
+          ))}
+
+          {/* <SolanaWalletButton /> */}
+        </div>
       )}
     </>
   );

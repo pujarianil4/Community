@@ -108,7 +108,7 @@
     }
     .post_time {
       margin-bottom: auto;
-      margin-top: 5px;
+      margin-top: 6px;
       color: var(--label-text);
       font-size: 12px;
     }
@@ -349,6 +349,7 @@
     .post_time {
       width: 52px;
       height: 20px;
+      margin-top: 6px;
       @include lessThan(md) {
         width: 40px;
       }
@@ -377,17 +378,18 @@
       }
     }
   }
-  div {
-    &:nth-child(3) {
-      height: 400px;
-    }
-  }
-  .content {
-    margin-left: 54px;
-    margin-top: 10px;
+  .proposal_data {
+    margin: 8px 0 0 54px;
     width: 90%;
-    @include lessThan(lg) {
-      margin-left: 43px;
+    height: 70px;
+    @include lessThan(xl) {
+      margin: 8px 0 0 8px;
+      width: 98%;
+    }
+    @include lessThan(md) {
+      display: block;
+
+      height: 45px;
     }
   }
 }
