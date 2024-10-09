@@ -49,11 +49,10 @@ export interface IPost {
   ccount: number;
   cta: string;
   user: IUser;
-  sts: "archived" | "draft" | "published"
+  sts: "archived" | "draft" | "published";
   media?: string[];
   // img?: string;
   community: ICommunity;
-  sts: string;
 }
 
 export interface IComment {

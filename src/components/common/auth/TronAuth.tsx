@@ -156,7 +156,7 @@ const TronAuthComponent = ({
         } else {
           setUserAuthData({ error: msg });
         }
-        // NotificationMessage("error", msg);
+        NotificationMessage("error", msg);
       }
     }
   }, [isWalletConnected]);

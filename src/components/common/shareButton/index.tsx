@@ -79,36 +79,36 @@ const ShareButton: React.FC<ShareModalProps> = ({
           {/* Facebook */}
           <FacebookShareButton url={postUrl} quote={postTitle}>
             <FaFacebookF />
-            <span> Facebook</span>
+            <div>Facebook</div>
           </FacebookShareButton>
 
           {/* Twitter */}
           <TwitterShareButton url={postUrl} title={postTitle}>
             <FaXTwitter />
-            <span> X</span>
+            <div>X</div>
           </TwitterShareButton>
 
           <TelegramShareButton url={postUrl} title={postTitle}>
             {/* <TelegramIcon size={32} round /> */}
             <FaTelegramPlane />
-            <span> Telegram</span>
+            <div> Telegram</div>
           </TelegramShareButton>
 
           <RedditShareButton url={postUrl} title={postTitle}>
             {/* <RedditIcon size={32} round /> */}
             <IoLogoReddit />
-            <span> Reddit</span>
+            <div> Reddit</div>
           </RedditShareButton>
 
           <LinkedinShareButton url={postUrl} title={postTitle}>
             {/* <RedditIcon size={32} round /> */}
             <FaLinkedinIn />
-            <span> Linkedin</span>
+            <div> Linkedin</div>
           </LinkedinShareButton>
           <WhatsappShareButton url={postUrl} title={postTitle}>
             {/* <RedditIcon size={32} round /> */}
             <FaWhatsapp />
-            <span> Whatsapp</span>
+            <div> Whatsapp</div>
           </WhatsappShareButton>
         </div>
 

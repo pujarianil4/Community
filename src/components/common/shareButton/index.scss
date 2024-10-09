@@ -9,27 +9,40 @@
 }
 .share_model {
   padding: 16px !important;
+  .ant-model-body {
+    padding: 5px !important;
+  }
   h3 {
     color: var(--primary);
     font-weight: $font-weight-bold;
     margin-top: 2rem;
+    @include lessThan(md) {
+      font-size: $font-size-md;
+    }
   }
   .share_bx {
     margin-top: 20px;
     display: flex;
     gap: 12px;
     align-items: center;
-
-    svg {
-      height: 40px;
-      width: 40px;
+    flex-wrap: wrap;
+    button {
+      width: 14%;
+      height: 60px;
       @include lessThan(md) {
-        height: 30px;
-        width: 30px;
+        width: 16%;
       }
     }
-    span {
-      font-size: $font-size-sm;
+    svg {
+      height: 35px;
+      width: 30px;
+      @include lessThan(md) {
+        height: 25px;
+        width: 20px;
+      }
+    }
+    div {
+      font-size: $font-size-xsm;
       @include lessThan(md) {
         font-size: $font-size-xxsm;
       }

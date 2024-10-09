@@ -134,7 +134,7 @@ export default function CosmosAuthComponent({
         } else {
           setUserAuthData({ error: msg });
         }
-        // NotificationMessage("error", msg);
+        NotificationMessage("error", msg);
       }
     }
   }, [isWalletConnected, isConnected]);

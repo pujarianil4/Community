@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/contexts/store";
 import { setClientSideCookie } from "@/utils/helpers";
 import useRedux from "@/hooks/useRedux";
-
+import NotificationMessage from "../Notification";
 import { handleLogIn, handleSignup } from "@/services/api/authapi";
 
 interface ISignupData {
@@ -128,6 +128,7 @@ const SolanaAuthComponent = ({
       } else {
         setUserAuthData({ error: msg });
       }
+      NotificationMessage("error", msg);
     }
   }, [publicKey, signMessage]);
 

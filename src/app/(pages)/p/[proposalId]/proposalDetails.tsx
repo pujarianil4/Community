@@ -12,7 +12,8 @@ import { fetchProposalByID } from "@/services/api/proposalApi";
 import Vote from "@components/rightPanel/voteSection";
 import SkeletonLoader from "./proposalLoading";
 import VoteLoading from "@components/rightPanel/voteLoading";
-
+import ShareButton from "@/components/common/shareButton";
+import { getCurrentDomain } from "@/utils/helpers";
 interface IProps {
   proposalId: string;
 }
@@ -34,6 +35,9 @@ export default function ProposalDetails({ proposalId }: IProps) {
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const currentDomain = getCurrentDomain();
+  const proposalUrl = `${currentDomain}/p/${proposalId}`;
 
   useEffect(() => {
     if (proposalData) {
@@ -101,8 +105,11 @@ export default function ProposalDetails({ proposalId }: IProps) {
                       </Link>
                     </div>
                     <CButton className='share_btn'>
-                      <ShareIcon />
-                      Share
+                      <ShareButton
+                        postTitle={proposalData?.title}
+                        postUrl={proposalUrl}
+                        postImage=''
+                      />
                     </CButton>
                   </div>
                   <MarkdownRenderer markdownContent={proposalData?.desc} />

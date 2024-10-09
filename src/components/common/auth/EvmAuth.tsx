@@ -110,7 +110,7 @@ export default function EvmAuthComponent({
         } else {
           setUserAuthData({ error: msg });
         }
-        // NotificationMessage("error", msg);
+        NotificationMessage("error", msg);
       }
     }
   }, [isConnected]);
