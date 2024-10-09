@@ -8,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import useRedux from "@/hooks/useRedux";
 import useAsync from "@/hooks/useAsync";
-import { fetchProposalByID } from "@/services/api/api";
+import { fetchProposalByID } from "@/services/api/proposalApi";
 import Vote from "@components/rightPanel/voteSection";
 import SkeletonLoader from "./proposalLoading";
 import VoteLoading from "@components/rightPanel/voteLoading";

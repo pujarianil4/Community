@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import useAsync from "@/hooks/useAsync";
-import { fetchCommunities } from "@/services/api/api";
+import { fetchCommunities } from "@/services/api/communityApi";
 import CardList from "@/components/cardList";
 import { ICommunity } from "@/utils/types/types";
 

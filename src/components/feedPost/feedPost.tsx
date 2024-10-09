@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { IPost, IVotePayload } from "@/utils/types/types";
 import SwipeCarousel from "../common/carousel";
 import PostPageLoader from "../common/loaders/postPage";
-import { sendVote } from "@/services/api/api";
+import { sendVote } from "@/services/api/userApi";
 import { useIntersectionObserver } from "@/hooks/useIntersection";
 import UHead from "../common/uhead";
 import Actions from "../common/actions";
@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/contexts/store";
 import CreatePost from "../createPost/CreatePost";
 import { Modal } from "antd";
+import { deletePost } from "@/services/api/postApi";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -31,7 +32,7 @@ interface Vote {
 
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 export default function FeedPost({ post, overlayClassName }: IProps) {
-  const { text, up, down, cta, media, user, community, id, ccount } = post;
+  const { text, up, down, cta, media, user, community, id, ccount, sts } = post;
   const postRef = useRef<HTMLDivElement | null>(null);
   const stayTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isViewed = useIntersectionObserver(postRef);
@@ -44,7 +45,6 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
 
   const userInfo = useSelector((state: RootState) => state.user);
 
-  console.log("user", user, userInfo);
   const self = user.id == userInfo.uid;
 
   const handleRedirectPost = () => {
@@ -94,10 +94,14 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
     }
   };
 
-  const moreActionCall = (data: any) => {
-    if (data == "edit") {
-      console.log("edit", post);
-      setIsEditModalOpen(true);
+  const moreActionCall = async (data: any) => {
+    if (sts != "archived") {
+      if (data == "edit") {
+        console.log("edit", post);
+        setIsEditModalOpen(true);
+      } else if (data == "delete" && id) {
+        await deletePost(id);
+      }
     }
   };
 
@@ -158,14 +162,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
       </div> */}
 
         {post && (
-          <UHead
-            user={post.user}
-            community={post.community}
-            time={post.cta}
-            showMore
-            self={self}
-            callBack={moreActionCall}
-          />
+          <UHead post={post} showMore self={self} callBack={moreActionCall} />
         )}
 
         <div

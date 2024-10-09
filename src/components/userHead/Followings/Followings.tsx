@@ -3,7 +3,7 @@ import EmptyData from "@/components/common/Empty";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
-import { getFollowinsByUserId } from "@/services/api/api";
+import { getFollowinsByUserId } from "@/services/api/userApi";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";

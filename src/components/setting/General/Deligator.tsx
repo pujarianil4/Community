@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import useAsync from "@/hooks/useAsync";
-import { fetchDelegatesByUname } from "@/services/api/api";
+import { fetchDelegatesByUname } from "@/services/api/userApi";
 import EmptyData from "@/components/common/Empty";
 import { numberWithCommas } from "@/utils/helpers";
 import { RootState } from "@/contexts/store";

@@ -10,7 +10,6 @@ import React, {
 import { IoSearch } from "react-icons/io5";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useAsync from "@/hooks/useAsync";
-import { fetchCommunities } from "@/services/api/api";
 import { ICommunity } from "@/utils/types/types";
 import Image from "next/image";
 import { debounce, getImageSource, numberWithCommas } from "@/utils/helpers";

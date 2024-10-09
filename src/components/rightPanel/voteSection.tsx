@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import CButton from "../common/Button";
-import { fetchProposalByID, voteToProposal } from "@/services/api/api";
+import { fetchProposalByID, voteToProposal } from "@/services/api/proposalApi";
 import { IVoteProposalPayload } from "@/utils/types/types";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
@@ -99,9 +99,8 @@ export default function VoteSection() {
               <div className='range_data'>
                 <p>No</p>
                 <p className='no'>
-                  {proposalData?.down < 2
-                    ? `${proposalData?.down} vote`
-                    : `${proposalData?.down} votes`}
+                  {proposalData?.down || 0}
+                  {proposalData?.down < 2 ? `vote` : ` votes`}
                 </p>
               </div>
               <RangeBar
@@ -109,10 +108,9 @@ export default function VoteSection() {
                 current={proposalData?.down}
               />
             </div>
-          </div>{" "}
+          </div>
         </>
       )}
-
       {/* )} */}
     </section>
   );

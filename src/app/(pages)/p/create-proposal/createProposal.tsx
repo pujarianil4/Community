@@ -1,40 +1,70 @@
 "use client";
-import React, { useState } from "react";
-import CInput from "../common/Input";
-import CButton from "../common/Button";
-import TiptapEditor from "../common/tiptapEditor";
+import React, { useCallback, useState } from "react";
+import "./index.scss";
 import { IProposalForm } from "@/utils/types/types";
-import { createProposal } from "@/services/api/proposalApi";
-import NotificationMessage from "../common/Notification";
+import { createProposal } from "@/services/api/api";
 import TurndownService from "turndown";
+import NotificationMessage from "@/components/common/Notification";
+import CInput from "@/components/common/Input";
+import TiptapEditor from "@/components/common/tiptapEditor";
+import CButton from "@/components/common/Button";
+import { DatePicker } from "antd";
+import dayjs, { Dayjs } from "dayjs";
+import { useRouter } from "next/navigation";
+
+const { RangePicker } = DatePicker;
 
 interface IProps {
-  setIsProposalModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   cname: string;
   cid: number;
-  setRefetchProposal: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function CreateProposal({
-  setIsProposalModalOpen,
-  cname,
-  cid,
-  setRefetchProposal,
-}: IProps) {
-  const today = new Date().toISOString().slice(0, 10);
+export default function CreateProposal({ cname, cid }: IProps) {
   const initialProposal = {
     title: "",
     desc: "",
     cid: cid,
-    validity: today,
+    validity: {
+      start: "",
+      end: "",
+    },
   };
   const [content, setContent] = useState<string>("");
   const [isLoadingProposal, setIsLoadingProposal] = useState<boolean>(false);
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({
     title: "",
     desc: "",
+    date: "",
   });
   const [proposalForm, setProposalForm] =
     useState<IProposalForm>(initialProposal);
+
+  const [dates, setDates] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([
+    null,
+    null,
+  ]);
+  const router = useRouter();
+  const handleRedirect = (id: number) => {
+    router.push(`/p/${id}`);
+  };
+
+  const onChange = (value: [dayjs.Dayjs | null, dayjs.Dayjs | null] | null) => {
+    if (formErrors.date) {
+      setFormErrors((prevErrors) => ({ ...prevErrors, date: "" }));
+    }
+    if (value) {
+      setDates(value);
+      const formattedStartDate = value[0]?.format("YYYY-MM-DD") || "";
+      const formattedEndDate = value[1]?.format("YYYY-MM-DD") || "";
+
+      setProposalForm({
+        ...proposalForm,
+        validity: {
+          start: formattedStartDate,
+          end: formattedEndDate,
+        },
+      });
+    }
+  };
 
   // const handleTokenList = () => {
   //   console.log("HANDLE_TOKEN_LIST");
@@ -51,16 +81,43 @@ export default function CreateProposal({
     }
   };
 
+  const clearDatePicker = () => {
+    setDates([null, null]);
+    setProposalForm((prevForm) => ({
+      ...prevForm,
+      validity: {
+        start: "",
+        end: "",
+      },
+    }));
+  };
+
+  const disabledDateFunction = useCallback((current: Dayjs | null) => {
+    if (!current) {
+      return false;
+    }
+
+    const yesterday = dayjs().subtract(1, "day");
+    const ninetyDaysAfterToday = dayjs().add(90, "days");
+
+    return current.isBefore(yesterday) || current.isAfter(ninetyDaysAfterToday);
+  }, []);
+
   const handleCreateProposal = async () => {
     try {
       let valid = true;
       const errors = { ...formErrors };
+
       if (!proposalForm.title) {
         errors.title = "Title is required";
         valid = false;
       }
       if (!content) {
         errors.desc = "Description is required";
+        valid = false;
+      }
+      if (!dates[0] || !dates[1]) {
+        errors.date = "Start and End dates are required";
         valid = false;
       }
       if (!valid) {
@@ -71,18 +128,30 @@ export default function CreateProposal({
       const turndownService = new TurndownService();
       const markDownContent = turndownService.turndown(content);
       const proposalData = { ...proposalForm, desc: markDownContent };
-      await createProposal(proposalData);
-      setIsProposalModalOpen(false);
+
+      // if (proposalForm.validity.start && proposalForm.validity.end) {
+      //   const daysBetween = calculateDaysBetween(
+      //     proposalForm.validity.start,
+      //     proposalForm.validity.end
+      //   );
+      //   console.log("Number of days between:", daysBetween);
+      // }
+
+      const res = await createProposal(proposalData);
+
       setProposalForm(initialProposal);
       setContent("");
-      setRefetchProposal(true);
+      clearDatePicker();
+      NotificationMessage("success", "Proposal Is Created Successfully");
+      handleRedirect(res?.id);
+      // TODO: Deside where to go after creating new proposal
     } catch (error: any) {
       NotificationMessage("error", error?.message);
     } finally {
       setIsLoadingProposal(false);
     }
   };
-  // TODO: Update proper UI for errors too.
+
   return (
     <main className='create_proposal_container'>
       <h2>{cname}</h2>
@@ -92,12 +161,11 @@ export default function CreateProposal({
         name='title'
         value={proposalForm.title}
         onChange={handleProposalForm}
-        // onFocus={() => handleInputFocus("title")}
         onFocus={() =>
           setFormErrors((prevErrors) => ({ ...prevErrors, title: "" }))
         }
       />
-      {formErrors.title && <p className='error_message'>{formErrors.title}</p>}
+      <p className='error_message'>{formErrors.title && formErrors.title}</p>
       {/* 
       <label htmlFor='To'>To</label>
       <CInput
@@ -126,14 +194,28 @@ export default function CreateProposal({
       >
         <TiptapEditor content={content} setContent={setContent} />
       </div>
-      {formErrors.desc && <p className='error_message'>{formErrors.desc}</p>}
-      <input
+      <p className='error_message'>{formErrors.desc && formErrors.desc}</p>
+      {/* <input
         type='date'
         value={proposalForm.validity}
         min={today}
         onChange={handleProposalForm}
         name='validity'
+      /> */}
+      <RangePicker
+        onChange={onChange}
+        value={[
+          dates[0] ? dayjs(dates[0]) : null,
+          dates[1] ? dayjs(dates[1]) : null,
+        ]}
+        allowClear
+        disabledDate={disabledDateFunction}
+        // onFocus={() =>
+        //   setFormErrors((prevErrors) => ({ ...prevErrors, date: "" }))
+        // }
       />
+      <p className='error_message'>{formErrors.date && formErrors.date}</p>
+
       <CButton
         loading={isLoadingProposal}
         className='proposal_btn'

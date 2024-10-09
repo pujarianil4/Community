@@ -3,11 +3,11 @@ import React, { useMemo, useState } from "react";
 import { Collapse } from "antd";
 import { DropdownLowIcon } from "@/assets/icons";
 import {
-  delegateNetWorth,
   fetchDelegatesByUname,
-  getFollowersByUserId,
   undoDelegateNetWorth,
-} from "@/services/api/api";
+  delegateNetWorth,
+} from "@/services/api/userApi";
+import { getFollowersByUserId } from "@/services/api/userApi";
 import useAsync from "@/hooks/useAsync";
 import CButton from "@/components/common/Button";
 import { numberWithCommas } from "@/utils/helpers";

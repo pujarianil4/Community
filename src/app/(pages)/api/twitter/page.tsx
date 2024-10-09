@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
-import { updateUser } from "@/services/api/api";
+import { updateUser } from "@/services/api/userApi";
 import NotificationMessage from "@/components/common/Notification";
 export default function TwitterCallback() {
   const searchParams = useSearchParams();

@@ -4,7 +4,7 @@ import NotificationMessage from "@/components/common/Notification";
 import { getClientSideCookie } from "@/utils/helpers";
 import { DeleteIcon, DesktopIcon, MobileIcon } from "@/assets/icons";
 
-import { getSession, removeSession } from "@/services/api/api";
+import { getSession, removeSession } from "@/services/api/userApi";
 
 const session = () => {
   const { isLoading, refetch, data } = useAsync(getSession);

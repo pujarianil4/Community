@@ -3,7 +3,7 @@ import EmptyData from "@/components/common/Empty";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
-import { getFollowersByUserId } from "@/services/api/api";
+import { getFollowersByUserId } from "@/services/api/userApi";
 import { getImageSource } from "@/utils/helpers";
 import Image from "next/image";
 import Link from "next/link";

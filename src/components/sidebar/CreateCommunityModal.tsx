@@ -4,11 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import TiptapEditor from "../common/tiptapEditor";
 import "./index.scss";
 import CButton from "../common/Button";
-import {
-  createCommunity,
-  fetchCommunityByCname,
-  uploadSingleFile,
-} from "@/services/api/api";
+import { uploadSingleFile } from "@/services/api/commonApi";
 
 import useAsync from "@/hooks/useAsync";
 import NotificationMessage from "../common/Notification";
@@ -21,6 +17,10 @@ import { UploadIcon } from "@/assets/icons";
 import TurndownService from "turndown";
 import { Modal } from "antd";
 import { ICommunity } from "@/utils/types/types";
+import {
+  createCommunity,
+  fetchCommunityByCname,
+} from "@/services/api/communityApi";
 
 import Avatar from "@/components/common/loaders/userAvatar";
 import ProfileAvatar from "@/components/common/loaders/profileAvatar";

@@ -10,12 +10,8 @@ import {
   MdEmojiEmotions,
   MdOutlineGifBox,
 } from "react-icons/md";
-import {
-  fetchCommunities,
-  handlePostToCommunity,
-  uploadMultipleFile,
-  uploadSingleFile,
-} from "@/services/api/api";
+import { uploadMultipleFiles } from "@/services/api/commonApi";
+import { fetchCommunities } from "@/services/api/communityApi";
 // import { LocalStore } from "@/utils/helpers";
 import Image from "next/image";
 import useRedux from "@/hooks/useRedux";
@@ -31,12 +27,13 @@ import TurndownService from "turndown";
 import { BackIcon, LinkIcon } from "@/assets/icons";
 import FocusableDiv from "../common/focusableDiv";
 
-import { getPosts } from "@/services/api/api";
+import { getPosts, patchPost } from "@/services/api/postApi";
 import { IPost } from "@/utils/types/types";
 import PostLoader from "./postLoader";
 import MarkdownRenderer from "../common/MarkDownRender";
 import { identifyMediaType } from "@/utils/helpers";
 import { Pagination } from "antd";
+import { createPost } from "@/services/api/postApi";
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPostModalOpen: boolean;
@@ -148,6 +145,7 @@ const CreatePost: React.FC<Props> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMsg, setUploadMsg] = useState({ msg: "", type: "" });
   const [isDraft, setIsDraft] = useState(false);
+  const [post, setPost] = useState<IPost>();
 
   const [uploadingSkeletons, setUploadingSkeletons] = useState<number[]>([]);
   const {
@@ -187,7 +185,7 @@ const CreatePost: React.FC<Props> = ({
         sts: "published",
       };
       console.log("data", data);
-      await handlePostToCommunity(data);
+      await createPost(data);
       setIsLoadingPost(false);
       setIsPostModalOpen(false);
       NotificationMessage("success", "Post Created Succesfuly");
@@ -259,7 +257,7 @@ const CreatePost: React.FC<Props> = ({
         NotificationMessage("info", "Please select up to 5 media");
         setUploadMsg({ msg: "", type: "" });
       } else {
-        const uploadedFiles = await uploadMultipleFile(newPics);
+        const uploadedFiles = await uploadMultipleFiles(newPics);
         setPics((prevPics) => [...prevPics, ...filesArray]);
 
         if (uploadedFiles.length > 0) {
@@ -278,11 +276,11 @@ const CreatePost: React.FC<Props> = ({
     }
   };
   useEffect(() => {
-    if (editPost) {
-      setIsPostModalOpen(false);
-    } else {
-      closeBtn?.addEventListener("click", () => {
-        console.log("close");
+    closeBtn?.addEventListener("click", () => {
+      console.log("close");
+      if (editPost) {
+        setIsPostModalOpen(false);
+      } else {
         // Clear states when the modal is closed
         setIsLoadingPost(false);
         setSelectedOption(null);
@@ -295,8 +293,8 @@ const CreatePost: React.FC<Props> = ({
           type: "",
         });
         setIsPostModalOpen(false);
-      });
-    }
+      }
+    });
   }, [closeBtn]);
 
   useEffect(() => {
@@ -323,6 +321,7 @@ const CreatePost: React.FC<Props> = ({
 
   const handleEditPost = async (post: any) => {
     console.log("Editing post:", post);
+    setPost(post);
     setIsEditingPost(true); // Enable editing mode
 
     setContent(post.text); // Set post content
@@ -352,6 +351,37 @@ const CreatePost: React.FC<Props> = ({
   const handleRemoveMedia = (rmIndx: number) => {
     setPics((prevPics) => prevPics.filter((_, idx) => idx !== rmIndx));
     setUploadedImg((prevImg) => prevImg.filter((_, idx) => idx !== rmIndx)); // If applicable, also update uploadedImg state
+  };
+
+  const handleUpdatePost = async () => {
+    const turndownService = new TurndownService();
+    const markDownContent = turndownService.turndown(content);
+    try {
+      setIsLoadingPost(true);
+      const data = {
+        cid: selectedOption?.id,
+        text: markDownContent,
+        // ...(uploadedImg && { media: uploadedImg }),
+        // media: uploadedImg ? uploadedImg : null,
+        media: uploadedImg.length > 0 ? uploadedImg : null,
+      };
+      console.log("data", data);
+      if (post?.id) {
+        await patchPost(post?.id, data);
+        setIsLoadingPost(false);
+        setIsPostModalOpen(false);
+        NotificationMessage("success", "Post updated Succesfuly");
+        dispatch(actions.setRefetchPost(true));
+      }
+      // dispatch(actions.setRefetchCommunity(true));
+      // resetPostForm();
+    } catch (error: any) {
+      console.log("error", error);
+      NotificationMessage("error", error?.response?.data?.message);
+      setIsLoadingPost(false);
+      // setIsPostModalOpen(false);
+      // resetPostForm();
+    }
   };
 
   return (
@@ -521,7 +551,7 @@ const CreatePost: React.FC<Props> = ({
               <CButton
                 loading={isLoadingPost}
                 disabled={isDisabled}
-                // onClick={handlePost}
+                onClick={handleUpdatePost}
                 className='create_btn'
               >
                 Update Post
