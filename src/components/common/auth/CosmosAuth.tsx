@@ -13,12 +13,10 @@ import Image from "next/image";
 import React, { useCallback, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { DropdownLowIcon } from "@/assets/icons";
 import NotificationMessage from "../Notification";
-import { Collapse } from "antd";
+
 import { cosmosWallets } from "@/config/cosmos/cosmos";
 
-const { Panel } = Collapse;
 export interface ISignupData {
   username: string;
   name: string;
@@ -163,13 +161,7 @@ export default function CosmosAuthComponent({
 
   return (
     <div>
-      <Collapse accordion style={{ marginTop: "10px" }}>
-        <Panel
-          header='Cosmos Wallets'
-          key='1'
-          extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
-        >
-          {/* <div className='solana_wallets'>
+      {/* <div className='solana_wallets'>
             <div key={address} className='wallet' onClick={handleConnect}>
               <Image
                 alt={wallet.prettyName}
@@ -182,25 +174,23 @@ export default function CosmosAuthComponent({
 
 
           </div> */}
-          {cosmosWallets.map((wallet: any) => {
-            return (
-              <div className='solana_wallets'>
-                <div key={address} className='wallet' onClick={handleConnect}>
-                  <Image
-                    alt={wallet.walletInfo.prettyName}
-                    src={wallet.walletInfo.logo}
-                    width={30}
-                    height={30}
-                  />
-                  <span>{wallet.walletInfo.prettyName}</span>
-                </div>
-              </div>
-            );
-          })}
+      {cosmosWallets.map((wallet: any) => {
+        return (
+          <div className='solana_wallets'>
+            <div key={address} className='wallet' onClick={handleConnect}>
+              <Image
+                alt={wallet.walletInfo.prettyName}
+                src={wallet.walletInfo.logo}
+                width={30}
+                height={30}
+              />
+              <span>{wallet.walletInfo.prettyName}</span>
+            </div>
+          </div>
+        );
+      })}
 
-          {}
-        </Panel>
-      </Collapse>
+      {}
     </div>
   );
 }

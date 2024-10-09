@@ -29,7 +29,7 @@ const session = () => {
           <DesktopIcon />
           <div className='u_bx'>
             <span className='u_txt'>{session.ip}</span>{" "}
-            {session.id !== cookiesData.sid && (
+            {session.id !== cookiesData?.sid && (
               <span onClick={() => handleRemoveSession(session.id)}>
                 <DeleteIcon />
               </span>

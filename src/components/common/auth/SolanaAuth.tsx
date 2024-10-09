@@ -18,10 +18,6 @@ import { RootState } from "@/contexts/store";
 import { setClientSideCookie } from "@/utils/helpers";
 import useRedux from "@/hooks/useRedux";
 
-import { DropdownLowIcon } from "@/assets/icons";
-import { Collapse } from "antd";
-const { Panel } = Collapse;
-
 interface ISignupData {
   username: string;
   name: string;
@@ -154,36 +150,26 @@ const SolanaAuthComponent = ({
   }, [connected, signUserMessage]);
 
   return (
-    <>
-      <Collapse accordion style={{ marginTop: "10px" }}>
-        <Panel
-          header='Solana Wallet'
-          key='1'
-          extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
+    <div className='solana_wallets'>
+      {/* <button>Solana Wallets</button> */}
+      {wallets?.map((wallet, i) => (
+        <div
+          key={i}
+          className='wallet'
+          onClick={() => handleWalletClick(wallet.adapter.name)}
         >
-          <div className='solana_wallets'>
-            {/* <button>Solana Wallets</button> */}
-            {wallets?.map((wallet, i) => (
-              <div
-                key={i}
-                className='wallet'
-                onClick={() => handleWalletClick(wallet.adapter.name)}
-              >
-                <Image
-                  alt={wallet.adapter.name}
-                  src={wallet.adapter.icon}
-                  width={30}
-                  height={30}
-                />
-                <span>{wallet.adapter.name}</span>
-              </div>
-            ))}
+          <Image
+            alt={wallet.adapter.name}
+            src={wallet.adapter.icon}
+            width={30}
+            height={30}
+          />
+          <span>{wallet.adapter.name}</span>
+        </div>
+      ))}
 
-            {/* <SolanaWalletButton /> */}
-          </div>
-        </Panel>
-      </Collapse>
-    </>
+      {/* <SolanaWalletButton /> */}
+    </div>
   );
 };
 
