@@ -51,7 +51,7 @@
 // }
 
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Virtuoso, VirtuosoGrid } from "react-virtuoso";
 
 interface IProps {
@@ -79,6 +79,19 @@ export default function VirtualizedContainer({
   customScrollSelector = "main_panel_container",
   footerHeight = 50,
 }: IProps) {
+  const [customScrollParent, setCustomScrollParent] = useState<
+    HTMLElement | undefined
+  >(undefined);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const scrollParent = document.querySelector(
+        `.${customScrollSelector}`
+      ) as HTMLElement;
+
+      setCustomScrollParent(scrollParent);
+    }
+  }, [customScrollSelector]);
   const commonProps = {
     data: listData,
     endReached: () => {
@@ -92,9 +105,7 @@ export default function VirtualizedContainer({
     },
     itemContent: renderComponent,
     style: { overflow: "hidden" },
-    customScrollParent: document.querySelector(
-      `.${customScrollSelector}`
-    ) as HTMLElement,
+    customScrollParent,
     components: {
       Footer: () => <div style={{ height: `${footerHeight}px` }}></div>,
     },
