@@ -1,8 +1,9 @@
-import { ICreateProposalPayload, IVoteProposalPayload } from "@/utils/types/types";
+import {
+  ICreateProposalPayload,
+  IVoteProposalPayload,
+} from "@/utils/types/types";
 import { store } from "@contexts/store";
 import { api } from "./api";
-
-
 
 // Create Proposal
 export const createProposal = async (payload: ICreateProposalPayload) => {
@@ -15,7 +16,6 @@ export const createProposal = async (payload: ICreateProposalPayload) => {
     throw error;
   }
 };
-
 
 // Fetch All Proposals
 export const fetchAllProposals = async ({
@@ -61,6 +61,18 @@ export const fetchProposalByID = async (proposalId: number) => {
   } catch (error) {
     console.error("Fetch_ProposalByID_Error", error);
     throw error;
+  }
+};
+
+// fetch proposal by id for metadata
+export const getProposalForMeta = async (pId: number) => {
+  try {
+    const response = await api.get(`/governance/proposal/${pId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+    return null;
   }
 };
 

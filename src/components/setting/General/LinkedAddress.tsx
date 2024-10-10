@@ -11,16 +11,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import NotificationMessage from "@/components/common/Notification";
 import AuthModal from "@/components/common/auth/AuthModal";
-import {
-  AddIcon,
-  DeleteIcon,
-  DropdownLowIcon,
-  EtherIcon,
-} from "@/assets/icons";
-
-import { Collapse } from "antd";
-
-const { Panel } = Collapse;
+import { AddIcon, DeleteIcon, EtherIcon } from "@/assets/icons";
 
 const linkAddress = () => {
   const { openConnectModal } = useConnectModal();
@@ -72,6 +63,7 @@ const linkAddress = () => {
       //   setMessageHash(undefined);
       //   hasCalledRef.current = false;
       // }, 4000);
+      //  NotificationMessage("error", err?.response?.data?.message);
     }
   };
 
@@ -95,39 +87,32 @@ const linkAddress = () => {
 
   return (
     <div>
-      <Collapse accordion style={{ marginTop: "16px" }}>
-        <Panel
-          header='Linked Address'
-          key='1'
-          extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
-        >
-          <div>
-            <div className='link_address'>
-              <span className='telegram-user-details'>Link New Address</span>
-              <span onClick={handleOpenModal}>
-                <AddIcon fill='#ffffff' width={14} height={14} />
-              </span>
-            </div>
-            {data?.map((wallet: { address: string; typ: string }) => (
-              <div key={wallet.address} className='addresses'>
-                <div>
-                  <div>
-                    <EtherIcon />
-                    <span className='telegram-user-details'>
-                      {wallet.address} ({wallet.typ})
-                    </span>
-                  </div>
-                  <div>
-                    <span onClick={() => remove(wallet.address)}>
-                      <DeleteIcon />
-                    </span>
-                  </div>
-                </div>
+      <div>
+        <div className='link_address'>
+          <span className='telegram-user-details'>Link New Address</span>
+          <span onClick={handleOpenModal}>
+            <AddIcon fill='#ffffff' width={14} height={14} />
+          </span>
+        </div>
+        {data?.map((wallet: { address: string; typ: string }) => (
+          <div key={wallet.address} className='addresses'>
+            <div>
+              <div>
+                <EtherIcon />
+                <span className='telegram-user-details'>
+                  {wallet.address} ({wallet.typ})
+                </span>
               </div>
-            ))}
+              <div>
+                <span onClick={() => remove(wallet.address)}>
+                  <DeleteIcon />
+                </span>
+              </div>
+            </div>
           </div>
-        </Panel>
-      </Collapse>
+        ))}
+      </div>
+
       <AuthModal
         visible={isModalOpen}
         setVisible={setIsModalOpen}

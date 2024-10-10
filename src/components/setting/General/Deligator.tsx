@@ -1,15 +1,11 @@
 "use client";
 import React from "react";
-import { Collapse } from "antd";
-import { DropdownLowIcon } from "@/assets/icons";
 import useAsync from "@/hooks/useAsync";
 import { fetchDelegatesByUname } from "@/services/api/userApi";
 import EmptyData from "@/components/common/Empty";
 import { numberWithCommas } from "@/utils/helpers";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
-
-const { Panel } = Collapse;
 
 export default function Deligator() {
   const userNameSelector = (state: RootState) => state?.user;

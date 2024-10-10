@@ -49,7 +49,7 @@ export interface IPost {
   ccount: number;
   cta: string;
   user: IUser;
-  sts: "archived" | "draft" | "published"
+  sts: "archived" | "draft" | "published";
   media?: string[];
   // img?: string;
   community: ICommunity;
@@ -74,7 +74,6 @@ export interface IComment {
 }
 
 export interface IFollowAPI {
-  uid: number;
   typ: string;
   fwid: number;
 }

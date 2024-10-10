@@ -1,5 +1,6 @@
 import { store } from "@contexts/store";
 import { api } from "./api";
+import { followApi } from './userApi';
 
 // Fetch Communities
 export const fetchCommunities = async (sortby: string) => {
@@ -19,6 +20,7 @@ export const fetchCommunities = async (sortby: string) => {
 export const createCommunity = async (data: any) => {
   try {
     const response = await api.post("/community", data);
+    await followApi({fwid: response.data.id, typ:"c"})
     return response.data;
   } catch (error) {
     console.error("Create Community Error: ", error);
