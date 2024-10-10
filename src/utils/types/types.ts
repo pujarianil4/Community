@@ -14,6 +14,7 @@ export interface IUser {
   uta?: string;
   desc?: string;
   sid?: string;
+  fwrs?: number;
   netWrth?: number;
   effectiveNetWrth?: number;
   telegram?: { id: string; username: string } | string | null;
@@ -56,20 +57,15 @@ export interface IPost {
 
 export interface IComment {
   id: number;
-  uid: number;
-  pid: number;
-  pcid: number | null;
+  img: IImsg;
   content: string;
-  isVoted?: boolean;
   up: number;
   down: number;
-  rCount: number | null;
+  rCount: number;
   cta: string;
-  uta: string;
   user: IUser;
-  img: string;
-  parentComment?: IComment | null;
-  comments?: IComment[];
+  post: IPost;
+  community?: ICommunity;
 }
 
 export interface IFollowAPI {
