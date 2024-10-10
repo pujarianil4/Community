@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import React, {
   memo,
@@ -10,66 +11,37 @@ import React, {
 import { IoSearch } from "react-icons/io5";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useAsync from "@/hooks/useAsync";
-import { fetchCommunities } from "@/services/api/api";
-import { ICommunity } from "@/utils/types/types";
+import { fetchSearchData } from "@/services/api/api";
+import { ICommunity, IPost, IUser } from "@/utils/types/types";
 import Image from "next/image";
 import { debounce, getImageSource, numberWithCommas } from "@/utils/helpers";
 import { CloseIcon } from "@/assets/icons";
 
-// TODO: UPDATE WITH API DATA
-const communityList: ICommunity[] = [
-  {
-    id: 1,
-    username: "TestCommunity",
-    name: "TestCommunity",
-    ticker: "UFT",
-    img: {
-      pro: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
-      cvr: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
-    },
-    metadata: "unilend",
-    pCount: 5,
-    followers: 3,
-    tSupply: 0,
-    sts: 1,
-    cta: "2024-09-03T07:09:26.687Z",
-    uta: "2024-09-03T07:09:26.687Z",
-  },
-  {
-    id: 2,
-    username: "Unilend2",
-    name: "Unilend",
-    ticker: "UFT",
-    img: {
-      pro: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
-      cvr: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
-    },
-    metadata: "unilend",
-    pCount: 5,
-    followers: 3,
-    tSupply: 0,
-    sts: 1,
-    cta: "2024-09-03T07:09:26.687Z",
-    uta: "2024-09-03T07:09:26.687Z",
-  },
-  {
-    id: 3,
-    username: "Unilend3",
-    name: "Unilend",
-    ticker: "UFT",
-    img: {
-      pro: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
-      cvr: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
-    },
-    metadata: "unilend",
-    pCount: 5,
-    followers: 3,
-    tSupply: 0,
-    sts: 1,
-    cta: "2024-09-03T07:09:26.687Z",
-    uta: "2024-09-03T07:09:26.687Z",
-  },
-];
+interface IPagination {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+}
+
+interface ISuggestions {
+  posts: {
+    data: IPost[];
+    pagination: IPagination;
+  };
+  comments: {
+    data: any[];
+    pagination: IPagination;
+  };
+  communities: {
+    data: ICommunity[];
+    pagination: IPagination;
+  };
+  users: {
+    data: IUser[];
+    pagination: IPagination;
+  };
+}
 
 // export default function Searchbar() {
 const Searchbar = memo(() => {
@@ -79,22 +51,57 @@ const Searchbar = memo(() => {
   const isSearchPage = useMemo(() => {
     return pathname.split("/")[pathname.split("/").length - 1] === "search";
   }, [pathname]);
-  // const {
-  //   isLoading,
-  //   data: communityList,
-  //   refetch,
-  // } = useAsync(fetchCommunities);
+
+  const initialPagination = {
+    currentPage: 1,
+    totalPages: 2,
+    totalItems: 20,
+    itemsPerPage: 10,
+  };
+
+  const initialSuggetion: ISuggestions = {
+    posts: {
+      data: [],
+      pagination: initialPagination,
+    },
+    comments: {
+      data: [],
+      pagination: initialPagination,
+    },
+    communities: {
+      data: [],
+      pagination: initialPagination,
+    },
+    users: {
+      data: [],
+      pagination: initialPagination,
+    },
+  };
+
   const isCommunity = false;
   // TODO update community
-  const community = "TestCommunity";
+  // const community = "TestCommunity";
   const [searchVal, setSearchVal] = useState<string>("");
-  const [suggestions, setSuggestions] = useState<ICommunity[]>([]);
-  const [selectedData, setSelectedData] = useState<ICommunity[]>([]);
+  const [suggestions, setSuggestions] =
+    useState<ISuggestions>(initialSuggetion);
+  const [selectedData, setSelectedData] = useState<ICommunity[] | IUser[]>([]); // TODO add condition to remove the data
+  const [selectionType, setSelectionType] = useState<"u" | "c" | null>(null);
+  console.log("selectedData", selectedData);
+  console.log("selectionType", selectionType);
   const [focused, setFocused] = useState<boolean>(false);
-  // console.log("communityList", communityList);
-
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const searchPayload = {
+    search: searchVal,
+    page: 1,
+    limit: 10,
+  };
+
+  const {
+    isLoading,
+    data: searchData,
+    callFunction,
+  } = useAsync(fetchSearchData, searchPayload);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchVal(event.target.value);
   };
@@ -106,25 +113,46 @@ const Searchbar = memo(() => {
   //   []
   // );
 
-  const handleSelect = (community: ICommunity) => {
-    setSelectedData([...selectedData, community]);
+  const handleSelect = (data: ICommunity | IUser, type: "u" | "c") => {
+    setSelectedData([...selectedData, data]);
+    setSelectionType(type);
+    // console.log("PATH_", `/${type === "c" ? "c" : "u"}/${data?.username}`);
+    // router.push(`/${type === "c" ? "c" : "u"}/${data?.username}`);
+    console.log("COMMUNIYT", selectedData, data);
     // setSelectedUserSet(new Set([...selectedUserSet, user.email]));
-    // setSearchVal("");
-    setSuggestions([]);
+    setSearchVal("");
+    setSuggestions(initialSuggetion);
     inputRef?.current?.focus();
   };
 
-  const handleRemoveSearch = (community: ICommunity) => {
-    const updatedVal = selectedData.filter((item) => item.id !== community.id);
+  const handleRemoveSearch = (data: ICommunity | IUser) => {
+    const updatedVal = selectedData?.filter((item) => item.id !== data.id);
     setSelectedData(updatedVal);
   };
 
   const handleSearchVal = (val: string) => {
-    if (isCommunity) {
-      router.push(`/c/${community}/search?q=${encodeURIComponent(searchVal)}`);
-    } else {
-      router.push(`/search?q=${encodeURIComponent(searchVal)}`);
+    const type = searchParams.get("type"); // Get the current type
+    let searchUrl = `/search?q=${encodeURIComponent(searchVal)}`;
+
+    if (selectionType === "c" && selectedData[0]?.username) {
+      searchUrl = `/c/${
+        selectedData[0]?.username
+      }/search?q=${encodeURIComponent(searchVal)}`;
+    } else if (selectionType === "u" && selectedData[0]?.username) {
+      searchUrl = `/u/${
+        selectedData[0]?.username
+      }/search?q=${encodeURIComponent(searchVal)}`;
     }
+
+    if (!selectedData[0]?.username) {
+      setSelectionType(null);
+    }
+
+    if (type) {
+      searchUrl += `&type=${type}`;
+    }
+
+    router.push(searchUrl);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -132,7 +160,9 @@ const Searchbar = memo(() => {
     if (event.key === "Enter") {
       if (isCommunity) {
         router.push(
-          `/c/${community}/search?q=${encodeURIComponent(searchVal)}`
+          `/c/${selectedData[0]?.username}/search?q=${encodeURIComponent(
+            searchVal
+          )}`
         );
       } else {
         router.push(`/search?q=${encodeURIComponent(searchVal)}`);
@@ -142,22 +172,46 @@ const Searchbar = memo(() => {
       target?.value === "" &&
       selectedData?.length > 0
     ) {
-      const lastCommunity = selectedData[selectedData.length - 1];
-      handleRemoveSearch(lastCommunity);
-      setSuggestions([]);
+      const lastSelect = selectedData[selectedData.length - 1];
+      handleRemoveSearch(lastSelect);
+      setSuggestions(initialSuggetion);
     }
   };
 
   const handleFocus = () => setFocused(true);
-  const handleBlur = () => setFocused(false);
+  // const handleBlur = () => setFocused(false);
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (
+  //       suggestionsRef.current &&
+  //       !suggestionsRef?.current.contains(event?.target as Node)
+  //     ) {
+  //       setFocused(false);
+  //     }
+  //   };
+
+  //   document.addEventListener("mousedown", handleClickOutside);
+
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    if (searchVal.length > 2) {
+      callFunction(fetchSearchData, { ...searchPayload, search: searchVal });
+    }
+  }, [searchVal]);
 
   useEffect(() => {
     if (searchVal.trim() === "") {
-      setSuggestions([]);
+      setSuggestions(initialSuggetion);
       return;
     }
-    setSuggestions(communityList);
-  }, [searchVal]);
+    setSuggestions(searchData); //communities
+  }, [searchVal, searchData]);
+
   useEffect(() => {
     if (isSearchPage) {
       setSearchVal(searchParams.get("q")?.toLocaleLowerCase() as string);
@@ -165,13 +219,6 @@ const Searchbar = memo(() => {
   }, [isSearchPage]);
   return (
     <div className='search_container'>
-      {/* <CInput
-        prefix={<IoSearch />}
-        placeholder='Search Post Here'
-        className='search'
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-      /> */}
       <div className='search_input'>
         {selectedData.length > 0 && (
           <div
@@ -179,12 +226,12 @@ const Searchbar = memo(() => {
             onClick={() => handleRemoveSearch(selectedData[0])}
           >
             <Image
-              src={selectedData[0]?.img.pro}
+              src={selectedData[0]?.img?.pro}
               alt={selectedData[0]?.username}
-              width={16}
-              height={16}
+              width={24}
+              height={24}
             />
-            <span>{selectedData[0].metadata} &times;</span>
+            <span>{selectedData[0]?.username} &times;</span>
           </div>
         )}
 
@@ -200,7 +247,7 @@ const Searchbar = memo(() => {
           }
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
-          onBlur={handleBlur}
+          // onBlur={handleBlur}
         />
         {searchVal && (
           <div className='close_icon' onClick={() => setSearchVal("")}>
@@ -217,11 +264,17 @@ const Searchbar = memo(() => {
             <IoSearch />
             <span>{`Search For "${searchVal}"`}</span>
           </li>
+
           <ul className='suggestions_list'>
-            {suggestions.length > 0 &&
-              selectedData.length === 0 &&
-              suggestions?.map((community: ICommunity) => (
-                <li key={community.id} onClick={() => handleSelect(community)}>
+            {suggestions?.communities?.data?.length > 0 &&
+              selectedData?.length === 0 && <h2>Community</h2>}
+            {suggestions?.communities?.data?.length > 0 &&
+              selectedData?.length === 0 &&
+              suggestions?.communities?.data?.map((community: ICommunity) => (
+                <li
+                  key={community.id}
+                  onClick={() => handleSelect(community, "c")}
+                >
                   <Image
                     src={getImageSource(community.img.pro, "c")}
                     alt={community?.username}
@@ -233,6 +286,26 @@ const Searchbar = memo(() => {
                   <span>{numberWithCommas(community?.followers)} Members</span>
                 </li>
               ))}
+            {suggestions?.users?.data?.length > 0 &&
+              selectedData?.length === 0 && <h2>Users</h2>}
+            {suggestions?.users?.data?.length > 0 &&
+              selectedData?.length === 0 &&
+              suggestions?.users?.data?.map((user: IUser) => (
+                <li key={user.id} onClick={() => handleSelect(user, "u")}>
+                  <Image
+                    src={getImageSource(user?.img?.pro, "u")}
+                    alt={user?.username}
+                    width={24}
+                    height={24}
+                    loading='lazy'
+                  />
+                  <span>{user?.username}</span>
+                  <span>
+                    {numberWithCommas(user?.fwrs || 0)} &nbsp;
+                    {user?.fwrs == 1 ? "Follower" : "Followers"}
+                  </span>
+                </li>
+              ))}
           </ul>
         </>
       )}
@@ -240,4 +313,5 @@ const Searchbar = memo(() => {
   );
 });
 
+Searchbar.displayName = "Searchbar";
 export default Searchbar;
