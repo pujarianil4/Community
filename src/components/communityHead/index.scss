@@ -1,6 +1,7 @@
 @import "/src/styles";
 .user_container {
   position: relative;
+
   .userhead_cotainer {
     width: 100%;
     height: 372px;
@@ -44,7 +45,7 @@
       background-color: var(--primary-bg);
       border-radius: 0.75rem;
       // padding: 0.5rem;
-      @include lessThan(md) {
+      @include lessThan(xl) {
         width: 96%;
         left: 2%;
         top: 88px;
@@ -168,6 +169,16 @@
         }
         .social_bx {
           text-align: end;
+          .edit_comunity {
+            background: var(--tertiary-bg) !important;
+            color: var(--primary) !important;
+            font-size: $font-size-sm !important;
+            margin-top: 5px;
+            @include lessThan(md) {
+              height: 22px !important;
+              font-size: $font-size-xxsm !important;
+            }
+          }
         }
       }
 
@@ -214,11 +225,12 @@
     align-items: center;
     gap: 8px;
     z-index: 1;
+
     @include lessThan(xl) {
-      margin-top: -4px;
+      margin-top: 15px;
     }
     @include lessThan(md) {
-      margin-top: -7px;
+      margin-top: 15px;
       right: 8px;
       width: 100px;
     }
@@ -228,9 +240,10 @@
       color: var(--primary) !important;
       font-size: 14px !important;
       cursor: pointer;
-
+      top: 15px;
       @include lessThan(xl) {
         font-size: $font-size-sm !important;
+        top: 0px;
       }
       @include lessThan(md) {
         font-size: $font-size-xxsm !important;
@@ -238,6 +251,9 @@
       svg {
         @include lessThan(md) {
           width: 12px;
+        }
+        @include lessThan(sm) {
+          width: 9px;
         }
       }
     }

@@ -3,7 +3,7 @@ import type { Metadata, ResolvingMetadata } from "next";
 import React from "react";
 import PageWraper from "@/components/Wrapers/PageWraper";
 import "./index.scss";
-import { getPostsByPostId, getPostsForMeta } from "@/services/api/api";
+import { getPostsByPostId, getPostsForMeta } from "@/services/api/postApi";
 
 //markdown render
 import markdownToTxt from "markdown-to-txt";
@@ -113,38 +113,3 @@ export async function generateMetadata(
     };
   }
 }
-// export async function generateMetadata(
-//   { params }: Iprops,
-//   parent: ResolvingMetadata
-// ): Promise<Metadata> {
-//   const { postId } = params;
-
-//   try {
-//     const turndownService = new TurndownService();
-
-//     const post = await getPostsForMeta(postId);
-//     const markDownContent = turndownService.turndown(post?.text);
-//     const postTitle = markDownContent;
-
-//     const postDescription = markDownContent;
-//     console.log("turndorn editor", postDescription);
-//     const postImage =
-//       post?.media[0] ||
-//       "https://testcommunity.s3.ap-south-1.amazonaws.com/ee27b86d-e9a6-4320-b240-33e4ab8d5306-38636.jpg";
-//     const previousImages = (await parent)?.openGraph?.images || [];
-//     return {
-//       title: postTitle,
-//       description: postDescription,
-//       openGraph: {
-//         images: [postImage, ...previousImages],
-//       },
-//     };
-//   } catch (error) {
-//     console.error("Failed to fetch post data", error);
-
-//     return {
-//       title: "Error fetching post",
-//       description: "Could not fetch the post details.",
-//     };
-//   }
-// }

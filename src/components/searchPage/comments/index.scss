@@ -10,6 +10,14 @@
   .markdown_container {
     font-size: $font-size-md;
   }
+  .actions {
+    justify-content: flex-start;
+    gap: 1.3rem;
+    width: 99%;
+    .up_down {
+      gap: 10px;
+    }
+  }
 
   .comment {
     padding: 1rem;
@@ -49,7 +57,7 @@
 
     .post_time {
       font-size: $font-size-xsm;
-      margin-top: 12px;
+      margin-top: 5px;
     }
   }
 }

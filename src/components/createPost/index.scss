@@ -11,7 +11,7 @@
   }
 }
 .create_post_container {
-  padding: 2rem;
+  padding: 1rem 1rem 0.5rem 1rem;
   background-color: var(--secondary-bg) !important;
   position: relative;
   @include lessThan(md) {
@@ -26,7 +26,7 @@
   }
 
   .user_data {
-    margin-top: 2rem;
+    margin-top: 1rem;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -96,11 +96,17 @@
         @include lessThan(md) {
           margin-top: 1rem;
         }
-        .editor_wrapper {
-          margin: 10px 0;
-          max-height: 350px;
-          min-height: 150px;
-          // height: 300px;
+
+        .focusable-div {
+          .editor_content {
+            margin: 10px 0;
+            max-height: 300px;
+            min-height: 150px;
+            height: 300px;
+            @include lessThan(md) {
+              height: 0px;
+            }
+          }
         }
 
         .inputs {
@@ -233,7 +239,7 @@
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
-    min-height: 95px;
+    // min-height: 95px;
     margin: 12px 0px;
     @include lessThan(md) {
       padding: 2px 8px 8px 8px;
@@ -363,7 +369,7 @@
     display: flex;
     justify-content: center;
     flex-direction: row;
-    margin-bottom: 1rem;
+    // margin-bottom: 1rem;
     gap: 10px;
     align-items: center;
     // height: 30px;
@@ -508,10 +514,12 @@
   cursor: pointer;
   padding: 0px 10px;
   position: relative; // For positioning hover_bx inside
-
+  border: 1px solid var(--primary-border);
+  border-radius: 8px;
   .content,
   .post_img {
-    transition: opacity 0.3s ease; // Smooth transition for opacity
+    transition: opacity 0.3s ease;
+    padding: 5px; // Smooth transition for opacity
     @include lessThan(md) {
       width: 85px !important;
       aspect-ratio: 1.25 !important;
@@ -644,6 +652,65 @@
       &:hover {
         background: var(--primary);
       }
+    }
+  }
+}
+
+.img_loader {
+  display: block;
+  max-width: 250px;
+  max-height: 95px;
+  height: 95px;
+  width: 140px;
+  border-radius: 5px;
+}
+
+.draft_post_loader {
+  margin: 1rem 0;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--primary-border);
+  .content {
+    width: 77%;
+    height: 60px;
+    @include lessThan(md) {
+      height: 30px;
+    }
+  }
+  .img_bx {
+    padding: 5px;
+    .post_img {
+      display: block;
+      max-width: 250px;
+      max-height: 85px;
+      height: 75px;
+      width: 120px;
+      border-radius: 5px;
+      @include lessThan(md) {
+        height: 50px;
+        width: 70px;
+      }
+    }
+  }
+}
+
+.no_draft_posts {
+  padding: 2rem;
+  text-align: center;
+  color: var(--black);
+  h2 {
+    @include lessThan(md) {
+      font-size: $font-size-md;
+    }
+  }
+  p {
+    font-size: $font-size-sm;
+    @include lessThan(md) {
+      font-size: $font-size-xsm;
     }
   }
 }

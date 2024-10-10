@@ -24,6 +24,7 @@ interface DropdownWithSearchProps {
   // defaultSearch?: any;
   isUser?: boolean;
   placeholder?: string;
+  defaultCommunity?: ICommunity;
 }
 
 const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
@@ -34,6 +35,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
   selected,
   isUser = false,
   placeholder = "Select Community",
+  defaultCommunity,
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -41,13 +43,13 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
     const value = e.target.value;
     setSearchTerm(value);
     setVisible(true);
+    if (value === "") {
+      onSelect(null);
+    }
   };
 
   const handleFocus = () => {
     setVisible(true);
-    if (selected) {
-      setSearchTerm(""); // Clear the search term when focusing on the input again
-    }
   };
 
   const handleBlur = () => {
@@ -68,22 +70,24 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
     if (selected) {
       setSearchTerm(selected?.username);
     }
-  }, []);
+  }, [selected]);
 
   return (
     <main className='dropdown_with_search'>
-      <div className='search_input'>
-        <IoSearch className='s_icon' />
-        <input
-          className='dropdown_input'
-          placeholder={placeholder}
-          // value={selected ? selected.username : searchTerm}
-          value={searchTerm}
-          onChange={handleSearch}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-      </div>
+      {!defaultCommunity && (
+        <div className='search_input'>
+          <IoSearch className='s_icon' />
+          <input
+            className='dropdown_input'
+            placeholder={placeholder}
+            // value={selected ? selected.username : searchTerm}
+            value={searchTerm}
+            onChange={handleSearch}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+        </div>
+      )}
       {visible && (
         <div className='custom_dropdown'>
           {options?.length > 0 ? (

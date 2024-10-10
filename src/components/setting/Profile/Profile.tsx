@@ -6,13 +6,10 @@ import React, { useEffect, useRef, useState } from "react";
 import "./index.scss";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import {
-  fetchUser,
-  fetchUserById,
-  fetchUserByUserName,
-  updateUser,
-  uploadSingleFile,
-} from "@/services/api/api";
+import { uploadSingleFile } from "@/services/api/commonApi";
+import { fetchUserById, updateUser } from "@services/api/userApi";
+
+import { fetchUserByUserName } from "@/services/api/userApi";
 import useAsync from "@/hooks/useAsync";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
@@ -256,7 +253,7 @@ export default function Profile() {
   return (
     <div className='profile_container'>
       <div className='cover_bx'>
-        {!user?.img?.cvr ? (
+        {isUploadingCover || !user?.img?.cvr ? (
           <ProfileAvatar />
         ) : (
           <img
@@ -279,10 +276,10 @@ export default function Profile() {
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploadingCover && <span className='cvrmsg'>uploading...</span>}
+        {/* {isUploadingCover && <span className='cvrmsg'>uploading...</span>} */}
       </div>
       <div className='avatar'>
-        {!user?.img?.pro ? (
+        {isUploadingAvatar || !user?.img?.pro ? (
           <Avatar />
         ) : (
           <img
@@ -308,7 +305,7 @@ export default function Profile() {
             style={{ visibility: "hidden" }}
           />
         </div>
-        {isUploadingAvatar && <span className='msg'>Uploading...</span>}
+        {/* {isUploadingAvatar && <span className='msg'>Uploading...</span>} */}
       </div>
 
       <div className='info'>

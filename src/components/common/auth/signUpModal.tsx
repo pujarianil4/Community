@@ -3,7 +3,7 @@
 import React, { useEffect, useState, ChangeEvent } from "react";
 
 import useRedux from "@/hooks/useRedux";
-import { fetchUserByUserName } from "@/services/api/api";
+import { fetchUserByUserName } from "@/services/api/userApi";
 
 import { RootState } from "@/contexts/store";
 import { debounce, setClientSideCookie } from "@/utils/helpers";
@@ -17,6 +17,7 @@ import { Modal } from "antd";
 import dynamic from "next/dynamic";
 import CosmosAuthComponent from "./CosmosAuth";
 
+import { Collapse } from "antd";
 // Dynamically import TronAuthComponent, disabling SSR
 const TronAuthComponent = dynamic(() => import("./TronAuth"), {
   ssr: false,
@@ -119,6 +120,68 @@ export const SignUpModal = ({
     // }
   };
 
+  const evmAuthItems = [
+    {
+      key: "1",
+      label: "Ethereum Wallets",
+      children: (
+        <>
+          <EvmAuthComponent
+            isSignUp={isSignUp}
+            signUpData={signUpData}
+            setUserAuthData={handleUserAuthData}
+          />
+        </>
+      ),
+    },
+  ];
+
+  const solanaAuthItems = [
+    {
+      key: "2",
+      label: "Solana Wallets",
+      children: (
+        <>
+          <SolanaAuthComponent
+            isSignUp={isSignUp}
+            signUpData={signUpData}
+            setUserAuthData={handleUserAuthData}
+          />
+        </>
+      ),
+    },
+  ];
+  const tronAuthItems = [
+    {
+      key: "3",
+      label: "Tron Wallets",
+      children: (
+        <>
+          <TronAuthComponent
+            isSignUp={isSignUp}
+            signUpData={signUpData}
+            setUserAuthData={handleUserAuthData}
+          />
+        </>
+      ),
+    },
+  ];
+  const cosmosAuthItems = [
+    {
+      key: "4",
+      label: "Cosmos Wallets",
+      children: (
+        <>
+          <CosmosAuthComponent
+            isSignUp={isSignUp}
+            signUpData={signUpData}
+            setUserAuthData={handleUserAuthData}
+          />
+        </>
+      ),
+    },
+  ];
+
   return (
     <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
       <div className='signUpModal'>
@@ -184,28 +247,52 @@ export const SignUpModal = ({
         )}
         {modalTab == 3 && (
           <div className='wallet_modal'>
-            <EvmAuthComponent
+            {/* <EvmAuthComponent
+              isSignUp={isSignUp}
+              signUpData={signUpData}
+              setUserAuthData={handleUserAuthData}
+            /> */}
+            <Collapse
+              items={evmAuthItems}
+              accordion
+              expandIconPosition='end'
+              className='accordion_bx'
+            />
+
+            <Collapse
+              items={solanaAuthItems}
+              accordion
+              expandIconPosition='end'
+              className='accordion_bx'
+            />
+            <Collapse
+              items={tronAuthItems}
+              accordion
+              expandIconPosition='end'
+              className='accordion_bx'
+            />
+            <Collapse
+              items={cosmosAuthItems}
+              accordion
+              expandIconPosition='end'
+              className='accordion_bx'
+            />
+            {/* <SolanaAuthComponent
               isSignUp={isSignUp}
               signUpData={signUpData}
               setUserAuthData={handleUserAuthData}
             />
-
-            <SolanaAuthComponent
-              isSignUp={isSignUp}
-              signUpData={signUpData}
-              setUserAuthData={handleUserAuthData}
-            />
-
             <TronAuthComponent
               isSignUp={isSignUp}
               signUpData={signUpData}
               setUserAuthData={handleUserAuthData}
             />
+
             <CosmosAuthComponent
               isSignUp={isSignUp}
               signUpData={signUpData}
               setUserAuthData={handleUserAuthData}
-            />
+            /> */}
             <p>
               Don&apos;t have account?
               <span onClick={() => setModalTab(2)}> SignUp</span>

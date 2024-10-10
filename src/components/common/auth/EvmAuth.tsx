@@ -1,12 +1,8 @@
 import { getSignMessage } from "@/config/ethers";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
-import {
-  fetchUserById,
-  handleLogIn,
-  handleSignup,
-  linkAddress,
-} from "@/services/api/api";
+import { linkAddress } from "@/services/api/authapi";
+import { fetchUserById } from "@services/api/userApi";
 import { sigMsg } from "@/utils/constants";
 import { setClientSideCookie } from "@/utils/helpers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
@@ -16,10 +12,8 @@ import { useSelector } from "react-redux";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import NotificationMessage from "../Notification";
 
-import { DropdownLowIcon } from "@/assets/icons";
-import { Collapse } from "antd";
-const { Panel } = Collapse;
 import { walletIcons } from "@/utils/constants/walletIcons";
+import { handleLogIn, handleSignup } from "@/services/api/authapi";
 
 export interface ISignupData {
   username: string;
@@ -116,7 +110,7 @@ export default function EvmAuthComponent({
         } else {
           setUserAuthData({ error: msg });
         }
-        // NotificationMessage("error", msg);
+        NotificationMessage("error", msg);
       }
     }
   }, [isConnected]);
@@ -167,42 +161,32 @@ export default function EvmAuthComponent({
   const filteredConnectors = filterDuplicates(connectors);
   console.log("conectors", connectors, filteredConnectors);
   return (
-    <>
-      <Collapse accordion style={{ marginTop: "10px" }}>
-        <Panel
-          header='Ethereum Wallets'
-          key='1'
-          extra={<DropdownLowIcon fill='#ffffff' width={13} height={7} />}
-        >
-          <div className='eth_wallets'>
-            {filteredConnectors
-              // .filter((cn: any, i: number) => i != 3)
-              .map((connector: any, i: number) => {
-                const rkDetails = connector.rkDetails || {};
-                const connectorName = rkDetails.name || connector.name;
-                const connectorIconUrl =
-                  walletIcons[rkDetails.id] ||
-                  walletIcons[connector.id] ||
-                  connector.icon;
-                return (
-                  <div
-                    key={rkDetails?.id}
-                    className='wallet'
-                    onClick={() => handleWalletClick(connector)}
-                  >
-                    <Image
-                      src={connectorIconUrl}
-                      alt={`${connectorName} logo`}
-                      width={30}
-                      height={30}
-                    />
-                    <span>{connectorName}</span>
-                  </div>
-                );
-              })}
-          </div>
-        </Panel>
-      </Collapse>
-    </>
+    <div className='eth_wallets'>
+      {filteredConnectors
+        // .filter((cn: any, i: number) => i != 3)
+        .map((connector: any, i: number) => {
+          const rkDetails = connector.rkDetails || {};
+          const connectorName = rkDetails.name || connector.name;
+          const connectorIconUrl =
+            walletIcons[rkDetails.id] ||
+            walletIcons[connector.id] ||
+            connector.icon;
+          return (
+            <div
+              key={rkDetails?.id}
+              className='wallet'
+              onClick={() => handleWalletClick(connector)}
+            >
+              <Image
+                src={connectorIconUrl}
+                alt={`${connectorName} logo`}
+                width={30}
+                height={30}
+              />
+              <span>{connectorName}</span>
+            </div>
+          );
+        })}
+    </div>
   );
 }

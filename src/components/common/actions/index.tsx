@@ -7,7 +7,7 @@ import { GoComment } from "react-icons/go";
 import { numberWithCommas } from "@/utils/helpers";
 import { SaveIcon, ShareIcon } from "@/assets/icons";
 import { IPost, IVotePayload } from "@/utils/types/types";
-import { sendVote } from "@/services/api/api";
+import { sendVote } from "@/services/api/userApi";
 import ShareButton from "../shareButton";
 import { PiBookmarkSimpleDuotone } from "react-icons/pi";
 import CPopup from "../popup";
@@ -95,17 +95,22 @@ export default function Actions({
   return (
     <div className='actions'>
       <div className='up_down'>
-        <PiArrowFatUpDuotone
-          className={vote.type == "up" || isVoted ? "active" : ""}
-          onClick={() => handleVote("up")}
-          size={18}
-        />
-        <span>{vote.value}</span>
-        <PiArrowFatDownDuotone
-          className={vote.type == "down" ? "active" : ""}
-          onClick={() => handleVote("down")}
-          size={18}
-        />
+        <span>
+          <PiArrowFatUpDuotone
+            className={vote.type == "up" || isVoted ? "active" : ""}
+            onClick={() => handleVote("up")}
+            size={18}
+          />
+          <span>{vote.value}</span>{" "}
+        </span>
+        <span>
+          <PiArrowFatDownDuotone
+            className={vote.type == "down" ? "active" : ""}
+            onClick={() => handleVote("down")}
+            size={18}
+          />
+          <span> {vote.value}</span>
+        </span>
       </div>
       <Link href={`post/${id}`} as={`/post/${id}`}>
         <div className='comments'>

@@ -4,7 +4,7 @@ import CInput from "../common/Input";
 import CButton from "../common/Button";
 import TiptapEditor from "../common/tiptapEditor";
 import { IProposalForm } from "@/utils/types/types";
-import { createProposal } from "@/services/api/api";
+import { createProposal } from "@/services/api/proposalApi";
 import NotificationMessage from "../common/Notification";
 import TurndownService from "turndown";
 

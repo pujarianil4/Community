@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import "./index.scss";
 import { getImageSource, timeAgo } from "@/utils/helpers";
 import { BsEye } from "react-icons/bs";
 
-import { ICommunity, IUser } from "@/utils/types/types";
+import { ICommunity, IPost, IUser } from "@/utils/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import { IoIosMore } from "react-icons/io";
@@ -13,10 +13,10 @@ import CPopup from "../popup";
 import { IoFlagOutline } from "react-icons/io5";
 
 interface IProps {
-  user: IUser;
-  community: ICommunity;
-  time: string;
   showMore?: boolean;
+  self?: boolean;
+  callBack?: (data: any) => void;
+  post: IPost;
 }
 
 interface List {
@@ -25,20 +25,13 @@ interface List {
 }
 
 export default function UHead({
-  user,
-  community,
-  time,
   showMore = false,
+  self = false,
+  callBack,
+  post,
 }: IProps) {
-  const content = (
-    <div className='options_popup'>
-      <div className='option'>
-        <IoIosMore />
-        <span>Block</span>
-      </div>
-    </div>
-  );
-
+  const [open, setOpen] = useState(false);
+  const { user, community, cta } = post;
   const popupList: Array<List> = [
     {
       label: "Block",
@@ -48,9 +41,30 @@ export default function UHead({
       label: "Report",
       icon: <IoFlagOutline />,
     },
+    ...(self
+      ? [
+          {
+            label: "Edit",
+            icon: <IoIosMore />,
+          },
+          {
+            label: "Delete",
+            icon: <IoFlagOutline />,
+          },
+        ]
+      : []),
   ];
 
-  const handleSelectMore = () => {};
+  const handleSelectMore = (label: string) => {
+    setOpen(false);
+    callBack && callBack(String(label).toLowerCase());
+  };
+
+  const handleOpen = () => {
+    if (post && post.sts != "archived") {
+      setOpen(true);
+    }
+  };
 
   return (
     <div className='user_head'>
@@ -82,11 +96,16 @@ export default function UHead({
           {community?.username} &nbsp;
         </Link>
       </div>
-      <p className='post_time'>&bull; {timeAgo(time)}</p>
+      <p className='post_time'>&bull; {timeAgo(cta)}</p>
       {showMore && (
         <div className='more'>
-          <CPopup onSelect={handleSelectMore} list={popupList} onAction='hover'>
-            <div className='options'>
+          <CPopup
+            onSelect={handleSelectMore}
+            open={open}
+            list={popupList}
+            onAction='hover'
+          >
+            <div onClick={handleOpen} className='options'>
               <IoIosMore />
             </div>
           </CPopup>

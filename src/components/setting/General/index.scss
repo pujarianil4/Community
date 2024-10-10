@@ -44,7 +44,16 @@
           padding: 7px 10px;
         }
         .ant-collapse-expand-icon {
-          display: none;
+          // display: none;
+
+          svg {
+            color: var(--primary);
+            font-weight: $font-weight-bold;
+            font-size: $font-size-sm;
+            @include lessThan(md) {
+              font-size: $font-size-xsm;
+            }
+          }
         }
         .ant-collapse-header-text {
           color: var(--primary);
@@ -184,4 +193,8 @@
   width: 100%;
   height: 56px;
   border-radius: 12px;
+}
+
+.accordion_cls {
+  margin-top: 1rem;
 }

@@ -1,12 +1,7 @@
 "use client";
 import "./index.scss";
-
 import React from "react";
-
-import { DropdownLowIcon } from "@/assets/icons";
-
 import { Collapse } from "antd";
-
 //Auth Import
 import Discord from "@/components/common/auth/DiscordAuth";
 import TwitterConnect from "@/components/common/auth/TwitterAuth";
@@ -19,32 +14,91 @@ import LinkAddress from "./LinkedAddress";
 import Deligate from "./Deligate";
 import Deligator from "./Deligator";
 
-const { Panel } = Collapse;
-
 export default function General() {
+  const socialItems = [
+    {
+      key: "1",
+      label: "Social Connections",
+      children: (
+        <>
+          <TelegramConnect />
+          <Discord />
+          <TwitterConnect />
+        </>
+      ),
+    },
+  ];
+
+  const LinkedAddress = [
+    {
+      key: "2",
+      label: "Linked Address",
+      children: (
+        <>
+          <LinkAddress />
+        </>
+      ),
+    },
+  ];
+
+  const SessionItems = [
+    {
+      key: "3",
+      label: "Active Session",
+      children: (
+        <>
+          <Session />
+        </>
+      ),
+    },
+  ];
+
+  const DeligateItems = [
+    {
+      key: "4",
+      label: "Deligate",
+      children: (
+        <>
+          <Deligate />
+        </>
+      ),
+    },
+  ];
   return (
     <>
       <div className='general_container'>
-        <Collapse defaultActiveKey={["1"]} style={{ marginTop: "16px" }}>
-          <Panel
-            header='Social Connections'
-            key='1'
-            extra={<DropdownLowIcon fill='#EBB82A' width={13} height={7} />}
-          >
-            <TelegramConnect />
-            <Discord />
-            <TwitterConnect />
-          </Panel>
-        </Collapse>
+        <Collapse
+          items={socialItems}
+          defaultActiveKey={["1"]}
+          accordion
+          expandIconPosition='end'
+          className='accordion_cls'
+        />
 
         {/* Link Your Wallet Accordion */}
+        <Collapse
+          items={LinkedAddress}
+          accordion
+          expandIconPosition='end'
+          className='accordion_cls'
+        />
 
-        <LinkAddress />
         {/* Session Accordion */}
-        <Session />
+
+        <Collapse
+          items={SessionItems}
+          accordion
+          expandIconPosition='end'
+          className='accordion_cls'
+        />
         {/* Governance */}
         {/* <Governance /> */}
-        <Deligate />
+        <Collapse
+          items={DeligateItems}
+          accordion
+          expandIconPosition='end'
+          className='accordion_cls'
+        />
         {/* <Deligator /> */}
       </div>
     </>

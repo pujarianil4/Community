@@ -4,7 +4,7 @@
   max-width: 756px;
   height: 100%;
   overflow-y: auto;
-  min-width: 370px;
+  min-width: 320px;
   padding: 20px;
   margin-left: calc((100vw - 1400px) / 2);
 
@@ -16,6 +16,17 @@
   // }
   @include lessThan(sm) {
     padding: 10px 10px;
+  }
+}
+.hidden_right_panel {
+  margin-left: calc((100vw - 1000px) / 2);
+
+  @include lessThan(lg) {
+    margin-left: calc((100vw - 756px) / 2);
+  }
+
+  @include lessThan(md) {
+    margin: auto;
   }
 }
 .wraper {

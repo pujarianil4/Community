@@ -9,12 +9,8 @@ import {
   MdEmojiEmotions,
   MdOutlineGifBox,
 } from "react-icons/md";
-import {
-  fetchCommunities,
-  handlePostToCommunity,
-  uploadMultipleFile,
-  uploadSingleFile,
-} from "@/services/api/api";
+import { uploadMultipleFiles } from "@/services/api/commonApi";
+import { fetchCommunities } from "@/services/api/communityApi";
 // import { LocalStore } from "@/utils/helpers";
 import Image from "next/image";
 import useRedux from "@/hooks/useRedux";
@@ -30,16 +26,17 @@ import TurndownService from "turndown";
 import { BackIcon, LinkIcon } from "@/assets/icons";
 import FocusableDiv from "../common/focusableDiv";
 
-import { getPosts } from "@/services/api/api";
+import { patchPost, getPostsByuName } from "@/services/api/postApi";
 import { IPost } from "@/utils/types/types";
 import PostLoader from "./postLoader";
 import MarkdownRenderer from "../common/MarkDownRender";
 import { identifyMediaType } from "@/utils/helpers";
 import { Pagination } from "antd";
+import { createPost } from "@/services/api/postApi";
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPostModalOpen: boolean;
-  post?: IPost;
+  editPost?: IPost;
   defaultCommunity?: ICommunity;
 }
 
@@ -118,6 +115,7 @@ export const FileInput: React.FC<FileInputProps> = React.memo(
 FileInput.displayName = "FileInput";
 
 const userNameSelector = (state: RootState) => state?.user;
+const refetchPost = (state: RootState) => state.common.refetch.post;
 const refetchCommunitySelector = (state: RootState) =>
   state.common.refetch.community;
 
@@ -125,11 +123,10 @@ const CreatePost: React.FC<Props> = ({
   isPostModalOpen,
   setIsPostModalOpen,
   defaultCommunity,
+  editPost,
 }) => {
-  const [{ dispatch, actions }, [user, comminityRefetch]] = useRedux([
-    userNameSelector,
-    refetchCommunitySelector,
-  ]);
+  const [{ dispatch, actions }, [user, comminityRefetch, postRefetch]] =
+    useRedux([userNameSelector, refetchCommunitySelector, refetchPost]);
 
   const {
     isLoading,
@@ -137,6 +134,7 @@ const CreatePost: React.FC<Props> = ({
     refetch,
   } = useAsync(fetchCommunities);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
+  const [isLoadingDraftPost, setIsLoadingDraftPost] = useState(false);
   const [isDisabled, setISDisabled] = useState(false);
   const [pics, setPics] = useState<File[]>([]);
   const [uploadedImg, setUploadedImg] = useState<File[]>([]);
@@ -146,21 +144,29 @@ const CreatePost: React.FC<Props> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMsg, setUploadMsg] = useState({ msg: "", type: "" });
   const [isDraft, setIsDraft] = useState(false);
+  const [post, setPost] = useState<IPost>();
+
+  const turndownService = new TurndownService();
+  const markDownContent = turndownService.turndown(content);
+
+  const [uploadingSkeletons, setUploadingSkeletons] = useState<number[]>([]);
 
   const {
-    isLoading: isLoadingPostData,
-    data: posts,
-    refetch: refetchPost,
-  } = useAsync(getPosts, { sortby: "pCount" });
+    isLoading: isLoadingUserPost,
+    data: userPosts,
+    refetch: refetchUserPost,
+  } = useAsync(getPostsByuName, { nameId: user.username, sortby: "time" });
 
   const [isEditingPost, setIsEditingPost] = useState(false);
 
+  const draftPosts =
+    userPosts?.filter((post: IPost) => post.sts === "draft") || [];
   // add pagination for draft posts
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 4;
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts?.slice(indexOfFirstPost, indexOfLastPost);
+  const draftData = draftPosts?.slice(indexOfFirstPost, indexOfLastPost);
 
   const handlePaginationChange = (page: number) => {
     setCurrentPage(page);
@@ -168,23 +174,39 @@ const CreatePost: React.FC<Props> = ({
 
   const closeBtn = document.querySelector(".ant-modal-close");
 
-  const handlePost = async () => {
+  const handlePost = async (postStatus: "draft" | "published") => {
     const turndownService = new TurndownService();
     const markDownContent = turndownService.turndown(content);
+    console.log("handlePost", selectedOption, defaultCommunity);
+
     try {
-      setIsLoadingPost(true);
+      if (postStatus === "draft") {
+        setIsLoadingDraftPost(true);
+      } else {
+        setIsLoadingPost(true);
+      }
+
       const data = {
-        cid: selectedOption?.id,
+        cid: selectedOption?.id || defaultCommunity?.id,
         text: markDownContent,
-        // ...(uploadedImg && { media: uploadedImg }),
-        // media: uploadedImg ? uploadedImg : null,
         media: uploadedImg.length > 0 ? uploadedImg : null,
+        sts: postStatus,
       };
-      console.log("data", data);
-      await handlePostToCommunity(data);
+
+      // await createPost(data);
+      if (isEditingPost && post?.id) {
+        // If editing an existing post, update it
+        await patchPost(post?.id, data);
+        NotificationMessage("success", `Post ${postStatus} successfully`);
+        refetchUserPost();
+      } else {
+        // Otherwise, create a new post
+        await createPost(data);
+        NotificationMessage("success", "Post Created Succesfuly");
+      }
+      setIsLoadingDraftPost(false);
       setIsLoadingPost(false);
       setIsPostModalOpen(false);
-      NotificationMessage("success", "Post Created Succesfuly");
       dispatch(actions.setRefetchPost(true));
       // dispatch(actions.setRefetchCommunity(true));
       resetPostForm();
@@ -194,39 +216,6 @@ const CreatePost: React.FC<Props> = ({
       setIsLoadingPost(false);
       // setIsPostModalOpen(false);
       // resetPostForm();
-    }
-  };
-
-  const saveDraft = async (draftData: any) => {
-    try {
-      console.log("save draft api calll");
-    } catch (error) {
-      throw new Error("Error saving draft");
-    }
-  };
-
-  const handleSaveDraft = async () => {
-    const turndownService = new TurndownService();
-    const markDownContent = turndownService.turndown(content);
-    try {
-      setIsLoadingPost(true);
-      const draftData = {
-        cid: selectedOption?.id,
-        text: markDownContent,
-        // media: uploadedImg ? uploadedImg : null,
-        media: uploadedImg.length > 0 ? uploadedImg : null,
-        isDraft: true, // Mark this post as a draft
-      };
-
-      await saveDraft(draftData); // function to save draft
-      setIsLoadingPost(false);
-      setIsPostModalOpen(false);
-      NotificationMessage("success", "Post save in Draft");
-      resetPostForm();
-      setIsDraft(true); // Switch to the draft section
-    } catch (error: any) {
-      NotificationMessage("error", error?.response?.data?.message);
-      setIsLoadingPost(false);
     }
   };
 
@@ -244,42 +233,60 @@ const CreatePost: React.FC<Props> = ({
     setIsUploading(true);
     setUploadMsg({ msg: "Uploading...", type: "info" });
 
+    const filesArray = Array.from(newPics);
+    const skeletonIds = filesArray.map((_, index) => pics.length + index);
+    setUploadingSkeletons((prev) => [...prev, ...skeletonIds]);
+
     try {
-      const filesArray = Array.from(newPics);
       if (filesArray.length > 5) {
         NotificationMessage("info", "Please select up to 5 media");
         setUploadMsg({ msg: "", type: "" });
       } else {
-        const uploadedFiles = await uploadMultipleFile(newPics);
+        const uploadedFiles = await uploadMultipleFiles(newPics);
         setPics((prevPics) => [...prevPics, ...filesArray]);
 
-        if (uploadedFiles.length > 0)
-          setUploadedImg((prevPics) => [...prevPics, ...uploadedFiles]);
+        if (uploadedFiles.length > 0) {
+          setUploadedImg((prevImgs) => [...prevImgs, ...uploadedFiles]);
+        }
+
         setUploadMsg({ msg: "Uploaded Successfully", type: "success" });
-        console.log("Uploaded files:", uploadedFiles);
+        setUploadingSkeletons([]);
       }
       setIsUploading(false);
     } catch (error) {
       setIsUploading(false);
       setUploadMsg({ msg: "Failed to Upload", type: "error" });
       NotificationMessage("error", "Error uploading files");
+      setUploadingSkeletons([]);
     }
   };
+
+  useEffect(() => {
+    if (postRefetch == true) {
+      refetchUserPost();
+      dispatch(actions.resetRefetch());
+    }
+  }, [postRefetch]);
+
   useEffect(() => {
     closeBtn?.addEventListener("click", () => {
       console.log("close");
-      // Clear states when the modal is closed
-      setIsLoadingPost(false);
-      setSelectedOption(null);
-      setContent("");
-      setPics([]);
-      setUploadedImg([]);
-      setSearchTerm(defaultCommunity?.username || "");
-      setUploadMsg({
-        msg: "",
-        type: "",
-      });
-      setIsPostModalOpen(false);
+      if (editPost) {
+        setIsPostModalOpen(false);
+      } else {
+        // Clear states when the modal is closed
+        setIsLoadingPost(false);
+        setSelectedOption(null);
+        setContent("");
+        setPics([]);
+        setUploadedImg([]);
+        setSearchTerm(defaultCommunity?.username || "");
+        setUploadMsg({
+          msg: "",
+          type: "",
+        });
+        setIsPostModalOpen(false);
+      }
     });
   }, [closeBtn]);
 
@@ -291,22 +298,21 @@ const CreatePost: React.FC<Props> = ({
   }, [comminityRefetch]);
 
   useEffect(() => {
+    console.log("default", defaultCommunity);
+
     if (defaultCommunity?.id) {
       setSelectedOption(defaultCommunity);
     }
   }, [defaultCommunity]);
 
-  // useEffect(() => {
-  //   console.log("post created new");
-  //   refetchPost;
-  // }, [posts]);
+  const isFormValid = () => {
+    const isFilled = markDownContent?.trim() !== "" && selectedOption !== null;
 
-  useEffect(() => {
-    setISDisabled(!content || !selectedOption);
-  }, [content, selectedOption]);
+    return isFilled;
+  };
 
   const handleEditPost = async (post: any) => {
-    console.log("Editing post:", post);
+    setPost(post);
     setIsEditingPost(true); // Enable editing mode
 
     setContent(post.text); // Set post content
@@ -325,9 +331,72 @@ const CreatePost: React.FC<Props> = ({
     setIsDraft(false); // Close draft view
   };
 
+  useEffect(() => {
+    if (editPost) {
+      handleEditPost(editPost);
+    }
+  }, [editPost, isPostModalOpen]);
+
   const handleRemoveMedia = (rmIndx: number) => {
     setPics((prevPics) => prevPics.filter((_, idx) => idx !== rmIndx));
     setUploadedImg((prevImg) => prevImg.filter((_, idx) => idx !== rmIndx)); // If applicable, also update uploadedImg state
+  };
+
+  const handleUpdatePost = async () => {
+    const turndownService = new TurndownService();
+    const markDownContent = turndownService.turndown(content);
+    try {
+      setIsLoadingPost(true);
+      const data = {
+        cid: selectedOption?.id,
+        text: markDownContent,
+        // ...(uploadedImg && { media: uploadedImg }),
+        // media: uploadedImg ? uploadedImg : null,
+        media: uploadedImg.length > 0 ? uploadedImg : null,
+      };
+      if (post?.id) {
+        await patchPost(post?.id, data);
+        setIsLoadingPost(false);
+        setIsPostModalOpen(false);
+        NotificationMessage("success", "Post updated Succesfuly");
+        dispatch(actions.setRefetchPost(true));
+      }
+      // dispatch(actions.setRefetchCommunity(true));
+      // resetPostForm();
+    } catch (error: any) {
+      console.log("error", error);
+      NotificationMessage("error", error?.response?.data?.message);
+      setIsLoadingPost(false);
+      // setIsPostModalOpen(false);
+      // resetPostForm();
+    }
+  };
+
+  const draftPost = async (post: IPost) => {
+    try {
+      setIsLoadingPost(true);
+      const data = {
+        cid: post?.cid,
+        text: post?.text,
+        media: post.media,
+        sts: "published",
+      };
+      if (post?.id) {
+        await patchPost(post?.id, data);
+        setIsLoadingPost(false);
+        setIsPostModalOpen(false);
+        NotificationMessage("success", "Post created Succesfuly");
+        dispatch(actions.setRefetchPost(true));
+      }
+      // dispatch(actions.setRefetchCommunity(true));
+      // resetPostForm();
+    } catch (error: any) {
+      console.log("error", error);
+      NotificationMessage("error", error?.response?.data?.message);
+      setIsLoadingPost(false);
+      // setIsPostModalOpen(false);
+      // resetPostForm();
+    }
   };
 
   return (
@@ -360,17 +429,17 @@ const CreatePost: React.FC<Props> = ({
 
       {isDraft ? (
         <section className='draft_posts_section'>
-          {isLoadingPostData ? (
+          {isLoadingUserPost ? (
             <>
-              {Array(5)
+              {Array(4)
                 .fill(() => 0)
                 .map((_: any, i: number) => (
                   <PostLoader key={i} />
                 ))}
             </>
-          ) : (
+          ) : draftData?.length > 0 ? (
             <section>
-              {currentPosts?.map((post: IPost) => (
+              {draftData?.map((post: IPost) => (
                 <article
                   className='draft_post'
                   key={post?.id}
@@ -379,6 +448,7 @@ const CreatePost: React.FC<Props> = ({
                   <div className='content'>
                     <MarkdownRenderer markdownContent={post?.text} limit={2} />
                   </div>
+
                   {post?.media?.[0] && (
                     <Image
                       className='post_img'
@@ -388,7 +458,6 @@ const CreatePost: React.FC<Props> = ({
                       height={128}
                     />
                   )}
-
                   <div className='hover_bx'>
                     <CButton
                       onClick={() => handleEditPost(post)}
@@ -396,7 +465,11 @@ const CreatePost: React.FC<Props> = ({
                     >
                       Edit
                     </CButton>
-                    <CButton onClick={handlePost} className='hvr_postBtn'>
+
+                    <CButton
+                      onClick={() => draftPost(post)}
+                      className='hvr_postBtn'
+                    >
                       Post
                     </CButton>
                   </div>
@@ -405,12 +478,20 @@ const CreatePost: React.FC<Props> = ({
               <div className='drft_pagination'>
                 <Pagination
                   current={currentPage}
-                  total={posts?.length}
+                  total={draftData?.length}
                   pageSize={postsPerPage}
                   onChange={handlePaginationChange}
                 />
               </div>
             </section>
+          ) : (
+            <div className='no_draft_posts'>
+              <h2>Save drafts to post when you re ready</h2>
+              <p>
+                When you save a draft, it will show up here so you can edit and
+                post it whenever you'd like.
+              </p>
+            </div>
           )}
         </section>
       ) : (
@@ -422,7 +503,7 @@ const CreatePost: React.FC<Props> = ({
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               selected={selectedOption}
-              // defaultSearch={defaultCommunity?.username}
+              defaultCommunity={defaultCommunity || editPost?.community}
             />
             <div className='post_editor'>
               <FocusableDiv>
@@ -432,32 +513,45 @@ const CreatePost: React.FC<Props> = ({
                   autoFocus={true}
                   maxCharCount={300}
                 />
-                {/* {pics?.length > 0 && (
-                  <div className='file_container'>
-                    {pics?.map((picFile, index) => (
-                      <Img
-                        key={index}
-                        index={index}
-                        file={picFile}
-                        onRemove={(rmIndx) =>
-                          setPics(pics.filter((_, idx) => idx !== rmIndx))
-                        }
-                      />
-                    ))}
-                  </div>
-                )} */}
-                {pics?.length > 0 && (
-                  <div className='file_container'>
-                    {pics?.map((picFile, index) => (
-                      <Img
-                        key={index}
-                        index={index}
-                        file={picFile}
-                        onRemove={handleRemoveMedia}
-                      />
-                    ))}
-                  </div>
-                )}
+                {/* <div className='file_container'>
+                  {pics.length > 0 && (
+                    <div className='file_container'>
+                      {pics.map((picFile, index) => (
+                        <Img
+                          key={index}
+                          index={index}
+                          file={picFile}
+                          onRemove={handleRemoveMedia}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {uploadingSkeletons.map((_, index) => (
+                    <div
+                      key={`skeleton-${index}`}
+                      className='skeleton img_loader'
+                    ></div>
+                  ))}
+                </div> */}
+
+                <div className='file_container'>
+                  {pics.map((picFile, index) => (
+                    <Img
+                      key={index}
+                      index={index}
+                      file={picFile}
+                      onRemove={handleRemoveMedia}
+                    />
+                  ))}
+
+                  {uploadingSkeletons.map((_, index) => (
+                    <div
+                      key={`skeleton-${index}`}
+                      className='skeleton img_loader'
+                    ></div>
+                  ))}
+                </div>
 
                 <div className='inputs'>
                   <FileInput onChange={handleUploadFile}>
@@ -470,29 +564,45 @@ const CreatePost: React.FC<Props> = ({
                     <MdEmojiEmotions color='#636466' size={20} />
                   </div>
 
-                  <span className={uploadMsg.type}>{uploadMsg?.msg}</span>
+                  {/* <span className={uploadMsg.type}>{uploadMsg?.msg}</span> */}
+                  {/* <span className={uploadMsg?.type}>
+                    {isUploading ? <div className='loader'></div> : null}
+                  </span> */}
                 </div>
               </FocusableDiv>
             </div>
           </div>
-          <div className='media'>
-            <CButton
-              loading={isLoadingPostData}
-              disabled={isDisabled}
-              onClick={handleSaveDraft}
-              className='create_btn'
-            >
-              Save as Draft
-            </CButton>
-            <CButton
-              loading={isLoadingPost}
-              disabled={isDisabled}
-              onClick={handlePost}
-              className='create_btn'
-            >
-              Post
-            </CButton>
-          </div>
+          {editPost ? (
+            <div className='media'>
+              <CButton
+                loading={isLoadingPost}
+                disabled={!isFormValid()}
+                onClick={handleUpdatePost}
+                className='create_btn'
+              >
+                Update Post
+              </CButton>
+            </div>
+          ) : (
+            <div className='media'>
+              <CButton
+                loading={isLoadingDraftPost}
+                disabled={!isFormValid()}
+                onClick={() => handlePost("draft")}
+                className='create_btn'
+              >
+                Save as Draft
+              </CButton>
+              <CButton
+                loading={isLoadingPost}
+                disabled={!isFormValid()}
+                onClick={() => handlePost("published")}
+                className='create_btn'
+              >
+                Post
+              </CButton>
+            </div>
+          )}
         </section>
       )}
     </main>

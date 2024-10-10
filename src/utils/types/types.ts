@@ -50,6 +50,7 @@ export interface IPost {
   ccount: number;
   cta: string;
   user: IUser;
+  sts: "archived" | "draft" | "published";
   media?: string[];
   // img?: string;
   community: ICommunity;
@@ -69,7 +70,6 @@ export interface IComment {
 }
 
 export interface IFollowAPI {
-  uid: number;
   typ: string;
   fwid: number;
 }
@@ -138,13 +138,6 @@ export interface IVotePayload {
   voteTyp: "up" | "down" | "";
 }
 
-export interface ICreateProposalPayload {
-  title: string;
-  desc: string;
-  cid: number;
-  validity: string;
-}
-
 export interface IVoteProposalPayload {
   pid: number;
   typ: string;
@@ -154,7 +147,11 @@ export interface IProposalForm {
   title: string;
   desc: string;
   cid: number;
-  validity: string;
+  // validity: string;
+  validity: {
+    start: string;
+    end: string;
+  };
 }
 
 export interface IProposal {

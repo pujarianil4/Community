@@ -2,7 +2,7 @@
 
 import CommentsLoader from "@/components/common/loaders/comments";
 import useAsync from "@/hooks/useAsync";
-import { fetchComments } from "@/services/api/api";
+import { fetchComments } from "@/services/api/postApi";
 import { IComment } from "@/utils/types/types";
 import React, { useEffect, useRef, useState } from "react";
 import { CarryOutOutlined } from "@ant-design/icons";

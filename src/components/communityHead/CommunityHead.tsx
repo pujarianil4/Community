@@ -1,6 +1,6 @@
 "use client";
 import useAsync from "@/hooks/useAsync";
-import { fetchCommunityByCname } from "@/services/api/api";
+import { fetchCommunityByCname } from "@/services/api/communityApi";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import CButton from "../common/Button";
 import {
@@ -34,9 +34,15 @@ import { Modal } from "antd";
 import CreatePost from "../createPost/CreatePost";
 import ProposalItemLoader from "../proposals/proposalItemLoader";
 import FollowListLoader from "../common/loaders/followList";
+import { CreateCommunityModal } from "../sidebar/CreateCommunityModal";
+
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
+
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [isEditCommunityOpen, setIsEditCommunityOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -46,6 +52,17 @@ export default function CommunityHead() {
     fetchCommunityByCname,
     communityId
   );
+
+  const refetchRoute = (state: RootState) => state?.common.refetch.user;
+  const [{ dispatch, actions }, [refetchUser]] = useRedux([refetchRoute]);
+
+  useEffect(() => {
+    if (refetchUser == true) {
+      refetch();
+      dispatch(actions.resetRefetch());
+    }
+  }, [refetchUser]);
+
   console.log("isLoading", isLoading);
   const tabsList = useMemo(() => {
     const baseTabs = [
@@ -139,12 +156,17 @@ export default function CommunityHead() {
 
   const handleCancel = () => {
     setIsPostModalOpen(false);
+    setIsEditCommunityOpen(false);
   };
 
   const handleCreatePost = () => {
     // TODO: Show create post with current community
     console.log("CREATE_POST");
     setIsPostModalOpen(true);
+  };
+
+  const handleEditCommunityCallBack = () => {
+    refetch();
   };
 
   return (
@@ -202,6 +224,12 @@ export default function CommunityHead() {
 
                 <div className='social_bx'>
                   <CommunityFollowButton communityData={data} />
+                  {/* <CButton
+                    className='edit_comunity'
+                    onClick={() => setIsEditCommunityOpen(true)}
+                  >
+                    Edit
+                  </CButton> */}
                   <div className='socials'>
                     <div className='disabled'>
                       <DiscordIcon />
@@ -289,6 +317,13 @@ export default function CommunityHead() {
           />
         )}
       </Modal>
+
+      <CreateCommunityModal
+        isModalOpen={isEditCommunityOpen}
+        onClose={handleCancel}
+        refetchCommunities={handleEditCommunityCallBack}
+        defaultCommunity={data}
+      />
     </>
   );
 }

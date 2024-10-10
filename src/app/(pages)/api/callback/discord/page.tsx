@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import fetchDiscordData from "@/services/api/fetchDiscord";
 import { useRouter, useSearchParams } from "next/navigation";
-import { updateUser } from "@/services/api/api";
+import { updateUser } from "@/services/api/userApi";
 import NotificationMessage from "@/components/common/Notification";
 const discord = () => {
   const router = useRouter();

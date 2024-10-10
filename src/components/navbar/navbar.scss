@@ -553,6 +553,9 @@
   flex-direction: column;
   gap: 10px;
   margin-top: 1.3rem;
+  .accordion_bx {
+    margin-top: 10px;
+  }
   .ant-collapse {
     border: 1px solid var(--tertiary-bg);
     border-radius: 12px;
@@ -562,7 +565,7 @@
     .ant-collapse-item {
       .ant-collapse-header {
         .ant-collapse-expand-icon {
-          display: none;
+          color: var(--black);
         }
         .ant-collapse-header-text {
           color: var(--black);

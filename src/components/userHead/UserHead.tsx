@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import useAsync from "@/hooks/useAsync";
-import { fetchUser } from "@/services/api/api";
+import { fetchUser } from "@/services/api/userApi";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import "./userhead.scss";
 // import UandCHeadLoader from "../common/loaders/UandCHead";
@@ -17,6 +17,12 @@ import { DiscordIcon, TelegramIcon, TwitterIcon } from "@/assets/icons";
 import { getImageSource, numberWithCommas } from "@/utils/helpers";
 import UserFollowButton from "../FollowBtn/userFollowbtn";
 import FollowListLoader from "../common/loaders/followList";
+
+import { Tooltip } from "antd";
+import Link from "next/link";
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
+
 export default function UserHead() {
   const { userId: id } = useParams<{ userId: string }>();
   const router = useRouter();
@@ -24,7 +30,18 @@ export default function UserHead() {
   const searchParams = useSearchParams();
   const pathArray = pathname.split("/");
   const userId = id || pathArray[pathArray.length - 1];
-  const { isLoading, data } = useAsync(fetchUser, userId || id);
+
+  const { isLoading, data, refetch } = useAsync(fetchUser, userId || id);
+
+  const refetchRoute = (state: RootState) => state?.common.refetch.user;
+  const [{ dispatch, actions }, [refetchUser]] = useRedux([refetchRoute]);
+
+  useEffect(() => {
+    if (refetchUser == true) {
+      refetch();
+      dispatch(actions.resetRefetch());
+    }
+  }, [refetchUser]);
 
   const tabsList = useMemo(() => {
     const baseTabs = [
@@ -83,6 +100,10 @@ export default function UserHead() {
     },
     [pathname, router, searchParams, tabsList]
   );
+
+  const discordConnected = data?.discord?.id;
+  const telegramConnected = data?.telegram?.id;
+  const twitterConnected = data?.x?.id;
 
   // const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
   //   e.currentTarget.src =
@@ -154,19 +175,66 @@ export default function UserHead() {
                 <div className='social_bx'>
                   <UserFollowButton userData={data} />
                   <div className='socials'>
-                    <div className='disabled'>
-                      <DiscordIcon />
-                    </div>
-                    <div className='disabled'>
-                      <TelegramIcon />
-                    </div>
-                    <div className='disabled'>
-                      <TwitterIcon />
-                    </div>
+                    <Tooltip
+                      title={
+                        discordConnected
+                          ? `Connected: ${data.discord.username}`
+                          : "Not connected"
+                      }
+                    >
+                      <div
+                        className={discordConnected ? "enabled" : "disabled"}
+                      >
+                        {discordConnected ? (
+                          <Link
+                            href={`https://discord.com/users/${data.discord.id}`}
+                            target='_blank'
+                          >
+                            <DiscordIcon />
+                          </Link>
+                        ) : (
+                          <DiscordIcon />
+                        )}
+                      </div>
+                    </Tooltip>
+                    <Tooltip
+                      title={
+                        telegramConnected
+                          ? `Connected: ${data.telegram.username}`
+                          : "Not connected"
+                      }
+                    >
+                      <div
+                        className={telegramConnected ? "enabled" : "disabled"}
+                      >
+                        {telegramConnected ? (
+                          <Link
+                            href={`https://t.me/${data.telegram.username}`}
+                            target='_blank'
+                          >
+                            <TelegramIcon />
+                          </Link>
+                        ) : (
+                          <TelegramIcon />
+                        )}
+                      </div>
+                    </Tooltip>
+                    <Tooltip
+                      title={
+                        twitterConnected
+                          ? `Connected: ${data.x.username}`
+                          : "Not connected"
+                      }
+                    >
+                      <div
+                        className={twitterConnected ? "enabled" : "disabled"}
+                      >
+                        <TwitterIcon />
+                      </div>
+                    </Tooltip>
                   </div>
                 </div>
               </div>
-              {/* TODO: add disabled class as per social link availablity */}
             </div>
           </div>
         )}
