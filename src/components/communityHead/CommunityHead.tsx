@@ -224,12 +224,12 @@ export default function CommunityHead() {
 
                 <div className='social_bx'>
                   <CommunityFollowButton communityData={data} />
-                  <CButton
+                  {/* <CButton
                     className='edit_comunity'
                     onClick={() => setIsEditCommunityOpen(true)}
                   >
                     Edit
-                  </CButton>
+                  </CButton> */}
                   <div className='socials'>
                     <div className='disabled'>
                       <DiscordIcon />
