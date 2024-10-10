@@ -72,14 +72,14 @@ export default function UHead({
           as={`/u/${user?.username}`}
           className='user_name'
         >
-          {user?.username}
+          {user?.username} &nbsp;
         </Link>
         <Link
           href={`c/${community?.username}`}
           as={`/c/${community?.username}`}
           className='community_name'
         >
-          {community?.username}
+          {community?.username} &nbsp;
         </Link>
       </div>
       <p className='post_time'>&bull; {timeAgo(time)}</p>
