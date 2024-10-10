@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef, memo } from "react";
 import dynamic from "next/dynamic";
 import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
-import { Spin } from "antd";
 import {
   MdDeleteOutline,
   MdEmojiEmotions,
@@ -27,7 +26,7 @@ import TurndownService from "turndown";
 import { BackIcon, LinkIcon } from "@/assets/icons";
 import FocusableDiv from "../common/focusableDiv";
 
-import { getPosts, patchPost } from "@/services/api/postApi";
+import { patchPost, getPostsByuName } from "@/services/api/postApi";
 import { IPost } from "@/utils/types/types";
 import PostLoader from "./postLoader";
 import MarkdownRenderer from "../common/MarkDownRender";
@@ -116,6 +115,7 @@ export const FileInput: React.FC<FileInputProps> = React.memo(
 FileInput.displayName = "FileInput";
 
 const userNameSelector = (state: RootState) => state?.user;
+const refetchPost = (state: RootState) => state.common.refetch.post;
 const refetchCommunitySelector = (state: RootState) =>
   state.common.refetch.community;
 
@@ -125,10 +125,8 @@ const CreatePost: React.FC<Props> = ({
   defaultCommunity,
   editPost,
 }) => {
-  const [{ dispatch, actions }, [user, comminityRefetch]] = useRedux([
-    userNameSelector,
-    refetchCommunitySelector,
-  ]);
+  const [{ dispatch, actions }, [user, comminityRefetch, postRefetch]] =
+    useRedux([userNameSelector, refetchCommunitySelector, refetchPost]);
 
   const {
     isLoading,
@@ -136,6 +134,7 @@ const CreatePost: React.FC<Props> = ({
     refetch,
   } = useAsync(fetchCommunities);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
+  const [isLoadingDraftPost, setIsLoadingDraftPost] = useState(false);
   const [isDisabled, setISDisabled] = useState(false);
   const [pics, setPics] = useState<File[]>([]);
   const [uploadedImg, setUploadedImg] = useState<File[]>([]);
@@ -147,23 +146,27 @@ const CreatePost: React.FC<Props> = ({
   const [isDraft, setIsDraft] = useState(false);
   const [post, setPost] = useState<IPost>();
 
+  const turndownService = new TurndownService();
+  const markDownContent = turndownService.turndown(content);
+
   const [uploadingSkeletons, setUploadingSkeletons] = useState<number[]>([]);
+
   const {
-    isLoading: isLoadingPostData,
-    data: posts,
-    refetch: refetchPost,
-  } = useAsync(getPosts, { sortby: "pCount" });
+    isLoading: isLoadingUserPost,
+    data: userPosts,
+    refetch: refetchUserPost,
+  } = useAsync(getPostsByuName, { nameId: user.username, sortby: "time" });
 
   const [isEditingPost, setIsEditingPost] = useState(false);
 
-  const draftPosts = posts?.filter((post: IPost) => post.sts === "draft") || [];
-
+  const draftPosts =
+    userPosts?.filter((post: IPost) => post.sts === "draft") || [];
   // add pagination for draft posts
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 4;
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = draftPosts?.slice(indexOfFirstPost, indexOfLastPost);
+  const draftData = draftPosts?.slice(indexOfFirstPost, indexOfLastPost);
 
   const handlePaginationChange = (page: number) => {
     setCurrentPage(page);
@@ -177,27 +180,31 @@ const CreatePost: React.FC<Props> = ({
     console.log("handlePost", selectedOption, defaultCommunity);
 
     try {
-      setIsLoadingPost(true);
+      if (postStatus === "draft") {
+        setIsLoadingDraftPost(true);
+      } else {
+        setIsLoadingPost(true);
+      }
+
       const data = {
         cid: selectedOption?.id || defaultCommunity?.id,
         text: markDownContent,
         media: uploadedImg.length > 0 ? uploadedImg : null,
         sts: postStatus,
       };
-      console.log("data", data);
+
       // await createPost(data);
       if (isEditingPost && post?.id) {
         // If editing an existing post, update it
-        console.log("data draft", data);
         await patchPost(post?.id, data);
         NotificationMessage("success", `Post ${postStatus} successfully`);
-        // NotificationMessage("success", "Post published successfully");
+        refetchUserPost();
       } else {
         // Otherwise, create a new post
         await createPost(data);
         NotificationMessage("success", "Post Created Succesfuly");
       }
-
+      setIsLoadingDraftPost(false);
       setIsLoadingPost(false);
       setIsPostModalOpen(false);
       dispatch(actions.setRefetchPost(true));
@@ -253,6 +260,14 @@ const CreatePost: React.FC<Props> = ({
       setUploadingSkeletons([]);
     }
   };
+
+  useEffect(() => {
+    if (postRefetch == true) {
+      refetchUserPost();
+      dispatch(actions.resetRefetch());
+    }
+  }, [postRefetch]);
+
   useEffect(() => {
     closeBtn?.addEventListener("click", () => {
       console.log("close");
@@ -290,21 +305,13 @@ const CreatePost: React.FC<Props> = ({
     }
   }, [defaultCommunity]);
 
-  // useEffect(() => {
-  //   console.log("post created new");
-  //   refetchPost;
-  // }, [posts]);
+  const isFormValid = () => {
+    const isFilled = markDownContent?.trim() !== "" && selectedOption !== null;
 
-  useEffect(() => {
-    if (!content && !selectedOption) {
-      setISDisabled(true);
-    } else {
-      setISDisabled(false);
-    }
-  }, [content, selectedOption]);
+    return isFilled;
+  };
 
   const handleEditPost = async (post: any) => {
-    console.log("Editing post:", post);
     setPost(post);
     setIsEditingPost(true); // Enable editing mode
 
@@ -325,9 +332,7 @@ const CreatePost: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    console.log("editPost", "post", editPost);
     if (editPost) {
-      console.log("editPost", editPost);
       handleEditPost(editPost);
     }
   }, [editPost, isPostModalOpen]);
@@ -349,7 +354,6 @@ const CreatePost: React.FC<Props> = ({
         // media: uploadedImg ? uploadedImg : null,
         media: uploadedImg.length > 0 ? uploadedImg : null,
       };
-      console.log("data", data);
       if (post?.id) {
         await patchPost(post?.id, data);
         setIsLoadingPost(false);
@@ -425,17 +429,17 @@ const CreatePost: React.FC<Props> = ({
 
       {isDraft ? (
         <section className='draft_posts_section'>
-          {isLoadingPostData ? (
+          {isLoadingUserPost ? (
             <>
-              {Array(5)
+              {Array(4)
                 .fill(() => 0)
                 .map((_: any, i: number) => (
                   <PostLoader key={i} />
                 ))}
             </>
-          ) : (
+          ) : draftData?.length > 0 ? (
             <section>
-              {currentPosts?.map((post: IPost) => (
+              {draftData?.map((post: IPost) => (
                 <article
                   className='draft_post'
                   key={post?.id}
@@ -474,12 +478,20 @@ const CreatePost: React.FC<Props> = ({
               <div className='drft_pagination'>
                 <Pagination
                   current={currentPage}
-                  total={posts?.length}
+                  total={draftData?.length}
                   pageSize={postsPerPage}
                   onChange={handlePaginationChange}
                 />
               </div>
             </section>
+          ) : (
+            <div className='no_draft_posts'>
+              <h2>Save drafts to post when you re ready</h2>
+              <p>
+                When you save a draft, it will show up here so you can edit and
+                post it whenever you'd like.
+              </p>
+            </div>
           )}
         </section>
       ) : (
@@ -564,7 +576,7 @@ const CreatePost: React.FC<Props> = ({
             <div className='media'>
               <CButton
                 loading={isLoadingPost}
-                disabled={isDisabled}
+                disabled={!isFormValid()}
                 onClick={handleUpdatePost}
                 className='create_btn'
               >
@@ -574,8 +586,8 @@ const CreatePost: React.FC<Props> = ({
           ) : (
             <div className='media'>
               <CButton
-                loading={isLoadingPostData}
-                disabled={isDisabled}
+                loading={isLoadingDraftPost}
+                disabled={!isFormValid()}
                 onClick={() => handlePost("draft")}
                 className='create_btn'
               >
@@ -583,7 +595,7 @@ const CreatePost: React.FC<Props> = ({
               </CButton>
               <CButton
                 loading={isLoadingPost}
-                disabled={isDisabled}
+                disabled={!isFormValid()}
                 onClick={() => handlePost("published")}
                 className='create_btn'
               >

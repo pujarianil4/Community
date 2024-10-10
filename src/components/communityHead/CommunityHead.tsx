@@ -35,6 +35,10 @@ import CreatePost from "../createPost/CreatePost";
 import ProposalItemLoader from "../proposals/proposalItemLoader";
 import FollowListLoader from "../common/loaders/followList";
 import { CreateCommunityModal } from "../sidebar/CreateCommunityModal";
+
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
+
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
@@ -48,6 +52,17 @@ export default function CommunityHead() {
     fetchCommunityByCname,
     communityId
   );
+
+  const refetchRoute = (state: RootState) => state?.common.refetch.user;
+  const [{ dispatch, actions }, [refetchUser]] = useRedux([refetchRoute]);
+
+  useEffect(() => {
+    if (refetchUser == true) {
+      refetch();
+      dispatch(actions.resetRefetch());
+    }
+  }, [refetchUser]);
+
   console.log("isLoading", isLoading);
   const tabsList = useMemo(() => {
     const baseTabs = [
