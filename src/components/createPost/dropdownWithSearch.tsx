@@ -41,13 +41,13 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
     const value = e.target.value;
     setSearchTerm(value);
     setVisible(true);
+    if (value === "") {
+      onSelect(null);
+    }
   };
 
   const handleFocus = () => {
     setVisible(true);
-    if (selected) {
-      setSearchTerm(""); // Clear the search term when focusing on the input again
-    }
   };
 
   const handleBlur = () => {
