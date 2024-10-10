@@ -1,0 +1,10 @@
+@import "/src/styles";
+.virtuoso_grid_list {
+  width: 100%;
+  .virtuoso-grid-item {
+    width: 100%;
+    .card_container {
+      width: 100%;
+    }
+  }
+}

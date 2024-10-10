@@ -7,6 +7,8 @@ import Communities from "./communitiesList";
 import User from "./userList";
 import SearchComments from "./comments";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import useAsync from "@/hooks/useAsync";
+import { fetchSearchData } from "@/services/api/api";
 
 interface IProps {
   params?: any;
@@ -17,6 +19,19 @@ export default function SearchPageComponent({ isComment = true }: IProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("q");
+  // const { isLoading, data: searchData } = useAsync(fetchSearchData, {
+  //   search: searchQuery,
+  //   page: 1,
+  //   limit: 10,
+  // });
+  // const [searchKey, setSearchKey] = useState<string>(searchQuery || "");
+  // console.log("SEARCH_KEY", { searchQuery }, { searchKey });
+
+  // useEffect(() => {
+  //   if (searchQuery) setSearchKey(searchQuery);
+  // }, [searchQuery]);
+
   const tabsList = useMemo(() => {
     const baseTabs = [
       {
@@ -24,22 +39,31 @@ export default function SearchPageComponent({ isComment = true }: IProps) {
         label: "Posts",
         content: <Posts />,
       },
-      {
-        key: "2",
-        label: "Communities",
-        content: <Communities />,
-      },
+      // {
+      //   key: "2",
+      //   label: "Communities",
+      //   // content: <Communities communitiesData={searchData?.communities} />,
+      //   content: <Communities />,
+      // },
     ];
 
     if (isComment) {
       baseTabs.push({
+        key: "2",
+        label: "Communities",
+        // content: <Communities communitiesData={searchData?.communities} />,
+        content: <Communities />,
+      });
+      baseTabs.push({
         key: "3",
         label: "Comments",
+        // content: <SearchComments commentsData={searchData?.comments} />,
         content: <SearchComments />,
       });
       baseTabs.push({
         key: "4",
         label: "User",
+        // content: <User usersData={searchData?.users} />,
         content: <User />,
       });
     }
