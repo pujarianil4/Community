@@ -7,10 +7,7 @@ import EmptyData from "@/components/common/Empty";
 import { IComment } from "@/utils/types/types";
 import { useSearchParams } from "next/navigation";
 import useAsync from "@/hooks/useAsync";
-import {
-  fetchSearchByCommentData,
-  fetchSearchByUserData,
-} from "@/services/api/api";
+import { fetchSearchByCommentData } from "@/services/api/searchApi";
 import NotificationMessage from "@/components/common/Notification";
 import VirtualList from "@/components/common/virtualList";
 

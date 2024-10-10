@@ -8,7 +8,7 @@ import User from "./userList";
 import SearchComments from "./comments";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useAsync from "@/hooks/useAsync";
-import { fetchSearchData } from "@/services/api/api";
+import { fetchSearchData } from "@/services/api/searchApi";
 
 interface IProps {
   params?: any;

@@ -8,7 +8,7 @@ import {
   fetchCommunitySearchByPostData,
   fetchSearchByPostData,
   fetchUserSearchByPostData,
-} from "@/services/api/api";
+} from "@/services/api/searchApi";
 import SearchPostItem from "./post";
 import { IPost } from "@/utils/types/types";
 import PostLoader from "./postLoader";

@@ -43,7 +43,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import useAsync from "@/hooks/useAsync";
-import { fetchSearchByCommunityData } from "@/services/api/api";
+import { fetchSearchByCommunityData } from "@/services/api/searchApi";
 import { ICommunity } from "@/utils/types/types";
 import { useSearchParams } from "next/navigation";
 import VirtualList from "@/components/common/virtualList";

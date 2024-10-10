@@ -11,7 +11,7 @@ import React, {
 import { IoSearch } from "react-icons/io5";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useAsync from "@/hooks/useAsync";
-import { fetchSearchData } from "@/services/api/api";
+import { fetchSearchData } from "@/services/api/searchApi";
 import { ICommunity, IPost, IUser } from "@/utils/types/types";
 import Image from "next/image";
 import { debounce, getImageSource, numberWithCommas } from "@/utils/helpers";

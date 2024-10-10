@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import "./index.scss";
 import useAsync from "@/hooks/useAsync";
-import { fetchSearchByUserData } from "@/services/api/api";
+import { fetchSearchByUserData } from "@/services/api/searchApi";
 import { IUser } from "@/utils/types/types";
 import { useSearchParams } from "next/navigation";
 import EmptyData from "../common/Empty";
