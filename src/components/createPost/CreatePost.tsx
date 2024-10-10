@@ -177,6 +177,8 @@ const CreatePost: React.FC<Props> = ({
   const handlePost = async (postStatus: "draft" | "published") => {
     const turndownService = new TurndownService();
     const markDownContent = turndownService.turndown(content);
+    console.log("handlePost", selectedOption, defaultCommunity);
+
     try {
       if (postStatus === "draft") {
         setIsLoadingDraftPost(true);
@@ -185,7 +187,7 @@ const CreatePost: React.FC<Props> = ({
       }
 
       const data = {
-        cid: selectedOption?.id,
+        cid: selectedOption?.id || defaultCommunity?.id,
         text: markDownContent,
         media: uploadedImg.length > 0 ? uploadedImg : null,
         sts: postStatus,
@@ -296,6 +298,8 @@ const CreatePost: React.FC<Props> = ({
   }, [comminityRefetch]);
 
   useEffect(() => {
+    console.log("default", defaultCommunity);
+
     if (defaultCommunity?.id) {
       setSelectedOption(defaultCommunity);
     }
@@ -499,7 +503,7 @@ const CreatePost: React.FC<Props> = ({
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               selected={selectedOption}
-              // defaultSearch={defaultCommunity?.username}
+              defaultCommunity={defaultCommunity || editPost?.community}
             />
             <div className='post_editor'>
               <FocusableDiv>

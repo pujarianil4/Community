@@ -15,6 +15,7 @@ import { RootState } from "@/contexts/store";
 import CreatePost from "../createPost/CreatePost";
 import { Modal } from "antd";
 import { deletePost } from "@/services/api/postApi";
+import useRedux from "@/hooks/useRedux";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
   ssr: false,
@@ -41,6 +42,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
     value: Number(up) + Number(down),
     type: "",
   });
+  const [{ dispatch, actions }] = useRedux();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const userInfo = useSelector((state: RootState) => state.user);
@@ -101,6 +103,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
         setIsEditModalOpen(true);
       } else if (data == "delete" && id) {
         await deletePost(id);
+        dispatch(actions.setRefetchPost(true));
       }
     }
   };
