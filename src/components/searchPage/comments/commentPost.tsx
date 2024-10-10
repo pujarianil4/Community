@@ -2,63 +2,35 @@
 import Actions from "@/components/common/actions";
 import MarkdownRenderer from "@/components/common/MarkDownRender";
 import UHead from "@/components/common/uhead";
+import { IComment, ICommunity } from "@/utils/types/types";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-export default function CommentPost() {
+interface IProps {
+  commentData: IComment;
+}
+export default function CommentPost({ commentData }: IProps) {
   const router = useRouter();
-  const post = {
-    id: 1,
-    uid: 1,
-    cid: 1,
-    text: "hello",
-    media: [
-      "https://testcommunity.s3.ap-south-1.amazonaws.com/aa33d3e3-0be5-45f9-9050-78a635d6920b-logo.jpg",
-    ],
-    up: 0,
-    down: 0,
-    ccount: 0,
-    cta: "2024-09-03T07:11:57.009Z",
-    user: {
-      id: 1,
-      username: "anil",
-      name: "anil",
-      img: {
-        pro: "https://testcommunity.s3.ap-south-1.amazonaws.com/338246b4-0d3c-4918-ba38-c0ee03e051c7-PHOTO-2024-07-15-09-41-52.jpg",
-      },
-      pcount: 3,
-      tid: null,
-      did: null,
-      desc: "",
-      sts: 1,
-      fwrs: 1,
-      fwng: 1,
-      netWrth: 4906,
-      cta: "2024-09-03T07:08:52.294Z",
-      uta: "2024-09-03T08:46:48.218Z",
-    },
-    community: {
-      id: 1,
-      username: "Unilend",
-      name: "Unilend",
-      ticker: "UFT",
-      img: {
-        pro: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
-        cvr: "https://testcommunity.s3.amazonaws.com/05b06751-aef7-468b-89b5-02d42e2a1d47-unilend_finance_logo.jpeg",
-      },
-      metadata: "unilend",
-      pCount: 5,
-      followers: 3,
-      tSupply: 0,
-      sts: 1,
-      cta: "2024-09-03T07:09:26.687Z",
-      uta: "2024-09-03T07:09:26.687Z",
-    },
-    comments: [],
+
+  const { id, img, content, up, down, rCount, cta, user, post, community } =
+    commentData;
+  const commentAction = {
+    up,
+    down,
+    id,
+    isVoted: false, // TODO: update after isVoted api update completes.
+    ccount: 1,
+    text: content,
+    media: [img as string],
+    uid: id,
+    cid: id,
+    cta,
+    user,
+    community: community as ICommunity,
   };
 
   const handleRedirectPost = () => {
-    router.push(`/post/${post?.id}`);
+    router.push(`/post/${id}`);
   };
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -69,12 +41,14 @@ export default function CommentPost() {
   };
   return (
     <article onClick={handleClick} className='comment_post_card'>
+      {/* TODO: Change Community data here */}
       <UHead user={post?.user} community={post?.community} time={post?.cta} />
       <MarkdownRenderer markdownContent={post?.text} limit={2} />
       <div className='comment'>
-        <UHead user={post?.user} community={post?.community} time={post?.cta} />
-        <MarkdownRenderer markdownContent={post?.text} limit={2} />
-        <Actions post={post} type='c' />
+        <UHead user={user} community={commentData?.community} time={cta} />
+        <MarkdownRenderer markdownContent={content} limit={2} />
+        {/* TODO: update actions with the comments */}
+        <Actions post={commentAction} type='c' />
       </div>
       <Actions post={post} type='c' />
     </article>
