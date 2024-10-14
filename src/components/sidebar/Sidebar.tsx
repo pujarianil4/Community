@@ -47,6 +47,7 @@ import CHead from "../common/chead";
 import Avatar from "@/components/common/loaders/userAvatar";
 import ProfileAvatar from "@/components/common/loaders/profileAvatar";
 import { CreateCommunityModal } from "./CreateCommunityModal";
+import { getFollowinsByUserId } from "@/services/api/userApi";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -128,7 +129,13 @@ const SideBar: React.FC = () => {
   const [{ dispatch, actions }, [comminityRefetch]] = useRedux([
     refetchCommunitySelector,
   ]);
-  const { isLoading, callFunction, data, refetch } = useAsync(fetchCommunities);
+  const { isLoading, callFunction, data, refetch } = useAsync(
+    getFollowinsByUserId,
+    {
+      userId: 11,
+      type: "c",
+    }
+  );
 
   const router = useRouter();
 
@@ -224,7 +231,7 @@ const SideBar: React.FC = () => {
   const getCommunities = async (cmnties: Array<any>) => {
     const inFormat = cmnties.map((cm: any) => {
       return {
-        key: "c/" + cm.username,
+        key: "c/" + cm.followedCommunity.username,
         label: (
           <>
             {/* <div className='community_item'>
@@ -236,7 +243,7 @@ const SideBar: React.FC = () => {
               />
               <span>{cm?.name}</span>
             </div> */}
-            <CHead community={cm} />
+            <CHead community={cm.followedCommunity} />
           </>
         ),
       };
@@ -247,6 +254,8 @@ const SideBar: React.FC = () => {
 
   const handleCallback = () => {
     refetch();
+    console.log("refectch");
+
     dispatch(actions.setRefetchCommunity(true));
   };
 
@@ -273,6 +282,7 @@ const SideBar: React.FC = () => {
 
   useEffect(() => {
     if (comminityRefetch) {
+      refetch();
       dispatch(actions.setRefetchCommunity(false));
     }
   }, [comminityRefetch]);

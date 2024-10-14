@@ -74,7 +74,6 @@ export interface IComment {
 }
 
 export interface IFollowAPI {
-  uid: number;
   typ: string;
   fwid: number;
 }
