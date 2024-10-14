@@ -236,7 +236,16 @@ export default function UserHead() {
                       <div
                         className={twitterConnected ? "enabled" : "disabled"}
                       >
-                        <TwitterIcon />
+                        {twitterConnected ? (
+                          <Link
+                            href={`https://x.com/${data.x.username}`}
+                            target='_blank'
+                          >
+                            <TwitterIcon />
+                          </Link>
+                        ) : (
+                          <TwitterIcon />
+                        )}
                       </div>
                     </Tooltip>
                   </div>
