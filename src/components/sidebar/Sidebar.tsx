@@ -254,6 +254,8 @@ const SideBar: React.FC = () => {
 
   const handleCallback = () => {
     refetch();
+    console.log("refectch");
+
     dispatch(actions.setRefetchCommunity(true));
   };
 
@@ -280,6 +282,7 @@ const SideBar: React.FC = () => {
 
   useEffect(() => {
     if (comminityRefetch) {
+      refetch();
       dispatch(actions.setRefetchCommunity(false));
     }
   }, [comminityRefetch]);
