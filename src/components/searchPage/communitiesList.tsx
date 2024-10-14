@@ -1,45 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-// "use client";
-// import React, { useState } from "react";
-// // import "./index.scss";
-// import useAsync from "@/hooks/useAsync";
-// import {
-//   fetchCommunities,
-//   fetchSearchByCommunityData,
-// } from "@/services/api/api";
-// import CardList from "@/components/cardList";
-// import { ICommunity } from "@/utils/types/types";
-// import { useSearchParams } from "next/navigation";
-
-// interface IProps {
-//   communitiesData?: ICommunity[];
-// }
-// export default function Communities({ communitiesData }: IProps) {
-//   const searchParams = useSearchParams();
-//   const searchQuery = searchParams.get("q");
-//   const [page, setPage] = useState(1);
-//   const limit = 10;
-
-//   const payload = {
-//     search: searchQuery,
-//     page,
-//     limit,
-//   };
-//   const { isLoading, data, refetch } = useAsync(
-//     fetchSearchByCommunityData,
-//     payload
-//   );
-//   // const { isLoading, data, refetch } = useAsync(fetchCommunities, "followers");
-
-//   return (
-//     <CardList
-//       cardListData={data?.communities as ICommunity[]}
-//       type='c'
-//       isLoading={isLoading}
-//     />
-//   );
-// }
-
 "use client";
 import React, { useEffect, useState } from "react";
 import useAsync from "@/hooks/useAsync";
@@ -120,6 +78,8 @@ export default function Communities() {
             page={page}
             setPage={setPage}
             limit={limit}
+            isGrid={true}
+            itemWidth={200}
             renderComponent={(index: number, community: ICommunity) => (
               <Card key={index} cardData={community as ICommunity} type='c' />
             )}
