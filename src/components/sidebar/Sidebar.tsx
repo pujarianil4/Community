@@ -126,13 +126,15 @@ const SideBar: React.FC = () => {
 
   const refetchCommunitySelector = (state: RootState) =>
     state.common.refetch.community;
-  const [{ dispatch, actions }, [comminityRefetch]] = useRedux([
+  const userSelector = (state: RootState) => state.user;
+  const [{ dispatch, actions }, [comminityRefetch, user]] = useRedux([
     refetchCommunitySelector,
+    userSelector,
   ]);
   const { isLoading, callFunction, data, refetch } = useAsync(
     getFollowinsByUserId,
     {
-      userId: 11,
+      userId: user?.uid,
       type: "c",
     }
   );
