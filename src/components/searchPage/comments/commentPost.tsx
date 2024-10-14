@@ -2,7 +2,7 @@
 import Actions from "@/components/common/actions";
 import MarkdownRenderer from "@/components/common/MarkDownRender";
 import UHead from "@/components/common/uhead";
-import { IComment, ICommunity } from "@/utils/types/types";
+import { IComment, ICommunity, IUser } from "@/utils/types/types";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -12,8 +12,7 @@ interface IProps {
 export default function CommentPost({ commentData }: IProps) {
   const router = useRouter();
 
-  const { id, img, content, up, down, rCount, cta, user, post, community } =
-    commentData;
+  const { id, img, content, up, down, rCount, cta, user, post } = commentData;
   const commentAction = {
     up,
     down,
@@ -26,7 +25,8 @@ export default function CommentPost({ commentData }: IProps) {
     cid: id,
     cta,
     user,
-    community: community as ICommunity,
+    community: post?.community as ICommunity,
+    sts: post?.sts,
   };
 
   const handleRedirectPost = () => {
@@ -42,10 +42,11 @@ export default function CommentPost({ commentData }: IProps) {
   return (
     <article onClick={handleClick} className='comment_post_card'>
       {/* TODO: Change Community data here */}
-      <UHead user={post?.user} community={post?.community} time={post?.cta} />
+      {/* <UHead user={post?.user} community={post?.community} time={post?.cta} /> */}
+      <UHead post={post} />
       <MarkdownRenderer markdownContent={post?.text} limit={2} />
       <div className='comment'>
-        <UHead user={user} community={commentData?.community} time={cta} />
+        <UHead post={commentAction} />
         <MarkdownRenderer markdownContent={content} limit={2} />
         {/* TODO: update actions with the comments */}
         <Actions post={commentAction} type='c' />
