@@ -24,16 +24,6 @@ export default function CommunitiesList() {
     callFunction(fetchCommunities, filter.value);
   };
 
-  // const refetchRoute = (state: RootState) => state?.common.refetch.user;
-  // const [{ dispatch, actions }, [refetchUser]] = useRedux([refetchRoute]);
-
-  // useEffect(() => {
-  //   if (refetchUser == true) {
-  //     refetch();
-  //     dispatch(actions.resetRefetch());
-  //   }
-  // }, [refetchUser]);
-
   return (
     <>
       <CardList

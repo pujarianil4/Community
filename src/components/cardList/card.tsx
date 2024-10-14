@@ -25,7 +25,9 @@ export default function Card({ cardData, type = "u" }: IProps) {
   const [memberCount, setMemberCount] = useState<number>(
     type === "c" ? (cardData as ICommunity)?.followers : 0
   );
-
+  const [userCount, setUserCount] = useState<number>(
+    type === "u" ? (cardData as ICommunity)?.followers : 0
+  );
   const handleRedirect = () => {
     if (type == "c") {
       router.push(`/c/${cardData?.username}`);
@@ -35,6 +37,11 @@ export default function Card({ cardData, type = "u" }: IProps) {
   };
 
   const updateMemberCount = (isFollowed: boolean) => {
+    setMemberCount((prevCount) =>
+      isFollowed ? prevCount + 1 : Math.max(0, prevCount - 1)
+    );
+  };
+  const updateUserCount = (isFollowed: boolean) => {
     setMemberCount((prevCount) =>
       isFollowed ? prevCount + 1 : Math.max(0, prevCount - 1)
     );
@@ -95,6 +102,7 @@ export default function Card({ cardData, type = "u" }: IProps) {
               <UserFollowButton
                 userData={cardData as IUser}
                 // userId={(cardData as IUser).username}
+                onSuccess={(isFollowed) => updateUserCount(isFollowed)}
               />
             </>
           )}

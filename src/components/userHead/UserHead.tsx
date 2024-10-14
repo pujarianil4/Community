@@ -33,15 +33,19 @@ export default function UserHead() {
 
   const { isLoading, data, refetch } = useAsync(fetchUser, userId || id);
 
-  const refetchRoute = (state: RootState) => state?.common.refetch.user;
-  const [{ dispatch, actions }, [refetchUser]] = useRedux([refetchRoute]);
+  const [membersCount, setMembersCount] = useState<number>(0);
 
   useEffect(() => {
-    if (refetchUser == true) {
-      refetch();
-      dispatch(actions.resetRefetch());
+    if (data) {
+      setMembersCount(data.fwrs);
     }
-  }, [refetchUser]);
+  }, [data]);
+
+  const handleMemberCountUpdate = (isFollowed: boolean) => {
+    setMembersCount((prevCount) =>
+      isFollowed ? prevCount + 1 : Math.max(0, prevCount - 1)
+    );
+  };
 
   const tabsList = useMemo(() => {
     const baseTabs = [
@@ -152,7 +156,7 @@ export default function UserHead() {
                 </div>
                 <div className='stats box'>
                   <p>Followers</p>
-                  <h4>{numberWithCommas(data?.fwrs) || "0"}</h4>
+                  <h4>{numberWithCommas(membersCount) || 0}</h4>
                 </div>
                 <div className='stats box'>
                   <p>Following</p>
@@ -173,7 +177,10 @@ export default function UserHead() {
                 </div>
 
                 <div className='social_bx'>
-                  <UserFollowButton userData={data} />
+                  <UserFollowButton
+                    userData={data}
+                    onSuccess={handleMemberCountUpdate}
+                  />
                   <div className='socials'>
                     <Tooltip
                       title={
