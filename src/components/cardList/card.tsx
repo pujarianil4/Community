@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { ICommunity, IUser } from "@/utils/types/types";
 import Image from "next/image";
 import CButton from "@/components/common/Button";
@@ -22,6 +22,10 @@ type IProps = ICommunityCardProps | IUserCardProps;
 export default function Card({ cardData, type = "u" }: IProps) {
   const router = useRouter();
 
+  const [memberCount, setMemberCount] = useState<number>(
+    type === "c" ? (cardData as ICommunity)?.followers : 0
+  );
+
   const handleRedirect = () => {
     if (type == "c") {
       router.push(`/c/${cardData?.username}`);
@@ -29,6 +33,13 @@ export default function Card({ cardData, type = "u" }: IProps) {
       router.push(`/u/${cardData?.username}`);
     }
   };
+
+  const updateMemberCount = (isFollowed: boolean) => {
+    setMemberCount((prevCount) =>
+      isFollowed ? prevCount + 1 : Math.max(0, prevCount - 1)
+    );
+  };
+
   return (
     <section className='card_container' onClick={handleRedirect}>
       <div className='photo_section'>
@@ -68,10 +79,15 @@ export default function Card({ cardData, type = "u" }: IProps) {
           {type === "c" ? (
             <>
               <p>
-                {numberWithCommas((cardData as ICommunity)?.followers) || 0}
+                {numberWithCommas(memberCount || 0)}
+                {/* {numberWithCommas((cardData as ICommunity)?.followers) || 0} */}
                 &nbsp; Members <br /> <span>569 Online</span>
               </p>
-              <CommunityFollowButton communityData={cardData as ICommunity} />
+
+              <CommunityFollowButton
+                communityData={cardData as ICommunity}
+                onSuccess={(isFollowed) => updateMemberCount(isFollowed)}
+              />
             </>
           ) : (
             <>
