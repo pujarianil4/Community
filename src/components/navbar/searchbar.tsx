@@ -16,6 +16,8 @@ import { ICommunity, IPost, IUser } from "@/utils/types/types";
 import Image from "next/image";
 import { debounce, getImageSource, numberWithCommas } from "@/utils/helpers";
 import { CloseIcon } from "@/assets/icons";
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
 
 interface IPagination {
   currentPage: number;
@@ -78,16 +80,16 @@ const Searchbar = memo(() => {
     },
   };
 
-  const isCommunity = false;
-  // TODO update community
-  // const community = "TestCommunity";
+  const commonSelector = (state: RootState) => state?.common?.navbarSearch;
+  const [{ dispatch, actions }, [navSearch]] = useRedux([commonSelector]);
   const [searchVal, setSearchVal] = useState<string>("");
   const [suggestions, setSuggestions] =
     useState<ISuggestions>(initialSuggetion);
   const [selectedData, setSelectedData] = useState<ICommunity[] | IUser[]>([]); // TODO add condition to remove the data
-  const [selectionType, setSelectionType] = useState<"u" | "c" | null>(null);
-  console.log("selectedData", selectedData);
-  console.log("selectionType", selectionType);
+  const [selectionType, setSelectionType] = useState<"u" | "c" | null>(
+    navSearch?.pill?.type
+  );
+  const [pill, setPill] = useState(navSearch?.pill);
   const [focused, setFocused] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -97,54 +99,65 @@ const Searchbar = memo(() => {
     limit: 10,
   };
 
-  const {
-    isLoading,
-    data: searchData,
-    callFunction,
-  } = useAsync(fetchSearchData, searchPayload);
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchVal(event.target.value);
-  };
+  const { data: searchData, callFunction } = useAsync(
+    fetchSearchData,
+    searchPayload
+  );
 
-  // const debouncedHandleChange = useCallback(
-  //   debounce((event: React.ChangeEvent<HTMLInputElement>) => {
-  //     setSearchVal(event.target.value);
-  //   }, 300),
-  //   []
-  // );
+  const debouncedHandleChange = useCallback(
+    debounce((value: string) => {
+      setSearchVal(value);
+    }, 300),
+    []
+  );
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    debouncedHandleChange(event.target.value);
+  };
 
   const handleSelect = (data: ICommunity | IUser, type: "u" | "c") => {
     setSelectedData([...selectedData, data]);
     setSelectionType(type);
-    // console.log("PATH_", `/${type === "c" ? "c" : "u"}/${data?.username}`);
-    // router.push(`/${type === "c" ? "c" : "u"}/${data?.username}`);
-    console.log("COMMUNIYT", selectedData, data);
-    // setSelectedUserSet(new Set([...selectedUserSet, user.email]));
+    const searchData = {
+      searchVal: "",
+      pill: {
+        img: data?.img?.pro,
+        label: data?.username,
+        type,
+      },
+    };
+    dispatch(actions.setNavbarSearch(searchData));
+    router.push(`/${type === "c" ? "c" : "u"}/${data?.username}`);
     setSearchVal("");
     setSuggestions(initialSuggetion);
     inputRef?.current?.focus();
   };
 
-  const handleRemoveSearch = (data: ICommunity | IUser) => {
-    const updatedVal = selectedData?.filter((item) => item.id !== data.id);
-    setSelectedData(updatedVal);
+  const handleRemoveSearch = () => {
+    // const updatedVal = selectedData?.filter((item) => item.id !== data.id); // Required if multiple select
+    setSelectedData([]);
+    const searchData = {
+      searchVal: "",
+      pill: {
+        img: "",
+        label: "",
+        type: null,
+      },
+    };
+    dispatch(actions.setNavbarSearch(searchData));
   };
 
-  const handleSearchVal = (val: string) => {
+  const handleSearchVal = () => {
     const type = searchParams.get("type"); // Get the current type
     let searchUrl = `/search?q=${encodeURIComponent(searchVal)}`;
+    const username = pill?.label || selectedData[0]?.username;
 
-    if (selectionType === "c" && selectedData[0]?.username) {
-      searchUrl = `/c/${
-        selectedData[0]?.username
-      }/search?q=${encodeURIComponent(searchVal)}`;
-    } else if (selectionType === "u" && selectedData[0]?.username) {
-      searchUrl = `/u/${
-        selectedData[0]?.username
-      }/search?q=${encodeURIComponent(searchVal)}`;
+    if (selectionType === "c" && username) {
+      searchUrl = `/c/${username}/search?q=${encodeURIComponent(searchVal)}`;
+    } else if (selectionType === "u" && username) {
+      searchUrl = `/u/${username}/search?q=${encodeURIComponent(searchVal)}`;
     }
-
-    if (!selectedData[0]?.username) {
+    if (!username) {
       setSelectionType(null);
     }
 
@@ -158,45 +171,26 @@ const Searchbar = memo(() => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement;
     if (event.key === "Enter") {
-      if (isCommunity) {
-        router.push(
-          `/c/${selectedData[0]?.username}/search?q=${encodeURIComponent(
-            searchVal
-          )}`
-        );
-      } else {
-        router.push(`/search?q=${encodeURIComponent(searchVal)}`);
-      }
+      handleSearchVal();
     } else if (
       event.key === "Backspace" &&
       target?.value === "" &&
-      selectedData?.length > 0
+      (selectedData?.length > 0 || pill?.img)
     ) {
-      const lastSelect = selectedData[selectedData.length - 1];
-      handleRemoveSearch(lastSelect);
+      // const lastSelect = selectedData[selectedData.length - 1]; // Required if multiple select
+      handleRemoveSearch();
       setSuggestions(initialSuggetion);
+      setPill({ img: "", label: "" });
     }
   };
 
   const handleFocus = () => setFocused(true);
   // const handleBlur = () => setFocused(false);
 
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (
-  //       suggestionsRef.current &&
-  //       !suggestionsRef?.current.contains(event?.target as Node)
-  //     ) {
-  //       setFocused(false);
-  //     }
-  //   };
-
-  //   document.addEventListener("mousedown", handleClickOutside);
-
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
+  useEffect(() => {
+    setPill(navSearch?.pill);
+    setSelectionType(navSearch?.pill?.type);
+  }, [navSearch]);
 
   useEffect(() => {
     if (searchVal.length > 2) {
@@ -220,18 +214,17 @@ const Searchbar = memo(() => {
   return (
     <div className='search_container'>
       <div className='search_input'>
-        {selectedData.length > 0 && (
-          <div
-            className='user_pill'
-            onClick={() => handleRemoveSearch(selectedData[0])}
-          >
+        {(selectedData.length > 0 || pill?.img) && (
+          <div className='user_pill' onClick={() => handleRemoveSearch()}>
             <Image
-              src={selectedData[0]?.img?.pro}
-              alt={selectedData[0]?.username}
+              src={pill?.img ? pill?.img : selectedData[0]?.img?.pro}
+              alt={pill?.label ? pill?.label : selectedData[0]?.username}
               width={24}
               height={24}
             />
-            <span>{selectedData[0]?.username} &times;</span>
+            <span>
+              {pill?.label ? pill?.label : selectedData[0]?.username} &times;
+            </span>
           </div>
         )}
 
@@ -257,10 +250,7 @@ const Searchbar = memo(() => {
       </div>
       {focused && searchVal && (
         <>
-          <li
-            className='search_Suggestion'
-            onClick={() => handleSearchVal(searchVal)}
-          >
+          <li className='search_Suggestion' onClick={() => handleSearchVal()}>
             <IoSearch />
             <span>{`Search For "${searchVal}"`}</span>
           </li>
