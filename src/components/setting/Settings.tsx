@@ -8,6 +8,7 @@ import Profile from "./Profile/Profile";
 import "./index.scss";
 import { useRouter } from "next/navigation";
 import { usePathname, useSearchParams } from "next/navigation";
+import ProposalVotes from "./ProposalVotes";
 
 function Setting() {
   const router = useRouter();
@@ -25,6 +26,11 @@ function Setting() {
         label: "Profile",
         content: <Profile />,
         key: "2",
+      },
+      {
+        label: "ProposalVotes",
+        content: <ProposalVotes />,
+        key: "3",
       },
       // Uncomment the following tabs if needed
       // {
