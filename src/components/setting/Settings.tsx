@@ -52,30 +52,42 @@ function Setting() {
     []
   );
 
-  const [activeTab, setActiveTab] = useState(tabsList[0].key);
+  const labelToKeyMap = Object.fromEntries(
+    tabsList.map((tab) => [tab.label.toLocaleLowerCase(), tab.key])
+  );
+  const initialLabel =
+    searchParams.get("type")?.toLocaleLowerCase() || "account";
+  const [activeType, setActiveType] = useState(
+    labelToKeyMap[initialLabel] || "1"
+  );
 
   useEffect(() => {
-    const currentTab = searchParams.get("tab");
-    if (currentTab && tabsList.some((tab) => tab.key === currentTab)) {
-      setActiveTab(currentTab);
+    const currentLabel = searchParams.get("type")?.toLocaleLowerCase();
+    if (currentLabel && labelToKeyMap[currentLabel]) {
+      setActiveType(labelToKeyMap[currentLabel]);
     } else {
-      router.replace(`${pathname}?tab=1`);
+      router.replace(`${pathname}?type=account`);
     }
-  }, [searchParams, pathname, router, tabsList]);
+  }, [searchParams, pathname, router, labelToKeyMap]);
 
   const handleTabChange = useCallback(
     (key: string) => {
-      setActiveTab(key);
-      router.push(`${pathname}?tab=${key}`);
+      const selectedLabel = tabsList
+        .find((tab) => tab.key === key)
+        ?.label.toLocaleLowerCase();
+      setActiveType(key);
+      if (selectedLabel) {
+        router.push(`${pathname}?type=${encodeURIComponent(selectedLabel)}`);
+      }
     },
-    [pathname, router]
+    [pathname, router, searchParams, tabsList]
   );
 
   return (
     <div className='setting_bx'>
       <h1>Settings</h1>
       <CTabs
-        activeKey={activeTab}
+        activeKey={activeType}
         defaultActiveKey='1'
         items={tabsList}
         onChange={handleTabChange}

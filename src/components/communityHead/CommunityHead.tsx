@@ -53,15 +53,19 @@ export default function CommunityHead() {
     communityId
   );
 
-  const refetchRoute = (state: RootState) => state?.common.refetch.user;
-  const [{ dispatch, actions }, [refetchUser]] = useRedux([refetchRoute]);
+  const [membersCount, setMembersCount] = useState<number>(0);
 
   useEffect(() => {
-    if (refetchUser == true) {
-      refetch();
-      dispatch(actions.resetRefetch());
+    if (data) {
+      setMembersCount(data.followers);
     }
-  }, [refetchUser]);
+  }, [data]);
+
+  const handleMemberCountUpdate = (isFollowed: boolean) => {
+    setMembersCount((prevCount) =>
+      isFollowed ? prevCount + 1 : Math.max(0, prevCount - 1)
+    );
+  };
 
   console.log("isLoading", isLoading);
   const tabsList = useMemo(() => {
@@ -202,7 +206,7 @@ export default function CommunityHead() {
                 </div>
                 <div className='stats box'>
                   <p>Members</p>
-                  <h4>{numberWithCommas(data?.followers) || 0}</h4>
+                  <h4>{numberWithCommas(membersCount) || 0}</h4>
                 </div>
                 {/* <div className='stats box'>
                   <p>Following</p>
@@ -223,7 +227,11 @@ export default function CommunityHead() {
                 </div>
 
                 <div className='social_bx'>
-                  <CommunityFollowButton communityData={data} />
+                  <CommunityFollowButton
+                    communityData={data}
+                    onSuccess={handleMemberCountUpdate}
+                  />
+
                   {/* <CButton
                     className='edit_comunity'
                     onClick={() => setIsEditCommunityOpen(true)}

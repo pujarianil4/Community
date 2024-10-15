@@ -109,7 +109,7 @@ export default function Actions({
             onClick={() => handleVote("down")}
             size={18}
           />
-          <span> {vote.value}</span>
+          {/* <span> {vote.value}</span> */}
         </span>
       </div>
       <Link href={`post/${id}`} as={`/post/${id}`}>

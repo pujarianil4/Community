@@ -84,9 +84,13 @@
               height: 45px;
             }
           }
+
           @include lessThan(md) {
             width: 45px;
             height: 45px;
+          }
+          @include lessThan(sm) {
+            width: 40px;
           }
         }
         h4 {
@@ -95,8 +99,14 @@
           overflow: hidden;
           text-overflow: ellipsis;
           font-weight: $font-weight-semi-bold;
+          @include lessThan(xl) {
+            font-size: $font-size-xsm;
+          }
           @include lessThan(md) {
-            font-size: $font-size-sm;
+            font-size: $font-size-xsm;
+          }
+          @include lessThan(sm) {
+            font-size: 11px;
           }
         }
 
@@ -121,15 +131,22 @@
           font-size: $font-size-xsm;
           color: var(--primary-text);
           margin-bottom: 4px;
-          @include lessThan(md) {
+          @include lessThan(xl) {
             font-size: $font-size-xxsm;
+          }
+          @include lessThan(sm) {
+            font-size: $font-size-xxxsm;
           }
         }
         h4 {
           font-size: 16px;
           color: var(--primary-text);
-          @include lessThan(md) {
-            font-size: $font-size-sm;
+          @include lessThan(xl) {
+            font-size: $font-size-xsm;
+            font-weight: $font-weight-semi-bold;
+          }
+          @include lessThan(sm) {
+            font-size: $font-size-xxsm;
             font-weight: $font-weight-semi-bold;
           }
         }
