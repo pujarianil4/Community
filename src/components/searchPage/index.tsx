@@ -17,6 +17,7 @@ export default function SearchPageComponent({ isComment = true }: IProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
   const tabsList = useMemo(() => {
     const baseTabs = [
       {
@@ -24,22 +25,31 @@ export default function SearchPageComponent({ isComment = true }: IProps) {
         label: "Posts",
         content: <Posts />,
       },
-      {
-        key: "2",
-        label: "Communities",
-        content: <Communities />,
-      },
+      // {
+      //   key: "2",
+      //   label: "Communities",
+      //   // content: <Communities communitiesData={searchData?.communities} />,
+      //   content: <Communities />,
+      // },
     ];
 
     if (isComment) {
       baseTabs.push({
+        key: "2",
+        label: "Communities",
+        // content: <Communities communitiesData={searchData?.communities} />,
+        content: <Communities />,
+      });
+      baseTabs.push({
         key: "3",
         label: "Comments",
+        // content: <SearchComments commentsData={searchData?.comments} />,
         content: <SearchComments />,
       });
       baseTabs.push({
         key: "4",
         label: "User",
+        // content: <User usersData={searchData?.users} />,
         content: <User />,
       });
     }

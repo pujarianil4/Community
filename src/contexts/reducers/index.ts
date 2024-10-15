@@ -9,6 +9,7 @@ export const {
   setRefetchUser,
   resetRefetch,
   setProposalData,
+  setNavbarSearch,
 } = commonSlice.actions;
 
 export const userReducer = userSlice.reducer;
