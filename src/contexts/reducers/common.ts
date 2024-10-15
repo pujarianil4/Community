@@ -14,6 +14,14 @@ export interface Common {
     yes: number;
     no: number;
   };
+  navbarSearch: {
+    pill: {
+      img: string;
+      label: string;
+      type: "c" | "u" | null;
+    };
+    searchVal: string;
+  };
 }
 
 //TODO update Later
@@ -29,6 +37,14 @@ const initialState: Common = {
     isVoted: false,
     yes: 0,
     no: 0,
+  },
+  navbarSearch: {
+    pill: {
+      img: "",
+      label: "",
+      type: null,
+    },
+    searchVal: "",
   },
 };
 
@@ -52,6 +68,10 @@ export const commonSlice = createSlice({
       state.proposal.isVoted = action.payload.isVoted;
       state.proposal.yes = action.payload.yes;
       state.proposal.no = action.payload.no;
+    },
+    setNavbarSearch: (state, action) => {
+      state.navbarSearch.searchVal = action.payload.searchVal;
+      state.navbarSearch.pill = action.payload.pill;
     },
     resetRefetch: (state) => {
       state.refetch.community = false;

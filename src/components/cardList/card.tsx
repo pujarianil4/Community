@@ -1,8 +1,8 @@
 "use client";
+import "./index.scss";
 import React from "react";
 import { ICommunity, IUser } from "@/utils/types/types";
 import Image from "next/image";
-import CButton from "@/components/common/Button";
 import { getImageSource, numberWithCommas } from "@/utils/helpers";
 import CommunityFollowButton from "../FollowBtn/communityFollowBtn";
 import UserFollowButton from "../FollowBtn/userFollowbtn";

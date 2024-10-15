@@ -10,6 +10,7 @@ import {
   setRefetchUser,
   resetRefetch,
   setProposalData,
+  setNavbarSearch,
 } from "@/contexts/reducers";
 
 type ActionCreators = {
@@ -20,6 +21,7 @@ type ActionCreators = {
   setRefetchUser: typeof setRefetchUser;
   resetRefetch: typeof resetRefetch;
   setProposalData: typeof setProposalData;
+  setNavbarSearch: typeof setNavbarSearch;
   // Add other actions here if needed
 };
 
@@ -38,6 +40,7 @@ export default function useRedux<T>(selectors?: any): [UseReduxHook, any] {
     setRefetchUser,
     resetRefetch,
     setProposalData,
+    setNavbarSearch,
     // Add other actions here if needed
   };
 

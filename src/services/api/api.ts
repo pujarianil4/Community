@@ -14,9 +14,7 @@ const updateAuthorizationHeader = () => {
   if (token) {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   }
-
 };
 
 updateAuthorizationHeader();
 store.subscribe(updateAuthorizationHeader);
-
