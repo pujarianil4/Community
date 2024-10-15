@@ -145,7 +145,8 @@
 
   .up_down {
     display: flex;
-    gap: 2rem;
+    align-items: center;
+    gap: 5px;
     span {
       display: flex;
       align-items: center;

@@ -9,9 +9,13 @@ import { ICommunity } from "@/utils/types/types";
 
 interface IProps {
   communityData: ICommunity;
+  onSuccess: (isFollowed: boolean) => void;
 }
 
-export default function CommunityFollowButton({ communityData }: IProps) {
+export default function CommunityFollowButton({
+  communityData,
+  onSuccess,
+}: IProps) {
   const { isLoading: isLoadingFollow, callFunction } = useAsync();
   const [{ dispatch, actions }] = useRedux();
   const [isFollowed, setIsFollowed] = useState<boolean>(
@@ -25,6 +29,7 @@ export default function CommunityFollowButton({ communityData }: IProps) {
         await callFunction(followApi, { typ: "c", fwid: communityData?.id });
         dispatch(actions.setRefetchCommunity(true));
         setIsFollowed(true);
+        onSuccess(true);
       } else {
         setIsUnFollowLoading(true);
         await UnFollowAPI({
@@ -34,6 +39,7 @@ export default function CommunityFollowButton({ communityData }: IProps) {
         dispatch(actions.setRefetchCommunity(true));
         setIsFollowed(false);
         setIsUnFollowLoading(false);
+        onSuccess(false);
       }
     } catch (error) {
       console.error("Error handling follow:", error);

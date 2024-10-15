@@ -12,9 +12,10 @@ import { IUser } from "@/utils/types/types";
 
 interface IProps {
   userData: IUser;
+  onSuccess: (isFollowed: boolean) => void;
 }
 
-export default function UserFollowButton({ userData }: IProps) {
+export default function UserFollowButton({ userData, onSuccess }: IProps) {
   const router = useRouter();
   const userNameSelector = (state: RootState) => state?.user;
   const refetchRoute = (state: RootState) => state?.common.refetch;
@@ -46,16 +47,18 @@ export default function UserFollowButton({ userData }: IProps) {
           typ: "u",
           fwid: userData.id,
         });
-        dispatch(actions.setRefetchUser(true));
+        // dispatch(actions.setRefetchUser(true));
         setIsFollowed(true);
+        onSuccess(true);
       } else {
         setIsUnFollowLoading(true);
         await UnFollowAPI({
           type: "u",
           fwid: userData?.id?.toString() as string,
         });
-        dispatch(actions.setRefetchUser(true));
+        // dispatch(actions.setRefetchUser(true));
         setIsFollowed(false);
+        onSuccess(false);
         setIsUnFollowLoading(false);
       }
     } catch (error) {
@@ -64,7 +67,7 @@ export default function UserFollowButton({ userData }: IProps) {
   };
 
   const handleEdit = () => {
-    router.push(`/settings`);
+    router.push(`/settings?type=profile`);
   };
 
   // useEffect(() => {

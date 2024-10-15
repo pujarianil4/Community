@@ -663,6 +663,10 @@
   height: 95px;
   width: 140px;
   border-radius: 5px;
+  @include lessThan(md) {
+    width: 40px;
+    height: auto;
+  }
 }
 
 .draft_post_loader {
