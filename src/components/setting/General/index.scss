@@ -198,3 +198,52 @@
 .accordion_cls {
   margin-top: 1rem;
 }
+
+.proposal_modal {
+  width: fit-content !important;
+  margin: 0 auto !important;
+}
+
+.proposal_warning_container {
+  background-color: var(--secondary-bg) !important;
+  padding: 2rem 1.5rem 0.5rem;
+  max-width: 400px;
+
+  p {
+    text-align: justify;
+  }
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+
+  button {
+    padding: 7px 15px !important;
+    background-color: var(--secondary-bg) !important;
+    border: 1px solid var(--primary-border) !important;
+    border-radius: 5px !important;
+    color: var(--primary) !important;
+    height: 40px;
+    font-size: 15px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s ease;
+    @include lessThan(md) {
+      font-size: 12px !important;
+      height: 28px;
+      padding: 8px !important;
+    }
+    &:hover {
+      opacity: 0.9;
+      background-color: var(--secondary-bg) !important;
+    }
+
+    &:disabled {
+      background-color: var(--secondary-bg) !important;
+      color: var(--label-text) !important;
+      opacity: 0.8;
+      cursor: not-allowed !important;
+    }
+  }
+}
