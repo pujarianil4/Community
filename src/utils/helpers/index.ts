@@ -5,19 +5,32 @@ export function setClientSideCookie(
   value: any,
   force: boolean = false
 ) {
-  console.log("setClientSideCookie", name, value, force);
+ 
+  const cookieOptions = {
+    path: "/", 
+  };
 
   if (force) {
-    setCookie(null, name, value);
+    setCookie(null, name, value, cookieOptions);
   } else {
     const user = getClientSideCookie(name);
-    !user && setCookie(null, name, value);
+    !user && setCookie(null, name, value, cookieOptions);
   }
 }
 
 export function getClientSideCookie(name: string) {
   const cookies = parseCookies();
-  return cookies[name] && JSON.parse(cookies[name]);
+  
+  if (cookies[name]) {
+    try {
+      return JSON.parse(cookies[name]);
+    } catch (error) {
+      console.error("Error parsing cookie:", error);
+      return null;
+    }
+  }
+  
+  return null;
 }
 
 export function deleteClientSideCookie(name: string) {
