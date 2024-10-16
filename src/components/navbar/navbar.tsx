@@ -299,9 +299,6 @@ function Navbar() {
             ) : (
               <div></div>
             )}
-            <CButton auth='auth' onClick={showModal}>
-              LogIn
-            </CButton>
           </div>
         </nav>
       )}
