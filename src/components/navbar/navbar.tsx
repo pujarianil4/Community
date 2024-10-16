@@ -107,7 +107,7 @@ function Navbar() {
     try {
       deleteClientSideCookie("authToken");
       const logout = await handleLogOut();
-      deleteClientSideCookie("authToken");
+      // deleteClientSideCookie("authToken");
       setUserSession(null);
       const initialState: any = {
         username: "",
@@ -123,7 +123,9 @@ function Navbar() {
       dispatch(actions.setUserData(initialState));
       // Add a short delay before reloading the page
       setTimeout(() => {
+        deleteClientSideCookie("authToken");
         router.push("/");
+        window?.location?.reload();
       }, 1000);
       // window?.location?.reload();
     } catch (error) {
@@ -143,7 +145,9 @@ function Navbar() {
       dispatch(actions.setUserData(initialState));
       // Add a short delay before reloading the page
       setTimeout(() => {
+        deleteClientSideCookie("authToken");
         router.push("/");
+        window?.location?.reload();
       }, 1000);
       //  window?.location?.reload();
     }
@@ -292,7 +296,7 @@ function Navbar() {
                   </Popover>
                 </div>
               </div>
-            ) : userSession?.userAvailable == false ? (
+            ) : userSession?.userAvailable == false || !userSession ? (
               <CButton auth='auth' onClick={showModal}>
                 LogIn
               </CButton>
