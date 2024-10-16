@@ -130,7 +130,11 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   if (!editor) {
     return null;
   }
-
+  const style = {
+    p: {
+      minHeight: "100px",
+    },
+  };
   return (
     <main className='tiptap_editor_container'>
       <div className={`toolbar_items ${!showToolbar ? "hide_toolbar" : ""}`}>
@@ -232,7 +236,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
         </button>
       </div>
       <div className='editor_content'>
-        <EditorContent editor={editor} />
+        <EditorContent editor={editor} style={style.p} />
       </div>
       <div
         className={`char_count ${

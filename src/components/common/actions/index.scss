@@ -4,22 +4,21 @@
   justify-content: space-between;
 
   // justify-content: space-between;
-  width: 80%;
+  width: 83%;
   min-width: 335px;
-  margin: auto;
-  margin-top: 16px;
+  margin: 0 auto;
+  // margin-top: 16px;
+  padding-top: 16px;
   // @include lessThan(xl) {
   //   margin-left: 0;
   // }
   @include lessThan(xl) {
     gap: 12px;
-    width: 94%;
+    width: 100%;
   }
   @include lessThan(lg) {
     gap: 1rem;
-    width: 94%;
-    margin-top: 16px;
-    // margin-top: 16px;
+    width: 100%;
   }
   @include lessThan(md) {
     gap: 1rem;
@@ -47,7 +46,7 @@
         }
       }
       span {
-        font-size: $font-size-sm;
+        font-size: $font-size-xsm;
         color: var(--light-tx) !important;
         @include lessThan(xl) {
           font-size: $font-size-xsm;
@@ -146,7 +145,7 @@
   .up_down {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
     span {
       display: flex;
       align-items: center;

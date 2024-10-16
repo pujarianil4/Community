@@ -38,7 +38,7 @@ export default function Post({ post }: IProps) {
 
           <div className='post_info'>
             <span className='username'>{post?.user.username} </span>
-            <span className='community'>- {post?.community.username}</span>
+            <span className='community'> {post?.community.username}</span>
           </div>
         </div>
         <div className='post_content_bx'>
