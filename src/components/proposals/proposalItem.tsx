@@ -3,24 +3,40 @@ import { getImageSource, timeAgo } from "@/utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import CButton from "../common/Button";
 import MarkdownRenderer from "../common/MarkDownRender";
 import { useRouter } from "next/navigation";
 import { IProposal } from "@/utils/types/types";
+import "./index.scss";
 
 interface IProps {
   proposal: IProposal;
+  showCheckbox?: boolean;
+  onSelectChange?: (id: number, selected: boolean) => void;
+  isChecked?: boolean;
 }
 
-export default function ProposalItem({ proposal }: IProps) {
+export default function ProposalItem({
+  proposal,
+  showCheckbox = false,
+  onSelectChange,
+  isChecked = false,
+}: IProps) {
   // TODO: create seperate component for USER_HEAD
   // TODO: update community and user data
 
   const { id, cta: time, title, desc, up, down, user, community } = proposal;
-  const isActive = true;
+  // active, ended, up_coming
+  const proposalAction = "active"; // TODO: upadate dynamic action after API update
   const router = useRouter();
+
   const handleRedirect = () => {
     router.push(`/p/${id}`);
+  };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (onSelectChange) {
+      onSelectChange(id, event.target.checked);
+    }
   };
   return (
     <>
@@ -56,8 +72,17 @@ export default function ProposalItem({ proposal }: IProps) {
           </div>
           <p className='post_time'>&bull; {timeAgo(time)}</p>
           {/* TODO: add action */}
-          <CButton onClick={() => {}}>{isActive ? "Active" : "Ended"}</CButton>
+          <p className={`proposal_action ${proposalAction} `}>Action</p>
+          {/* <CButton onClick={() => {}}>{isActive ? "Active" : "Ended"}</CButton> */}
           {/* <div className='more'><IoIosMore /></div> */}
+          {showCheckbox && (
+            <input
+              className='checkbox'
+              type='checkbox'
+              onChange={handleCheckboxChange}
+              checked={isChecked}
+            />
+          )}
         </div>
 
         <div className='proposal_data' onClick={handleRedirect}>
@@ -66,7 +91,7 @@ export default function ProposalItem({ proposal }: IProps) {
             <MarkdownRenderer markdownContent={desc} limit={4} />
             <div className='stats'>
               {/* TODO: on going show as per activity */}
-              <p>On going</p>
+              {/* <p>On going</p> */}
               <p>{up} WUFT</p>
               <p>Started on January 12,2023</p>
             </div>
@@ -75,14 +100,14 @@ export default function ProposalItem({ proposal }: IProps) {
             <div className='range_bar_data'>
               <div className='range_data'>
                 <p>Yes</p>
-                <p className='yes'>{up}</p>
+                <p className='yes'>{up}&nbsp; Votes</p>
               </div>
               <RangeBar total={up + down} current={up} />
             </div>
             <div className='range_bar_data'>
               <div className='range_data'>
                 <p>No</p>
-                <p className='no'>{down}</p>
+                <p className='no'>{down} &nbsp; Votes</p>
               </div>
               <RangeBar total={up + down} current={down} />
             </div>
@@ -100,7 +125,7 @@ interface RangeBarProps {
 
 export const RangeBar: React.FC<RangeBarProps> = ({ total, current }) => {
   // Calculate the percentage width
-  const percentage = (current / total) * 100;
+  const percentage = total !== 0 ? (current / total) * 100 : 0;
 
   return (
     <div className='rangebar'>
