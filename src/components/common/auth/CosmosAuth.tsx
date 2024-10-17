@@ -45,7 +45,7 @@ export default function CosmosAuthComponent({
     wallet,
     signArbitrary,
     isWalletConnected,
-  } = context1;
+  } = chainContext;
   const ref = useRef<any>(null);
   console.log("cosmosWallets", cosmosWallets);
 
