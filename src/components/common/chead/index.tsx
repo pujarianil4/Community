@@ -18,8 +18,8 @@ export default function CHead({ community }: ICHead) {
         height={20}
       />
       <div className='content'>
-        <p>{community?.name}</p>
-        <span>@{community?.username}</span>
+        <p>{community?.username}</p>
+        <span className='member'> {community?.followers} Members</span>
       </div>
     </div>
   );

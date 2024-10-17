@@ -11,14 +11,18 @@ interface ICFilter {
   list: Array<List>;
   callBack: (s: List) => void;
   defaultListIndex: number;
+  selectedFilter: string;
 }
 
 export default function CFilter({
   list,
   callBack,
   defaultListIndex,
+  selectedFilter, // Use selectedFilter
 }: ICFilter) {
-  const [selected, setSelected] = useState(list[defaultListIndex].title || "");
+  const [selected, setSelected] = useState(
+    selectedFilter || list[defaultListIndex].title
+  );
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (listItem: List) => {
@@ -48,7 +52,6 @@ export default function CFilter({
         content={content}
         trigger='click'
       >
-        {" "}
         <div className='cfilter'>
           <span>{selected}</span>
           <GoChevronDown className='downarrow' size={20} />

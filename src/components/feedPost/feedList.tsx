@@ -52,12 +52,16 @@ export default function FeedList({
   const [page, setPage] = useState(1);
   const [posts, setPosts] = useState<IPost[]>([]);
   const limit = 10; // UPDATE limit later
+  const [selectedFilter, setSelectedFilter] = useState<List>({
+    value: sortby,
+    title: "trending",
+  });
 
   const { isLoading, data, refetch, callFunction } = useAsync(
     getFunctionByMethod[method],
     {
       nameId: id,
-      sortby,
+      sortby: selectedFilter.value,
       order,
       page,
       limit: limit,
@@ -73,6 +77,7 @@ export default function FeedList({
   const loadingArray = Array(5).fill(() => 0);
 
   const handleFilter = (filter: List) => {
+    setSelectedFilter(filter);
     callFunction(getFunctionByMethod[method], {
       nameId: id,
       sortby: filter.value,
@@ -132,6 +137,7 @@ export default function FeedList({
           ]}
           callBack={handleFilter}
           defaultListIndex={0}
+          selectedFilter={selectedFilter.title}
         />
       )}
 

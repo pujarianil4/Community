@@ -184,6 +184,12 @@
         padding: 0px;
       }
     }
+    .activeText {
+      color: var(--primary) !important;
+    }
+    .endedText {
+      color: var(--error) !important;
+    }
   }
   .proposal_data {
     display: flex;
@@ -417,8 +423,6 @@
       width: 120px;
       @include lessThan(md) {
         width: 80px;
-      }
-      .user_name {
       }
       .community_name {
         margin-top: 5px;
