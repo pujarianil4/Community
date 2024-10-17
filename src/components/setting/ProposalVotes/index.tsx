@@ -35,7 +35,11 @@ export default function ProposalVotes() {
   const handleSelectChange = (id: number, selected: boolean) => {
     setSelectedProposals((prev) => {
       const updatedSelected = new Map(prev);
-      updatedSelected.set(id, selected);
+      if (selected) {
+        updatedSelected.set(id, true);
+      } else {
+        updatedSelected.delete(id);
+      }
       return updatedSelected;
     });
   };
