@@ -12,7 +12,7 @@ import { IUser } from "@/utils/types/types";
 
 interface IProps {
   userData: IUser;
-  onSuccess: (isFollowed: boolean) => void;
+  onSuccess?: (isFollowed: boolean) => void;
 }
 
 export default function UserFollowButton({ userData, onSuccess }: IProps) {
@@ -49,7 +49,7 @@ export default function UserFollowButton({ userData, onSuccess }: IProps) {
         });
         // dispatch(actions.setRefetchUser(true));
         setIsFollowed(true);
-        onSuccess(true);
+        onSuccess && onSuccess(true);
       } else {
         setIsUnFollowLoading(true);
         await UnFollowAPI({
@@ -58,7 +58,7 @@ export default function UserFollowButton({ userData, onSuccess }: IProps) {
         });
         // dispatch(actions.setRefetchUser(true));
         setIsFollowed(false);
-        onSuccess(false);
+        onSuccess && onSuccess(false);
         setIsUnFollowLoading(false);
       }
     } catch (error) {
