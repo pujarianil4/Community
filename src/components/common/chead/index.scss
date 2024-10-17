@@ -25,12 +25,9 @@
       margin: 0;
       padding: 0;
       color: var(--primary-text);
-      @include lessThan(xl) {
-        font-size: $font-size-xsm;
-      }
     }
 
-    span {
+    .member {
       font-size: 10px;
       height: auto; /* Ensures height only depends on content */
       line-height: 1.2;

@@ -3,7 +3,7 @@ import Head from "next/head";
 import { Modal, Button, message } from "antd";
 import { FiShare } from "react-icons/fi";
 import { ShareIcon } from "@/assets/icons";
-
+import NotificationMessage from "../Notification";
 // icons
 import { FaTelegramPlane } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -12,8 +12,7 @@ import { IoLogoReddit } from "react-icons/io5";
 import { FaLinkedinIn } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa";
 import { FaWhatsapp } from "react-icons/fa";
-import { CiCirclePlus } from "react-icons/ci";
-import { FaRegCopy } from "react-icons/fa6";
+import { FiCopy } from "react-icons/fi";
 <FaLinkedinIn />;
 
 import "./index.scss";
@@ -53,10 +52,10 @@ const ShareButton: React.FC<ShareModalProps> = ({
     window?.navigator.clipboard
       .writeText(postUrl)
       .then(() => {
-        message.success("Link copied to clipboard!");
+        NotificationMessage("success", "Link copied to clipboard!");
       })
       .catch(() => {
-        message.error("Failed to copy link");
+        NotificationMessage("error", "Failed to copy link");
       });
   };
 
@@ -112,18 +111,15 @@ const ShareButton: React.FC<ShareModalProps> = ({
           </WhatsappShareButton>
         </div>
 
-        <h3> Email to Share</h3>
+        <h3>Copy Link</h3>
         <div className='share_bx'>
           <EmailShareButton
             url={postUrl}
             title={postTitle}
             onClick={handleCopyLink}
           >
-            <CiCirclePlus />
+            <FiCopy />
           </EmailShareButton>
-          {/* <button onClick={handleCopyLink}>
-            <FaRegCopy />
-          </button> */}
         </div>
       </Modal>
     </>
