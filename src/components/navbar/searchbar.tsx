@@ -92,6 +92,7 @@ const Searchbar = memo(() => {
   const [pill, setPill] = useState(navSearch?.pill);
   const [focused, setFocused] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   const searchPayload = {
     search: searchVal,
@@ -104,16 +105,18 @@ const Searchbar = memo(() => {
     searchPayload
   );
 
-  const debouncedHandleChange = useCallback(
-    debounce((value: string) => {
-      setSearchVal(value);
-    }, 300),
-    []
-  );
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedHandleChange(event.target.value);
+    setSearchVal(event.target.value);
   };
+
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (
+      searchContainerRef.current &&
+      !searchContainerRef.current.contains(event.target as Node)
+    ) {
+      setFocused(false);
+    }
+  }, []);
 
   const handleSelect = (data: ICommunity | IUser, type: "u" | "c") => {
     setSelectedData([...selectedData, data]);
@@ -188,14 +191,30 @@ const Searchbar = memo(() => {
   // const handleBlur = () => setFocused(false);
 
   useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [handleClickOutside]);
+
+  useEffect(() => {
     setPill(navSearch?.pill);
     setSelectionType(navSearch?.pill?.type);
   }, [navSearch]);
 
   useEffect(() => {
-    if (searchVal.length > 2) {
-      callFunction(fetchSearchData, { ...searchPayload, search: searchVal });
-    }
+    const debouncedCall = debounce(() => {
+      if (searchVal.length > 2) {
+        callFunction(fetchSearchData, { ...searchPayload, search: searchVal });
+      }
+    }, 300);
+
+    debouncedCall();
+
+    return () => {
+      debouncedCall?.cancel();
+    };
   }, [searchVal]);
 
   useEffect(() => {
@@ -212,7 +231,7 @@ const Searchbar = memo(() => {
     }
   }, [isSearchPage]);
   return (
-    <div className='search_container'>
+    <div className='search_container' ref={searchContainerRef}>
       <div className='search_input'>
         {(selectedData.length > 0 || pill?.img) && (
           <div className='user_pill' onClick={() => handleRemoveSearch()}>
@@ -252,7 +271,9 @@ const Searchbar = memo(() => {
         <>
           <li className='search_Suggestion' onClick={() => handleSearchVal()}>
             <IoSearch />
-            <span>{`Search For "${searchVal}"`}</span>
+            <span>{`Search For "${searchVal}", ${
+              searchVal.length < 3 ? "at least 3 letters require" : ""
+            }`}</span>
           </li>
 
           <ul className='suggestions_list'>
@@ -273,7 +294,10 @@ const Searchbar = memo(() => {
                     loading='lazy'
                   />
                   <span>{community?.username}</span>
-                  <span>{numberWithCommas(community?.followers)} Members</span>
+                  <span>
+                    {numberWithCommas(community?.followers)}{" "}
+                    {community?.followers == 1 ? "Member" : "Members"}
+                  </span>
                 </li>
               ))}
             {suggestions?.users?.data?.length > 0 &&
