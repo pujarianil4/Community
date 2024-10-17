@@ -1,4 +1,5 @@
 "use client";
+
 import EmptyData from "@/components/common/Empty";
 import { RootState } from "@/contexts/store";
 import useAsync from "@/hooks/useAsync";
@@ -7,25 +8,29 @@ import { getFollowersByUserId } from "@/services/api/userApi";
 import { getImageSource } from "@/utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.scss";
 import FollowListLoader from "@/components/common/loaders/followList";
 
+import VirtualList from "@/components/common/virtualList";
 interface IFollowers {
   uid: string;
   entityType: "u" | "c";
 }
 
 export default function Followers({ uid, entityType }: IFollowers) {
-  // const userNameSelector = (state: RootState) => state?.user;
-
-  // const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
-
-  const { isLoading, data, refetch } = useAsync(getFollowersByUserId, {
+  const [page, setPage] = useState(1);
+  const [communities, setCommunities] = useState<any[]>([]);
+  const limit = 10;
+  const payload = {
     userId: uid,
     type: entityType,
-  });
+    page,
+    limit,
+  };
 
+  const { isLoading, data, refetch } = useAsync(getFollowersByUserId, payload);
+  console.log("follow data", data);
   const refetchRoute = (state: RootState) => state?.common.refetch.user;
   const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
 

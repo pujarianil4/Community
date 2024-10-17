@@ -10,7 +10,7 @@ import {
   MdOutlineGifBox,
 } from "react-icons/md";
 import { uploadMultipleFiles } from "@/services/api/commonApi";
-import { fetchCommunities } from "@/services/api/communityApi";
+import { getFollowinsByUserId } from "@/services/api/userApi";
 // import { LocalStore } from "@/utils/helpers";
 import Image from "next/image";
 import useRedux from "@/hooks/useRedux";
@@ -132,7 +132,12 @@ const CreatePost: React.FC<Props> = ({
     isLoading,
     data: communityList,
     refetch,
-  } = useAsync(fetchCommunities);
+  } = useAsync(getFollowinsByUserId, {
+    userId: user?.uid,
+    type: "c",
+  });
+
+  const followCList = communityList?.map((item: any) => item.followedCommunity);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
   const [isLoadingDraftPost, setIsLoadingDraftPost] = useState(false);
   const [isDisabled, setISDisabled] = useState(false);
@@ -192,7 +197,6 @@ const CreatePost: React.FC<Props> = ({
         media: uploadedImg.length > 0 ? uploadedImg : null,
         sts: postStatus,
       };
-
       // await createPost(data);
       if (isEditingPost && post?.id) {
         // If editing an existing post, update it
@@ -354,6 +358,7 @@ const CreatePost: React.FC<Props> = ({
         // media: uploadedImg ? uploadedImg : null,
         media: uploadedImg.length > 0 ? uploadedImg : null,
       };
+
       if (post?.id) {
         await patchPost(post?.id, data);
         setIsLoadingPost(false);
@@ -499,7 +504,7 @@ const CreatePost: React.FC<Props> = ({
           <div className='inputArea'>
             <DropdownWithSearch
               onSelect={setSelectedOption}
-              options={communityList}
+              options={followCList}
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               selected={selectedOption}
