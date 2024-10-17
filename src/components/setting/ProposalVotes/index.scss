@@ -4,6 +4,10 @@
   display: flex;
   justify-content: space-between;
 
+  @include lessThan(md) {
+    margin-bottom: 1rem;
+  }
+
   div {
     display: flex;
     gap: 1rem;

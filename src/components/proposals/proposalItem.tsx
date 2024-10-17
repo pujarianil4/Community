@@ -26,7 +26,7 @@ export default function ProposalItem({
 
   const { id, cta: time, title, desc, up, down, user, community } = proposal;
   // active, ended, up_coming
-  const proposalAction = "active"; // TODO: upadate dynamic action after API update
+  const proposalAction = "up_coming"; // TODO: upadate dynamic action after API update
   const router = useRouter();
 
   const handleRedirect = () => {
