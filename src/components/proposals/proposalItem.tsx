@@ -56,7 +56,9 @@ export default function ProposalItem({ proposal }: IProps) {
           </div>
           <p className='post_time'>&bull; {timeAgo(time)}</p>
           {/* TODO: add action */}
-          <CButton onClick={() => {}}>{isActive ? "Active" : "Ended"}</CButton>
+          <span className={isActive ? "activeText" : "endedText"}>
+            {isActive ? "Active" : "Ended"}
+          </span>
           {/* <div className='more'><IoIosMore /></div> */}
         </div>
 

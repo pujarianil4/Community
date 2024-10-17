@@ -512,6 +512,7 @@ const CreatePost: React.FC<Props> = ({
                   content={content}
                   autoFocus={true}
                   maxCharCount={300}
+                  className='box_height'
                 />
                 {/* <div className='file_container'>
                   {pics.length > 0 && (

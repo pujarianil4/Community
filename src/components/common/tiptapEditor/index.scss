@@ -117,7 +117,6 @@
     // min-height: 90px;
     cursor: text;
     div {
-      min-height: 90px;
       cursor: pointer;
       p {
         font-size: $font-size-xsm;
@@ -201,4 +200,10 @@ a.link {
   color: var(--label-text);
   pointer-events: none;
   height: 0;
+}
+
+.customHeight {
+  p {
+    min-height: 90px;
+  }
 }

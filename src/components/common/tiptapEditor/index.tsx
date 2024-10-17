@@ -50,6 +50,7 @@ interface TiptapEditorProps {
   placeHolder?: string;
   autoFocus?: boolean;
   maxCharCount?: number;
+  className?: string;
 }
 
 const TiptapEditor: React.FC<TiptapEditorProps> = ({
@@ -59,6 +60,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   placeHolder = "Type here...",
   autoFocus = false,
   maxCharCount = 2000,
+  className = "customHeight",
 }) => {
   const [remainingChars, setRemainingChars] = useState<number>(
     maxCharCount - (content?.length || 0)
@@ -83,6 +85,11 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
         setContent(editor.getHTML());
         setRemainingChars(0);
       }
+    },
+    editorProps: {
+      attributes: {
+        class: className,
+      },
     },
   });
 
@@ -130,11 +137,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   if (!editor) {
     return null;
   }
-  const style = {
-    p: {
-      minHeight: "100px",
-    },
-  };
+
   return (
     <main className='tiptap_editor_container'>
       <div className={`toolbar_items ${!showToolbar ? "hide_toolbar" : ""}`}>
@@ -236,7 +239,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
         </button>
       </div>
       <div className='editor_content'>
-        <EditorContent editor={editor} style={style.p} />
+        <EditorContent editor={editor} />
       </div>
       <div
         className={`char_count ${
