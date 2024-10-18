@@ -25,14 +25,15 @@ import TiptapEditor from "../common/tiptapEditor";
 import TurndownService from "turndown";
 import { BackIcon, LinkIcon } from "@/assets/icons";
 import FocusableDiv from "../common/focusableDiv";
-
+import VirtualList from "@/components/common/virtualList";
 import { patchPost, getPostsByuName } from "@/services/api/postApi";
 import { IPost } from "@/utils/types/types";
 import PostLoader from "./postLoader";
 import MarkdownRenderer from "../common/MarkDownRender";
 import { identifyMediaType } from "@/utils/helpers";
-import { Pagination } from "antd";
+
 import { createPost } from "@/services/api/postApi";
+import EmptyData from "../common/Empty";
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPostModalOpen: boolean;
@@ -151,31 +152,52 @@ const CreatePost: React.FC<Props> = ({
   const [isDraft, setIsDraft] = useState(false);
   const [post, setPost] = useState<IPost>();
 
+  const [page, setPage] = useState(1);
+  const [draftD, setDraftD] = useState<any[]>([]);
+  const limit = 20;
   const turndownService = new TurndownService();
   const markDownContent = turndownService.turndown(content);
 
   const [uploadingSkeletons, setUploadingSkeletons] = useState<number[]>([]);
 
+  const payload = {
+    nameId: user.username,
+    sortby: "time",
+    page,
+    limit,
+  };
+
   const {
     isLoading: isLoadingUserPost,
     data: userPosts,
     refetch: refetchUserPost,
-  } = useAsync(getPostsByuName, { nameId: user.username, sortby: "time" });
+  } = useAsync(getPostsByuName, payload);
 
   const [isEditingPost, setIsEditingPost] = useState(false);
 
   const draftPosts =
     userPosts?.filter((post: IPost) => post.sts === "draft") || [];
-  // add pagination for draft posts
-  const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 4;
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const draftData = draftPosts?.slice(indexOfFirstPost, indexOfLastPost);
+  console.log("draftPost", draftPosts);
 
-  const handlePaginationChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  useEffect(() => {
+    if (draftPosts && draftPosts.length > 0) {
+      setDraftD((prevData) => {
+        const isSamePosts =
+          prevData.length === draftPosts.length &&
+          prevData.every((post, index) => post.id === draftPosts[index].id);
+        if (!isSamePosts) {
+          return page === 1 ? draftPosts : [...prevData, ...draftPosts];
+        }
+
+        return prevData;
+      });
+    }
+  }, [draftPosts, page]);
+  console.log("draftD", draftD);
+  console.log("page", page);
+  useEffect(() => {
+    if (page !== 1) refetchUserPost();
+  }, [page]);
 
   const closeBtn = document.querySelector(".ant-modal-close");
 
@@ -434,69 +456,68 @@ const CreatePost: React.FC<Props> = ({
 
       {isDraft ? (
         <section className='draft_posts_section'>
-          {isLoadingUserPost ? (
+          {page < 2 && isLoadingUserPost ? (
             <>
               {Array(4)
-                .fill(() => 0)
-                .map((_: any, i: number) => (
+                .fill(0)
+                .map((_, i) => (
                   <PostLoader key={i} />
                 ))}
             </>
-          ) : draftData?.length > 0 ? (
-            <section>
-              {draftData?.map((post: IPost) => (
-                <article
-                  className='draft_post'
-                  key={post?.id}
-                  onMouseEnter={() => setIsEditingPost(false)}
-                >
-                  <div className='content'>
-                    <MarkdownRenderer markdownContent={post?.text} limit={2} />
-                  </div>
-
-                  {post?.media?.[0] && (
-                    <Image
-                      className='post_img'
-                      src={post.media[0]}
-                      alt=''
-                      width={160}
-                      height={128}
-                    />
-                  )}
-                  <div className='hover_bx'>
-                    <CButton
-                      onClick={() => handleEditPost(post)}
-                      className='editBtn'
-                    >
-                      Edit
-                    </CButton>
-
-                    <CButton
-                      onClick={() => draftPost(post)}
-                      className='hvr_postBtn'
-                    >
-                      Post
-                    </CButton>
-                  </div>
-                </article>
-              ))}
-              <div className='drft_pagination'>
-                <Pagination
-                  current={currentPage}
-                  total={draftData?.length}
-                  pageSize={postsPerPage}
-                  onChange={handlePaginationChange}
-                />
-              </div>
-            </section>
           ) : (
-            <div className='no_draft_posts'>
-              <h2>Save drafts to post when you re ready</h2>
-              <p>
-                When you save a draft, it will show up here so you can edit and
-                post it whenever you'd like.
-              </p>
-            </div>
+            <>
+              <VirtualList
+                listData={draftD}
+                isLoading={isLoadingUserPost}
+                page={page}
+                setPage={setPage}
+                limit={limit}
+                itemWidth={200}
+                renderComponent={(index: number, post: any) => (
+                  <article
+                    className='draft_post'
+                    key={index}
+                    onMouseEnter={() => setIsEditingPost(false)}
+                  >
+                    <div className='content'>
+                      <MarkdownRenderer
+                        markdownContent={post?.text}
+                        limit={2}
+                      />
+                    </div>
+                    {post?.media?.[0] && (
+                      <Image
+                        className='post_img'
+                        src={post.media[0]}
+                        alt=''
+                        width={160}
+                        height={128}
+                      />
+                    )}
+                    <div className='hover_bx'>
+                      <CButton
+                        onClick={() => handleEditPost(post)}
+                        className='editBtn'
+                      >
+                        Edit
+                      </CButton>
+
+                      <CButton
+                        onClick={() => draftPost(post)}
+                        className='hvr_postBtn'
+                      >
+                        Post
+                      </CButton>
+                    </div>
+                  </article>
+                )}
+                footerHeight={50}
+              />
+              {isLoadingUserPost && page > 1 && <PostLoader />}
+              {!isLoadingUserPost && draftPosts.length === 0 && page === 1 && (
+                <EmptyData />
+              )}
+            </>
           )}
         </section>
       ) : (

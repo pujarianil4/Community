@@ -53,9 +53,9 @@ export default function CommunitiesList() {
     if (page !== 1) refetch();
   }, [page]);
 
-  if (data?.length === 0 && !isLoading) {
-    return <EmptyData />;
-  }
+  // if (data?.length === 0 && !isLoading) {
+  //   return <EmptyData />;
+  // }
 
   return (
     <main>
@@ -110,6 +110,7 @@ export default function CommunitiesList() {
             footerHeight={50}
           />
           {isLoading && page > 1 && <CardListLoader />}
+          {data?.length === 0 && !isLoading && <EmptyData />}
         </>
       )}
     </main>

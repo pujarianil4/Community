@@ -112,8 +112,6 @@ export const getFollowinsByUserId = async ({
 }: {
   userId: number;
   type: string;
-  sortby: string;
-  order: string;
   page: number;
   limit: number;
 }) => {
@@ -128,16 +126,29 @@ export const getFollowinsByUserId = async ({
   }
 };
 
-export const getFollowersByUserId = async ({ userId, type }: IFollowersAPI) => {
+export const getFollowersByUserId = async ({
+  userId,
+  type,
+  page = 1,
+  limit = 20,
+}: {
+  userId: number;
+  type: string;
+  sortby: string;
+  order: string;
+  page: number;
+  limit: number;
+}) => {
   try {
-    const response = await api.get(`/followers/fwrs/${userId}?typ=${type}`);
+    const response = await api.get(
+      `/followers/fwrs/${userId}?typ=${type}&page=${page}&limit=${limit}`
+    );
     return response.data;
   } catch (error) {
     console.error("getFollowinsByUserId", error);
     throw error;
   }
 };
-
 export const getAddressesByUserId = async (userId: string) => {
   if (userId == "0") {
     return null;

@@ -3,15 +3,16 @@
   width: 940px !important;
   border-radius: 16px !important;
   box-shadow: -5px -6px 4px 0 rgba(0, 0, 0, 0.3);
-
+  min-height: 500px;
   .ant-model-content {
     height: 740px !important;
-    min-height: fit-content;
+    min-height: 00px !important;
     border-radius: 16px !important;
   }
 }
 .create_post_container {
   padding: 1rem 1rem 0.5rem 1rem;
+  min-height: 700px !important;
   background-color: var(--secondary-bg) !important;
   position: relative;
   @include lessThan(md) {
@@ -25,6 +26,9 @@
     margin: 1rem 0;
   }
 
+  .draft_posts_section {
+    height: 500px;
+  }
   .user_data {
     margin-top: 1rem;
     display: flex;
