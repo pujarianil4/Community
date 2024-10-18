@@ -28,6 +28,7 @@ export default function CommunityFollowButton({
       if (!isFollowed) {
         await callFunction(followApi, { typ: "c", fwid: communityData?.id });
         dispatch(actions.setRefetchCommunity(true));
+        dispatch(actions.setRefetchUser(true));
         setIsFollowed(true);
         onSuccess(true);
       } else {
@@ -37,6 +38,7 @@ export default function CommunityFollowButton({
           fwid: communityData?.id?.toString() as string,
         });
         dispatch(actions.setRefetchCommunity(true));
+        dispatch(actions.setRefetchUser(true));
         setIsFollowed(false);
         setIsUnFollowLoading(false);
         onSuccess(false);
