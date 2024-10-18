@@ -47,7 +47,7 @@ export default function UserFollowButton({ userData, onSuccess }: IProps) {
           typ: "u",
           fwid: userData.id,
         });
-        // dispatch(actions.setRefetchUser(true));
+        dispatch(actions.setRefetchUser(true));
         setIsFollowed(true);
         onSuccess(true);
       } else {
@@ -56,7 +56,7 @@ export default function UserFollowButton({ userData, onSuccess }: IProps) {
           type: "u",
           fwid: userData?.id?.toString() as string,
         });
-        // dispatch(actions.setRefetchUser(true));
+        dispatch(actions.setRefetchUser(true));
         setIsFollowed(false);
         onSuccess(false);
         setIsUnFollowLoading(false);
