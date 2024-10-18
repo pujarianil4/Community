@@ -29,7 +29,7 @@ export const getPosts = async ({
 
   try {
     const response = await api.get(
-      `/posts?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}`
+      `/posts?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}&sts=published`
     );
     console.log("============Fetched all posts=============", response.data);
     return response.data;
@@ -44,15 +44,18 @@ export const getPostsBycName = async ({
   nameId,
   page = 1,
   limit = 20,
+   sts= ""
 }: {
   nameId: string;
   page: number;
   limit: number;
+  sts: string
 }) => {
   const uid = store.getState().user?.uid;
   try {
     const response = await api.get(
-      `/posts/community/cname/${nameId}?page=${page}&limit=${limit}&uid=${uid}`
+      `/posts/community/cname/${nameId}?page=${page}&limit=${limit}&uid=${uid}` + 
+      (sts ? `&sts=${sts}` : '')
     );
     console.log("=========Fetched all posts By Cname=========", response.data);
     return response.data;
@@ -68,15 +71,17 @@ export const getPostsByuName = async ({
   nameId,
   page = 1,
   limit = 20,
+  sts= ""
 }: {
   nameId: string;
   page: number;
   limit: number;
+  sts: string
 }) => {
   const uid = store.getState().user?.uid;
   try {
     const response = await api.get(
-      `/posts/username/${nameId}?page=${page}&limit=${limit}&uid=${uid}`
+      `/posts/username/${nameId}?page=${page}&limit=${limit}&uid=${uid}` +  (sts ? `&sts=${sts}` : '')
     );
     console.log("=========Fetched all posts By Uname==========", response.data);
     return response.data;
