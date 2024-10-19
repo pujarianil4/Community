@@ -13,6 +13,7 @@
 .create_post_container {
   padding: 1rem 1rem 0.5rem 1rem;
   min-height: 700px !important;
+
   background-color: var(--secondary-bg) !important;
   position: relative;
   @include lessThan(md) {
@@ -27,7 +28,12 @@
   }
 
   .draft_posts_section {
-    height: 500px;
+    // height: 700px !important;
+
+    .virtuoso {
+      height: 1500px !important;
+      overflow: auto !important;
+    }
   }
   .user_data {
     margin-top: 1rem;

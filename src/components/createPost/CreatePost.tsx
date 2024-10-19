@@ -153,8 +153,8 @@ const CreatePost: React.FC<Props> = ({
   const [post, setPost] = useState<IPost>();
 
   const [page, setPage] = useState(1);
-  const [draftD, setDraftD] = useState<any[]>([]);
-  const limit = 20;
+  const [draftPosts, setDraftPosts] = useState<any[]>([]);
+  const limit = 9;
   const turndownService = new TurndownService();
   const markDownContent = turndownService.turndown(content);
 
@@ -165,6 +165,7 @@ const CreatePost: React.FC<Props> = ({
     sortby: "time",
     page,
     limit,
+    sts: "draft",
   };
 
   const {
@@ -172,33 +173,30 @@ const CreatePost: React.FC<Props> = ({
     data: userPosts,
     refetch: refetchUserPost,
   } = useAsync(getPostsByuName, payload);
-
+  console.log("userPost", userPosts);
   const [isEditingPost, setIsEditingPost] = useState(false);
 
-  const draftPosts =
-    userPosts?.filter((post: IPost) => post.sts === "draft") || [];
-  console.log("draftPost", draftPosts);
-
+  // useEffect(() => {
+  //   if (userPosts && userPosts.length > 0) {
+  //     setDraftPosts((prevData) =>
+  //       page === 1 ? userPosts : [...prevData, ...userPosts]
+  //     );
+  //   }
+  // }, [userPosts]);
   useEffect(() => {
-    if (draftPosts && draftPosts.length > 0) {
-      setDraftD((prevData) => {
-        const isSamePosts =
-          prevData.length === draftPosts.length &&
-          prevData.every((post, index) => post.id === draftPosts[index].id);
-        if (!isSamePosts) {
-          return page === 1 ? draftPosts : [...prevData, ...draftPosts];
-        }
-
-        return prevData;
-      });
+    if (userPosts && userPosts?.length > 0) {
+      if (page === 1) {
+        setDraftPosts(userPosts);
+      } else {
+        setDraftPosts((prevPosts) => [...prevPosts, ...userPosts]);
+      }
     }
-  }, [draftPosts, page]);
-  console.log("draftD", draftD);
-  console.log("page", page);
+  }, [userPosts]);
+
   useEffect(() => {
     if (page !== 1) refetchUserPost();
   }, [page]);
-
+  console.log("page", page);
   const closeBtn = document.querySelector(".ant-modal-close");
 
   const handlePost = async (postStatus: "draft" | "published") => {
@@ -311,6 +309,7 @@ const CreatePost: React.FC<Props> = ({
           msg: "",
           type: "",
         });
+        setDraftPosts([]);
         setIsPostModalOpen(false);
       }
     });
@@ -467,12 +466,11 @@ const CreatePost: React.FC<Props> = ({
           ) : (
             <>
               <VirtualList
-                listData={draftD}
+                listData={draftPosts}
                 isLoading={isLoadingUserPost}
                 page={page}
                 setPage={setPage}
                 limit={limit}
-                itemWidth={200}
                 renderComponent={(index: number, post: any) => (
                   <article
                     className='draft_post'
@@ -510,8 +508,12 @@ const CreatePost: React.FC<Props> = ({
                       </CButton>
                     </div>
                   </article>
+                  // <div key={index} style={{ height: "300px" }}>
+                  //   {" "}
+                  //   {index}{" "}
+                  // </div>
                 )}
-                footerHeight={50}
+                footerHeight={150}
               />
               {isLoadingUserPost && page > 1 && <PostLoader />}
               {!isLoadingUserPost && draftPosts.length === 0 && page === 1 && (
