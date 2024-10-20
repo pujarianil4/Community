@@ -205,8 +205,8 @@ function Navbar() {
   const content = (
     <div className='user_popover'>
       <Link
-        href={`/u/${userSession?.username}`}
-        as={`/u/${userSession?.username}`}
+        href={`/u/${userProfile?.username}`}
+        as={`/u/${userProfile?.username}`}
       >
         <div className='row'>
           <PiUserCircleDuotone size={28} />

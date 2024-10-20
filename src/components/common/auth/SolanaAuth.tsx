@@ -68,50 +68,24 @@ const SolanaAuthComponent = ({
           signUpData?.name,
           signedMessage,
           sigMsg,
+          "Solana",
           PUBLICKEY
         );
-        const userdata = await fetchUserById(response?.uid);
-        const user = {
-          username: userdata.username,
-          name: userdata?.name || "",
-          uid: response?.uid || 0,
-          token: response?.token || "",
-          img: userdata?.img.pro,
-          sid: response?.id || "",
-          netWrth: userdata?.netWrth || 0,
-          effectiveNetWrth: userdata?.effectiveNetWrth || 0,
-        };
-
-        setClientSideCookie("authToken", JSON.stringify(user));
-        dispatch(actions.setUserData(user));
-        dispatch(actions.setRefetchUser(true));
-        setUserAuthData(user);
+        setUserAuthData({ user: true });
       } else if (walletRoute == "auth" && !isSignUp) {
         response = await handleLogIn({
           sig: signedMessage,
           msg: sigMsg,
           pubKey: PUBLICKEY,
+          typ: "Solana",
         });
-        const userdata = await fetchUserById(response?.uid);
-        const user = {
-          username: userdata.username,
-          name: userdata?.name || "",
-          uid: response?.uid || 0,
-          token: response?.token || "",
-          img: userdata?.img.pro,
-          sid: response?.id || "",
-          netWrth: userdata?.netWrth || 0,
-          effectiveNetWrth: userdata?.effectiveNetWrth || 0,
-        };
-        setClientSideCookie("authToken", JSON.stringify(user));
-        dispatch(actions.setUserData(user));
-        dispatch(actions.setRefetchUser(true));
-        setUserAuthData(user);
+        setUserAuthData({ user: true });
       } else if (walletRoute == "linkWallet") {
         const response = await linkAddress({
           sig: signedMessage,
           msg: sigMsg,
           pubKey: PUBLICKEY,
+          typ: "Solana",
         });
         setUserAuthData(response);
       }

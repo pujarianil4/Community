@@ -45,8 +45,8 @@ const saveTokens = (id: string, token: string): void => {
 
   // Decrypt only if the token exists
   return {
-    id: id ? decryptToken(id) : null,
-    token: token ? decryptToken(token) : null,
+    id: id ? id : null,
+    token: token ? token : null,
   };
 };
 
