@@ -50,7 +50,7 @@ const linkAddress = () => {
       //   sig: sign,
       //   msg: sigMsg,
       // });
-      callFunction(getAddressesByUserId, user.uid);
+      callFunction(getAddressesByUserId, user.id);
       setIsModalOpen(false);
       dispatch(actions.setWalletRoute("auth"));
       // setTimeout(() => {
