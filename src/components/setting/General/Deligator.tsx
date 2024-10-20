@@ -8,7 +8,7 @@ import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 
 export default function Deligator() {
-  const userNameSelector = (state: RootState) => state?.user;
+  const userNameSelector = (state: RootState) => state?.user.profile;
   const [{}, [user]] = useRedux([userNameSelector]);
   const payload = {
     username: user?.username,

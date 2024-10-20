@@ -40,6 +40,7 @@ import Searchbar from "./searchbar";
 import { IoMdArrowBack } from "react-icons/io";
 import { handleLogOut } from "@/services/api/authapi";
 import { IUser } from "@/utils/types/types";
+import { clearTokens } from "@/services/api/api";
 export interface ISignupData {
   username: string;
   name: string;
@@ -104,103 +105,36 @@ function Navbar() {
 
   const userLogout = async () => {
     try {
-      deleteClientSideCookie("authToken");
       const logout = await handleLogOut();
-      // deleteClientSideCookie("authToken");
-      setUserSession(null);
-      const initialState: any = {
-        username: "",
-        name: "",
-        uid: 0,
-        token: "",
-        img: "",
-        sid: "",
-        netWrth: 0,
-        effectiveNetWrth: 0,
-      };
-
-      dispatch(actions.setUserData(initialState));
+      clearTokens();
+      dispatch(actions.setUserData({} as IUser));
       // Add a short delay before reloading the page
-      // setTimeout(() => {
-      //   deleteClientSideCookie("authToken");
-      //   router.push("/");
-      //   window?.location?.reload();
-      // }, 1000);
-      // window?.location?.reload();
+      setTimeout(() => {
+        window?.location?.reload();
+      }, 1000);
     } catch (error) {
-      deleteClientSideCookie("authToken");
       setUserSession(null);
-      const initialState: any = {
-        username: "",
-        name: "",
-        uid: 0,
-        token: "",
-        img: "",
-        sid: "",
-        netWrth: 0,
-        effectiveNetWrth: 0,
-      };
-
-      dispatch(actions.setUserData(initialState));
+      clearTokens();
+      dispatch(actions.setUserData({} as IUser));
       // Add a short delay before reloading the page
-      // setTimeout(() => {
-      //   deleteClientSideCookie("authToken");
-      //   router.push("/");
-      //   window?.location?.reload();
-      // }, 1000);
-      //  window?.location?.reload();
+      setTimeout(() => {
+        window?.location?.reload();
+      }, 1000);
     }
   };
 
-  // useEffect(() => {
-  //   console.log("userData", user);
-
-  //   // if (!userData?.token) {
-  //   //   setUserSession({ userAvailable: false });
-  //   // } else {
-  //   //   setUserSession(user);
-  //   // }
-  // }, []);
-
-  const fetchFromCookies = () => {
-    const userData1: any = getClientSideCookie("authToken");
-    console.log("userFetc", userData1);
-    if (userData?.uid) {
-      setUserSession(userData);
-      dispatch(actions.setUserData(userData));
-    }
-  };
-
-  // fetch user details after refresh
-  const fetchUser = async () => {
-    const userData1: any = getClientSideCookie("authToken");
-    console.log("userData1", userData1);
-    if (userData?.uid) {
-      const response = await fetchUserById(userData?.uid);
-      console.log("response", response);
-      const user = {
-        username: response?.username,
-        name: response?.name,
-        uid: response?.id,
-        token: userData1?.token,
-        img: response?.img?.pro,
-        sid: response?.id || "",
-        netWrth: response?.netWrth,
-        effectiveNetWrth: response?.effectiveNetWrth,
-      };
-      setUserSession(user);
-      console.log("user", user);
-      setClientSideCookie("authToken", JSON.stringify(user));
-      dispatch(actions.setUserData(userData));
-    }
-  };
   useEffect(() => {
     // fetchFromCookies();
-    // if (common?.refetch?.user) {
-    //   fetchUser();
-    //   dispatch(actions.setRefetchUser(false));
-    // }
+    if (common?.refetch?.user) {
+      // fetchUser();
+      dispatch(actions.setRefetchUser(false));
+    }
   }, [common?.refetch?.user]);
+
+  useEffect(() => {
+    // fetchFromCookies();
+    console.log("profileUpdate", profile, userProfile);
+  }, [profile]);
 
   const content = (
     <div className='user_popover'>
@@ -257,7 +191,7 @@ function Navbar() {
           </div>
 
           <div className='signin'>
-            {userProfile?.username ? (
+            {userProfile?.username && !isLoading ? (
               <div className='user_actions'>
                 {!showSearchBar && (
                   <IoSearch
@@ -295,7 +229,7 @@ function Navbar() {
                   </Popover>
                 </div>
               </div>
-            ) : userSession?.userAvailable == false || !userSession ? (
+            ) : error || (!userProfile.id && !isLoading) ? (
               <CButton auth='auth' onClick={showModal}>
                 LogIn
               </CButton>
