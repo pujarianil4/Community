@@ -127,6 +127,14 @@ api.interceptors.response.use(
    return response
   
   },
+
+  (error : any) => {
+
+    if(error&& error.response.data){
+      return Promise.reject(error.response.data);
+    }
+    return Promise.reject(error);
+  }
    
 );
 

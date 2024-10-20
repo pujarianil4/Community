@@ -200,6 +200,7 @@ export default function Profile() {
         .catch((error) => {
           console.error("Error updating user:", error);
           NotificationMessage("error", error?.message);
+          NotificationMessage("error", error?.response?.data?.message);
           // Optionally show error message
         });
     }
