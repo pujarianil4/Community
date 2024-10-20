@@ -45,7 +45,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
   const [{ dispatch, actions }] = useRedux();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const userInfo = useSelector((state: RootState) => state.user);
+  const userInfo = useSelector((state: RootState) => state.user.profile);
 
   const self = user.id == userInfo.uid;
 

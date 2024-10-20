@@ -16,7 +16,7 @@ import { AddIcon, DeleteIcon, EtherIcon } from "@/assets/icons";
 const linkAddress = () => {
   const { openConnectModal } = useConnectModal();
   const CommonSelector = (state: RootState) => state?.common;
-  const userNameSelector = (state: RootState) => state?.user;
+  const userNameSelector = (state: RootState) => state?.user.profile;
   const [{ dispatch, actions }, [common, user]] = useRedux([
     CommonSelector,
     userNameSelector,
@@ -24,7 +24,7 @@ const linkAddress = () => {
 
   const { isLoading, data, refetch, callFunction } = useAsync(
     getAddressesByUserId,
-    user.uid
+    user.id
   );
 
   const userAccount = useAccount();
@@ -68,8 +68,8 @@ const linkAddress = () => {
   };
 
   useEffect(() => {
-    if (!data) {
-      callFunction(getAddressesByUserId, user.uid);
+    if (user.id && !data) {
+      callFunction(getAddressesByUserId, user.id);
     }
   }, [userAccount.isConnected, user]);
 

@@ -39,6 +39,8 @@ import { SignUpModal } from "../common/auth/signUpModal";
 import Searchbar from "./searchbar";
 import { IoMdArrowBack } from "react-icons/io";
 import { handleLogOut } from "@/services/api/authapi";
+import { IUser } from "@/utils/types/types";
+import { clearTokens } from "@/services/api/api";
 export interface ISignupData {
   username: string;
   name: string;
@@ -54,11 +56,9 @@ function Navbar() {
   const secretCode = process.env.NEXT_PUBLIC_DISCORD_ID;
   const userAccount = useAccount();
 
-  const [{ dispatch, actions }, [user, common]] = useRedux([
-    userNameSelector,
-    commonSelector,
-  ]);
-
+  const [{ dispatch, actions }, [{ profile, isLoading, error }, common]] =
+    useRedux([userNameSelector, commonSelector]);
+  const userProfile: IUser = profile;
   const userData: any = getClientSideCookie("authToken");
   const { disconnect } = useDisconnect();
   const { openConnectModal } = useConnectModal();
@@ -99,121 +99,54 @@ function Navbar() {
     setIsPostModalOpen(false);
   };
 
-  useEffect(() => {
-    console.log("userSession", userSession);
-  }, [userSession]);
+  // useEffect(() => {
+  //   console.log("userSession", userSession);
+  // }, [userSession]);
 
   const userLogout = async () => {
     try {
-      deleteClientSideCookie("authToken");
       const logout = await handleLogOut();
-      // deleteClientSideCookie("authToken");
-      setUserSession(null);
-      const initialState: any = {
-        username: "",
-        name: "",
-        uid: 0,
-        token: "",
-        img: "",
-        sid: "",
-        netWrth: 0,
-        effectiveNetWrth: 0,
-      };
-
-      dispatch(actions.setUserData(initialState));
+      clearTokens();
+      dispatch(actions.setUserData({} as IUser));
       // Add a short delay before reloading the page
       setTimeout(() => {
-        deleteClientSideCookie("authToken");
-        router.push("/");
         window?.location?.reload();
       }, 1000);
-      // window?.location?.reload();
     } catch (error) {
-      deleteClientSideCookie("authToken");
       setUserSession(null);
-      const initialState: any = {
-        username: "",
-        name: "",
-        uid: 0,
-        token: "",
-        img: "",
-        sid: "",
-        netWrth: 0,
-        effectiveNetWrth: 0,
-      };
-
-      dispatch(actions.setUserData(initialState));
+      clearTokens();
+      dispatch(actions.setUserData({} as IUser));
       // Add a short delay before reloading the page
       setTimeout(() => {
-        deleteClientSideCookie("authToken");
-        router.push("/");
         window?.location?.reload();
       }, 1000);
-      //  window?.location?.reload();
     }
   };
 
   useEffect(() => {
-    console.log("userData?.token", userData?.token);
-
-    if (!userData?.token) {
-      setUserSession({ userAvailable: false });
-    } else {
-      setUserSession(user);
-    }
-  }, [user]);
-
-  const fetchFromCookies = () => {
-    const userData1: any = getClientSideCookie("authToken");
-    console.log("userFetc", userData1);
-    if (userData?.uid) {
-      setUserSession(userData);
-      dispatch(actions.setUserData(userData));
-    }
-  };
-
-  // fetch user details after refresh
-  const fetchUser = async () => {
-    const userData1: any = getClientSideCookie("authToken");
-    console.log("userData1", userData1);
-    if (userData?.uid) {
-      const response = await fetchUserById(userData?.uid);
-      console.log("response", response);
-      const user = {
-        username: response?.username,
-        name: response?.name,
-        uid: response?.id,
-        token: userData1?.token,
-        img: response?.img?.pro,
-        sid: response?.id || "",
-        netWrth: response?.netWrth,
-        effectiveNetWrth: response?.effectiveNetWrth,
-      };
-      setUserSession(user);
-      console.log("user", user);
-      setClientSideCookie("authToken", JSON.stringify(user));
-      dispatch(actions.setUserData(userData));
-    }
-  };
-  useEffect(() => {
-    fetchFromCookies();
+    // fetchFromCookies();
     if (common?.refetch?.user) {
-      fetchUser();
+      // fetchUser();
       dispatch(actions.setRefetchUser(false));
     }
   }, [common?.refetch?.user]);
 
+  useEffect(() => {
+    // fetchFromCookies();
+    console.log("profileUpdate", profile, userProfile);
+  }, [profile]);
+
   const content = (
     <div className='user_popover'>
       <Link
-        href={`/u/${userSession?.username}`}
-        as={`/u/${userSession?.username}`}
+        href={`/u/${userProfile?.username}`}
+        as={`/u/${userProfile?.username}`}
       >
         <div className='row'>
           <PiUserCircleDuotone size={28} />
           <span className='text'>
             <span className='text_main'>Profile</span>
-            <span className='text_sub'>@{userSession?.username}</span>
+            <span className='text_sub'>@{userProfile?.username}</span>
           </span>
         </div>
       </Link>
@@ -258,7 +191,7 @@ function Navbar() {
           </div>
 
           <div className='signin'>
-            {userSession?.token ? (
+            {userProfile?.username && !isLoading ? (
               <div className='user_actions'>
                 {!showSearchBar && (
                   <IoSearch
@@ -277,13 +210,13 @@ function Navbar() {
                     content={content}
                     trigger='click'
                   >
-                    {userSession?.img ? (
+                    {userProfile?.img ? (
                       <Image
                         width={50}
                         height={50}
                         loading='lazy'
                         className='avatar'
-                        src={userSession?.img}
+                        src={userProfile?.img.pro}
                         alt='avatar'
                       />
                     ) : (
@@ -296,7 +229,7 @@ function Navbar() {
                   </Popover>
                 </div>
               </div>
-            ) : userSession?.userAvailable == false || !userSession ? (
+            ) : error || (!userProfile.id && !isLoading) ? (
               <CButton auth='auth' onClick={showModal}>
                 LogIn
               </CButton>

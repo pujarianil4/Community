@@ -7,7 +7,11 @@ import "./index.scss";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { uploadSingleFile } from "@/services/api/commonApi";
-import { fetchUserById, updateUser } from "@services/api/userApi";
+import {
+  fetchUserById,
+  getUserProfile,
+  updateUser,
+} from "@services/api/userApi";
 
 import { fetchUserByUserName } from "@/services/api/userApi";
 import useAsync from "@/hooks/useAsync";
@@ -30,7 +34,7 @@ import FocusableDiv from "@/components/common/focusableDiv";
 
 export default function Profile() {
   const [{ dispatch, actions }, [userData]] = useRedux([
-    (state: RootState) => state.user,
+    (state: RootState) => state.user.profile,
   ]);
   const [isLoadingUpadte, setIsLoadingUpdate] = useState(false);
   const [usernameError, setUsernameError] = useState<string>("");
@@ -114,7 +118,7 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    callFunction(fetchUserById, userData.uid);
+    callFunction(fetchUserById, userData.id);
   }, [userData]);
 
   useEffect(() => {
@@ -167,24 +171,26 @@ export default function Profile() {
     if (Object.keys(updates).length > 0) {
       setIsLoadingUpdate(true);
       updateUser(updates)
-        .then((response) => {
+        .then(async (response) => {
           dispatch(actions.setRefetchUser(true));
-          const updatedUser: any = {
-            username: response?.username,
-            name: response?.name,
-            uid: response?.id,
-            token: userData?.token,
-            img: response?.img?.pro,
-            sid: response?.id || "",
-            netWrth: response?.netWrth,
-            effectiveNetWrth: response?.effectiveNetWrth,
-          };
 
-          console.log("updatedUser", updatedUser, userData);
+          const user = await getUserProfile();
+          // const updatedUser: any = {
+          //   username: response?.username,
+          //   name: response?.name,
+          //   uid: response?.id,
+          //   token: userData?.token,
+          //   img: response?.img?.pro,
+          //   sid: response?.id || "",
+          //   netWrth: response?.netWrth,
+          //   effectiveNetWrth: response?.effectiveNetWrth,
+          // };
 
-          setClientSideCookie("authToken", JSON.stringify(updatedUser), true);
+          // console.log("updatedUser", updatedUser, userData);
 
-          dispatch(actions.setUserData(updatedUser));
+          // setClientSideCookie("authToken", JSON.stringify(updatedUser), true);
+
+          // dispatch(actions.setUserData(updatedUser));
           setIsLoadingUpdate(false);
           NotificationMessage("success", "Profile updated !");
           setUser(user);
