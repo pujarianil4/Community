@@ -30,7 +30,7 @@ import FocusableDiv from "@/components/common/focusableDiv";
 
 export default function Profile() {
   const [{ dispatch, actions }, [userData]] = useRedux([
-    (state: RootState) => state.user,
+    (state: RootState) => state.user.profile,
   ]);
   const [isLoadingUpadte, setIsLoadingUpdate] = useState(false);
   const [usernameError, setUsernameError] = useState<string>("");

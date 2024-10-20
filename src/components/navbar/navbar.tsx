@@ -99,9 +99,9 @@ function Navbar() {
     setIsPostModalOpen(false);
   };
 
-  useEffect(() => {
-    console.log("userSession", userSession);
-  }, [userSession]);
+  // useEffect(() => {
+  //   console.log("userSession", userSession);
+  // }, [userSession]);
 
   const userLogout = async () => {
     try {
@@ -122,11 +122,11 @@ function Navbar() {
 
       dispatch(actions.setUserData(initialState));
       // Add a short delay before reloading the page
-      setTimeout(() => {
-        deleteClientSideCookie("authToken");
-        router.push("/");
-        window?.location?.reload();
-      }, 1000);
+      // setTimeout(() => {
+      //   deleteClientSideCookie("authToken");
+      //   router.push("/");
+      //   window?.location?.reload();
+      // }, 1000);
       // window?.location?.reload();
     } catch (error) {
       deleteClientSideCookie("authToken");
@@ -144,23 +144,23 @@ function Navbar() {
 
       dispatch(actions.setUserData(initialState));
       // Add a short delay before reloading the page
-      setTimeout(() => {
-        deleteClientSideCookie("authToken");
-        router.push("/");
-        window?.location?.reload();
-      }, 1000);
+      // setTimeout(() => {
+      //   deleteClientSideCookie("authToken");
+      //   router.push("/");
+      //   window?.location?.reload();
+      // }, 1000);
       //  window?.location?.reload();
     }
   };
 
   useEffect(() => {
-    console.log("userData?.token", userData?.token);
+    console.log("userData", user);
 
-    if (!userData?.token) {
-      setUserSession({ userAvailable: false });
-    } else {
-      setUserSession(user);
-    }
+    // if (!userData?.token) {
+    //   setUserSession({ userAvailable: false });
+    // } else {
+    //   setUserSession(user);
+    // }
   }, [user]);
 
   const fetchFromCookies = () => {
@@ -196,11 +196,11 @@ function Navbar() {
     }
   };
   useEffect(() => {
-    fetchFromCookies();
-    if (common?.refetch?.user) {
-      fetchUser();
-      dispatch(actions.setRefetchUser(false));
-    }
+    // fetchFromCookies();
+    // if (common?.refetch?.user) {
+    //   fetchUser();
+    //   dispatch(actions.setRefetchUser(false));
+    // }
   }, [common?.refetch?.user]);
 
   const content = (

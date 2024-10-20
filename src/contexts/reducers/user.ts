@@ -1,47 +1,51 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { parseCookies } from "nookies";
+import { IUser } from '@/utils/types/types';
 
-export interface User {
-  username: string;
-  name: string;
-  uid: number;
-  token?: string;
-  img: string;
-  sid: number;
-  netWrth: number;
-  effectiveNetWrth: number;
+// export interface User {
+//   username: string;
+//   name: string;
+//   uid: number;
+//   token?: string;
+//   img: string;
+//   sid: number;
+//   netWrth: number;
+//   effectiveNetWrth: number;
+// }
+
+interface state{
+  profile: IUser,
+  isLoading: boolean,
+  error: string
 }
-const cookies = parseCookies();
-const auth = cookies?.authToken;
 
-const userData: any = auth && JSON.parse(auth);
 
 //TODO update Later
-const initialState: User = {
-  username: userData?.username || "",
-  name: userData?.name || "",
-  uid: userData?.uid || 0,
-  token: userData?.token || "",
-  img: userData?.img,
-  sid: userData?.id || "",
-  netWrth: userData?.netWrth || "",
-  effectiveNetWrth: userData?.effectiveNetWrth || "",
+const initialState: state = {
+
+  profile: {} as IUser,
+  isLoading: false,
+  error: ""
+
 };
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUserData: (state, action: PayloadAction<User>) => {
-      state.username = action.payload?.username;
-      state.name = action.payload?.name;
-      state.uid = action.payload?.uid;
-      state.token = action.payload?.token;
-      state.img = action.payload?.img;
-      state.sid = action.payload?.sid;
-      state.netWrth = action.payload?.netWrth;
-      state.effectiveNetWrth = action.payload?.effectiveNetWrth;
+    setUserData: (state, action: PayloadAction<IUser>) => {
+      console.log("setUserData", action);
+      
+     state.profile= action.payload
+     state.isLoading = false,
+     state.error = ""
+    },
+    setUserLoading: (state) => {
+      state.isLoading = true;
+    },
+    setUserError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload;
+      state.isLoading = false;
     },
   },
 });

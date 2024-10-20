@@ -6,6 +6,7 @@ import { PublicKey } from '@solana/web3.js';
 
 import { IFollowAPI, IPostCommentAPI, IVotePayload } from "@/utils/types/types";
 import { getClientSideCookie } from "@/utils/helpers";
+import { setUserData, setUserError, setUserLoading } from '@/contexts/reducers';
 
 
 // Follow API
@@ -65,7 +66,7 @@ export const fetchUserByUserName = async (username: string) => {
 
 
 export const fetchUser = async (username: string) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile.uid;
   if (!username) {
     return null;
   }
@@ -97,6 +98,23 @@ export const fetchUserById = async (id: string) => {
     throw error;
   }
 };
+
+export const getUserProfile = async () => {
+  store.dispatch(setUserLoading())
+  try {
+    const response = await api.get(`/users/me`);
+   
+    console.log("responseUSer", response.data);
+    
+  store.dispatch(setUserData(response.data))
+    return response.data;
+  } catch (error) {
+    console.error("Fetch User ", error);
+    store.dispatch(setUserError("failed"))
+    throw error;
+  }
+};
+
 
 export const updateUser = async (payload: Partial<IUser>) => {
   try {
@@ -232,7 +250,7 @@ export const isUserFollowed = async ({
   fwid: string;
   type: string;
 }) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile.uid;
 
   try {
     const response = await api.get(

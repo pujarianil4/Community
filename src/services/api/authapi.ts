@@ -5,6 +5,7 @@ import { api } from "./api";
 export const handleLogIn = async (payload: {
   sig: `0x${string}` | string | undefined;
   msg: string;
+  typ: string
   pubKey?: PublicKey | string | null;
 }) => {
   const response = await api.post("/auth/login", payload);
