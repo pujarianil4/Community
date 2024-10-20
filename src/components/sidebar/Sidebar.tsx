@@ -131,13 +131,7 @@ const SideBar: React.FC = () => {
     refetchCommunitySelector,
     userSelector,
   ]);
-  const { isLoading, callFunction, data, refetch } = useAsync(
-    getFollowinsByUserId,
-    {
-      userId: user.uid,
-      type: "c",
-    }
-  );
+  const { isLoading, callFunction, data, refetch } = useAsync();
 
   const router = useRouter();
 
@@ -254,8 +248,19 @@ const SideBar: React.FC = () => {
     SetCommunityList(inFormat);
   };
 
+  const fetchUserCommunities = async () => {
+    if (user.id) {
+      const data: any = await callFunction(getFollowinsByUserId, {
+        userId: user.id,
+        type: "c",
+      });
+      getCommunities(data);
+      return data;
+    }
+  };
+
   const handleCallback = () => {
-    refetch();
+    fetchUserCommunities();
     console.log("refectch");
 
     dispatch(actions.setRefetchCommunity(true));
@@ -284,14 +289,14 @@ const SideBar: React.FC = () => {
 
   useEffect(() => {
     if (comminityRefetch) {
-      refetch();
+      fetchUserCommunities();
       dispatch(actions.setRefetchCommunity(false));
     }
   }, [comminityRefetch]);
 
   useEffect(() => {
-    if (data) getCommunities(data);
-  }, [data]);
+    fetchUserCommunities();
+  }, [user]);
   return (
     <>
       <RxHamburgerMenu

@@ -2,6 +2,8 @@ import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig, AxiosR
 import { store } from "@contexts/store";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
+import { setUserData, setUserError, setUserLoading } from '@/contexts/reducers';
+import { IUser } from '@/utils/types/types';
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret_key";
  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://community-slr7.onrender.com";
@@ -98,7 +100,27 @@ api.interceptors.response.use(
       const token = response.data.token;
      
       
-      saveTokens(response.data.uid, response.data.token)
+      saveTokens(response.data.uid, response.data.token);
+
+      (async ()=> {
+        store.dispatch(setUserLoading())
+        try {
+          const user = await axios.get<IUser>(
+            `${BASE_URL}/users/me`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          store.dispatch(setUserData(user.data))
+        } catch (error) {
+          store.dispatch(setUserError("Failed to get User"))
+        }
+
+        
+      })()
+  
 
     }
     

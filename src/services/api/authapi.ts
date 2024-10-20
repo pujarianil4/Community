@@ -31,6 +31,7 @@ export const handleSignup = async (
   name: string | undefined,
   sig: string | undefined,
   msg: string,
+  typ: string,
   pubKey?: PublicKey | string | null
 ) => {
   try {
@@ -40,6 +41,7 @@ export const handleSignup = async (
       sig,
       msg,
       pubKey,
+      typ,
     });
     console.log("==============userSignUp=================", response);
     return response.data;
@@ -52,6 +54,7 @@ export const handleSignup = async (
 export const linkAddress = async (payload: {
   sig: `0x${string}` | string | undefined;
   msg: string;
+  typ: string
   pubKey?: PublicKey | string;
 }) => {
   const response = await api.post("/users/address", payload);

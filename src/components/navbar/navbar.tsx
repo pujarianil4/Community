@@ -39,6 +39,7 @@ import { SignUpModal } from "../common/auth/signUpModal";
 import Searchbar from "./searchbar";
 import { IoMdArrowBack } from "react-icons/io";
 import { handleLogOut } from "@/services/api/authapi";
+import { IUser } from "@/utils/types/types";
 export interface ISignupData {
   username: string;
   name: string;
@@ -54,11 +55,9 @@ function Navbar() {
   const secretCode = process.env.NEXT_PUBLIC_DISCORD_ID;
   const userAccount = useAccount();
 
-  const [{ dispatch, actions }, [user, common]] = useRedux([
-    userNameSelector,
-    commonSelector,
-  ]);
-
+  const [{ dispatch, actions }, [{ profile, isLoading, error }, common]] =
+    useRedux([userNameSelector, commonSelector]);
+  const userProfile: IUser = profile;
   const userData: any = getClientSideCookie("authToken");
   const { disconnect } = useDisconnect();
   const { openConnectModal } = useConnectModal();
@@ -153,15 +152,15 @@ function Navbar() {
     }
   };
 
-  useEffect(() => {
-    console.log("userData", user);
+  // useEffect(() => {
+  //   console.log("userData", user);
 
-    // if (!userData?.token) {
-    //   setUserSession({ userAvailable: false });
-    // } else {
-    //   setUserSession(user);
-    // }
-  }, [user]);
+  //   // if (!userData?.token) {
+  //   //   setUserSession({ userAvailable: false });
+  //   // } else {
+  //   //   setUserSession(user);
+  //   // }
+  // }, []);
 
   const fetchFromCookies = () => {
     const userData1: any = getClientSideCookie("authToken");
@@ -213,7 +212,7 @@ function Navbar() {
           <PiUserCircleDuotone size={28} />
           <span className='text'>
             <span className='text_main'>Profile</span>
-            <span className='text_sub'>@{userSession?.username}</span>
+            <span className='text_sub'>@{userProfile?.username}</span>
           </span>
         </div>
       </Link>
@@ -258,7 +257,7 @@ function Navbar() {
           </div>
 
           <div className='signin'>
-            {userSession?.token ? (
+            {userProfile?.username ? (
               <div className='user_actions'>
                 {!showSearchBar && (
                   <IoSearch
@@ -277,13 +276,13 @@ function Navbar() {
                     content={content}
                     trigger='click'
                   >
-                    {userSession?.img ? (
+                    {userProfile?.img ? (
                       <Image
                         width={50}
                         height={50}
                         loading='lazy'
                         className='avatar'
-                        src={userSession?.img}
+                        src={userProfile?.img.pro}
                         alt='avatar'
                       />
                     ) : (
