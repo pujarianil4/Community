@@ -11,7 +11,7 @@ interface ICFilter {
   list: Array<List>;
   callBack: (s: List) => void;
   defaultListIndex: number;
-  selectedFilter: string;
+  selectedFilter?: string;
 }
 
 export default function CFilter({
