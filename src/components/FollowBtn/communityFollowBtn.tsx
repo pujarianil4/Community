@@ -9,7 +9,7 @@ import { ICommunity } from "@/utils/types/types";
 
 interface IProps {
   communityData: ICommunity;
-  onSuccess: (isFollowed: boolean) => void;
+  onSuccess?: (isFollowed: boolean) => void;
 }
 
 export default function CommunityFollowButton({
@@ -30,7 +30,7 @@ export default function CommunityFollowButton({
         dispatch(actions.setRefetchCommunity(true));
         dispatch(actions.setRefetchUser(true));
         setIsFollowed(true);
-        onSuccess(true);
+        onSuccess && onSuccess(true);
       } else {
         setIsUnFollowLoading(true);
         await UnFollowAPI({
@@ -41,7 +41,7 @@ export default function CommunityFollowButton({
         dispatch(actions.setRefetchUser(true));
         setIsFollowed(false);
         setIsUnFollowLoading(false);
-        onSuccess(false);
+        onSuccess && onSuccess(false);
       }
     } catch (error) {
       console.error("Error handling follow:", error);

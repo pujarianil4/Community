@@ -11,8 +11,7 @@ import TelegramConnect from "@/components/common/auth/AuthTelegram";
 import Session from "./Session";
 //
 import LinkAddress from "./LinkedAddress";
-import Deligate from "./Deligate";
-import Deligator from "./Deligator";
+import Deligate from "./deligate/Deligate";
 
 export default function General() {
   const socialItems = [
