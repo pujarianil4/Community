@@ -27,6 +27,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  experimental: {
+    concurrentFeatures: true,
+  },
 };
 
 export default nextConfig;

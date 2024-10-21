@@ -10,6 +10,7 @@ import { getPosts } from "@/services/api/postApi";
 import { fetchCommunities } from "@/services/api/communityApi";
 import { ICommunity, IPost } from "@/utils/types/types";
 import Community from "./community";
+import Link from "next/link";
 export default function RightPanel() {
   const pathName = usePathname();
   const isProposalPage =
@@ -20,7 +21,7 @@ export default function RightPanel() {
 
   const { isLoading: isPostLoading, data: postByComments } = useAsync(
     getPosts,
-    { sortby: "pCount" }
+    { sortby: "ccount" }
   );
   const { isLoading, data: communities } = useAsync(fetchCommunities, "pCount");
 
@@ -51,9 +52,11 @@ export default function RightPanel() {
         <div className='card_heading'>
           <h2> Suggestions</h2>
           <div>
-            <span>
-              View All <RightUpIcon />
-            </span>
+            <Link href={"/communities"} as={"/communities"}>
+              <span>
+                View All <RightUpIcon />
+              </span>
+            </Link>
           </div>
         </div>
         {isLoading ? (
@@ -83,9 +86,11 @@ export default function RightPanel() {
         <div className='card_heading'>
           <h2>Trending Post</h2>
           <div>
-            <span>
-              View All <RightUpIcon />
-            </span>
+            <Link href={"/"} as={"/"}>
+              <span>
+                View All <RightUpIcon />
+              </span>
+            </Link>
           </div>
         </div>
         {isPostLoading ? (

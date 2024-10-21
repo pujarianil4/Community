@@ -52,12 +52,20 @@ export default function FeedList({
   const [page, setPage] = useState(1);
   const [posts, setPosts] = useState<IPost[]>([]);
   const limit = 10; // UPDATE limit later
+  const [selectedFilter, setSelectedFilter] = useState<List>({
+    value: sortby,
+    title: "trending",
+  });
+  const [selectedSts, setSelectedSts] = useState<List>({
+    value: "",
+    title: "All",
+  });
 
   const { isLoading, data, refetch, callFunction } = useAsync(
     getFunctionByMethod[method],
     {
       nameId: id,
-      sortby,
+      sortby: selectedFilter.value,
       order,
       page,
       limit: limit,
@@ -66,19 +74,33 @@ export default function FeedList({
 
   const refetchRoute = (state: RootState) => state?.common.refetch.user;
   const refetchPost = (state: RootState) => state.common.refetch.post;
-
-  const [{ dispatch, actions }, [shouldRefetchUser, shouldRefetchPost]] =
-    useRedux([refetchRoute, refetchPost]);
-
+  const userNameSelector = (state: RootState) => state?.user;
+  const [{ dispatch, actions }, [shouldRefetchUser, shouldRefetchPost, user]] =
+    useRedux([refetchRoute, refetchPost, userNameSelector]);
   const loadingArray = Array(5).fill(() => 0);
 
   const handleFilter = (filter: List) => {
+    setSelectedFilter(filter);
     callFunction(getFunctionByMethod[method], {
       nameId: id,
       sortby: filter.value,
       order: "DESC",
       page: 1,
       limit: limit,
+    });
+    setPosts([]);
+    setPage(1);
+  };
+
+  const handleFilterStatus = (filter: List) => {
+    setSelectedSts(filter);
+    callFunction(getFunctionByMethod[method], {
+      nameId: id,
+      sortby,
+      order: "DESC",
+      page: 1,
+      limit: limit,
+      sts: filter.value,
     });
     setPosts([]);
     setPage(1);
@@ -113,6 +135,10 @@ export default function FeedList({
     if (page !== 1) refetch();
   }, [page]);
 
+  useEffect(() => {
+    console.log("user", user.uid == id, user, id);
+  }, [user]);
+
   if (page < 2 && isLoading) {
     return loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />);
   }
@@ -128,6 +154,22 @@ export default function FeedList({
           ]}
           callBack={handleFilter}
           defaultListIndex={0}
+          selectedFilter={selectedFilter.title}
+        />
+      )}
+      {method != "allPosts" && (
+        <CFilter
+          list={[
+            { value: "", title: "All" },
+            { value: "published", title: "Published" },
+            { value: "archived", title: "Archived" },
+            ...(user.username == id
+              ? [{ value: "draft", title: "Drafts" }]
+              : []),
+          ]}
+          callBack={handleFilterStatus}
+          defaultListIndex={0}
+          selectedFilter={selectedSts.title}
         />
       )}
 

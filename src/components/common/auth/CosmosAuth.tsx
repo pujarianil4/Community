@@ -14,7 +14,6 @@ import NotificationMessage from "../Notification";
 import { cosmosWallets } from "@/config/cosmos/cosmos";
 import { handleLogIn, handleSignup } from "@/services/api/authapi";
 import { IUser } from "@/utils/types/types";
-import { User } from "@/contexts/reducers/user";
 
 export interface ISignupData {
   username: string;
@@ -45,7 +44,7 @@ export default function CosmosAuthComponent({
     wallet,
     signArbitrary,
     isWalletConnected,
-  } = context1;
+  } = chainContext;
   const ref = useRef<any>(null);
   console.log("cosmosWallets", cosmosWallets);
 
@@ -74,48 +73,23 @@ export default function CosmosAuthComponent({
             signUpData?.name,
             signedMessage,
             sigMsg,
+            "Cosmos",
             address
           );
-          const userdata = await fetchUserById(response?.uid);
-          const user: User = {
-            username: userdata.username,
-            name: userdata?.name || "",
-            uid: response?.uid || 0,
-            token: response?.token || "",
-            img: userdata?.img?.pro,
-            netWrth: userdata?.netWrth || 0,
-            sid: response?.id || "",
-            effectiveNetWrth: userdata?.effectiveNetWrth || 0,
-          };
-          setClientSideCookie("authToken", JSON.stringify(user));
-          dispatch(actions.setUserData(user));
-          dispatch(actions.setRefetchUser(true));
-          setUserAuthData(user);
+          setUserAuthData({ user: true });
         } else if (walletRoute == "auth" && !isSignUp) {
           response = await handleLogIn({
             sig: signedMessage,
             msg: sigMsg,
+            typ: "Cosmos",
             pubKey: address,
           });
-          const userdata = await fetchUserById(response?.uid);
-          const user: User = {
-            username: userdata.username,
-            name: userdata?.name || "",
-            uid: response?.uid || 0,
-            token: response?.token || "",
-            img: userdata?.img?.pro,
-            sid: response?.id || "",
-            netWrth: userdata?.netWrth || 0,
-            effectiveNetWrth: userdata?.effectiveNetWrth || 0,
-          };
-          setClientSideCookie("authToken", JSON.stringify(user));
-          dispatch(actions.setUserData(user));
-          dispatch(actions.setRefetchUser(true));
-          setUserAuthData(user);
+          setUserAuthData({ user: true });
         } else if (walletRoute == "linkWallet") {
           const response = await linkAddress({
             sig: signedMessage,
             msg: sigMsg,
+            typ: "Cosmos",
             pubKey: address,
           });
           setUserAuthData(response);
