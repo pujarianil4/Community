@@ -40,7 +40,11 @@ export default function ProposalList({
 
   useEffect(() => {
     if (proposalsData && proposalsData?.length > 0) {
-      setProposals((prevPosts) => [...prevPosts, ...proposalsData]);
+      if (page === 1) {
+        setProposals(proposalsData);
+      } else {
+        setProposals((prevPosts) => [...prevPosts, ...proposalsData]);
+      }
     }
   }, [proposalsData]);
 
@@ -77,7 +81,7 @@ export default function ProposalList({
         renderComponent={(index: number, proposal: IProposal) => (
           <ProposalItem key={index} proposal={proposal} />
         )}
-        footerHeight={80}
+        footerHeight={120}
       />
       {isLoading && page > 1 && <ProposalItemLoader />}
       {!isLoading && proposals.length === 0 && <EmptyData />}

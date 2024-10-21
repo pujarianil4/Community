@@ -40,12 +40,14 @@ export default function Posts() {
         return fetchSearchByPostData;
     }
   };
+  // PERIOD - hourly, daily, monthly, yearly;
   const payload = {
     search: searchQuery,
     page,
     limit,
     sortBy: "ccount",
     order: "DESC",
+    period: "",
   };
   const getPayload = () => {
     if (pathname.split("/")[1] == "c") {
@@ -69,6 +71,15 @@ export default function Posts() {
     callFunction(fetchDataByType(pathname.split("/")[1]), {
       ...payload,
       sortBy: filter?.value,
+    });
+    setPage(1);
+  };
+
+  const handleTimeFilter = (filter: List) => {
+    setPosts([]);
+    callFunction(fetchDataByType(pathname.split("/")[1]), {
+      ...payload,
+      period: filter?.value,
     });
     setPage(1);
   };
@@ -102,39 +113,29 @@ export default function Posts() {
     if (error) NotificationMessage("error", error?.message); // error?.response?.data?.message
   }, [error]);
 
-  if (
-    // Array.isArray(postsData?.posts)
-    //   ? postsData?.posts?.length === 0
-    //   : postsData?.posts?.data?.length === 0 && !isLoading
-    postsData?.posts?.length === 0 &&
-    !isLoading
-  ) {
-    return <EmptyData />;
-  }
   return (
     <main className='search_post_container'>
       {/* Update Filters as per data */}
       <section className='filters'>
         <CFilter
           list={[
-            { value: "ccount", title: "Relevance" },
-            { value: "cta", title: "Top" },
-            { value: "ccount", title: "Trending" },
-            { value: "cta", title: "Latest" },
+            { value: "ccount", title: "trending" },
+            { value: "time", title: "latest" },
+            { value: "up", title: "vote" },
           ]}
           callBack={handleFilter}
           defaultListIndex={0}
         />
         <CFilter
           list={[
-            { value: "ccount", title: "All time" },
-            { value: "cta", title: "Past year" },
-            { value: "cta", title: "Past month" },
-            { value: "cta", title: "Past week" },
-            { value: "cta", title: "Today" },
-            { value: "cta", title: "Past hour" },
+            { value: "", title: "All time" },
+            { value: "yearly", title: "Past year" },
+            { value: "monthly", title: "Past month" },
+            // { value: "cta", title: "Past week" },
+            { value: "daily", title: "Today" },
+            { value: "hourly", title: "Past hour" },
           ]}
-          callBack={handleFilter}
+          callBack={handleTimeFilter}
           defaultListIndex={0}
         />
       </section>
@@ -146,6 +147,10 @@ export default function Posts() {
               <PostLoader key={i} />
             ))}
         </>
+      ) : postsData?.posts?.length === 0 && !isLoading ? (
+        <div style={{ margin: "20% auto" }}>
+          <EmptyData />
+        </div>
       ) : (
         <section>
           {/* {postsData?.posts?.map((post: IPost) => (
@@ -161,7 +166,7 @@ export default function Posts() {
             renderComponent={(index: number, post: IPost) => (
               <SearchPostItem key={index} post={post} />
             )}
-            footerHeight={150}
+            footerHeight={200}
           />
           {isLoading && page > 1 && <PostLoader />}
         </section>

@@ -513,6 +513,11 @@
       }
     }
 
+    .highlighted {
+      color: var(--primary);
+      background-color: var(--tertiary-bg);
+    }
+
     @include lessThan(md) {
       li {
         span {

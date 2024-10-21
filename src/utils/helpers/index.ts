@@ -5,9 +5,8 @@ export function setClientSideCookie(
   value: any,
   force: boolean = false
 ) {
- 
   const cookieOptions = {
-    path: "/", 
+    path: "/",
   };
 
   if (force) {
@@ -20,7 +19,7 @@ export function setClientSideCookie(
 
 export function getClientSideCookie(name: string) {
   const cookies = parseCookies();
-  
+
   if (cookies[name]) {
     try {
       return JSON.parse(cookies[name]);
@@ -29,7 +28,7 @@ export function getClientSideCookie(name: string) {
       return null;
     }
   }
-  
+
   return null;
 }
 
@@ -76,12 +75,17 @@ export const timeAgo = (timestamp: string): string => {
 
 export const debounce = (func: (...args: any[]) => void, delay: number) => {
   let timer: NodeJS.Timeout;
-  return (...args: any[]) => {
+  const debouncedFunc = (...args: any[]) => {
     clearTimeout(timer);
     timer = setTimeout(() => {
       func(...args);
     }, delay);
   };
+  debouncedFunc.cancel = () => {
+    clearTimeout(timer);
+  };
+
+  return debouncedFunc as typeof debouncedFunc & { cancel: () => void };
 };
 
 export const getImageSource = (

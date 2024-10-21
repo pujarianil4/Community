@@ -9,8 +9,6 @@ export const fetchSearchData = async ({
   search: string;
   page: number;
   limit: number;
-  sortBy?: string;
-  order?: string;
 }) => {
   if (search?.length < 3) return null;
   try {
@@ -28,19 +26,23 @@ export const fetchSearchByPostData = async ({
   search,
   page = 1,
   limit = 10,
-  sortBy = "ccount", // TODO: update filter
+  sortBy = "time", // TODO: update filter
   order = "DESC",
+  period = "", // TODO: add all time default filter
 }: {
   search: string;
   page: number;
   limit: number;
-  sortBy?: string;
-  order?: string;
+  sortBy?: "ccount" | "time" | "up";
+  order?: "DESC" | "ASC";
+  period?: "hourly" | "daily" | "monthly" | "yearly" | "";
 }) => {
+  let url = `/search/posts?keyword=${search}&limit=${limit}&page=${page}&sortBy=${sortBy}&order=${order}`;
+  if (period) {
+    url += `&period=${period}`;
+  }
   try {
-    const { data } = await api.get(
-      `/search/posts?keyword=${search}&limit=${limit}&page=${page}&sortBy=${sortBy}&order=${order}`
-    );
+    const { data } = await api.get(url);
     console.log("DATA", data);
     return data;
   } catch (error) {
@@ -53,14 +55,10 @@ export const fetchSearchByCommunityData = async ({
   search,
   page = 1,
   limit = 10,
-}: // sortBy = "ccount", // TODO: update filter
-// order = "DESC",
-{
+}: {
   search: string;
   page: number;
   limit: number;
-  // sortBy?: string;
-  // order?: string;
 }) => {
   try {
     const { data } = await api.get(
@@ -77,14 +75,10 @@ export const fetchSearchByUserData = async ({
   search,
   page = 1,
   limit = 10,
-}: // sortBy = "ccount", // TODO: update filter
-// order = "DESC",
-{
+}: {
   search: string;
   page: number;
   limit: number;
-  // sortBy?: string;
-  // order?: string;
 }) => {
   try {
     const { data } = await api.get(
@@ -101,14 +95,10 @@ export const fetchSearchByCommentData = async ({
   search,
   page = 1,
   limit = 10,
-}: // sortBy = "ccount", // TODO: update filter
-// order = "DESC",
-{
+}: {
   search: string;
   page: number;
   limit: number;
-  // sortBy?: string;
-  // order?: string;
 }) => {
   try {
     const { data } = await api.get(
@@ -126,18 +116,25 @@ export const fetchCommunitySearchByPostData = async ({
   page = 1,
   limit = 10,
   cname,
+  sortBy = "time", // TODO: update filter
+  order = "DESC",
+  period = "", // TODO: add all time default filter
 }: {
   search: string;
   page: number;
   limit: number;
   cname: string;
-  // sortBy?: string;
-  // order?: string;
+  sortBy?: "ccount" | "time" | "up";
+  order?: "DESC" | "ASC";
+  period?: "hourly" | "daily" | "monthly" | "yearly" | "";
 }) => {
+  let url = `/search/inUsers?keyword=${search}&limit=${limit}&page=${page}&cname=${cname}&sortBy=${sortBy}&order=${order}`;
+
+  if (period) {
+    url += `&period=${period}`;
+  }
   try {
-    const { data } = await api.get(
-      `/search/inCommunity?keyword=${search}&limit=${limit}&page=${page}&cname=${cname}`
-    );
+    const { data } = await api.get(url);
     return data;
   } catch (error) {
     console.log("Search_Result_Error", error);
@@ -150,18 +147,25 @@ export const fetchUserSearchByPostData = async ({
   page = 1,
   limit = 10,
   uname,
+  sortBy = "time", // TODO: update filter
+  order = "DESC",
+  period = "", // TODO: add all time default filter
 }: {
   search: string;
   page: number;
   limit: number;
   uname: string;
-  // sortBy?: string;
-  // order?: string;
+  sortBy?: "ccount" | "time" | "up";
+  order?: "DESC" | "ASC";
+  period?: "hourly" | "daily" | "monthly" | "yearly" | "";
 }) => {
+  let url = `/search/inUsers?keyword=${search}&limit=${limit}&page=${page}&uname=${uname}&sortBy=${sortBy}&order=${order}`;
+
+  if (period) {
+    url += `&period=${period}`;
+  }
   try {
-    const { data } = await api.get(
-      `/search/inUsers?keyword=${search}&limit=${limit}&page=${page}&uname=${uname}`
-    );
+    const { data } = await api.get(url);
     return data;
   } catch (error) {
     console.log("Search_Result_Error", error);

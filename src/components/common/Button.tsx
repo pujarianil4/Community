@@ -58,7 +58,8 @@ export default function CButton({
 
   const closeModal = () => {
     setIsModalOpen(false);
-    onClick?.();
+    return;
+    // onClick?.();
   };
 
   return (

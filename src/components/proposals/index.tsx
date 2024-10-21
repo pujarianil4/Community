@@ -9,17 +9,24 @@ import { AddIcon } from "@/assets/icons";
 // import CreateProposal from "./createProposal";
 import ProposalList from "./proposalList";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface IPrpos {
   cid: number;
   cname: string;
 }
 export default function Proposals({ cid, cname }: IPrpos) {
+  const router = useRouter();
   // const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
   const [refetchProposal, setRefetchProposal] = useState(false);
   // const handleCreateProposal = () => {
   //   setIsProposalModalOpen(true);
   // };
+
+  const handleRedirect = () => {
+    router.push(`/p/create-proposal?community=${cname}&id=${cid}`);
+  };
+
   return (
     <>
       <main className='proposal_container'>
@@ -31,16 +38,9 @@ export default function Proposals({ cid, cname }: IPrpos) {
               className='search'
             />
           </div>
-          <Link
-            href={`p/create-proposal?community=${cname}&id=${cid}`}
-            as={`/p/create-proposal?community=${cname}&id=${cid}`}
-          >
-            <CButton
-            //  onClick={handleCreateProposal}
-            >
-              <AddIcon /> Create Proposal
-            </CButton>
-          </Link>
+          <CButton onClick={handleRedirect}>
+            <AddIcon /> Create Proposal
+          </CButton>
         </section>
         <ProposalList
           cid={cid}
