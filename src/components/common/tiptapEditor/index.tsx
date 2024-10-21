@@ -31,7 +31,7 @@ const createExtensions = (placeHolder: string) => [
   }),
   Link.configure({
     openOnClick: true,
-    autolink: true,
+    autolink: false,
     linkOnPaste: true,
     validate: (href) => /^https?:\/\//.test(href),
     HTMLAttributes: {
@@ -95,17 +95,31 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
     setIsModalVisible(true);
   };
 
-  const handleCreateLink = (text: string, href: string) => {
+  // const handleCreateLink = (text: string, href: string) => {
+  //   if (editor) {
+  //     editor
+  //       .chain()
+  //       .focus()
+  //       .extendMarkRange("link")
+  //       .setLink({ href })
+  //       .insertContent(text)
+  //       .run();
+  //   }
+  //   setIsModalVisible(false);
+  // };
+  const handleCreateLink = (href: string) => {
     if (editor) {
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href })
-        .insertContent(text)
-        .run();
+      editor.chain().focus().extendMarkRange("link").setLink({ href }).run();
     }
     setIsModalVisible(false);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === " " && isModalVisible) {
+      // Prevent the modal from opening when space is pressed
+      event.preventDefault();
+      setIsModalVisible(false);
+    }
   };
 
   const handleCancel = () => {
@@ -120,6 +134,27 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
       setRemainingChars(maxCharCount - initialCharCount);
     }
   }, [content, editor]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === " " && isModalVisible) {
+        event.preventDefault();
+        setIsModalVisible(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isModalVisible]);
+
+  useEffect(() => {
+    if (!isModalVisible) {
+      editor?.commands.focus();
+    }
+  }, [isModalVisible, editor]);
 
   useEffect(() => {
     if (autoFocus && editor) {
@@ -231,8 +266,9 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
           <GoUnlink size={16} />
         </button>
       </div>
-      <div className='editor_content'>
+      <div className='editor_content' onKeyDown={handleKeyDown}>
         <EditorContent editor={editor} />
+        {/* <EditorContent editor={editor} onKeyDown={handleKeyDown} /> */}
       </div>
       <div
         className={`char_count ${
