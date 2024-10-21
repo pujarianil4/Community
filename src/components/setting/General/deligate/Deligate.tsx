@@ -22,15 +22,16 @@ import ProposalWarning from "./ProposalWarning";
 const { Panel } = Collapse;
 
 export default function Deligate() {
-  const userNameSelector = (state: RootState) => state?.user;
+  const userNameSelector = (state: RootState) => state?.user.profile;
   const [{}, [user]] = useRedux([userNameSelector]);
-  const { isLoading: usersLoading, data: userList } = useAsync(
-    getFollowersByUserId,
-    {
-      userId: user?.uid,
-      type: "u",
-    }
-  );
+  const {
+    isLoading: usersLoading,
+    data: userList,
+    callFunction,
+  } = useAsync(getFollowersByUserId, {
+    userId: user?.id,
+    type: "u",
+  });
   const userData = useMemo(() => {
     return userList?.map((item: any) => item?.user);
   }, [userList]);

@@ -14,6 +14,7 @@ import NotificationMessage from "../Notification";
 
 import { walletIcons } from "@/utils/constants/walletIcons";
 import { handleLogIn, handleSignup } from "@/services/api/authapi";
+import { saveTokens } from "@/services/api/api";
 
 export interface ISignupData {
   username: string;
@@ -49,68 +50,62 @@ export default function EvmAuthComponent({
         console.log("signedMessage", signedMessage);
         setSignature(signedMessage || "");
         disconnect();
-        localStorage.clear();
         let response;
         if (walletRoute == "auth" && isSignUp) {
           response = await handleSignup(
             signUpData?.username,
             signUpData?.name,
             signedMessage,
-            sigMsg
+            sigMsg,
+            "EVM"
           );
-          const userdata = await fetchUserById(response?.uid);
-          const user = {
-            username: userdata.username,
-            name: userdata?.name || "",
-            uid: response?.uid || 0,
-            token: response?.token || "",
-            img: userdata?.img?.pro,
-            sid: response?.id || "",
-            netWrth: userdata?.netWrth || 0,
-            effectiveNetWrth: userdata?.effectiveNetWrth || 0,
-          };
-          setClientSideCookie("authToken", JSON.stringify(user));
-          dispatch(actions.setUserData(user));
-          dispatch(actions.setRefetchUser(true));
-          setUserAuthData(user);
+          setUserAuthData({ user: true });
         } else if (walletRoute == "auth" && !isSignUp) {
-          response = await handleLogIn({ sig: signedMessage, msg: sigMsg });
-          const userdata = await fetchUserById(response?.uid);
-          console.log("USER", userdata);
-          const user = {
-            username: userdata.username,
-            name: userdata?.name || "",
-            uid: response?.uid || 0,
-            token: response?.token || "",
-            img: userdata?.img?.pro,
-            sid: response?.id || "",
-            netWrth: userdata?.netWrth || 0,
-            effectiveNetWrth: userdata?.effectiveNetWrth || 0,
-          };
-          setClientSideCookie("authToken", JSON.stringify(user));
-          dispatch(actions.setUserData(user));
-          dispatch(actions.setRefetchUser(true));
-          setUserAuthData(user);
+          response = await handleLogIn({
+            sig: signedMessage,
+            msg: sigMsg,
+            typ: "EVM",
+          });
+          console.log("login", response);
+          setUserAuthData({ user: true });
+          // const userdata = await fetchUserById(response?.uid);
+          // console.log("USER", userdata);
+          // saveTokens(response?.uid, response?.token);
+          // const user = {
+          //   username: userdata.username,
+          //   name: userdata?.name || "",
+          //   uid: response?.uid || 0,
+          //   token: response?.token || "",
+          //   img: userdata?.img?.pro,
+          //   sid: response?.id || "",
+          //   netWrth: userdata?.netWrth || 0,
+          //   effectiveNetWrth: userdata?.effectiveNetWrth || 0,
+          // };
+          // setClientSideCookie("authToken", JSON.stringify(user));
+          // dispatch(actions.setUserData(user));
+          // dispatch(actions.setRefetchUser(true));
+          //setUserAuthData(user);
         } else if (walletRoute == "linkWallet") {
           const response = await linkAddress({
             sig: signedMessage,
             msg: sigMsg,
+            typ: "EVM",
           });
           setUserAuthData(response);
         }
       } catch (error: any) {
         disconnect();
-        localStorage.clear();
+        // localStorage.clear();
         console.error("Error signing the message:", error);
-        const msg = error.response.data.message;
-        const code = error.response.data.statusCode;
+        // const msg = error.response.data.message;
+        // const code = error.response.data.statusCode;
 
-        if (msg == "User not Registered!" && code == 404) {
-          setUserAuthData({ notRegistered: true });
-        } else {
-          setUserAuthData({ error: msg });
-        }
-        NotificationMessage("error", msg);
+        // if (msg == "User not Registered!" && code == 404) {
+        //   setUserAuthData({ notRegistered: true });
+        // } else {
+        //   setUserAuthData({ error: msg });
+        // }
+        // NotificationMessage("error", msg);
       }
     }
   }, [isConnected]);

@@ -29,10 +29,12 @@
     "antd": "^5.19.3",
     "axios": "^1.7.2",
     "chain-registry": "^1.63.102",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "discord.js": "^14.15.3",
     "encoding": "^0.1.13",
     "ethers": "^6.13.1",
+    "js-cookie": "^3.0.5",
     "markdown-to-txt": "^2.0.1",
     "next": "14.2.5",
     "next-share": "^0.27.0",
@@ -51,6 +53,8 @@
     "wagmi": "^2.11.3"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
