@@ -34,9 +34,15 @@ export default function CommunitiesList() {
   );
 
   const handleFilter = (filter: List) => {
+    const isSortByFilter = ["followers", "pCount", "sts", "cta"].includes(
+      filter?.value
+    );
+    const updatedPayload = isSortByFilter
+      ? { ...payload, sortby: filter.value }
+      : { ...payload, period: filter.value };
     setPage(1);
     setCommunities([]);
-    callFunction(fetchCommunities, { ...payload, sortby: filter.value });
+    callFunction(fetchCommunities, updatedPayload);
   };
 
   useEffect(() => {
@@ -53,10 +59,6 @@ export default function CommunitiesList() {
     if (page !== 1) refetch();
   }, [page]);
 
-  // if (data?.length === 0 && !isLoading) {
-  //   return <EmptyData />;
-  // }
-
   return (
     <main>
       <section className='filters'>
@@ -72,12 +74,12 @@ export default function CommunitiesList() {
         />
         <CFilter
           list={[
-            { value: "ccount", title: "All time" },
-            { value: "time", title: "Past year" },
-            { value: "time", title: "Past month" },
-            { value: "time", title: "Past week" },
-            { value: "time", title: "Today" },
-            { value: "time", title: "Past hour" },
+            { value: "", title: "All time" },
+            { value: "yearly", title: "Past year" },
+            { value: "monthly", title: "Past month" },
+            // { value: "time", title: "Past week" },
+            { value: "daily", title: "Today" },
+            { value: "hourly", title: "Past hour" },
           ]}
           callBack={(filter) => handleFilter?.(filter)}
           defaultListIndex={0}

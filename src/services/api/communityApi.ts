@@ -5,6 +5,7 @@ import { followApi } from "./userApi";
 // Fetch Communities
 export const fetchCommunities = async ({
   sortby = "pCount",
+  period = "",
   order = "DESC",
   page = 1,
   limit = 20,
@@ -13,12 +14,16 @@ export const fetchCommunities = async ({
   order: string;
   page: number;
   limit: number;
+  period?: "hourly" | "daily" | "monthly" | "yearly" | "";
 }) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.uid; // TODO : update it to profile after merging with main
+  let url = `/community?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}`;
+
+  if (period) {
+    url += `&period=${period}`;
+  }
   try {
-    const response = await api.get(
-      `/community?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}`
-    );
+    const response = await api.get(url);
     return response.data;
   } catch (error) {
     console.error("Fetch Communities Error: ", error);
