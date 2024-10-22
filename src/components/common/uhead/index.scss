@@ -85,7 +85,7 @@
 
       span {
         color: var(--label-text);
-        font-size: 10px;
+        font-size: 12px;
         @include lessThan(sm) {
           font-size: $font-size-xxsm;
         }

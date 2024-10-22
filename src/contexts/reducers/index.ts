@@ -1,7 +1,7 @@
 import { commonSlice } from "./common";
 import { userSlice } from "./user";
 
-export const { setUserData } = userSlice.actions;
+export const { setUserData, setUserError, setUserLoading } = userSlice.actions;
 export const {
   setWalletRoute,
   setRefetchCommunity,

@@ -16,7 +16,7 @@ export const fetchCommunities = async ({
   limit: number;
   period?: "hourly" | "daily" | "monthly" | "yearly" | "";
 }) => {
-  const uid = store.getState().user?.uid; // TODO : update it to profile after merging with main
+  const uid = store.getState().user?.profile?.id;
   let url = `/community?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}`;
 
   if (period) {
@@ -45,7 +45,7 @@ export const createCommunity = async (data: any) => {
 
 // Fetch Community by Name
 export const fetchCommunityByCname = async (cName: string) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
   if (!cName) return null;
   try {
     const { data } = await api.get(`/community/cname/${cName}?uid=${uid}`);

@@ -15,21 +15,23 @@ import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import DropdownWithSearch from "@/components/createPost/dropdownWithSearch";
 import { IUser } from "@/utils/types/types";
-import Deligator from "./Deligator";
 import NotificationMessage from "@/components/common/Notification";
+import Deligator from "./Deligator";
+import ProposalWarning from "./ProposalWarning";
 
 const { Panel } = Collapse;
 
 export default function Deligate() {
-  const userNameSelector = (state: RootState) => state?.user;
+  const userNameSelector = (state: RootState) => state?.user.profile;
   const [{}, [user]] = useRedux([userNameSelector]);
-  const { isLoading: usersLoading, data: userList } = useAsync(
-    getFollowersByUserId,
-    {
-      userId: user?.uid,
-      type: "u",
-    }
-  );
+  const {
+    isLoading: usersLoading,
+    data: userList,
+    callFunction,
+  } = useAsync(getFollowersByUserId, {
+    userId: user?.id,
+    type: "u",
+  });
   const userData = useMemo(() => {
     return userList?.map((item: any) => item?.user);
   }, [userList]);
@@ -45,6 +47,7 @@ export default function Deligate() {
   const [effectiveNetWrth, setEffectiveNetWrth] = useState<number>(
     user?.effectiveNetWrth || 0
   );
+  const [isWarningModal, setWarningModal] = useState<boolean>(false);
 
   const handleDelegate = async () => {
     try {
@@ -53,7 +56,16 @@ export default function Deligate() {
       refetch();
     } catch (error: any) {
       NotificationMessage("error", error?.response.data.message);
+      // handleWarning(); TODO change warning modal handling
     }
+  };
+
+  const handleWarning = async () => {
+    setWarningModal(true);
+  };
+
+  const handleCancel = async () => {
+    setWarningModal(false);
   };
 
   const handleUndoDelegate = async (id: number) => {
@@ -103,6 +115,7 @@ export default function Deligate() {
               <CButton disabled={!searchTerm} onClick={handleDelegate}>
                 Delegate
               </CButton>
+              {/* <CButton onClick={handleWarning}>Delegate</CButton> */}
             </div>
           ) : (
             <div className='delegate_loader skeleton'></div>
@@ -110,6 +123,9 @@ export default function Deligate() {
         </>
       )}
       <Deligator />
+
+      {/* MODAL */}
+      <ProposalWarning isModalOpen={isWarningModal} onClose={handleCancel} />
     </>
   );
 }

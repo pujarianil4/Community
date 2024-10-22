@@ -16,7 +16,7 @@ import { Modal } from "antd";
 
 import dynamic from "next/dynamic";
 import CosmosAuthComponent from "./CosmosAuth";
-
+import BitcoinAuthComponent from "./BitcoinAuth";
 import { Collapse } from "antd";
 // Dynamically import TronAuthComponent, disabling SSR
 const TronAuthComponent = dynamic(() => import("./TronAuth"), {
@@ -181,6 +181,22 @@ export const SignUpModal = ({
       ),
     },
   ];
+  //bitcoin
+  const bitcoinAuthItems = [
+    {
+      key: "4",
+      label: "Bitcoin Wallets",
+      children: (
+        <>
+          <BitcoinAuthComponent
+            isSignUp={isSignUp}
+            signUpData={signUpData}
+            setUserAuthData={handleUserAuthData}
+          />
+        </>
+      ),
+    },
+  ];
 
   return (
     <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
@@ -273,6 +289,12 @@ export const SignUpModal = ({
             />
             <Collapse
               items={cosmosAuthItems}
+              accordion
+              expandIconPosition='end'
+              className='accordion_bx'
+            />
+            <Collapse
+              items={bitcoinAuthItems}
               accordion
               expandIconPosition='end'
               className='accordion_bx'

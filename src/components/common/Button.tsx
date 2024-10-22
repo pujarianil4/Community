@@ -4,6 +4,7 @@ import { getClientSideCookie } from "@/utils/helpers";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Button } from "antd";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import AuthModal from "./auth/AuthModal";
 import { SignUpModal } from "./auth/signUpModal";
 import "./index.scss";
@@ -35,9 +36,8 @@ export default function CButton({
   // const [{ dispatch, actions }] = useRedux();
   const [modalTab, setModalTab] = useState(3);
   // const [{}, [common]] = useRedux([commonSelector]);
+  const user = useSelector((state: RootState) => state.user);
   const handleAction = () => {
-    const user = getClientSideCookie("authToken");
-
     if (auth == "auth") {
       onClick?.();
       return;
@@ -49,7 +49,7 @@ export default function CButton({
     // }
     // console.log("usere", user);
 
-    if (!user) {
+    if (!user.profile.id) {
       setIsModalOpen(true);
     } else {
       onClick?.();
@@ -58,7 +58,8 @@ export default function CButton({
 
   const closeModal = () => {
     setIsModalOpen(false);
-    onClick?.();
+    return;
+    // onClick?.();
   };
 
   return (

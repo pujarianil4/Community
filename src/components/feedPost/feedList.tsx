@@ -143,10 +143,6 @@ export default function FeedList({
     return loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />);
   }
 
-  if (!isLoading && posts?.length === 0) {
-    return <EmptyData />;
-  }
-
   return (
     <>
       {method == "allPosts" && (
@@ -176,18 +172,25 @@ export default function FeedList({
           selectedFilter={selectedSts.title}
         />
       )}
-      <VirtualList
-        listData={posts}
-        isLoading={isLoading}
-        page={page}
-        setPage={setPage}
-        limit={limit}
-        renderComponent={(index: number, post: IPost) => (
-          <FeedPost key={index} post={post} />
-        )}
-      />
 
-      {isLoading && page > 1 && <FeedPostLoader />}
+      {!isLoading && posts?.length === 0 ? (
+        <EmptyData />
+      ) : (
+        <>
+          <VirtualList
+            listData={posts}
+            isLoading={isLoading}
+            page={page}
+            setPage={setPage}
+            limit={limit}
+            renderComponent={(index: number, post: IPost) => (
+              <FeedPost key={index} post={post} />
+            )}
+          />
+
+          {isLoading && page > 1 && <FeedPostLoader />}
+        </>
+      )}
     </>
   );
 }
