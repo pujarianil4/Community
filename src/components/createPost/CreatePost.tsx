@@ -34,6 +34,7 @@ import { identifyMediaType } from "@/utils/helpers";
 
 import { createPost } from "@/services/api/postApi";
 import EmptyData from "../common/Empty";
+import Drafts from "./drafts";
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPostModalOpen: boolean;
@@ -134,7 +135,7 @@ const CreatePost: React.FC<Props> = ({
     data: communityList,
     refetch,
   } = useAsync(getFollowinsByUserId, {
-    userId: user?.uid,
+    userId: user?.profile?.id,
     type: "c",
   });
 
@@ -154,14 +155,14 @@ const CreatePost: React.FC<Props> = ({
 
   const [page, setPage] = useState(1);
   const [draftPosts, setDraftPosts] = useState<any[]>([]);
+  console.log("LENGTH", draftPosts?.length);
   const limit = 9;
   const turndownService = new TurndownService();
   const markDownContent = turndownService.turndown(content);
 
   const [uploadingSkeletons, setUploadingSkeletons] = useState<number[]>([]);
-
   const payload = {
-    nameId: user.username,
+    nameId: user?.profile?.username,
     sortby: "time",
     page,
     limit,
@@ -173,7 +174,6 @@ const CreatePost: React.FC<Props> = ({
     data: userPosts,
     refetch: refetchUserPost,
   } = useAsync(getPostsByuName, payload);
-  console.log("userPost", userPosts);
   const [isEditingPost, setIsEditingPost] = useState(false);
 
   // useEffect(() => {
@@ -190,6 +190,8 @@ const CreatePost: React.FC<Props> = ({
       } else {
         setDraftPosts((prevPosts) => [...prevPosts, ...userPosts]);
       }
+    } else {
+      setDraftPosts([]);
     }
   }, [userPosts]);
 
@@ -454,74 +456,71 @@ const CreatePost: React.FC<Props> = ({
       </section>
 
       {isDraft ? (
-        <section className='draft_posts_section'>
-          {page < 2 && isLoadingUserPost ? (
-            <>
-              {Array(4)
-                .fill(0)
-                .map((_, i) => (
-                  <PostLoader key={i} />
-                ))}
-            </>
-          ) : (
-            <>
-              <VirtualList
-                listData={draftPosts}
-                isLoading={isLoadingUserPost}
-                page={page}
-                setPage={setPage}
-                limit={limit}
-                renderComponent={(index: number, post: any) => (
-                  <article
-                    className='draft_post'
-                    key={index}
-                    onMouseEnter={() => setIsEditingPost(false)}
-                  >
-                    <div className='content'>
-                      <MarkdownRenderer
-                        markdownContent={post?.text}
-                        limit={2}
-                      />
-                    </div>
-                    {post?.media?.[0] && (
-                      <Image
-                        className='post_img'
-                        src={post.media[0]}
-                        alt=''
-                        width={160}
-                        height={128}
-                      />
-                    )}
-                    <div className='hover_bx'>
-                      <CButton
-                        onClick={() => handleEditPost(post)}
-                        className='editBtn'
-                      >
-                        Edit
-                      </CButton>
+        // <section className='draft_posts_section'>
+        //   {page < 2 && isLoadingUserPost ? (
+        //     <>
+        //       {Array(4)
+        //         .fill(0)
+        //         .map((_, i) => (
+        //           <PostLoader key={i} />
+        //         ))}
+        //     </>
+        //   ) : (
+        //     <>
+        //       <VirtualList
+        //         listData={draftPosts}
+        //         isLoading={isLoadingUserPost}
+        //         page={page}
+        //         setPage={setPage}
+        //         limit={limit}
+        //         renderComponent={(index: number, post: any) => (
+        //           <article
+        //             className='draft_post'
+        //             key={index}
+        //             onMouseEnter={() => setIsEditingPost(false)}
+        //           >
+        //             <div className='content'>
+        //               <MarkdownRenderer
+        //                 markdownContent={post?.text}
+        //                 limit={2}
+        //               />
+        //             </div>
+        //             {post?.media?.[0] && (
+        //               <Image
+        //                 className='post_img'
+        //                 src={post.media[0]}
+        //                 alt=''
+        //                 width={160}
+        //                 height={128}
+        //               />
+        //             )}
+        //             <div className='hover_bx'>
+        //               <CButton
+        //                 onClick={() => handleEditPost(post)}
+        //                 className='editBtn'
+        //               >
+        //                 Edit
+        //               </CButton>
 
-                      <CButton
-                        onClick={() => draftPost(post)}
-                        className='hvr_postBtn'
-                      >
-                        Post
-                      </CButton>
-                    </div>
-                  </article>
-                  // <div key={index} style={{ height: "300px" }}>
-                  //   {" "}
-                  //   {index}{" "}
-                  // </div>
-                )}
-                footerHeight={150}
-              />
-              {isLoadingUserPost && page > 1 && <PostLoader />}
-              {!isLoadingUserPost && draftPosts.length === 0 && page === 1 && (
-                <EmptyData />
-              )}
-            </>
-          )}
-        </section>
+        //               <CButton
+        //                 onClick={() => draftPost(post)}
+        //                 className='hvr_postBtn'
+        //               >
+        //                 Post
+        //               </CButton>
+        //             </div>
+        //           </article>
+        //         )}
+        //         footerHeight={150}
+        //       />
+        //       {isLoadingUserPost && page > 1 && <PostLoader />}
+        //       {!isLoadingUserPost && draftPosts?.length === 0 && page === 1 && (
+        //         <EmptyData />
+        //       )}
+        //     </>
+        //   )}
+        // </section>
+        <Drafts />
       ) : (
         <section className='create_post_form'>
           <div className='inputArea'>
