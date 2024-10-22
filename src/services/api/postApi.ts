@@ -24,7 +24,7 @@ export const getPosts = async ({
   page: number;
   limit: number;
 }) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
 
   try {
     const response = await api.get(
@@ -50,7 +50,7 @@ export const getPostsBycName = async ({
   limit: number;
   sts: string;
 }) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
   try {
     const response = await api.get(
       `/posts/community/cname/${nameId}?page=${page}&limit=${limit}&uid=${uid}` +
@@ -76,7 +76,7 @@ export const getPostsByuName = async ({
   limit: number;
   sts: "draft" | "published" | "archived" | "";
 }) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
   try {
     const response = await api.get(
       `/posts/username/${nameId}?page=${page}&limit=${limit}&uid=${uid}` +
@@ -92,7 +92,7 @@ export const getPostsByuName = async ({
 
 // fetch post by postid
 export const getPostsByPostId = async (postId: string) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
   try {
     const response = await api.get(`/posts/${postId}?uid=${uid}`);
     return response.data;
@@ -136,7 +136,7 @@ export const deletePost = async (postId: string | number) => {
 };
 // fetch post comments
 export const fetchComments = async (postId: string) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
   try {
     const response = await api.get(
       `/comments/post/${postId}?page=1&limit=100&uid=${uid}`
