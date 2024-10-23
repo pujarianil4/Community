@@ -185,7 +185,10 @@ const UnisatWallet: React.FC<UnisatWalletProps> = ({
         <div
           className='wallet'
           onClick={() => {
-            window.open("https://unisat.io", "_blank");
+            window.open(
+              "https://chromewebstore.google.com/detail/unisat-wallet/ppbibelpcjmhbdihakflkdcoccbgbkpo",
+              "_blank"
+            );
           }}
         >
           <Image
