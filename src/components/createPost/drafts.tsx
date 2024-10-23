@@ -5,17 +5,33 @@ import { IPost } from "@/utils/types/types";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import useAsync from "@/hooks/useAsync";
-import { getPostsByuName } from "@/services/api/postApi";
+import { getPostsByuName, patchPost } from "@/services/api/postApi";
 import MarkdownRenderer from "../common/MarkDownRender";
 import Image from "next/image";
 import CButton from "../common/Button";
 import EmptyData from "../common/Empty";
+import NotificationMessage from "../common/Notification";
 
-export default function Drafts() {
+interface Props {
+  setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isPostModalOpen: boolean;
+  onEditPost: (post: IPost) => void;
+}
+
+const Drafts: React.FC<Props> = ({
+  isPostModalOpen,
+  setIsPostModalOpen,
+  onEditPost,
+}) => {
+  const refetchPost = (state: RootState) => state.common.refetch.post;
+  const [{ dispatch, actions }, [postRefetch]] = useRedux([refetchPost]);
+
+  const [isLoadingPost, setIsLoadingPost] = useState(false);
+
   const [page, setPage] = useState(1);
   const [draftPosts, setDraftPosts] = useState<IPost[]>([]);
   console.log("LENGTH", draftPosts?.length);
-  const limit = 8;
+  const limit = 10;
   const userNameSelector = (state: RootState) => state?.user;
   const [{}, [user]] = useRedux([userNameSelector]);
 
@@ -49,6 +65,39 @@ export default function Drafts() {
     if (page !== 1) refetch();
   }, [page]);
 
+  useEffect(() => {
+    if (postRefetch == true) {
+      refetch();
+      dispatch(actions.resetRefetch());
+    }
+  }, [postRefetch]);
+
+  const draftPost = async (post: IPost) => {
+    try {
+      setIsLoadingPost(true);
+      const data = {
+        cid: post?.cid,
+        text: post?.text,
+        media: post.media,
+        sts: "published",
+      };
+      if (post?.id) {
+        await patchPost(post?.id, data);
+        setIsLoadingPost(false);
+        setIsPostModalOpen(false);
+        NotificationMessage("success", "Post created Succesfuly");
+        dispatch(actions.setRefetchPost(true));
+      }
+      // dispatch(actions.setRefetchCommunity(true));
+      // resetPostForm();
+    } catch (error: any) {
+      console.log("error", error);
+      NotificationMessage("error", error?.response?.data?.message);
+      setIsLoadingPost(false);
+      // setIsPostModalOpen(false);
+      // resetPostForm();
+    }
+  };
   return (
     <section className='draft_posts_section'>
       {page < 2 && isLoadingUserPost ? (
@@ -86,15 +135,12 @@ export default function Drafts() {
                   />
                 )}
                 <div className='hover_bx'>
-                  <CButton
-                    // onClick={() => handleEditPost(post)}
-                    className='editBtn'
-                  >
+                  <CButton onClick={() => onEditPost(post)} className='editBtn'>
                     Edit
                   </CButton>
 
                   <CButton
-                    // onClick={() => draftPost(post)}
+                    onClick={() => draftPost(post)}
                     className='hvr_postBtn'
                   >
                     Post
@@ -113,4 +159,5 @@ export default function Drafts() {
       )}
     </section>
   );
-}
+};
+export default Drafts;

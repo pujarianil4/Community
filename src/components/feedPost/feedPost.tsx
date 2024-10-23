@@ -47,8 +47,8 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
 
   const userInfo = useSelector((state: RootState) => state.user.profile);
 
-  const self = user.id == userInfo.uid;
-
+  // const self = user.id == userInfo.uid;
+  const self = user.id == userInfo.id;
   const handleRedirectPost = () => {
     router.push(`/post/${id}`);
   };

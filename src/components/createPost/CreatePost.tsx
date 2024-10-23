@@ -174,30 +174,9 @@ const CreatePost: React.FC<Props> = ({
     data: userPosts,
     refetch: refetchUserPost,
   } = useAsync(getPostsByuName, payload);
+
   const [isEditingPost, setIsEditingPost] = useState(false);
 
-  // useEffect(() => {
-  //   if (userPosts && userPosts.length > 0) {
-  //     setDraftPosts((prevData) =>
-  //       page === 1 ? userPosts : [...prevData, ...userPosts]
-  //     );
-  //   }
-  // }, [userPosts]);
-  useEffect(() => {
-    if (userPosts && userPosts?.length > 0) {
-      if (page === 1) {
-        setDraftPosts(userPosts);
-      } else {
-        setDraftPosts((prevPosts) => [...prevPosts, ...userPosts]);
-      }
-    } else {
-      setDraftPosts([]);
-    }
-  }, [userPosts]);
-
-  useEffect(() => {
-    if (page !== 1) refetchUserPost();
-  }, [page]);
   console.log("page", page);
   const closeBtn = document.querySelector(".ant-modal-close");
 
@@ -286,13 +265,6 @@ const CreatePost: React.FC<Props> = ({
       setUploadingSkeletons([]);
     }
   };
-
-  useEffect(() => {
-    if (postRefetch == true) {
-      refetchUserPost();
-      dispatch(actions.resetRefetch());
-    }
-  }, [postRefetch]);
 
   useEffect(() => {
     closeBtn?.addEventListener("click", () => {
@@ -400,33 +372,6 @@ const CreatePost: React.FC<Props> = ({
     }
   };
 
-  const draftPost = async (post: IPost) => {
-    try {
-      setIsLoadingPost(true);
-      const data = {
-        cid: post?.cid,
-        text: post?.text,
-        media: post.media,
-        sts: "published",
-      };
-      if (post?.id) {
-        await patchPost(post?.id, data);
-        setIsLoadingPost(false);
-        setIsPostModalOpen(false);
-        NotificationMessage("success", "Post created Succesfuly");
-        dispatch(actions.setRefetchPost(true));
-      }
-      // dispatch(actions.setRefetchCommunity(true));
-      // resetPostForm();
-    } catch (error: any) {
-      console.log("error", error);
-      NotificationMessage("error", error?.response?.data?.message);
-      setIsLoadingPost(false);
-      // setIsPostModalOpen(false);
-      // resetPostForm();
-    }
-  };
-
   return (
     <main className='create_post_container'>
       <span className='back_btn' onClick={() => setIsDraft(!isDraft)}>
@@ -456,71 +401,11 @@ const CreatePost: React.FC<Props> = ({
       </section>
 
       {isDraft ? (
-        // <section className='draft_posts_section'>
-        //   {page < 2 && isLoadingUserPost ? (
-        //     <>
-        //       {Array(4)
-        //         .fill(0)
-        //         .map((_, i) => (
-        //           <PostLoader key={i} />
-        //         ))}
-        //     </>
-        //   ) : (
-        //     <>
-        //       <VirtualList
-        //         listData={draftPosts}
-        //         isLoading={isLoadingUserPost}
-        //         page={page}
-        //         setPage={setPage}
-        //         limit={limit}
-        //         renderComponent={(index: number, post: any) => (
-        //           <article
-        //             className='draft_post'
-        //             key={index}
-        //             onMouseEnter={() => setIsEditingPost(false)}
-        //           >
-        //             <div className='content'>
-        //               <MarkdownRenderer
-        //                 markdownContent={post?.text}
-        //                 limit={2}
-        //               />
-        //             </div>
-        //             {post?.media?.[0] && (
-        //               <Image
-        //                 className='post_img'
-        //                 src={post.media[0]}
-        //                 alt=''
-        //                 width={160}
-        //                 height={128}
-        //               />
-        //             )}
-        //             <div className='hover_bx'>
-        //               <CButton
-        //                 onClick={() => handleEditPost(post)}
-        //                 className='editBtn'
-        //               >
-        //                 Edit
-        //               </CButton>
-
-        //               <CButton
-        //                 onClick={() => draftPost(post)}
-        //                 className='hvr_postBtn'
-        //               >
-        //                 Post
-        //               </CButton>
-        //             </div>
-        //           </article>
-        //         )}
-        //         footerHeight={150}
-        //       />
-        //       {isLoadingUserPost && page > 1 && <PostLoader />}
-        //       {!isLoadingUserPost && draftPosts?.length === 0 && page === 1 && (
-        //         <EmptyData />
-        //       )}
-        //     </>
-        //   )}
-        // </section>
-        <Drafts />
+        <Drafts
+          isPostModalOpen={isPostModalOpen}
+          setIsPostModalOpen={setIsPostModalOpen}
+          onEditPost={handleEditPost}
+        />
       ) : (
         <section className='create_post_form'>
           <div className='inputArea'>
@@ -541,28 +426,6 @@ const CreatePost: React.FC<Props> = ({
                   maxCharCount={300}
                   className='box_height'
                 />
-                {/* <div className='file_container'>
-                  {pics.length > 0 && (
-                    <div className='file_container'>
-                      {pics.map((picFile, index) => (
-                        <Img
-                          key={index}
-                          index={index}
-                          file={picFile}
-                          onRemove={handleRemoveMedia}
-                        />
-                      ))}
-                    </div>
-                  )}
-
-                  {uploadingSkeletons.map((_, index) => (
-                    <div
-                      key={`skeleton-${index}`}
-                      className='skeleton img_loader'
-                    ></div>
-                  ))}
-                </div> */}
-
                 <div className='file_container'>
                   {pics.map((picFile, index) => (
                     <Img
@@ -591,11 +454,6 @@ const CreatePost: React.FC<Props> = ({
                   <div>
                     <MdEmojiEmotions color='#636466' size={20} />
                   </div>
-
-                  {/* <span className={uploadMsg.type}>{uploadMsg?.msg}</span> */}
-                  {/* <span className={uploadMsg?.type}>
-                    {isUploading ? <div className='loader'></div> : null}
-                  </span> */}
                 </div>
               </FocusableDiv>
             </div>
