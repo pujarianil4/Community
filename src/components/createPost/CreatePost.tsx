@@ -443,7 +443,7 @@ const CreatePost: React.FC<Props> = ({
             height={48}
           />
           <h3 className='heading02'>
-            {user?.name || user?.username || "user name"}
+            {user?.profile?.name || user?.profile?.username || "user name"}
           </h3>
         </div>
         <div>
