@@ -1,49 +1,83 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ProposalItem from "./proposalItem";
 import useAsync from "@/hooks/useAsync";
-import { fetchProposalsByCId } from "@/services/api/proposalApi";
+import {
+  fetchProposalsByCId,
+  fetchSearchProposal,
+} from "@/services/api/proposalApi";
 import { IProposal } from "@/utils/types/types";
 import EmptyData from "../common/Empty";
 import ProposalItemLoader from "./proposalItemLoader";
 import VirtualList from "../common/virtualList";
+import { debounce } from "@/utils/helpers";
 
 interface IProps {
   cid: number;
   refetchProposal: boolean;
   setRefetchProposal: React.Dispatch<React.SetStateAction<boolean>>;
+  search?: string;
 }
 export default function ProposalList({
   cid,
   refetchProposal,
   setRefetchProposal,
+  search,
 }: IProps) {
   const [page, setPage] = useState<number>(1);
   const [proposals, setProposals] = useState<IProposal[]>([]);
+  const [debouncedSearch, setDebouncedSearch] = useState<string | undefined>(
+    search
+  );
   const limit = 10;
+
+  const updateDebouncedSearch = useCallback(
+    debounce((value: string) => {
+      setDebouncedSearch(value);
+    }, 300),
+    []
+  );
+
+  const fetchMethod =
+    debouncedSearch && debouncedSearch?.length > 2
+      ? fetchSearchProposal
+      : fetchProposalsByCId;
   const {
     isLoading,
     data: proposalsData,
     refetch,
-  } = useAsync(fetchProposalsByCId, {
+  } = useAsync(fetchMethod, {
     cid,
+    search: debouncedSearch,
     page,
     limit,
   });
 
-  useEffect(() => {
-    if (refetchProposal) {
-      refetch();
-      setRefetchProposal(false);
-    }
-  }, [refetchProposal]);
+  // TODO: due to create proposal seperate page not using this refech method
+  // useEffect(() => {
+  //   if (refetchProposal) {
+  //     refetch();
+  //     setRefetchProposal(false);
+  //   }
+  // }, [refetchProposal]);
 
   useEffect(() => {
-    if (proposalsData && proposalsData?.length > 0) {
+    if (search) refetch();
+  }, [search]);
+
+  useEffect(() => {
+    updateDebouncedSearch(search || "");
+  }, [search, updateDebouncedSearch]);
+
+  useEffect(() => {
+    let data = Array.isArray(proposalsData)
+      ? proposalsData
+      : proposalsData?.proposals;
+    if (data && data?.length > 0) {
       if (page === 1) {
-        setProposals(proposalsData);
+        setProposals(data);
       } else {
-        setProposals((prevPosts) => [...prevPosts, ...proposalsData]);
+        setProposals((prevPosts) => [...prevPosts, ...data]);
       }
     }
   }, [proposalsData]);

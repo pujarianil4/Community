@@ -4,13 +4,19 @@ import EmptyData from "@/components/common/Empty";
 import ProposalItem from "@/components/proposals/proposalItem";
 import ProposalItemLoader from "@/components/proposals/proposalItemLoader";
 import useAsync from "@/hooks/useAsync";
-import { fetchProposalsByCId } from "@/services/api/proposalApi";
+import {
+  fetchVotedProposalsByUname,
+  revokeProposals,
+} from "@/services/api/proposalApi";
 import { IProposal } from "@/utils/types/types";
 import VirtualList from "../../common/virtualList";
 import CInput from "@/components/common/Input";
 import { IoSearch } from "react-icons/io5";
 import "./index.scss";
 import CButton from "@/components/common/Button";
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
+import NotificationMessage from "@/components/common/Notification";
 
 export default function ProposalVotes() {
   const [page, setPage] = useState<number>(1);
@@ -19,13 +25,17 @@ export default function ProposalVotes() {
   const [selectedProposals, setSelectedProposals] = useState<
     Map<number, boolean>
   >(new Map());
-  // TODO: Update API as pe my votes
+  const tempArr: number[] = Array.from(selectedProposals.keys());
+  console.log("selectedProposals", tempArr);
+  const userNameSelector = (state: RootState) => state?.user;
+  const [{}, [user]] = useRedux([userNameSelector]);
+
   const {
     isLoading,
     data: proposalsData,
     refetch,
-  } = useAsync(fetchProposalsByCId, {
-    cid: 2,
+  } = useAsync(fetchVotedProposalsByUname, {
+    uname: user?.profile?.username,
     page,
     limit,
   });
@@ -55,9 +65,18 @@ export default function ProposalVotes() {
     setSelectedProposals(newSelected);
   };
 
-  const handleDevote = () => {
+  const handleDevote = async () => {
     const newSelected = new Map<number, boolean>();
     setSelectedProposals(newSelected);
+    const pid: number[] = Array.from(selectedProposals.keys());
+    try {
+      await revokeProposals(pid);
+      NotificationMessage("success", "Vote revoked successfully");
+      refetch(); // TODO:in place of refetch remove votes from state as handling in comments
+    } catch (error) {
+      console.log("ERROR_devote", error);
+      NotificationMessage("error", "Vote revoke failed");
+    }
   };
 
   useEffect(() => {
@@ -67,6 +86,8 @@ export default function ProposalVotes() {
       } else {
         setProposals((prevPosts) => [...prevPosts, ...proposalsData]);
       }
+    } else {
+      setProposals([]);
     }
   }, [proposalsData]);
 
