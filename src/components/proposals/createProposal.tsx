@@ -25,7 +25,10 @@ export default function CreateProposal({
     title: "",
     desc: "",
     cid: cid,
-    validity: today,
+    validity: {
+      start: today,
+      end: today,
+    },
   };
   const [content, setContent] = useState<string>("");
   const [isLoadingProposal, setIsLoadingProposal] = useState<boolean>(false);
@@ -129,7 +132,7 @@ export default function CreateProposal({
       {formErrors.desc && <p className='error_message'>{formErrors.desc}</p>}
       <input
         type='date'
-        value={proposalForm.validity}
+        value={proposalForm.validity?.end}
         min={today}
         onChange={handleProposalForm}
         name='validity'

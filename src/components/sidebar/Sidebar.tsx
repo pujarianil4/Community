@@ -207,7 +207,6 @@ const SideBar: React.FC = () => {
 
   const onClick: MenuProps["onClick"] = (e) => {
     if (e.key == "createCommunity") {
-      const user = getClientSideCookie("authToken");
       if (user) {
         showModal();
       } else {

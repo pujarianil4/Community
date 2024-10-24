@@ -114,7 +114,7 @@ export const FileInput: React.FC<FileInputProps> = React.memo(
 // Set displayName for FileInput component
 FileInput.displayName = "FileInput";
 
-const userNameSelector = (state: RootState) => state?.user;
+const userNameSelector = (state: RootState) => state?.user?.profile;
 const refetchPost = (state: RootState) => state.common.refetch.post;
 const refetchCommunitySelector = (state: RootState) =>
   state.common.refetch.community;
@@ -127,7 +127,6 @@ const CreatePost: React.FC<Props> = ({
 }) => {
   const [{ dispatch, actions }, [user, comminityRefetch, postRefetch]] =
     useRedux([userNameSelector, refetchCommunitySelector, refetchPost]);
-
   const {
     isLoading,
     data: communityList,
@@ -155,7 +154,10 @@ const CreatePost: React.FC<Props> = ({
     isLoading: isLoadingUserPost,
     data: userPosts,
     refetch: refetchUserPost,
-  } = useAsync(getPostsByuName, { nameId: user.username, sortby: "time" });
+  } = useAsync(getPostsByuName, {
+    nameId: user?.username,
+    sortby: "time",
+  });
 
   const [isEditingPost, setIsEditingPost] = useState(false);
 
