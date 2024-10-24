@@ -25,7 +25,7 @@ export const fetchAllProposals = async ({
   page: number;
   limit: number;
 }) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
   try {
     const { data } = await api.get(
       `/governance/proposal?page=${page}&limit=${limit}&uid=${uid}`
@@ -51,7 +51,7 @@ export const voteToProposal = async (payload: IVoteProposalPayload) => {
 
 // fetch proposal by id
 export const fetchProposalByID = async (proposalId: number) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
   try {
     const { data } = await api.get(
       `/governance/proposal/${proposalId}?uid=${uid}`
@@ -86,7 +86,7 @@ export const fetchProposalsByCId = async ({
   page: number;
   limit: number;
 }) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
   try {
     const { data } = await api.get(
       `/governance/proposal/c/${cid}?page=${page}&limit=${limit}&uid=${uid}`

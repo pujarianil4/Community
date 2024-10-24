@@ -1,13 +1,11 @@
 import { api } from "./api";
 import { store } from "@contexts/store";
-import { IFollowersAPI, IUser } from '@/utils/types/types';
-import { PublicKey } from '@solana/web3.js';
-
+import { IFollowersAPI, IUser } from "@/utils/types/types";
+import { PublicKey } from "@solana/web3.js";
 
 import { IFollowAPI, IPostCommentAPI, IVotePayload } from "@/utils/types/types";
 import { getClientSideCookie } from "@/utils/helpers";
 import { setUserData, setUserError, setUserLoading } from '@/contexts/reducers';
-
 
 // Follow API
 export const followApi = async (data: IFollowAPI) => {
@@ -37,7 +35,6 @@ export const UnFollowAPI = async ({
   }
 };
 
-
 // Vote
 export const sendVote = async (payload: IVotePayload) => {
   try {
@@ -48,7 +45,6 @@ export const sendVote = async (payload: IVotePayload) => {
     throw error;
   }
 };
-
 
 export const fetchUserByUserName = async (username: string) => {
   try {
@@ -63,7 +59,6 @@ export const fetchUserByUserName = async (username: string) => {
     throw error;
   }
 };
-
 
 export const fetchUser = async (username: string) => {
   const uid = store.getState().user?.profile.uid;
@@ -127,9 +122,21 @@ export const updateUser = async (payload: Partial<IUser>) => {
   }
 };
 
-export const getFollowinsByUserId = async ({ userId, type }: any) => {
+export const getFollowinsByUserId = async ({
+  userId,
+  type,
+  page = 1,
+  limit = 20,
+}: {
+  userId: number;
+  type: string;
+  page: number;
+  limit: number;
+}) => {
   try {
-    const response = await api.get(`/followers/fwng/${userId}?typ=${type}`);
+    const response = await api.get(
+      `/followers/fwng/${userId}?typ=${type}&page=${page}&limit=${limit}`
+    );
     return response.data;
   } catch (error) {
     console.error("getFollowinsByUserId", error);
@@ -137,18 +144,29 @@ export const getFollowinsByUserId = async ({ userId, type }: any) => {
   }
 };
 
-
-
-export const getFollowersByUserId = async ({ userId, type }: IFollowersAPI) => {
+export const getFollowersByUserId = async ({
+  userId,
+  type,
+  page = 1,
+  limit = 20,
+}: {
+  userId: number;
+  type: string;
+  sortby: string;
+  order: string;
+  page: number;
+  limit: number;
+}) => {
   try {
-    const response = await api.get(`/followers/fwrs/${userId}?typ=${type}`);
+    const response = await api.get(
+      `/followers/fwrs/${userId}?typ=${type}&page=${page}&limit=${limit}`
+    );
     return response.data;
   } catch (error) {
     console.error("getFollowinsByUserId", error);
     throw error;
   }
 };
-
 export const getAddressesByUserId = async (userId: string) => {
   if (userId == "0") {
     return null;
@@ -231,7 +249,6 @@ export const undoDelegateNetWorth = async (delegateId: number) => {
   }
 };
 
-
 export const delegateNetWorth = async (userId: number) => {
   try {
     const response = await api.post(`/governance/delegate/${userId}`);
@@ -241,7 +258,6 @@ export const delegateNetWorth = async (userId: number) => {
     throw error;
   }
 };
-
 
 export const isUserFollowed = async ({
   fwid,

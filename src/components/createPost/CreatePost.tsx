@@ -10,7 +10,7 @@ import {
   MdOutlineGifBox,
 } from "react-icons/md";
 import { uploadMultipleFiles } from "@/services/api/commonApi";
-import { fetchCommunities } from "@/services/api/communityApi";
+import { getFollowinsByUserId } from "@/services/api/userApi";
 // import { LocalStore } from "@/utils/helpers";
 import Image from "next/image";
 import useRedux from "@/hooks/useRedux";
@@ -25,14 +25,16 @@ import TiptapEditor from "../common/tiptapEditor";
 import TurndownService from "turndown";
 import { BackIcon, LinkIcon } from "@/assets/icons";
 import FocusableDiv from "../common/focusableDiv";
-
+import VirtualList from "@/components/common/virtualList";
 import { patchPost, getPostsByuName } from "@/services/api/postApi";
 import { IPost } from "@/utils/types/types";
 import PostLoader from "./postLoader";
 import MarkdownRenderer from "../common/MarkDownRender";
 import { identifyMediaType } from "@/utils/helpers";
-import { Pagination } from "antd";
+
 import { createPost } from "@/services/api/postApi";
+import EmptyData from "../common/Empty";
+import Drafts from "./drafts";
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPostModalOpen: boolean;
@@ -132,7 +134,12 @@ const CreatePost: React.FC<Props> = ({
     isLoading,
     data: communityList,
     refetch,
-  } = useAsync(fetchCommunities);
+  } = useAsync(getFollowinsByUserId, {
+    userId: user?.profile?.id,
+    type: "c",
+  });
+
+  const followCList = communityList?.map((item: any) => item.followedCommunity);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
   const [isLoadingDraftPost, setIsLoadingDraftPost] = useState(false);
   const [isDisabled, setISDisabled] = useState(false);
@@ -146,32 +153,31 @@ const CreatePost: React.FC<Props> = ({
   const [isDraft, setIsDraft] = useState(false);
   const [post, setPost] = useState<IPost>();
 
+  const [page, setPage] = useState(1);
+  const [draftPosts, setDraftPosts] = useState<any[]>([]);
+  console.log("LENGTH", draftPosts?.length);
+  const limit = 9;
   const turndownService = new TurndownService();
   const markDownContent = turndownService.turndown(content);
 
   const [uploadingSkeletons, setUploadingSkeletons] = useState<number[]>([]);
+  const payload = {
+    nameId: user?.profile?.username,
+    sortby: "time",
+    page,
+    limit,
+    sts: "draft",
+  };
 
   const {
     isLoading: isLoadingUserPost,
     data: userPosts,
     refetch: refetchUserPost,
-  } = useAsync(getPostsByuName, { nameId: user.username, sortby: "time" });
+  } = useAsync(getPostsByuName, payload);
 
   const [isEditingPost, setIsEditingPost] = useState(false);
 
-  const draftPosts =
-    userPosts?.filter((post: IPost) => post.sts === "draft") || [];
-  // add pagination for draft posts
-  const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 4;
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const draftData = draftPosts?.slice(indexOfFirstPost, indexOfLastPost);
-
-  const handlePaginationChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
+  console.log("page", page);
   const closeBtn = document.querySelector(".ant-modal-close");
 
   const handlePost = async (postStatus: "draft" | "published") => {
@@ -192,7 +198,6 @@ const CreatePost: React.FC<Props> = ({
         media: uploadedImg.length > 0 ? uploadedImg : null,
         sts: postStatus,
       };
-
       // await createPost(data);
       if (isEditingPost && post?.id) {
         // If editing an existing post, update it
@@ -262,13 +267,6 @@ const CreatePost: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (postRefetch == true) {
-      refetchUserPost();
-      dispatch(actions.resetRefetch());
-    }
-  }, [postRefetch]);
-
-  useEffect(() => {
     closeBtn?.addEventListener("click", () => {
       console.log("close");
       if (editPost) {
@@ -285,6 +283,7 @@ const CreatePost: React.FC<Props> = ({
           msg: "",
           type: "",
         });
+        setDraftPosts([]);
         setIsPostModalOpen(false);
       }
     });
@@ -354,38 +353,12 @@ const CreatePost: React.FC<Props> = ({
         // media: uploadedImg ? uploadedImg : null,
         media: uploadedImg.length > 0 ? uploadedImg : null,
       };
+
       if (post?.id) {
         await patchPost(post?.id, data);
         setIsLoadingPost(false);
         setIsPostModalOpen(false);
         NotificationMessage("success", "Post updated Succesfuly");
-        dispatch(actions.setRefetchPost(true));
-      }
-      // dispatch(actions.setRefetchCommunity(true));
-      // resetPostForm();
-    } catch (error: any) {
-      console.log("error", error);
-      NotificationMessage("error", error?.response?.data?.message);
-      setIsLoadingPost(false);
-      // setIsPostModalOpen(false);
-      // resetPostForm();
-    }
-  };
-
-  const draftPost = async (post: IPost) => {
-    try {
-      setIsLoadingPost(true);
-      const data = {
-        cid: post?.cid,
-        text: post?.text,
-        media: post.media,
-        sts: "published",
-      };
-      if (post?.id) {
-        await patchPost(post?.id, data);
-        setIsLoadingPost(false);
-        setIsPostModalOpen(false);
-        NotificationMessage("success", "Post created Succesfuly");
         dispatch(actions.setRefetchPost(true));
       }
       // dispatch(actions.setRefetchCommunity(true));
@@ -415,7 +388,7 @@ const CreatePost: React.FC<Props> = ({
             height={48}
           />
           <h3 className='heading02'>
-            {user?.name || user?.username || "user name"}
+            {user?.profile?.name || user?.profile?.username || "user name"}
           </h3>
         </div>
         <div>
@@ -428,78 +401,17 @@ const CreatePost: React.FC<Props> = ({
       </section>
 
       {isDraft ? (
-        <section className='draft_posts_section'>
-          {isLoadingUserPost ? (
-            <>
-              {Array(4)
-                .fill(() => 0)
-                .map((_: any, i: number) => (
-                  <PostLoader key={i} />
-                ))}
-            </>
-          ) : draftData?.length > 0 ? (
-            <section>
-              {draftData?.map((post: IPost) => (
-                <article
-                  className='draft_post'
-                  key={post?.id}
-                  onMouseEnter={() => setIsEditingPost(false)}
-                >
-                  <div className='content'>
-                    <MarkdownRenderer markdownContent={post?.text} limit={2} />
-                  </div>
-
-                  {post?.media?.[0] && (
-                    <Image
-                      className='post_img'
-                      src={post.media[0]}
-                      alt=''
-                      width={160}
-                      height={128}
-                    />
-                  )}
-                  <div className='hover_bx'>
-                    <CButton
-                      onClick={() => handleEditPost(post)}
-                      className='editBtn'
-                    >
-                      Edit
-                    </CButton>
-
-                    <CButton
-                      onClick={() => draftPost(post)}
-                      className='hvr_postBtn'
-                    >
-                      Post
-                    </CButton>
-                  </div>
-                </article>
-              ))}
-              <div className='drft_pagination'>
-                <Pagination
-                  current={currentPage}
-                  total={draftData?.length}
-                  pageSize={postsPerPage}
-                  onChange={handlePaginationChange}
-                />
-              </div>
-            </section>
-          ) : (
-            <div className='no_draft_posts'>
-              <h2>Save drafts to post when you re ready</h2>
-              <p>
-                When you save a draft, it will show up here so you can edit and
-                post it whenever you'd like.
-              </p>
-            </div>
-          )}
-        </section>
+        <Drafts
+          isPostModalOpen={isPostModalOpen}
+          setIsPostModalOpen={setIsPostModalOpen}
+          onEditPost={handleEditPost}
+        />
       ) : (
         <section className='create_post_form'>
           <div className='inputArea'>
             <DropdownWithSearch
               onSelect={setSelectedOption}
-              options={communityList}
+              options={followCList}
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               selected={selectedOption}
@@ -514,28 +426,6 @@ const CreatePost: React.FC<Props> = ({
                   maxCharCount={300}
                   className='box_height'
                 />
-                {/* <div className='file_container'>
-                  {pics.length > 0 && (
-                    <div className='file_container'>
-                      {pics.map((picFile, index) => (
-                        <Img
-                          key={index}
-                          index={index}
-                          file={picFile}
-                          onRemove={handleRemoveMedia}
-                        />
-                      ))}
-                    </div>
-                  )}
-
-                  {uploadingSkeletons.map((_, index) => (
-                    <div
-                      key={`skeleton-${index}`}
-                      className='skeleton img_loader'
-                    ></div>
-                  ))}
-                </div> */}
-
                 <div className='file_container'>
                   {pics.map((picFile, index) => (
                     <Img
@@ -564,11 +454,6 @@ const CreatePost: React.FC<Props> = ({
                   <div>
                     <MdEmojiEmotions color='#636466' size={20} />
                   </div>
-
-                  {/* <span className={uploadMsg.type}>{uploadMsg?.msg}</span> */}
-                  {/* <span className={uploadMsg?.type}>
-                    {isUploading ? <div className='loader'></div> : null}
-                  </span> */}
                 </div>
               </FocusableDiv>
             </div>

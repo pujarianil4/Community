@@ -2,7 +2,6 @@ import { IVotePayload, IPostCommentAPI } from "@/utils/types/types";
 import { store } from "@contexts/store";
 import { api } from "./api";
 
-
 // Create Post
 export const createPost = async (data: any) => {
   try {
@@ -25,7 +24,7 @@ export const getPosts = async ({
   page: number;
   limit: number;
 }) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
 
   try {
     const response = await api.get(
@@ -44,18 +43,18 @@ export const getPostsBycName = async ({
   nameId,
   page = 1,
   limit = 20,
-   sts= ""
+  sts = "",
 }: {
   nameId: string;
   page: number;
   limit: number;
-  sts: string
+  sts: string;
 }) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
   try {
     const response = await api.get(
-      `/posts/community/cname/${nameId}?page=${page}&limit=${limit}&uid=${uid}` + 
-      (sts ? `&sts=${sts}` : '')
+      `/posts/community/cname/${nameId}?page=${page}&limit=${limit}&uid=${uid}` +
+        (sts ? `&sts=${sts}` : "")
     );
     console.log("=========Fetched all posts By Cname=========", response.data);
     return response.data;
@@ -65,23 +64,23 @@ export const getPostsBycName = async ({
   }
 };
 
-
 // fetch posts by user name
 export const getPostsByuName = async ({
   nameId,
   page = 1,
   limit = 20,
-  sts= ""
+  sts = "",
 }: {
   nameId: string;
   page: number;
   limit: number;
-  sts: string
+  sts: "draft" | "published" | "archived" | "";
 }) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
   try {
     const response = await api.get(
-      `/posts/username/${nameId}?page=${page}&limit=${limit}&uid=${uid}` +  (sts ? `&sts=${sts}` : '')
+      `/posts/username/${nameId}?page=${page}&limit=${limit}&uid=${uid}` +
+        (sts ? `&sts=${sts}` : "")
     );
     console.log("=========Fetched all posts By Uname==========", response.data);
     return response.data;
@@ -91,10 +90,9 @@ export const getPostsByuName = async ({
   }
 };
 
-
 // fetch post by postid
 export const getPostsByPostId = async (postId: string) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
   try {
     const response = await api.get(`/posts/${postId}?uid=${uid}`);
     return response.data;
@@ -116,7 +114,7 @@ export const getPostsForMeta = async (postId: string) => {
 };
 
 // update post
-export const patchPost = async (postId: number ,data: any) => {
+export const patchPost = async (postId: number, data: any) => {
   try {
     const response = await api.patch(`/posts/${postId}`, data);
     return response.data;
@@ -127,7 +125,7 @@ export const patchPost = async (postId: number ,data: any) => {
 };
 
 // update post
-export const deletePost = async (postId: string | number ) => {
+export const deletePost = async (postId: string | number) => {
   try {
     const response = await api.delete(`/posts/${postId}`);
     return response.data;
@@ -138,7 +136,7 @@ export const deletePost = async (postId: string | number ) => {
 };
 // fetch post comments
 export const fetchComments = async (postId: string) => {
-  const uid = store.getState().user?.uid;
+  const uid = store.getState().user?.profile?.id;
   try {
     const response = await api.get(
       `/comments/post/${postId}?page=1&limit=100&uid=${uid}`
@@ -148,7 +146,6 @@ export const fetchComments = async (postId: string) => {
     console.error("COMMENTS_ERROR: ", error);
   }
 };
-
 
 // post comments
 export const postComments = async (data: IPostCommentAPI) => {
