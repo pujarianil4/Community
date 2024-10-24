@@ -560,6 +560,7 @@
   .post_img {
     transition: opacity 0.3s ease;
     padding: 5px; // Smooth transition for opacity
+    object-fit: contain;
     @include lessThan(md) {
       width: 85px !important;
       aspect-ratio: 1.25 !important;

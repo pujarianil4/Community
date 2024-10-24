@@ -24,7 +24,10 @@ export const fetchCommunities = async ({
   }
   try {
     const response = await api.get(url);
-    return response.data;
+    const data = Array.isArray(response?.data?.communities)
+      ? response?.data?.communities
+      : response?.data || [];
+    return data;
   } catch (error) {
     console.error("Fetch Communities Error: ", error);
     throw error;
