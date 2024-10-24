@@ -3,12 +3,27 @@ import { api } from "./api";
 import { followApi } from "./userApi";
 
 // Fetch Communities
-export const fetchCommunities = async (sortby: string) => {
+export const fetchCommunities = async ({
+  sortby = "pCount",
+  period = "",
+  order = "DESC",
+  page = 1,
+  limit = 20,
+}: {
+  sortby: string;
+  order: string;
+  page: number;
+  limit: number;
+  period?: "hourly" | "daily" | "monthly" | "yearly" | "";
+}) => {
   const uid = store.getState().user?.profile?.id;
+  let url = `/community?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}`;
+
+  if (period) {
+    url += `&period=${period}`;
+  }
   try {
-    const response = await api.get(
-      `/community?sortBy=${sortby}&order=DESC&page=1&limit=20&uid=${uid}`
-    );
+    const response = await api.get(url);
     return response.data;
   } catch (error) {
     console.error("Fetch Communities Error: ", error);

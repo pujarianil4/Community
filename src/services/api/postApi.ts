@@ -74,7 +74,7 @@ export const getPostsByuName = async ({
   nameId: string;
   page: number;
   limit: number;
-  sts: string;
+  sts: "draft" | "published" | "archived" | "";
 }) => {
   const uid = store.getState().user?.profile?.id;
   try {
