@@ -17,7 +17,7 @@ import { DiscordIcon, TelegramIcon, TwitterIcon } from "@/assets/icons";
 import { getImageSource, numberWithCommas } from "@/utils/helpers";
 import UserFollowButton from "../FollowBtn/userFollowbtn";
 import FollowListLoader from "../common/loaders/followList";
-
+import SavedPost from "./SavedPost";
 import { Tooltip } from "antd";
 import Link from "next/link";
 import { RootState } from "@/contexts/store";
@@ -68,6 +68,11 @@ export default function UserHead() {
         key: "4",
         label: "Community",
         content: <Followings uid={data?.id} entityType='c' />,
+      },
+      {
+        key: "5",
+        label: "Saved",
+        content: <SavedPost />,
       },
     ];
 
@@ -294,6 +299,11 @@ export default function UserHead() {
                 ) : (
                   <Followings uid={data?.id} entityType='c' />
                 ),
+            },
+            {
+              key: "5",
+              label: "Saved",
+              content: <SavedPost />,
             },
           ]}
         />

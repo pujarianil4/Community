@@ -11,6 +11,10 @@ import { sendVote } from "@/services/api/userApi";
 import ShareButton from "../shareButton";
 import { PiBookmarkSimpleDuotone } from "react-icons/pi";
 import CPopup from "../popup";
+import NotificationMessage from "../Notification";
+
+// save post Api
+// import { savePost } from "@/services/api/userApi";
 
 interface IProps {
   post: IPost;
@@ -92,6 +96,21 @@ export default function Actions({
       setVote(previousVote);
     }
   };
+
+  //handle save post
+  const handleSave = async () => {
+    try {
+      if (id) {
+        // const response = await savePost(id, true);
+        // console.log("Post saved successfully", response);
+        NotificationMessage("success", "Post saved successfully");
+      }
+    } catch (error) {
+      NotificationMessage("error", "Error saving post");
+      console.error("Failed to save the post:", error);
+    }
+  };
+
   return (
     <div className='actions'>
       <div className='up_down'>
@@ -139,7 +158,7 @@ export default function Actions({
         />
       )}
       {showSave && (
-        <div className='other'>
+        <div className='other' onClick={handleSave}>
           <PiBookmarkSimpleDuotone size={16} />
           <span>Save</span>
         </div>

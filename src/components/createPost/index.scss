@@ -560,6 +560,7 @@
   .post_img {
     transition: opacity 0.3s ease;
     padding: 5px; // Smooth transition for opacity
+    object-fit: contain;
     @include lessThan(md) {
       width: 85px !important;
       aspect-ratio: 1.25 !important;
@@ -759,11 +760,11 @@
   }
 }
 
-.box_height {
-  p {
-    min-height: 300px;
-    @include lessThan(md) {
-      min-height: 150px;
-    }
-  }
-}
+// .box_height {
+//   p {
+//     min-height: 300px;
+//     @include lessThan(md) {
+//       min-height: 150px;
+//     }
+//   }
+// }
