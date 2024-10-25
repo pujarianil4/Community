@@ -70,17 +70,22 @@ export default function ProposalList({
   }, [search, updateDebouncedSearch]);
 
   useEffect(() => {
-    let data = Array.isArray(proposalsData)
-      ? proposalsData
-      : proposalsData?.proposals;
-    if (data && data?.length > 0) {
+    if (proposalsData && proposalsData?.length > 0) {
       if (page === 1) {
-        setProposals(data);
+        setProposals(proposalsData);
       } else {
-        setProposals((prevPosts) => [...prevPosts, ...data]);
+        setProposals((prevPosts) => [...prevPosts, ...proposalsData]);
       }
+    } else {
+      setProposals([]);
     }
   }, [proposalsData]);
+
+  useEffect(() => {
+    if (isLoading) {
+      setProposals([]);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     if (page !== 1) refetch();

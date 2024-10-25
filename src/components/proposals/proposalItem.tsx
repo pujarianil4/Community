@@ -1,5 +1,5 @@
 "use client";
-import { getImageSource, timeAgo } from "@/utils/helpers";
+import { formatNumber, getImageSource, timeAgo } from "@/utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -40,7 +40,9 @@ export default function ProposalItem({
   };
   return (
     <>
-      <section className='proposal_Item'>
+      <section
+        className={`proposal_item ${isChecked ? "selected_proposal_item" : ""}`}
+      >
         <div className='user_head'>
           <Link
             href={`u/${user.username}`}
@@ -100,16 +102,26 @@ export default function ProposalItem({
             <div className='range_bar_data'>
               <div className='range_data'>
                 <p>Yes</p>
-                <p className='yes'>{up}&nbsp; Votes</p>
+                <p className='yes'>
+                  {up > 0 ? formatNumber(up) : 0}&nbsp;Votes
+                </p>
               </div>
-              <RangeBar total={up + down} current={up} />
+              <RangeBar
+                total={Number(up) + Number(down)}
+                current={Number(up)}
+              />
             </div>
             <div className='range_bar_data'>
               <div className='range_data'>
                 <p>No</p>
-                <p className='no'>{down} &nbsp; Votes</p>
+                <p className='no'>
+                  {down > 0 ? formatNumber(down) : 0}&nbsp;Votes
+                </p>
               </div>
-              <RangeBar total={up + down} current={down} />
+              <RangeBar
+                total={Number(up) + Number(down)}
+                current={Number(down)}
+              />
             </div>
           </div>
         </div>

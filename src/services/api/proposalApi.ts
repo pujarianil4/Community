@@ -153,7 +153,10 @@ export const fetchSearchProposal = async ({
     const { data } = await api.get(
       `/search/inProposal?cid=${cid}&keyword=${search}&page=${page}&limit=${limit}&uid=${uid}`
     );
-    return data;
+    const updatedData = Array.isArray(data?.proposals)
+      ? data?.proposals
+      : data || [];
+    return updatedData;
   } catch (error) {
     console.error("Search_Proposal_Error", error);
     throw error;
