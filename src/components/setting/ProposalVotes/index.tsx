@@ -112,7 +112,14 @@ export default function ProposalVotes() {
         </div>
         <div>
           <CButton className='select_all' onClick={handleSelectAll}>
-            {selectedCount !== 0 && selectedCount} Select All
+            {selectedCount !== 0 && selectedCount} Selected&nbsp;
+            <input
+              className='checkbox'
+              type='checkbox'
+              // onChange={handleCheckboxChange}
+              checked={selectedCount === proposals.length}
+            />
+            Select All
           </CButton>
           <CButton
             disabled={selectedProposals.size === 0}
