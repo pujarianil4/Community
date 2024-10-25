@@ -195,6 +195,28 @@ export function numberWithCommas(x: number | string) {
   return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+export function formatNumber(num: number, decimal: number = 3): string {
+  // if (!Number.isFinite(num)) return "∞";
+
+  const truncatedNum = Math.floor(num * 1000) / 1000;
+
+  const formatTruncated = (value: number) =>
+    value % 1 === 0
+      ? value.toFixed(0)
+      : value.toFixed(decimal).replace(/\.?0+$/, "");
+
+  // Check the range and format accordingly
+  if (truncatedNum >= 1e9) {
+    return formatTruncated(truncatedNum / 1e9) + "b"; // Billion
+  } else if (truncatedNum >= 1e6) {
+    return formatTruncated(truncatedNum / 1e6) + "m"; // Million
+  } else if (truncatedNum >= 1e3) {
+    return formatTruncated(truncatedNum / 1e3) + "k"; // Thousand
+  } else {
+    return formatTruncated(truncatedNum);
+  }
+}
+
 export function countLettersDigitsAndURLs(inputString: string) {
   const urlRegex = /https?:\/\/[^\s]+/g;
 
