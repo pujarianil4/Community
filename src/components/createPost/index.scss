@@ -760,11 +760,11 @@
   }
 }
 
-.box_height {
-  p {
-    min-height: 300px;
-    @include lessThan(md) {
-      min-height: 150px;
-    }
-  }
-}
+// .box_height {
+//   p {
+//     min-height: 300px;
+//     @include lessThan(md) {
+//       min-height: 150px;
+//     }
+//   }
+// }

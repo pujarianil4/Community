@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
@@ -67,6 +67,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [selectedText, setSelectedText] = useState<string>("");
+  const editorContentRef = useRef<HTMLDivElement>(null);
 
   const editor = useEditor({
     extensions: createExtensions(placeHolder),
@@ -162,6 +163,23 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
       editor?.commands.focus();
     }
   }, [isModalVisible, editor]);
+
+  useEffect(() => {
+    const handleEditorClick = () => {
+      editor?.commands.focus();
+    };
+
+    const editorContentEl = editorContentRef.current;
+    if (editorContentEl) {
+      editorContentEl.addEventListener("click", handleEditorClick);
+    }
+
+    return () => {
+      if (editorContentEl) {
+        editorContentEl.removeEventListener("click", handleEditorClick);
+      }
+    };
+  }, [editor]);
 
   useEffect(() => {
     if (autoFocus && editor) {
@@ -273,7 +291,11 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
           <GoUnlink size={16} />
         </button>
       </div>
-      <div className='editor_content' onKeyDown={handleKeyDown}>
+      <div
+        className='editor_content'
+        onKeyDown={handleKeyDown}
+        ref={editorContentRef}
+      >
         <EditorContent editor={editor} />
         {/* <EditorContent editor={editor} onKeyDown={handleKeyDown} /> */}
       </div>

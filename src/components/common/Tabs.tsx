@@ -25,7 +25,7 @@ const CTabs: React.FC<TabsComponentProps> = ({
     label: item.label,
     children: item.content,
   }));
-
+  console.log("tabs", tabItems);
   return (
     <Tabs
       defaultActiveKey={defaultActiveKey}

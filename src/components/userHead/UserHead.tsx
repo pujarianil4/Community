@@ -69,6 +69,11 @@ export default function UserHead() {
         label: "Community",
         content: <Followings uid={data?.id} entityType='c' />,
       },
+      {
+        key: "5",
+        label: "Saved",
+        content: <SavedPost />,
+      },
     ];
 
     return baseTabs;
@@ -267,11 +272,6 @@ export default function UserHead() {
             },
             {
               key: "2",
-              label: "Saved",
-              content: <SavedPost />,
-            },
-            {
-              key: "3",
               label: "Followers",
               content:
                 isLoading || !data ? (
@@ -281,7 +281,7 @@ export default function UserHead() {
                 ),
             },
             {
-              key: "4",
+              key: "3",
               label: "Followings",
               content:
                 isLoading || !data ? (
@@ -291,7 +291,7 @@ export default function UserHead() {
                 ),
             },
             {
-              key: "5",
+              key: "4",
               label: "Community",
               content:
                 isLoading || !data ? (
@@ -299,6 +299,11 @@ export default function UserHead() {
                 ) : (
                   <Followings uid={data?.id} entityType='c' />
                 ),
+            },
+            {
+              key: "5",
+              label: "Saved",
+              content: <SavedPost />,
             },
           ]}
         />
