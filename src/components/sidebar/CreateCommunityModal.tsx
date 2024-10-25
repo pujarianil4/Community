@@ -24,6 +24,7 @@ import {
 
 import Avatar from "@/components/common/loaders/userAvatar";
 import ProfileAvatar from "@/components/common/loaders/profileAvatar";
+import DropdownWithSearch from "../common/dropdownWithSearch";
 
 interface ICommunityForm {
   name?: string;
@@ -70,6 +71,19 @@ export const CreateCommunityModal = ({
   );
 };
 
+const tickers = [
+  "ADA",
+  "ARB",
+  "BNB",
+  "BTC",
+  "DOT",
+  "ETH",
+  "SOL",
+  "USDC",
+  "USDT",
+  "MATIC",
+];
+
 export const CreateCommunity = ({
   onClose,
   refetchCommunities,
@@ -98,7 +112,7 @@ export const CreateCommunity = ({
     avatar: useRef<HTMLInputElement>(null),
   };
   const closeBtn = document.querySelector(".ant-modal-close");
-
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [content, setContent] = useState<string>("");
@@ -385,11 +399,22 @@ export const CreateCommunity = ({
       </div>
       <div className='info'>
         <span className='label'>Ticker</span>
-        <input
+        {/* <input
           type='text'
           name='ticker'
           value={form.ticker}
           onChange={handleForm}
+        /> */}
+        <DropdownWithSearch
+          onSelect={(selectedTicker: string) => {
+            setForm((prevForm) => ({ ...prevForm, ticker: selectedTicker }));
+          }}
+          options={tickers}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selected={form?.ticker}
+          placeholder='Select Ticker'
+          isStringArray={true}
         />
       </div>
       <div className='info'>

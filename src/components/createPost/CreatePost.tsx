@@ -15,7 +15,7 @@ import { getFollowinsByUserId } from "@/services/api/userApi";
 import Image from "next/image";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
-import DropdownWithSearch from "./dropdownWithSearch";
+import DropdownWithSearch from "../common/dropdownWithSearch";
 import useAsync from "@/hooks/useAsync";
 import { getImageSource } from "@/utils/helpers";
 import { ErrorType, ICommunity } from "@/utils/types/types";
@@ -134,7 +134,7 @@ const CreatePost: React.FC<Props> = ({
     data: communityList,
     refetch,
   } = useAsync(getFollowinsByUserId, {
-    userId: user?.profile?.id,
+    userId: user?.id,
     type: "c",
   });
 
