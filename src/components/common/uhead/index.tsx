@@ -31,7 +31,9 @@ export default function UHead({
   post,
 }: IProps) {
   const [open, setOpen] = useState(false);
-  const { user, community, cta } = post;
+  const { user, community, cta, sts } = post;
+
+  console.log("post", post);
   const popupList: Array<List> = [
     {
       label: "Block",
@@ -96,7 +98,13 @@ export default function UHead({
           {community?.username} &nbsp;
         </Link>
       </div>
-      <p className='post_time'>&bull; {timeAgo(cta)}</p>
+      <p className='post_time'>
+        &bull; {timeAgo(cta)}
+        {sts == "archived" ? (
+          <span className='d_post'> [Deleted Post]</span>
+        ) : null}
+        {/* <div className='d_post'> [Deleted Post]</div> */}
+      </p>
       {showMore && (
         <div className='more'>
           <CPopup

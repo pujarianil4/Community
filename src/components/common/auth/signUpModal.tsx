@@ -44,7 +44,7 @@ export const SignUpModal = ({
   const [{ dispatch, actions }, [common]] = useRedux([CommonSelector]);
   const [signUpData, setSignUpData] = useState({ username: "", name: "" });
   const [isSignUp, setIsSignUp] = useState(false);
-
+  const [fromSignUp, setFromSignUp] = useState(false);
   useEffect(() => {
     setModalTab(3);
 
@@ -77,11 +77,13 @@ export const SignUpModal = ({
   }, 500);
   const handleAuth = (isSignup: boolean = true) => {
     console.log("IF_CALL");
+    setFromSignUp(isSignup);
     dispatch(actions.setWalletRoute("auth"));
     // openModal && openModal();
     setModalTab(3);
     setIsSignUp(isSignup);
   };
+
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSignUpData({
@@ -299,25 +301,25 @@ export const SignUpModal = ({
               expandIconPosition='end'
               className='accordion_bx'
             />
-            {/* <SolanaAuthComponent
-              isSignUp={isSignUp}
-              signUpData={signUpData}
-              setUserAuthData={handleUserAuthData}
-            />
-            <TronAuthComponent
-              isSignUp={isSignUp}
-              signUpData={signUpData}
-              setUserAuthData={handleUserAuthData}
-            />
 
-            <CosmosAuthComponent
-              isSignUp={isSignUp}
-              signUpData={signUpData}
-              setUserAuthData={handleUserAuthData}
-            /> */}
-            <p>
+            {/* <p>
               Don&apos;t have account?
               <span onClick={() => setModalTab(2)}> SignUp</span>
+            </p>
+ */}
+
+            <p>
+              {fromSignUp ? (
+                <>
+                  Choose Wallet, if go back
+                  <span onClick={() => setModalTab(2)}> SignUp</span>
+                </>
+              ) : (
+                <>
+                  Don&apos;t have account?
+                  <span onClick={() => setModalTab(2)}>SignUp</span>
+                </>
+              )}
             </p>
           </div>
         )}

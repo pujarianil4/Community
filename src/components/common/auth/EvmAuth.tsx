@@ -97,15 +97,15 @@ export default function EvmAuthComponent({
         disconnect();
         // localStorage.clear();
         console.error("Error signing the message:", error);
-        // const msg = error.response.data.message;
-        // const code = error.response.data.statusCode;
+        const msg = error.message;
+        const code = error.statusCode;
 
-        // if (msg == "User not Registered!" && code == 404) {
-        //   setUserAuthData({ notRegistered: true });
-        // } else {
-        //   setUserAuthData({ error: msg });
-        // }
-        // NotificationMessage("error", msg);
+        if (msg == "User not Registered!" && code == 404) {
+          setUserAuthData({ notRegistered: true });
+        } else {
+          setUserAuthData({ error: msg });
+        }
+        NotificationMessage("error", msg);
       }
     }
   }, [isConnected]);

@@ -196,9 +196,6 @@
             color: var(--primary-text) !important;
             max-width: 100%; // Ensure the content does not exceed the parent’s width
             box-sizing: border-box;
-            @include lessThan(xl) {
-              font-size: $font-size-xxsm;
-            }
           }
         }
       }

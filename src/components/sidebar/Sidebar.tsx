@@ -131,6 +131,8 @@ const SideBar: React.FC = () => {
     refetchCommunitySelector,
     userSelector,
   ]);
+
+  const userId = user;
   const { isLoading, callFunction, data, refetch } = useAsync();
 
   const router = useRouter();
@@ -207,7 +209,7 @@ const SideBar: React.FC = () => {
 
   const onClick: MenuProps["onClick"] = (e) => {
     if (e.key == "createCommunity") {
-      const user = getClientSideCookie("authToken");
+      const user = userId;
       if (user) {
         showModal();
       } else {
