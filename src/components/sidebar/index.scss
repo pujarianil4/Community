@@ -230,6 +230,11 @@
       }
     }
 
+    .search_input {
+      background-color: transparent;
+      border: 1px solid var(--primary-border);
+    }
+
     .avatar {
       display: flex;
       flex-direction: column;

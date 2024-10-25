@@ -10,6 +10,7 @@ import NotificationMessage from "../common/Notification";
 import { RangeBar } from "../proposals/proposalItem";
 import useAsync from "@/hooks/useAsync";
 import VoteLoading from "./voteLoading";
+import { formatNumber } from "@/utils/helpers";
 export default function VoteSection() {
   const { proposalId } = useParams<{ proposalId: string }>();
   const {
@@ -18,11 +19,13 @@ export default function VoteSection() {
     refetch,
   } = useAsync(fetchProposalByID, proposalId);
 
+  console.log("proposalData", proposalData);
+
   const proposalVote = (state: RootState) => state?.common?.proposal;
   const [{ dispatch, actions }, [proposalVoteData]] = useRedux([proposalVote]);
-  // const { isVoted, yes, no } = proposalVoteData;
-  // const { isVoted, up: yes, down: no } = proposalData;
-  const [value, setValue] = useState<string>(proposalData?.isVoted && "yes");
+  // const { isVoted, up, down } = proposalVoteData;
+  // const { isVoted, up: up, down: down } = proposalData;
+  const [value, setValue] = useState<string>(proposalData?.isVoted && "up");
 
   const handleVote = async (value: string) => {
     const payload: IVoteProposalPayload = {
@@ -33,9 +36,9 @@ export default function VoteSection() {
       await voteToProposal(payload);
       dispatch(
         actions.setProposalData(
-          value == "yes"
-            ? { isVoted: true, yes: proposalData?.yes, no: proposalData?.no }
-            : { isVoted: false, yes: proposalData?.yes, no: proposalData?.no }
+          value == "up"
+            ? { isVoted: true, up: proposalData?.up, down: proposalData?.down }
+            : { isVoted: false, up: proposalData?.up, down: proposalData?.down }
         )
       );
       refetch();
@@ -52,21 +55,21 @@ export default function VoteSection() {
       ) : (
         <>
           <CButton
-            className={`option ${value == "yes" ? "yes" : ""}`}
-            // onClick={() => setValue("yes")}
+            className={`option ${value == "up" ? "yes" : ""}`}
+            // onClick={() => setValue("up")}
             onClick={() => {
-              handleVote("yes");
-              setValue("yes");
+              handleVote("up");
+              setValue("up");
             }}
           >
             Yes
           </CButton>
           <CButton
-            className={`option ${value == "no" ? "no" : ""}`}
-            // onClick={() => setValue("no")}
+            className={`option ${value == "down" ? "no" : ""}`}
+            // onClick={() => setValue("down")}
             onClick={() => {
-              handleVote("no");
-              setValue("no");
+              handleVote("down");
+              setValue("down");
             }}
           >
             No
@@ -86,26 +89,28 @@ export default function VoteSection() {
               <div className='range_data'>
                 <p>Yes</p>
                 <p className='yes'>
-                  {proposalData?.up || 0}
+                  {proposalData?.up > 0 ? formatNumber(+proposalData?.up) : 0}
                   {proposalData?.up < 2 ? ` vote` : ` votes`}
                 </p>
               </div>
               <RangeBar
-                total={proposalData?.up + proposalData?.down}
-                current={proposalData?.up}
+                total={Number(proposalData?.up) + Number(proposalData?.down)}
+                current={Number(proposalData?.up)}
               />
             </div>
             <div className='range_bar_data'>
               <div className='range_data'>
                 <p>No</p>
                 <p className='no'>
-                  {proposalData?.down || 0}
-                  {proposalData?.down < 2 ? `vote` : ` votes`}
+                  {proposalData?.down > 0
+                    ? formatNumber(proposalData?.down)
+                    : 0}
+                  {proposalData?.down < 2 ? ` vote` : ` votes`}
                 </p>
               </div>
               <RangeBar
-                total={proposalData?.up + proposalData?.down}
-                current={proposalData?.down}
+                total={Number(proposalData?.up) + Number(proposalData?.down)}
+                current={Number(proposalData?.down)}
               />
             </div>
           </div>

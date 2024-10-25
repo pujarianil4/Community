@@ -1,7 +1,5 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import { Collapse } from "antd";
-import { DropdownLowIcon } from "@/assets/icons";
 import {
   fetchDelegatesByUname,
   undoDelegateNetWorth,
@@ -13,13 +11,11 @@ import CButton from "@/components/common/Button";
 import { numberWithCommas } from "@/utils/helpers";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
-import DropdownWithSearch from "@/components/createPost/dropdownWithSearch";
+import DropdownWithSearch from "@/components/common/dropdownWithSearch";
 import { IUser } from "@/utils/types/types";
 import NotificationMessage from "@/components/common/Notification";
 import Deligator from "./Deligator";
 import ProposalWarning from "./ProposalWarning";
-
-const { Panel } = Collapse;
 
 export default function Deligate() {
   const userNameSelector = (state: RootState) => state?.user.profile;

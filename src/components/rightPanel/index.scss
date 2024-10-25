@@ -390,12 +390,13 @@
     gap: 16px;
     .range_bar_data {
       min-height: 50px;
+      height: max-content;
+      margin-top: 0;
       .range_data {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin: 6px 12px;
-
         p {
           font-size: 12px !important;
         }

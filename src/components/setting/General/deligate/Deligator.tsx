@@ -22,7 +22,13 @@ export default function Deligator() {
     <main className='delegator_container'>
       <p className='d_head'>Deligator</p>
       {isLoading ? (
-        <p>Loading...</p>
+        <>
+          {Array(3)
+            .fill(() => 0)
+            .map(() => (
+              <div className='skeleton deligat_item_loader'></div>
+            ))}
+        </>
       ) : data?.length > 0 ? (
         <>
           {data?.map((item: any) => (

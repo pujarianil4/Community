@@ -1,14 +1,18 @@
-import {
-  ICreateProposalPayload,
-  IVoteProposalPayload,
-} from "@/utils/types/types";
+import { IProposalForm, IVoteProposalPayload } from "@/utils/types/types";
 import { store } from "@contexts/store";
 import { api } from "./api";
 
 // Create Proposal
-export const createProposal = async (payload: ICreateProposalPayload) => {
+export const createProposal = async (payload: IProposalForm) => {
+  // TODO: pass direct payload after create proposal API update
+  const tempPayload = {
+    title: payload?.title,
+    desc: payload?.desc,
+    cid: payload?.cid,
+    validity: payload?.validity?.end,
+  };
   try {
-    const { data } = await api.post(`/governance/proposal`, payload);
+    const { data } = await api.post(`/governance/proposal`, tempPayload);
     console.log("New Proposal Created");
     return data;
   } catch (error) {
@@ -94,6 +98,67 @@ export const fetchProposalsByCId = async ({
     return data;
   } catch (error) {
     console.error("Fetch_Proposals_Error", error);
+    throw error;
+  }
+};
+
+export const fetchVotedProposalsByUname = async ({
+  uname,
+  page = 1,
+  limit = 10,
+}: {
+  uname: string;
+  page: number;
+  limit: number;
+}) => {
+  try {
+    const { data } = await api.get(`/governance/vote/u/${uname}`);
+    return data;
+  } catch (error) {
+    console.error("Fetch_Voted_Proposals_Error", error);
+    throw error;
+  }
+};
+
+export const revokeProposals = async (pid: number[] = []) => {
+  console.log("PID", pid);
+  let url = `/governance/vote/revoke`;
+  if (pid.length > 0) {
+    const queryParam = encodeURIComponent(JSON.stringify(pid));
+    url += `?pid=${queryParam}`;
+  }
+  try {
+    const { data } = await api.delete(url);
+    return data;
+  } catch (error) {
+    console.error("Fetch_Voted_Proposals_Error", error);
+    throw error;
+  }
+};
+
+export const fetchSearchProposal = async ({
+  cid,
+  search,
+  page = 1,
+  limit = 10,
+}: {
+  cid: number;
+  search: string;
+  page: number;
+  limit: number;
+}) => {
+  if (search?.length < 3) return null;
+  const uid = store.getState().user?.profile?.id;
+  try {
+    const { data } = await api.get(
+      `/search/inProposal?cid=${cid}&keyword=${search}&page=${page}&limit=${limit}&uid=${uid}`
+    );
+    const updatedData = Array.isArray(data?.proposals)
+      ? data?.proposals
+      : data || [];
+    return updatedData;
+  } catch (error) {
+    console.error("Search_Proposal_Error", error);
     throw error;
   }
 };
