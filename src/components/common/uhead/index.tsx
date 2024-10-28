@@ -33,7 +33,6 @@ export default function UHead({
   const [open, setOpen] = useState(false);
   const { user, community, cta, sts } = post;
 
-  console.log("post", post);
   const popupList: Array<List> = [
     {
       label: "Block",

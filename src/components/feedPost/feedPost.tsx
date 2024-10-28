@@ -128,7 +128,12 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
 
   return (
     <>
-      <div ref={postRef} className={`postcard_container ${overlayClassName}`}>
+      <div
+        ref={postRef}
+        className={`postcard_container ${overlayClassName} ${
+          sts === "archived" ? "archived_post" : ""
+        }`}
+      >
         {/* <div className='user_head'>
         <Link
           href={`u/${post?.user.username}`}

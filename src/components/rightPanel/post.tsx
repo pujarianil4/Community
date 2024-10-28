@@ -44,7 +44,7 @@ export default function Post({ post }: IProps) {
         <div className='post_content_bx'>
           <div className='post_content'>
             <div
-              style={{ width: `${isMedia ? "164px" : "276px"}` }}
+              style={{ width: `${isMedia ? "190px" : "276px"}` }}
               className='redirect_content'
               onClick={handleRedirectPost}
             >

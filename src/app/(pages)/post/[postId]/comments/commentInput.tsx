@@ -21,6 +21,7 @@ interface ICommentInputProps {
   postId: number;
   setCommentCount: React.Dispatch<React.SetStateAction<number>>;
   setChildCommentCount?: React.Dispatch<React.SetStateAction<number>>;
+  status: string;
 }
 
 const CommentInput: React.FC<ICommentInputProps> = ({
@@ -30,7 +31,9 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   postId,
   setCommentCount,
   setChildCommentCount,
+  status,
 }) => {
+  const isArchived = status === "archived";
   const [commentBody, setCommentBody] = useState("");
   const [commentImg, setCommentImg] = useState(null);
   const [imgLoading, setImageLoading] = useState<boolean>(false);
@@ -85,6 +88,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   };
 
   const handleUploadFile = async (file: any) => {
+    if (isArchived) return;
     setImageLoading(true);
     try {
       const uploadedFile = await uploadSingleFile(file[0]);
@@ -141,7 +145,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
 
   return (
     <div className='comment_input' ref={containerRef}>
-      <div ref={commentInputRef}>
+      <div ref={commentInputRef} className={isArchived ? "delete_disable" : ""}>
         <TiptapEditor
           showToolbar={showToolbar}
           setContent={setCommentBody}
@@ -156,7 +160,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
         </div>
       )}
       {commentImg && (
-        <div className={`comment_image_wrapper `}>
+        <div className={`comment_image_wrapper`}>
           <div className='image_wrapper'>
             <Image
               src={commentImg}
@@ -173,20 +177,23 @@ const CommentInput: React.FC<ICommentInputProps> = ({
           )}
         </div>
       )}
-      <div className='comment_controls'>
+      <div className={`comment_controls ${isArchived ? "delete_disable" : ""}`}>
         <div>
           <FileInput onChange={handleUploadFile}>
-            <LuImagePlus color='var(--primary)' size={36} />
+            <LuImagePlus
+              color={isArchived ? "var(--primary-border)" : "var(--primary)"}
+              size={36}
+            />
           </FileInput>
           <RiText
             onClick={() => setShowToolbar(!showToolbar)}
-            color='var(--primary)'
+            color={isArchived ? "var(--primary-border)" : "var(--primary)"}
             size={36}
           />
         </div>
         <CButton
           className='comment_btn'
-          disabled={commentBody === "" && commentImg == null}
+          disabled={isArchived || (commentBody === "" && commentImg == null)}
           onClick={() => handlePostComment()}
         >
           Comment

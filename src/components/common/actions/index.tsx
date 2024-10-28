@@ -35,8 +35,8 @@ export default function Actions({
   showShare = false,
   showSave = false,
 }: IProps) {
-  const { up, down, id, isVoted, ccount, text, media } = post;
-
+  const { up, down, id, isVoted, ccount, text, media, sts } = post;
+  const isArchived = sts === "archived";
   const [vote, setVote] = useState<Vote>({
     value: Number(up) + Number(down),
     type: "",
@@ -55,6 +55,7 @@ export default function Actions({
   const handleSelectRepost = () => {};
 
   const handleVote = async (action: string) => {
+    if (isArchived) return; // no action if post deleted
     const previousVote = { ...vote };
 
     let newVote: Vote = { ...vote };
@@ -99,6 +100,7 @@ export default function Actions({
 
   //handle save post
   const handleSave = async () => {
+    if (isArchived) return;
     try {
       if (id) {
         // const response = await savePost(id, true);
@@ -112,7 +114,7 @@ export default function Actions({
   };
 
   return (
-    <div className='actions'>
+    <div className={`actions ${isArchived ? "no_action" : ""}`}>
       <div className='up_down'>
         <span>
           <PiArrowFatUpDuotone

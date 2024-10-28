@@ -109,7 +109,35 @@
             font-size: 11px;
           }
         }
+        .views {
+          margin-top: 8px;
 
+          p {
+            font-size: $font-size-xxsm;
+            color: var(--primary-text);
+          }
+          h4 {
+            font-size: $font-size-sm;
+          }
+
+          @include lessThan(md) {
+            margin-top: 4px;
+            p {
+              font-size: $font-size-xsm;
+            }
+
+            h4 {
+              font-size: $font-size-xsm;
+            }
+          }
+          @include lessThan(sm) {
+            margin-top: 2px;
+            font-size: 10px;
+            h4 {
+              font-size: $font-size-xxsm;
+            }
+          }
+        }
         .username {
           margin-top: 2px;
           font-size: $font-size-xsm;

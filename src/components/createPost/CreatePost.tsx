@@ -382,7 +382,7 @@ const CreatePost: React.FC<Props> = ({
         <div>
           <Image
             loading='lazy'
-            src={getImageSource(user?.img, "u")}
+            src={getImageSource(user?.profile?.img.pro, "u")}
             alt='user_img'
             width={48}
             height={48}
@@ -422,7 +422,7 @@ const CreatePost: React.FC<Props> = ({
                 <TiptapEditor
                   setContent={setContent}
                   content={content}
-                  autoFocus={true}
+                  autoFocus={false}
                   maxCharCount={300}
                   className='box_height'
                 />

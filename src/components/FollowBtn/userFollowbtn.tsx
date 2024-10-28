@@ -34,7 +34,10 @@ export default function UserFollowButton({ userData, onSuccess }: IProps) {
     data: followResponse,
     callFunction,
   } = useAsync();
-  const [isSelf, setIsSelf] = useState<boolean>(user.uid === userData?.id);
+  const [isSelf, setIsSelf] = useState<boolean>(
+    user?.profile?.id === userData?.id
+  );
+
   const [isFollowed, setIsFollowed] = useState<boolean>(
     userData?.isFollowed as boolean
   );

@@ -157,6 +157,10 @@ export default function UserHead() {
                   <div className='names'>
                     <h4>{data?.name}</h4>
                     <span className='username'>@{data?.username}</span>
+                    <div className='views'>
+                      <p>Views</p>
+                      <h4>{data?.vCount || 0}</h4>{" "}
+                    </div>
                   </div>
                 </div>
                 <div className='stats box'>
