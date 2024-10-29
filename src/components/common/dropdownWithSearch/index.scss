@@ -30,9 +30,8 @@
     z-index: 100;
     border-radius: 16px;
     margin-top: 0.5rem;
-    // padding: 0.5rem 0 0.5rem 0.5rem;
     @include lessThan(md) {
-      width: 100%;
+      width: 89%;
     }
   }
 
@@ -49,6 +48,9 @@
     outline: none;
     &:focus {
       border: none !important;
+    }
+    &::placeholder {
+      color: var(--label-text);
     }
     @include lessThan(md) {
       font-size: $font-size-xsm;
