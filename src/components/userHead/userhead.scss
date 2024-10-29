@@ -46,6 +46,9 @@
       width: 96%;
       left: 2%;
       top: 88px;
+      // height: 248px;
+    }
+    @include lessThan(md) {
       height: 185px;
     }
     .detailed_data {
@@ -188,7 +191,7 @@
       padding: 0.75rem 0.75rem 0;
       height: fit-content;
       @include lessThan(md) {
-        padding: 0.3rem 0.2rem 0;
+        padding: 0.5rem 0.5rem 0;
       }
       p {
         font-size: 14px;
