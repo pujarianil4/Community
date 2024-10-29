@@ -3,9 +3,15 @@ import React from "react";
 import useAsync from "@/hooks/useAsync";
 import { fetchDelegatesByUname } from "@/services/api/userApi";
 import EmptyData from "@/components/common/Empty";
-import { numberWithCommas } from "@/utils/helpers";
+import {
+  formatNumber,
+  getImageSource,
+  numberWithCommas,
+} from "@/utils/helpers";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
+import "../index.scss";
+import Image from "next/image";
 
 export default function Deligator() {
   const userNameSelector = (state: RootState) => state?.user.profile;
@@ -25,24 +31,33 @@ export default function Deligator() {
         <>
           {Array(3)
             .fill(() => 0)
-            .map(() => (
-              <div className='skeleton deligat_item_loader'></div>
+            .map((_, index) => (
+              <div key={index} className='skeleton delegate_item_loader'></div>
             ))}
         </>
       ) : data?.length > 0 ? (
-        <>
+        <section
+          className={`delegation_list ${
+            data?.length > 4 ? "right_padding" : ""
+          }`}
+        >
           {data?.map((item: any) => (
-            <div className='deligat_item' key={item.id}>
-              {/* Required User Details like img */}
-              <p>user: {item?.delegator?.username}</p>
-              <p>networth: {numberWithCommas(item?.delegator?.netWrth)}</p>
-              <p>
-                effective networth:
-                {numberWithCommas(item?.delegator?.effectiveNetWrth)}
-              </p>
+            <div className='delegate_item' key={item.id}>
+              <div>
+                <Image
+                  src={getImageSource(item?.delegator?.img?.pro, "u")}
+                  alt={item?.delegator?.username}
+                  loading='lazy'
+                  width={32}
+                  height={32}
+                />
+                <p>{item?.delegator?.username}</p>
+              </div>
+              {/* <p></p> */}
+              <p>{`value: ${formatNumber(item?.value)} ${item?.tkn}`}</p>
             </div>
           ))}
-        </>
+        </section>
       ) : (
         <EmptyData />
       )}
