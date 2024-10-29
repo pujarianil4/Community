@@ -18,6 +18,20 @@
       height: 24px;
       color: #757575;
     }
+
+    .close_icon {
+      margin-left: auto;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      @include lessThan(md) {
+        svg {
+          width: 18px !important;
+          height: 18px !important;
+        }
+      }
+    }
   }
   .custom_dropdown {
     position: absolute;
