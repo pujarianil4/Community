@@ -46,6 +46,9 @@
       width: 96%;
       left: 2%;
       top: 88px;
+      // height: 248px;
+    }
+    @include lessThan(md) {
       height: 185px;
     }
     .detailed_data {
@@ -109,7 +112,35 @@
             font-size: 11px;
           }
         }
+        .views {
+          margin-top: 8px;
 
+          p {
+            font-size: $font-size-xxsm;
+            color: var(--primary-text);
+          }
+          h4 {
+            font-size: $font-size-sm;
+          }
+
+          @include lessThan(md) {
+            margin-top: 4px;
+            p {
+              font-size: $font-size-xsm;
+            }
+
+            h4 {
+              font-size: $font-size-xsm;
+            }
+          }
+          @include lessThan(sm) {
+            margin-top: 2px;
+            font-size: 10px;
+            h4 {
+              font-size: $font-size-xxsm;
+            }
+          }
+        }
         .username {
           margin-top: 2px;
           font-size: $font-size-xsm;
@@ -160,7 +191,7 @@
       padding: 0.75rem 0.75rem 0;
       height: fit-content;
       @include lessThan(md) {
-        padding: 0.3rem 0.2rem 0;
+        padding: 0.5rem 0.5rem 0;
       }
       p {
         font-size: 14px;

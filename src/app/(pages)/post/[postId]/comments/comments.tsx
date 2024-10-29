@@ -15,8 +15,9 @@ import CommentItem from "./commentItem";
 interface Iprops {
   postId: number;
   setCommentCount: React.Dispatch<React.SetStateAction<number>>;
+  status: string;
 }
-export default function Comments({ postId, setCommentCount }: Iprops) {
+export default function Comments({ postId, setCommentCount, status }: Iprops) {
   const { isLoading, data: commentsData } = useAsync(fetchComments, postId);
   const [comments, setComments] = useState<IComment[]>([]);
   const [commentsTree, setCommentsTree] = useState<DataNode[]>([]);
@@ -138,6 +139,7 @@ export default function Comments({ postId, setCommentCount }: Iprops) {
         onComment={onComment}
         postId={postId}
         setCommentCount={setCommentCount}
+        status={status}
       />
       {isLoading ? (
         loadingArray.map((_: any, i: number) => <CommentsLoader key={i} />)

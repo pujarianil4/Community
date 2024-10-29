@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, ChangeEvent } from "react";
-
 import useRedux from "@/hooks/useRedux";
 import { fetchUserByUserName } from "@/services/api/userApi";
 
@@ -18,6 +17,7 @@ import dynamic from "next/dynamic";
 import CosmosAuthComponent from "./CosmosAuth";
 import BitcoinAuthComponent from "./BitcoinAuth";
 import { Collapse } from "antd";
+import { BackIcon } from "@/assets/icons";
 // Dynamically import TronAuthComponent, disabling SSR
 const TronAuthComponent = dynamic(() => import("./TronAuth"), {
   ssr: false,
@@ -200,9 +200,18 @@ export const SignUpModal = ({
     },
   ];
 
+  const handleBackToSignup = () => {
+    setFromSignUp(false);
+    setModalTab(2);
+  };
   return (
     <Modal open={isModalOpen} onCancel={handleCancel} footer={<></>}>
       <div className='signUpModal'>
+        {fromSignUp ? (
+          <span onClick={handleBackToSignup} className='back_btn'>
+            <BackIcon width={16} height={14} />
+          </span>
+        ) : null}
         {modalTab === 1 && (
           <div className='login'>
             <h4>Log In</h4>
@@ -310,14 +319,11 @@ export const SignUpModal = ({
 
             <p>
               {fromSignUp ? (
-                <>
-                  Choose Wallet, if go back
-                  <span onClick={() => setModalTab(2)}> SignUp</span>
-                </>
+                <>Select Wallet</>
               ) : (
                 <>
                   Don&apos;t have account?
-                  <span onClick={() => setModalTab(2)}>SignUp</span>
+                  <span onClick={() => setModalTab(2)}> SignUp</span>
                 </>
               )}
             </p>

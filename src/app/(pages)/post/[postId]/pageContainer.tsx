@@ -16,6 +16,7 @@ export default function PageContainer({ postData }: IProps) {
       <Comments
         postId={postData?.id as number}
         setCommentCount={setCommentCount}
+        status={postData?.sts}
       />
     </main>
   );
