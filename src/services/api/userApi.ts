@@ -5,7 +5,7 @@ import { PublicKey } from "@solana/web3.js";
 
 import { IFollowAPI, IPostCommentAPI, IVotePayload } from "@/utils/types/types";
 import { getClientSideCookie } from "@/utils/helpers";
-import { setUserData, setUserError, setUserLoading } from '@/contexts/reducers';
+import { setUserData, setUserError, setUserLoading } from "@/contexts/reducers";
 
 // Follow API
 export const followApi = async (data: IFollowAPI) => {
@@ -95,21 +95,20 @@ export const fetchUserById = async (id: string) => {
 };
 
 export const getUserProfile = async () => {
-  store.dispatch(setUserLoading())
+  store.dispatch(setUserLoading());
   try {
     const response = await api.get(`/users/me`);
-   
+
     console.log("responseUSer", response.data);
-    
-  store.dispatch(setUserData(response.data))
+
+    store.dispatch(setUserData(response.data));
     return response.data;
   } catch (error) {
     console.error("Fetch User ", error);
-    store.dispatch(setUserError("failed"))
+    store.dispatch(setUserError("failed"));
     throw error;
   }
 };
-
 
 export const updateUser = async (payload: Partial<IUser>) => {
   try {
@@ -239,9 +238,17 @@ export const fetchDelegatesByUname = async (payload: {
   }
 };
 
-export const undoDelegateNetWorth = async (delegateId: number) => {
+export const undoDelegateNetWorth = async ({
+  delegateId,
+  token,
+}: {
+  delegateId: number;
+  token: string;
+}) => {
   try {
-    const response = await api.post(`/governance/delegate/undo/${delegateId}`);
+    const response = await api.post(
+      `/governance/delegate/undo/${delegateId}?tkn=${token}`
+    );
     console.log("=====Undo Delegate Successful=====");
   } catch (error) {
     console.error("Delegate Error", error);
@@ -249,10 +256,31 @@ export const undoDelegateNetWorth = async (delegateId: number) => {
   }
 };
 
-export const delegateNetWorth = async (userId: number) => {
+// export const delegateNetWorth = async (userId: number) => {
+//   try {
+//     const response = await api.post(`/governance/delegate/${userId}`);
+//     console.log("=====Delegate Successful=====");
+//   } catch (error) {
+//     console.error("Delegate Error", error);
+//     throw error;
+//   }
+// };
+
+export const delegateNetWorth = async ({
+  userId,
+  tkn,
+  amount,
+}: {
+  userId: number;
+  tkn: string;
+  amount: number;
+}) => {
   try {
-    const response = await api.post(`/governance/delegate/${userId}`);
-    console.log("=====Delegate Successful=====");
+    const response = await api.post(`/governance/delegate/${userId}`, {
+      tkn,
+      amount,
+    });
+    console.log("=====Delegate Successful=====", response);
   } catch (error) {
     console.error("Delegate Error", error);
     throw error;

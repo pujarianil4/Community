@@ -55,7 +55,7 @@ export default function General() {
   const DeligateItems = [
     {
       key: "4",
-      label: "Deligate",
+      label: "Deligation",
       children: (
         <>
           <Deligate />

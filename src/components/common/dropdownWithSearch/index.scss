@@ -18,6 +18,20 @@
       height: 24px;
       color: #757575;
     }
+
+    .close_icon {
+      margin-left: auto;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      @include lessThan(md) {
+        svg {
+          width: 18px !important;
+          height: 18px !important;
+        }
+      }
+    }
   }
   .custom_dropdown {
     position: absolute;
@@ -30,9 +44,8 @@
     z-index: 100;
     border-radius: 16px;
     margin-top: 0.5rem;
-    // padding: 0.5rem 0 0.5rem 0.5rem;
     @include lessThan(md) {
-      width: 100%;
+      width: 89%;
     }
   }
 
@@ -49,6 +62,9 @@
     outline: none;
     &:focus {
       border: none !important;
+    }
+    &::placeholder {
+      color: var(--label-text);
     }
     @include lessThan(md) {
       font-size: $font-size-xsm;

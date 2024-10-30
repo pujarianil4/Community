@@ -8,6 +8,7 @@ import Image from "next/image";
 import { getImageSource } from "@/utils/helpers";
 import EmptyData from "../Empty";
 import ProfilelistLoader from "../loaders/profilelist";
+import { CloseIcon } from "@/assets/icons";
 
 interface DropdownWithSearchProps {
   onSelect: (value: any) => void;
@@ -47,10 +48,16 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
     setVisible(true);
   };
 
-  const handleBlur = () => {
+  const handleBlur = (e: React.FocusEvent<HTMLDivElement, Element>) => {
+    // if (
+    //   !e.currentTarget.contains(e.relatedTarget as Node) &&
+    //   e.relatedTarget?.className !== "dropdown_list"
+    // ) {
+    //   setVisible(false);
+    // }
     setTimeout(() => {
       setVisible(false);
-    }, 200);
+    }, 300);
   };
 
   const handleSelect = (item: any) => {
@@ -82,6 +89,11 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
+          {searchTerm && (
+            <div className='close_icon' onClick={() => setSearchTerm("")}>
+              <CloseIcon />
+            </div>
+          )}
         </div>
       )}
       {visible && (
