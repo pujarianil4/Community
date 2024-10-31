@@ -237,3 +237,16 @@ export function getCurrentDomain() {
     ? window.location.origin
     : "http://localhost:3000";
 }
+
+export function throwError(error: any, customMessage?: string): never {
+  const defaultErrorMessage = "Something Went Wrong";
+
+  const message = customMessage
+    ? customMessage
+    : error?.statusCode === 404
+    ? "Failed to fetch data"
+    : error?.message || defaultErrorMessage;
+
+  // console.error("Error occurred:", { error, message });
+  throw new Error(message);
+}
