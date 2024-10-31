@@ -35,8 +35,8 @@
   .details {
     position: absolute;
     top: 130px;
-    left: 8%;
-    width: 84%;
+    left: 4%;
+    width: 92%;
     height: 240px;
     z-index: 2;
     background-color: var(--primary-bg);
@@ -60,7 +60,7 @@
       justify-content: center;
       align-items: center;
       @include lessThan(md) {
-        height: 85px;
+        height: 98px;
       }
       .box {
         display: flex;
@@ -117,10 +117,12 @@
 
           p {
             font-size: $font-size-xxsm;
-            color: var(--primary-text);
+            color: var(--light);
+            font-weight: $font-weight-medium;
           }
           h4 {
             font-size: $font-size-sm;
+            font-weight: $font-weight-semi-bold;
           }
 
           @include lessThan(md) {
@@ -160,7 +162,7 @@
         flex-direction: column;
         p {
           font-size: $font-size-xsm;
-          color: var(--primary-text);
+          color: var(--light);
           margin-bottom: 4px;
           @include lessThan(xl) {
             font-size: $font-size-xxsm;
@@ -188,11 +190,10 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: 0.75rem 0.75rem 0;
+      // padding: 0.75rem 0.75rem 0;
+      padding: 12px 20px 0px 25px;
       height: fit-content;
-      @include lessThan(md) {
-        padding: 0.5rem 0.5rem 0;
-      }
+
       p {
         font-size: 14px;
         color: var(--primary-text);

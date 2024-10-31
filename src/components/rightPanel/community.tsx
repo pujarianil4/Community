@@ -13,6 +13,12 @@ interface IProps {
   community: ICommunity;
 }
 export default function Community({ community }: IProps) {
+  const [memberCount, setMemberCount] = useState(community.followers);
+
+  const handleFollowStatusChange = (isFollowed: boolean) => {
+    setMemberCount((prevCount) => (isFollowed ? prevCount + 1 : prevCount - 1));
+  };
+
   // const communityId = community?.username;
   // console.log("COMMUNITY____", community);
   // const { isLoading, data, refetch } = useAsync(
@@ -85,7 +91,7 @@ export default function Community({ community }: IProps) {
           loading='lazy'
         />
         <span>{community?.username}</span> */}
-        <CHead community={community} />
+        <CHead community={{ ...community, followers: memberCount }} />
       </Link>
       <div className='community_join'>
         {/* <CButton
@@ -95,7 +101,10 @@ export default function Community({ community }: IProps) {
         >
           {isFollowed ? "Joined" : "Join"}
         </CButton> */}
-        <CommunityFollowButton communityData={community} />
+        <CommunityFollowButton
+          communityData={community}
+          onSuccess={handleFollowStatusChange}
+        />
         {/* <span className='comm_icon'>Join</span> */}
       </div>
     </div>

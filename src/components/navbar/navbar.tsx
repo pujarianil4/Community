@@ -181,7 +181,7 @@ function Navbar() {
         <nav className='nav_container'>
           <div className='first_child'>
             <div className='logo'>
-              <Link href='#'>
+              <Link href='/'>
                 <h2>Numity</h2>
               </Link>
             </div>

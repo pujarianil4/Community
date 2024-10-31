@@ -22,7 +22,7 @@ import { Tooltip } from "antd";
 import Link from "next/link";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
-
+import { convertNumber } from "@/utils/helpers/index";
 export default function UserHead() {
   const { userId: id } = useParams<{ userId: string }>();
   const router = useRouter();
@@ -159,7 +159,7 @@ export default function UserHead() {
                     <span className='username'>@{data?.username}</span>
                     <div className='views'>
                       <p>Views</p>
-                      <h4>{data?.vCount || 0}</h4>{" "}
+                      <h4>{convertNumber(data?.vCount || 0, 1)}</h4>
                     </div>
                   </div>
                 </div>

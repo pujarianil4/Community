@@ -12,7 +12,7 @@ import ShareButton from "../shareButton";
 import { PiBookmarkSimpleDuotone } from "react-icons/pi";
 import CPopup from "../popup";
 import NotificationMessage from "../Notification";
-
+import { Tooltip } from "antd";
 // save post Api
 // import { savePost } from "@/services/api/userApi";
 
@@ -114,57 +114,66 @@ export default function Actions({
   };
 
   return (
-    <div className={`actions ${isArchived ? "no_action" : ""}`}>
-      <div className='up_down'>
-        <span>
-          <PiArrowFatUpDuotone
-            className={vote.type == "up" || isVoted ? "active" : ""}
-            onClick={() => handleVote("up")}
-            size={18}
-          />
-          <span>{vote.value}</span>{" "}
-        </span>
-        <span>
-          <PiArrowFatDownDuotone
-            className={vote.type == "down" ? "active" : ""}
-            onClick={() => handleVote("down")}
-            size={18}
-          />
-          {/* <span> {vote.value}</span> */}
-        </span>
-      </div>
-      <Link href={`post/${id}`} as={`/post/${id}`}>
-        <div className='comments'>
-          <GoComment size={18} />
-          <span>{numberWithCommas(ccount) || "comments"}</span>
-        </div>
-      </Link>
-      {showSave && (
-        <CPopup
-          onSelect={handleSelectRepost}
-          onAction='hover'
-          position='top'
-          list={[{ label: "Repost with Description" }, { label: "Repost" }]}
-        >
-          <div className='other'>
-            <AiOutlineRetweet size={16} />
-            <span>RePost</span>
+    <div>
+      <Tooltip title={isArchived ? "No action, this post is Deleted" : ""}>
+        <div className={`actions ${isArchived ? "" : ""}`}>
+          <div className='up_down'>
+            <span>
+              <PiArrowFatUpDuotone
+                className={vote.type == "up" || isVoted ? "active" : ""}
+                onClick={() => handleVote("up")}
+                size={18}
+              />
+              <span>{vote.value}</span>{" "}
+            </span>
+            <span>
+              <PiArrowFatDownDuotone
+                className={vote.type == "down" ? "active" : ""}
+                onClick={() => handleVote("down")}
+                size={18}
+              />
+              {/* <span> {vote.value}</span> */}
+            </span>
           </div>
-        </CPopup>
-      )}
-      {showShare && (
-        <ShareButton
-          postTitle={text}
-          postUrl={postUrl}
-          postImage={media?.[0] || ""}
-        />
-      )}
-      {showSave && (
-        <div className='other' onClick={handleSave}>
-          <PiBookmarkSimpleDuotone size={16} />
-          <span>Save</span>
+          <Link href={`post/${id}`} as={`/post/${id}`}>
+            <div className='comments'>
+              <GoComment size={18} />
+              <span>{numberWithCommas(ccount) || "comments"}</span>
+            </div>
+          </Link>
+          {showSave && (
+            <div onMouseEnter={(e) => isArchived && e.stopPropagation()}>
+              <CPopup
+                onSelect={handleSelectRepost}
+                onAction='hover'
+                position='top'
+                list={[
+                  { label: "Repost with Description" },
+                  { label: "Repost" },
+                ]}
+              >
+                <div className='other'>
+                  <AiOutlineRetweet size={16} />
+                  <span>RePost</span>
+                </div>
+              </CPopup>
+            </div>
+          )}
+          {showShare && (
+            <ShareButton
+              postTitle={text}
+              postUrl={postUrl}
+              postImage={media?.[0] || ""}
+            />
+          )}
+          {showSave && (
+            <div className='other' onClick={handleSave}>
+              <PiBookmarkSimpleDuotone size={16} />
+              <span>Save</span>
+            </div>
+          )}
         </div>
-      )}
+      </Tooltip>
     </div>
   );
 }
