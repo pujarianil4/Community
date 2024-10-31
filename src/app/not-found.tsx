@@ -4,9 +4,9 @@ import React from "react";
 
 export default function Notfound() {
   return (
-    <div className='notfound-page'>
+    <div className='notfound_page'>
       <NotFound />
-      <span>uh-oh! Nothing here...</span>
+      <p>uh-oh! Nothing here...</p>
       <Link href={`/`} as={`/`}>
         {" "}
         <button>Back to Home</button>
