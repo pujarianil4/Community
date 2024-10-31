@@ -89,22 +89,25 @@ main {
   overflow: hidden;
 }
 
-.notfound-page {
+.notfound_page,
+.error_page {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100vh;
+  height: 92vh;
+  padding: 1rem;
 
   svg {
-    width: 400px;
+    width: 600px;
+    margin: 0 auto 1rem;
   }
-  span {
+  p {
     color: var(--primary-text);
-    font-size: 15px;
-    position: relative;
-    top: -20px;
+    font-size: $font-size-xxlg;
+    text-align: center;
+    font-weight: $font-weight-medium;
   }
   button {
     width: max-content;
@@ -115,6 +118,17 @@ main {
     border-radius: 5px;
     border: 0px;
     cursor: pointer;
+    margin: 1.5rem auto;
+  }
+
+  @include lessThan(sm) {
+    svg {
+      min-width: 240px;
+      width: 92%;
+    }
+    p {
+      font-size: $font-size-md;
+    }
   }
 }
 nextjs-portal {
