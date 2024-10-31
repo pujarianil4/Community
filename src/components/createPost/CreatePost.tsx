@@ -15,7 +15,7 @@ import { getFollowinsByUserId } from "@/services/api/userApi";
 import Image from "next/image";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
-import DropdownWithSearch from "./dropdownWithSearch";
+import DropdownWithSearch from "../common/dropdownWithSearch";
 import useAsync from "@/hooks/useAsync";
 import { getImageSource } from "@/utils/helpers";
 import { ErrorType, ICommunity } from "@/utils/types/types";
@@ -116,7 +116,7 @@ export const FileInput: React.FC<FileInputProps> = React.memo(
 // Set displayName for FileInput component
 FileInput.displayName = "FileInput";
 
-const userNameSelector = (state: RootState) => state?.user;
+const userNameSelector = (state: RootState) => state?.user?.profile;
 const refetchPost = (state: RootState) => state.common.refetch.post;
 const refetchCommunitySelector = (state: RootState) =>
   state.common.refetch.community;
@@ -129,13 +129,12 @@ const CreatePost: React.FC<Props> = ({
 }) => {
   const [{ dispatch, actions }, [user, comminityRefetch, postRefetch]] =
     useRedux([userNameSelector, refetchCommunitySelector, refetchPost]);
-
   const {
     isLoading,
     data: communityList,
     refetch,
   } = useAsync(getFollowinsByUserId, {
-    userId: user?.profile?.id,
+    userId: user?.id,
     type: "c",
   });
 
@@ -162,7 +161,7 @@ const CreatePost: React.FC<Props> = ({
 
   const [uploadingSkeletons, setUploadingSkeletons] = useState<number[]>([]);
   const payload = {
-    nameId: user?.profile?.username,
+    nameId: user?.username,
     sortby: "time",
     page,
     limit,

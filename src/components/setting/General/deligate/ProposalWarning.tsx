@@ -1,15 +1,18 @@
 import React from "react";
 import { Modal } from "antd";
 import CButton from "@/components/common/Button";
+import "../index.scss";
 
 interface IProposalWarning {
   onClose: () => void;
   isModalOpen: boolean;
+  onProceed: () => void;
 }
 
 export default function ProposalWarning({
   onClose,
   isModalOpen,
+  onProceed,
 }: IProposalWarning) {
   return (
     <Modal
@@ -19,12 +22,18 @@ export default function ProposalWarning({
       footer={<></>}
       centered
     >
-      <ProposalWarningModal onClose={onClose} />
+      <ProposalWarningModal onClose={onClose} onProceed={onProceed} />
     </Modal>
   );
 }
 
-export function ProposalWarningModal({ onClose }: { onClose: () => void }) {
+export function ProposalWarningModal({
+  onClose,
+  onProceed,
+}: {
+  onClose: () => void;
+  onProceed: () => void;
+}) {
   // const closeBtn = document.querySelector(".ant-modal-close");
 
   const handleCancelDelegate = () => {
@@ -32,6 +41,7 @@ export function ProposalWarningModal({ onClose }: { onClose: () => void }) {
   };
   const handleProceedDelegate = () => {
     // TODO: Add feature to remove all votes and proceed to delegation
+    onProceed();
   };
   return (
     <main className='proposal_warning_container'>
@@ -40,8 +50,12 @@ export function ProposalWarningModal({ onClose }: { onClose: () => void }) {
         your votes will cancel by choosing a different delegate account.
       </p>
       <div>
-        <CButton onClick={handleCancelDelegate}>cancel</CButton>
-        <CButton onClick={handleProceedDelegate}>proceed any way</CButton>
+        <CButton className='btn' onClick={handleCancelDelegate}>
+          cancel
+        </CButton>
+        <CButton className='btn' onClick={handleProceedDelegate}>
+          proceed any way
+        </CButton>
       </div>
     </main>
   );

@@ -2,7 +2,6 @@
 import React, { useCallback, useState } from "react";
 import "./index.scss";
 import { IProposalForm } from "@/utils/types/types";
-import { createProposal } from "@/services/api/api";
 import TurndownService from "turndown";
 import NotificationMessage from "@/components/common/Notification";
 import CInput from "@/components/common/Input";
@@ -11,6 +10,7 @@ import CButton from "@/components/common/Button";
 import { DatePicker } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from "next/navigation";
+import { createProposal } from "@/services/api/proposalApi";
 
 const { RangePicker } = DatePicker;
 
@@ -136,7 +136,6 @@ export default function CreateProposal({ cname, cid }: IProps) {
       //   );
       //   console.log("Number of days between:", daysBetween);
       // }
-
       const res = await createProposal(proposalData);
 
       setProposalForm(initialProposal);

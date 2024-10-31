@@ -11,8 +11,8 @@ export interface Common {
   proposalVote: boolean;
   proposal: {
     isVoted: boolean;
-    yes: number;
-    no: number;
+    up: number;
+    down: number;
   };
   navbarSearch: {
     pill: {
@@ -35,8 +35,8 @@ const initialState: Common = {
   proposalVote: false,
   proposal: {
     isVoted: false,
-    yes: 0,
-    no: 0,
+    up: 0,
+    down: 0,
   },
   navbarSearch: {
     pill: {
@@ -66,8 +66,8 @@ export const commonSlice = createSlice({
     },
     setProposalData: (state, action) => {
       state.proposal.isVoted = action.payload.isVoted;
-      state.proposal.yes = action.payload.yes;
-      state.proposal.no = action.payload.no;
+      state.proposal.up = action.payload.up;
+      state.proposal.down = action.payload.down;
     },
     setNavbarSearch: (state, action) => {
       state.navbarSearch.searchVal = action.payload.searchVal;
