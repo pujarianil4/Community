@@ -120,7 +120,7 @@ export default function Posts() {
         <CFilter
           list={[
             { value: "ccount", title: "trending" },
-            { value: "time", title: "latest" },
+            { value: "cta", title: "latest" },
             { value: "up", title: "vote" },
           ]}
           callBack={handleFilter}
