@@ -209,7 +209,7 @@ const SideBar: React.FC = () => {
 
   const onClick: MenuProps["onClick"] = (e) => {
     if (e.key == "createCommunity") {
-      const user = userId;
+      const user = userId?.id;
       if (user) {
         showModal();
       } else {

@@ -42,6 +42,9 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   const [{}, [user]] = useRedux([userNameSelector]);
   const commentInputRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const noUser = user?.profile?.id;
+
+  const isDisabled = isArchived || !noUser;
 
   const handlePostComment = async () => {
     const turndownService = new TurndownService();
@@ -88,7 +91,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   };
 
   const handleUploadFile = async (file: any) => {
-    if (isArchived) return;
+    if (isDisabled) return;
     setImageLoading(true);
     try {
       const uploadedFile = await uploadSingleFile(file[0]);
@@ -145,7 +148,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
 
   return (
     <div className='comment_input' ref={containerRef}>
-      <div ref={commentInputRef} className={isArchived ? "delete_disable" : ""}>
+      <div ref={commentInputRef} className={isDisabled ? "delete_disable" : ""}>
         <TiptapEditor
           showToolbar={showToolbar}
           setContent={setCommentBody}
@@ -177,23 +180,23 @@ const CommentInput: React.FC<ICommentInputProps> = ({
           )}
         </div>
       )}
-      <div className={`comment_controls ${isArchived ? "delete_disable" : ""}`}>
+      <div className={`comment_controls ${isDisabled ? "delete_disable" : ""}`}>
         <div>
           <FileInput onChange={handleUploadFile}>
             <LuImagePlus
-              color={isArchived ? "var(--primary-border)" : "var(--primary)"}
+              color={isDisabled ? "var(--primary-border)" : "var(--primary)"}
               size={36}
             />
           </FileInput>
           <RiText
             onClick={() => setShowToolbar(!showToolbar)}
-            color={isArchived ? "var(--primary-border)" : "var(--primary)"}
+            color={isDisabled ? "var(--primary-border)" : "var(--primary)"}
             size={36}
           />
         </div>
         <CButton
           className='comment_btn'
-          disabled={isArchived || (commentBody === "" && commentImg == null)}
+          disabled={isDisabled || (commentBody === "" && commentImg == null)}
           onClick={() => handlePostComment()}
         >
           Comment
