@@ -30,7 +30,7 @@ const Drafts: React.FC<Props> = ({
 
   const [page, setPage] = useState(1);
   const [draftPosts, setDraftPosts] = useState<IPost[]>([]);
-  console.log("LENGTH", draftPosts?.length);
+
   const limit = 10;
   const userNameSelector = (state: RootState) => state?.user;
   const [{}, [user]] = useRedux([userNameSelector]);
@@ -149,7 +149,7 @@ const Drafts: React.FC<Props> = ({
               </article>
             )}
             customScrollSelector='draft_posts_section'
-            footerHeight={80}
+            footerHeight={5}
           />
           {isLoadingUserPost && page > 1 && <PostLoader />}
           {!isLoadingUserPost && draftPosts?.length === 0 && page === 1 && (

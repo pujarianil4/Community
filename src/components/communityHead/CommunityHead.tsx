@@ -15,6 +15,7 @@ import CTabs from "../common/Tabs";
 import FeedList from "../feedPost/feedList";
 import Followers from "../userHead/followers/Followers";
 import {
+  convertNumber,
   getImageSource,
   numberWithCommas,
   setToLocalStorage,
@@ -38,6 +39,7 @@ import { CreateCommunityModal } from "../sidebar/CreateCommunityModal";
 
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
+import { BsEye } from "react-icons/bs";
 
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
@@ -202,6 +204,17 @@ export default function CommunityHead() {
                   <div className='names'>
                     <h4>{data?.name}</h4>
                     <span className='username'>@{data?.username}</span>
+                    <div className='socials'>
+                      <div className='disabled'>
+                        <DiscordIcon />
+                      </div>
+                      <div className='disabled'>
+                        <TelegramIcon />
+                      </div>
+                      <div className='disabled'>
+                        <TwitterIcon />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className='stats box'>
@@ -227,6 +240,11 @@ export default function CommunityHead() {
                 </div>
 
                 <div className='social_bx'>
+                  <div className='views'>
+                    <span>{convertNumber(data?.vCount || 0, 1)}</span>
+                    {/* <span> 2500</span> */}
+                    <BsEye />
+                  </div>
                   <CommunityFollowButton
                     communityData={data}
                     onSuccess={handleMemberCountUpdate}
@@ -238,7 +256,7 @@ export default function CommunityHead() {
                   >
                     Edit
                   </CButton> */}
-                  <div className='socials'>
+                  {/* <div className='socials'>
                     <div className='disabled'>
                       <DiscordIcon />
                     </div>
@@ -248,7 +266,7 @@ export default function CommunityHead() {
                     <div className='disabled'>
                       <TwitterIcon />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               {/* TODO: add disabled class as per social link availablity */}

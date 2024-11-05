@@ -22,6 +22,7 @@ import { Tooltip } from "antd";
 import Link from "next/link";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
+import { BsEye } from "react-icons/bs";
 import { convertNumber } from "@/utils/helpers/index";
 export default function UserHead() {
   const { userId: id } = useParams<{ userId: string }>();
@@ -157,9 +158,77 @@ export default function UserHead() {
                   <div className='names'>
                     <h4>{data?.name}</h4>
                     <span className='username'>@{data?.username}</span>
-                    <div className='views'>
+                    {/* <div className='views'>
                       <p>Views</p>
                       <h4>{convertNumber(data?.vCount || 0, 1)}</h4>
+                    </div> */}
+                    <div className='socials'>
+                      <Tooltip
+                        title={
+                          discordConnected
+                            ? `Connected: ${data.discord.username}`
+                            : "Not connected"
+                        }
+                      >
+                        <div
+                          className={discordConnected ? "enabled" : "disabled"}
+                        >
+                          {discordConnected ? (
+                            <Link
+                              href={`https://discord.com/users/${data.discord.id}`}
+                              target='_blank'
+                            >
+                              <DiscordIcon />
+                            </Link>
+                          ) : (
+                            <DiscordIcon />
+                          )}
+                        </div>
+                      </Tooltip>
+                      <Tooltip
+                        title={
+                          telegramConnected
+                            ? `Connected: ${data.telegram.username}`
+                            : "Not connected"
+                        }
+                      >
+                        <div
+                          className={telegramConnected ? "enabled" : "disabled"}
+                        >
+                          {telegramConnected ? (
+                            <Link
+                              href={`https://t.me/${data.telegram.username}`}
+                              target='_blank'
+                            >
+                              <TelegramIcon />
+                            </Link>
+                          ) : (
+                            <TelegramIcon />
+                          )}
+                        </div>
+                      </Tooltip>
+                      <Tooltip
+                        title={
+                          twitterConnected
+                            ? `Connected: ${data.x.username}`
+                            : "Not connected"
+                        }
+                      >
+                        <div
+                          className={twitterConnected ? "enabled" : "disabled"}
+                        >
+                          {twitterConnected ? (
+                            <Link
+                              href={`https://x.com/${data.x.username}`}
+                              target='_blank'
+                            >
+                              <TwitterIcon />
+                            </Link>
+                          ) : (
+                            <TwitterIcon />
+                          )}
+                        </div>
+                      </Tooltip>
                     </div>
                   </div>
                 </div>
@@ -186,11 +255,18 @@ export default function UserHead() {
                 </div>
 
                 <div className='social_bx'>
+                  <div className='views'>
+                    <span>{convertNumber(data?.vCount || 0, 1)}</span>
+                    {/* <span> 2500</span> */}
+                    <BsEye />
+                  </div>
+
                   <UserFollowButton
                     userData={data}
                     onSuccess={handleMemberCountUpdate}
                   />
-                  <div className='socials'>
+
+                  {/* <div className='socials'>
                     <Tooltip
                       title={
                         discordConnected
@@ -257,7 +333,7 @@ export default function UserHead() {
                         )}
                       </div>
                     </Tooltip>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
