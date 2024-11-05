@@ -381,13 +381,13 @@ const CreatePost: React.FC<Props> = ({
         <div>
           <Image
             loading='lazy'
-            src={getImageSource(user?.profile?.img.pro, "u")}
+            src={getImageSource(user?.img.pro, "u")}
             alt='user_img'
             width={48}
             height={48}
           />
           <h3 className='heading02'>
-            {user?.profile?.name || user?.profile?.username || "user name"}
+            {user?.name || user?.username || "user name"}
           </h3>
         </div>
         <div>

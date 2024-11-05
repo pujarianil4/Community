@@ -1,13 +1,13 @@
 @import "/src/styles";
 .ant-model {
-  overflow: unset;
+  overflow: none;
 }
 .create_post_modal {
   width: 940px !important;
   border-radius: 16px !important;
   box-shadow: -5px -6px 4px 0 rgba(0, 0, 0, 0.3);
   min-height: 500px;
-  max-height: 80vh;
+  max-height: 85vh;
   overflow-y: auto;
   .ant-model-content {
     height: 740px !important;
@@ -17,8 +17,8 @@
 }
 .create_post_container {
   padding: 1rem 1rem 0.5rem 1rem;
-  min-height: 700px !important;
-
+  // min-height: 700px !important;
+  height: max-content;
   background-color: var(--secondary-bg) !important;
   position: relative;
   @include lessThan(md) {

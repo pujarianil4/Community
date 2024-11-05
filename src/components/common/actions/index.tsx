@@ -141,8 +141,26 @@ export default function Actions({
               <span>{numberWithCommas(ccount) || "comments"}</span>
             </div>
           </Link>
-          {showSave && (
-            <div onMouseEnter={(e) => isArchived && e.stopPropagation()}>
+          {/* {showSave && !isArchived && (
+            <CPopup
+              onSelect={handleSelectRepost}
+              onAction='hover'
+              position='top'
+              list={[{ label: "Repost with Description" }, { label: "Repost" }]}
+            >
+              <div className='other'>
+                <AiOutlineRetweet size={16} />
+                <span>RePost</span>
+              </div>
+            </CPopup>
+          )} */}
+          {showSave &&
+            (isArchived ? (
+              <div className='other disabled'>
+                <AiOutlineRetweet size={16} />
+                <span>RePost</span>
+              </div>
+            ) : (
               <CPopup
                 onSelect={handleSelectRepost}
                 onAction='hover'
@@ -157,8 +175,7 @@ export default function Actions({
                   <span>RePost</span>
                 </div>
               </CPopup>
-            </div>
-          )}
+            ))}
           {showShare && (
             <ShareButton
               postTitle={text}
