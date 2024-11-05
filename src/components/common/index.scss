@@ -306,6 +306,10 @@
   color: var(--primary);
   font-size: 12px;
   margin-top: 5px;
+  cursor: pointer;
+  :hover {
+    opacity: 0.9;
+  }
 }
 
 // Virtual-List
