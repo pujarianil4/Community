@@ -209,7 +209,7 @@ const SideBar: React.FC = () => {
 
   const onClick: MenuProps["onClick"] = (e) => {
     if (e.key == "createCommunity") {
-      const user = userId;
+      const user = userId?.id;
       if (user) {
         showModal();
       } else {
@@ -217,11 +217,27 @@ const SideBar: React.FC = () => {
     } else if (e.key[0] === "c" && e.key[1] === "/") {
       const path = extractNextString(e.key);
       router.push(`/${path}`);
+    } else if (e.key === "popular") {
+      router.push("/popular");
     } else if (!["popular"].includes(e.key)) {
       router.push(`/${e.key}`);
     }
   };
-
+  // const onClick: MenuProps["onClick"] = (e) => {
+  //   if (e.key === "createCommunity") {
+  //     const user = userId?.id;
+  //     if (user) {
+  //       showModal();
+  //     }
+  //   } else if (e.key === "popular") {
+  //     router.push("/popular"); // Explicitly handle "popular" route
+  //   } else if (e.key.startsWith("c/")) {
+  //     const path = extractNextString(e.key);
+  //     router.push(`/${path}`);
+  //   } else {
+  //     router.push(`/${e.key}`);
+  //   }
+  // };
   const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     e.currentTarget.src = getRandomImageLink();
   };

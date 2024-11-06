@@ -5,7 +5,6 @@ import { AiOutlineRetweet } from "react-icons/ai";
 import Link from "next/link";
 import { GoComment } from "react-icons/go";
 import { numberWithCommas } from "@/utils/helpers";
-import { SaveIcon, ShareIcon } from "@/assets/icons";
 import { IPost, IVotePayload } from "@/utils/types/types";
 import { sendVote } from "@/services/api/userApi";
 import ShareButton from "../shareButton";
@@ -13,6 +12,9 @@ import { PiBookmarkSimpleDuotone } from "react-icons/pi";
 import CPopup from "../popup";
 import NotificationMessage from "../Notification";
 import { Tooltip } from "antd";
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
+
 // save post Api
 // import { savePost } from "@/services/api/userApi";
 
@@ -36,7 +38,19 @@ export default function Actions({
   showSave = false,
 }: IProps) {
   const { up, down, id, isVoted, ccount, text, media, sts } = post;
+
+  const userNameSelector = (state: RootState) => state?.user;
+
+  const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
+
+  const noUser = user?.profile?.id;
+
+  useEffect(() => {
+    console.log("userData", noUser);
+  }, [user]);
+
   const isArchived = sts === "archived";
+  const isDisabled = isArchived || !noUser;
   const [vote, setVote] = useState<Vote>({
     value: Number(up) + Number(down),
     type: "",
@@ -55,7 +69,7 @@ export default function Actions({
   const handleSelectRepost = () => {};
 
   const handleVote = async (action: string) => {
-    if (isArchived) return; // no action if post deleted
+    if (isDisabled) return; // no action if post deleted
     const previousVote = { ...vote };
 
     let newVote: Vote = { ...vote };
@@ -100,7 +114,7 @@ export default function Actions({
 
   //handle save post
   const handleSave = async () => {
-    if (isArchived) return;
+    if (isDisabled) return;
     try {
       if (id) {
         // const response = await savePost(id, true);
@@ -155,7 +169,7 @@ export default function Actions({
             </CPopup>
           )} */}
           {showSave &&
-            (isArchived ? (
+            (isDisabled ? (
               <div className='other disabled'>
                 <AiOutlineRetweet size={16} />
                 <span>RePost</span>
