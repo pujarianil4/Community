@@ -20,6 +20,7 @@ import FeedPostLoader from "../common/loaders/Feedpost";
 import CFilter from "../common/Filter";
 import { IPost } from "@/utils/types/types";
 import VirtualList from "../common/virtualList";
+import { throwError } from "@/utils/helpers";
 
 const getFunctionByMethod = {
   allPosts: getPosts,
@@ -61,7 +62,7 @@ export default function FeedList({
     title: "All",
   });
 
-  const { isLoading, data, refetch, callFunction } = useAsync(
+  const { error, isLoading, data, refetch, callFunction } = useAsync(
     getFunctionByMethod[method],
     {
       nameId: id,
@@ -71,6 +72,10 @@ export default function FeedList({
       limit: limit,
     }
   );
+
+  if (error) {
+    throwError(error, "Failed to load posts. Please try again later.");
+  }
 
   const refetchRoute = (state: RootState) => state?.common.refetch.user;
   const refetchPost = (state: RootState) => state.common.refetch.post;
@@ -149,7 +154,7 @@ export default function FeedList({
         <CFilter
           list={[
             { value: "ccount", title: "trending" },
-            { value: "time", title: "latest" },
+            { value: "cta", title: "latest" },
             { value: "up", title: "vote" },
           ]}
           callBack={handleFilter}

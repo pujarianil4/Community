@@ -238,6 +238,18 @@ export function getCurrentDomain() {
     : "http://localhost:3000";
 }
 
+export function throwError(error: any, customMessage?: string): never {
+  const defaultErrorMessage = "Something Went Wrong";
+
+  const message = customMessage
+    ? customMessage
+    : error?.statusCode === 404
+    ? "Failed to load data. Please try again later."
+    : error?.message || defaultErrorMessage;
+
+  // console.error("Error occurred:", { error, message });
+  throw new Error(message);
+}
 export function convertNumber(value: number, decimals = 1) {
   const suffixes = [
     { value: 1e6, suffix: "M" },

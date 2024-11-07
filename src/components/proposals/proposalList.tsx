@@ -10,7 +10,7 @@ import { IProposal } from "@/utils/types/types";
 import EmptyData from "../common/Empty";
 import ProposalItemLoader from "./proposalItemLoader";
 import VirtualList from "../common/virtualList";
-import { debounce } from "@/utils/helpers";
+import { debounce, throwError } from "@/utils/helpers";
 
 interface IProps {
   cid: number;
@@ -43,6 +43,7 @@ export default function ProposalList({
       ? fetchSearchProposal
       : fetchProposalsByCId;
   const {
+    error,
     isLoading,
     data: proposalsData,
     refetch,
@@ -90,6 +91,10 @@ export default function ProposalList({
   useEffect(() => {
     if (page !== 1) refetch();
   }, [page]);
+
+  if (error) {
+    throwError(error);
+  }
 
   if (page < 2 && isLoading) {
     return Array(3)
