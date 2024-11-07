@@ -28,7 +28,7 @@ export const getPosts = async ({
 
   try {
     const response = await api.get(
-      `/postsss?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}&sts=published`
+      `/posts?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}&sts=published`
     );
     console.log("============Fetched all posts=============", response.data);
     return response.data;
