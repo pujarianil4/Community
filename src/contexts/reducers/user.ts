@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { IUser } from '@/utils/types/types';
+import { IUser } from "@/utils/types/types";
 
 // export interface User {
 //   username: string;
@@ -13,20 +13,17 @@ import { IUser } from '@/utils/types/types';
 //   effectiveNetWrth: number;
 // }
 
-interface state{
-  profile: IUser,
-  isLoading: boolean,
-  error: string
+interface state {
+  profile: IUser;
+  isLoading: boolean;
+  error: string;
 }
-
 
 //TODO update Later
 const initialState: state = {
-
   profile: {} as IUser,
   isLoading: false,
-  error: ""
-
+  error: "",
 };
 
 export const userSlice = createSlice({
@@ -34,11 +31,10 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserData: (state, action: PayloadAction<IUser>) => {
-      console.log("setUserData", action);
-      
-     state.profile= action.payload
-     state.isLoading = false,
-     state.error = ""
+      // console.log("setUserData", action);
+
+      state.profile = action.payload;
+      (state.isLoading = false), (state.error = "");
     },
     setUserLoading: (state) => {
       state.isLoading = true;

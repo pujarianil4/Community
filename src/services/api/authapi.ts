@@ -5,12 +5,12 @@ import { api } from "./api";
 export const handleLogIn = async (payload: {
   sig: `0x${string}` | string | undefined;
   msg: string;
-  typ: string
+  typ: string;
   pubKey?: PublicKey | string | null;
 }) => {
   const response = await api.post("/auth/login", payload);
 
-  console.log("LOGIN_RES", response);
+  // console.log("LOGIN_RES", response);
   // setToLocalStorage("userSession", response.data);
   return response.data;
 };
@@ -54,12 +54,12 @@ export const handleSignup = async (
 export const linkAddress = async (payload: {
   sig: `0x${string}` | string | undefined;
   msg: string;
-  typ: string
+  typ: string;
   pubKey?: PublicKey | string;
 }) => {
   const response = await api.post("/users/address", payload);
 
-  console.log("LOGIN_RES", response);
+  // console.log("LOGIN_RES", response);
   // setToLocalStorage("userSession", response.data);
   return response.data;
 };

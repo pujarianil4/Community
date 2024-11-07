@@ -323,7 +323,7 @@ const SideBar: React.FC = () => {
         onClick={() => setIsOpen(!isOpen)}
       />
       <div className={`sidebar_container ${isOpen && "open"}`}>
-        <div className='custom-menu'>
+        {/* <div className='custom-menu'>
           <Menu
             defaultSelectedKeys={["1"]}
             defaultOpenKeys={["community", "categories", "recentCommunity"]}
@@ -332,7 +332,7 @@ const SideBar: React.FC = () => {
             onClick={onClick}
             items={items}
           />
-        </div>
+        </div> */}
       </div>
 
       <CreateCommunityModal

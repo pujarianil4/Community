@@ -131,10 +131,10 @@ function Navbar() {
     }
   }, [common?.refetch?.user]);
 
-  useEffect(() => {
-    // fetchFromCookies();
-    console.log("profileUpdate", profile, userProfile);
-  }, [profile]);
+  // useEffect(() => {
+  //   // fetchFromCookies();
+  //   console.log("profileUpdate", profile, userProfile);
+  // }, [profile]);
 
   const content = (
     <div className='user_popover'>
@@ -185,56 +185,69 @@ function Navbar() {
                 <h2>Numity</h2>
               </Link>
             </div>
-            <div className='hidesearchbar'>
+            {/* <div className='hidesearchbar'>
               <Searchbar />
-            </div>
+            </div> */}
           </div>
 
           <div className='signin'>
             {userProfile?.username && !isLoading ? (
-              <div className='user_actions'>
-                {!showSearchBar && (
-                  <IoSearch
-                    className='mobile_search_icon'
-                    onClick={() => setShowSearchBar(true)}
-                  />
-                )}
-                <CButton className='create_post' onClick={showCreatePost}>
-                  <AddIcon />
-                  <span>Create Post</span>
-                </CButton>
-                <FaRegBell className='notification' size={25} />
-                <div className='user_icon'>
-                  <Popover
-                    placement='bottomRight'
-                    content={content}
-                    trigger='click'
-                  >
-                    {userProfile?.img ? (
-                      <Image
-                        width={50}
-                        height={50}
-                        loading='lazy'
-                        className='avatar'
-                        src={userProfile?.img.pro}
-                        alt='avatar'
-                      />
-                    ) : (
-                      <PiUserCircleDuotone
-                        color='var(--primary-text)'
-                        size={40}
-                      />
-                    )}
-                    {/* <GoChevronDown className='downarrow' size={20} /> */}
-                  </Popover>
-                </div>
-              </div>
+              // <div className='user_actions'>
+              //   {!showSearchBar && (
+              //     <IoSearch
+              //       className='mobile_search_icon'
+              //       onClick={() => setShowSearchBar(true)}
+              //     />
+              //   )}
+              //   <CButton className='create_post' onClick={showCreatePost}>
+              //     <AddIcon />
+              //     <span>Create Post</span>
+              //   </CButton>
+              //   <FaRegBell className='notification' size={25} />
+              //   <div className='user_icon'>
+              //     <Popover
+              //       placement='bottomRight'
+              //       content={content}
+              //       trigger='click'
+              //     >
+              //       {userProfile?.img ? (
+              //         <Image
+              //           width={50}
+              //           height={50}
+              //           loading='lazy'
+              //           className='avatar'
+              //           src={userProfile?.img.pro}
+              //           alt='avatar'
+              //         />
+              //       ) : (
+              //         <PiUserCircleDuotone
+              //           color='var(--primary-text)'
+              //           size={40}
+              //         />
+              //       )}
+              //     </Popover>
+              //   </div>
+              // </div>
+              // <div onClick={userLogout} className='row'>
+              //   <IoLogOutOutline size={25} />
+              //   <span className='text'>
+              //     <span className='text_main'>Log Out</span>
+              //   </span>
+              // </div>
+              <CButton auth='auth' onClick={userLogout}>
+                <IoLogOutOutline size={25} /> Log Out
+              </CButton>
             ) : error || (!userProfile.id && !isLoading) ? (
               <CButton auth='auth' onClick={showModal}>
                 LogIn
               </CButton>
             ) : (
-              <div></div>
+              <div onClick={userLogout} className='row'>
+                <IoLogOutOutline size={25} />
+                <span className='text'>
+                  <span className='text_main'>Log Out</span>
+                </span>
+              </div>
             )}
           </div>
         </nav>

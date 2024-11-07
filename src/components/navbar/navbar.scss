@@ -2,7 +2,7 @@
 .nav_container,
 .mobile_search_container {
   width: 100%;
-  padding-left: 25px;
+  padding: 0 12px;
   height: 80px;
   background-color: var(--secondary-bg);
   // border-bottom: 1px solid var(--primary-border);
@@ -24,9 +24,9 @@
           text-decoration: none;
           cursor: pointer;
 
-          @include lessThan(lg) {
-            margin-left: 40px;
-          }
+          // @include lessThan(lg) {
+          //   margin-left: 40px;
+          // }
         }
       }
     }

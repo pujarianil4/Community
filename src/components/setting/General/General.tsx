@@ -92,13 +92,12 @@ export default function General() {
         />
         {/* Governance */}
         {/* <Governance /> */}
-        <Collapse
+        {/* <Collapse
           items={DeligateItems}
           accordion
           expandIconPosition='end'
           className='accordion_cls'
-        />
-        {/* <Deligator /> */}
+        /> */}
       </div>
     </>
   );

@@ -22,7 +22,7 @@ PageWrapperProps) {
     <div className='pagewraper'>
       <Navbar />
       <Wraper>
-        <SideBar />
+        {/* <SideBar /> */}
         <MainPanel className={`${hideRightPanel ? "hidden_right_panel" : ""}`}>
           {children}
         </MainPanel>

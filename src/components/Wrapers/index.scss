@@ -6,32 +6,35 @@
   overflow-y: auto;
   min-width: 320px;
   padding: 20px;
-  margin-left: calc((100vw - 1400px) / 2);
 
-  @include lessThan(xxl) {
-    margin-left: 0;
-  }
+  // margin-left: calc((100vw - 1400px) / 2);
+
+  // @include lessThan(xxl) {
+  //   margin-left: 0;
+  // }
   // @media (width < 700px) {
   //   margin-left: 200px;
   // }
   @include lessThan(sm) {
     padding: 10px 10px;
   }
+  margin: auto;
 }
 .hidden_right_panel {
-  margin-left: calc((100vw - 1050px) / 2);
+  // margin-left: calc((100vw - 1050px) / 2);
 
-  @include lessThan(xl) {
-    margin-left: calc((100vw - 1000px) / 2);
-  }
+  // @include lessThan(xl) {
+  //   margin-left: calc((100vw - 1000px) / 2);
+  // }
 
-  @include lessThan(lg) {
-    margin-left: calc((100vw - 756px) / 2);
-  }
+  // @include lessThan(lg) {
+  //   margin-left: calc((100vw - 756px) / 2);
+  // }
 
-  @include lessThan(md) {
-    margin: auto;
-  }
+  // @include lessThan(md) {
+  //   margin: auto;
+  // }
+  margin: auto;
 }
 .wraper {
   width: 100%;
