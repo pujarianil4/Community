@@ -11,6 +11,7 @@ import useRedux from "@/hooks/useRedux";
 import CardListLoader from "@/components/cardList/cardListLoader";
 import EmptyData from "@/components/common/Empty";
 import CFilter from "@/components/common/Filter";
+import { throwError } from "@/utils/helpers";
 
 interface List {
   value: string;
@@ -28,10 +29,14 @@ export default function CommunitiesList() {
     limit,
   };
 
-  const { isLoading, data, refetch, callFunction } = useAsync(
+  const { error, isLoading, data, refetch, callFunction } = useAsync(
     fetchCommunities,
     payload
   );
+
+  if (error) {
+    throwError(error);
+  }
 
   const handleFilter = (filter: List) => {
     const isSortByFilter = ["followers", "pCount", "sts", "cta"].includes(

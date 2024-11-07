@@ -244,7 +244,7 @@ export function throwError(error: any, customMessage?: string): never {
   const message = customMessage
     ? customMessage
     : error?.statusCode === 404
-    ? "Failed to fetch data"
+    ? "Failed to load data. Please try again later."
     : error?.message || defaultErrorMessage;
 
   // console.error("Error occurred:", { error, message });

@@ -35,9 +35,7 @@ import CreatePost from "../createPost/CreatePost";
 import ProposalItemLoader from "../proposals/proposalItemLoader";
 import FollowListLoader from "../common/loaders/followList";
 import { CreateCommunityModal } from "../sidebar/CreateCommunityModal";
-
-import { RootState } from "@/contexts/store";
-import useRedux from "@/hooks/useRedux";
+import NotificationMessage from "../common/Notification";
 
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
@@ -48,7 +46,7 @@ export default function CommunityHead() {
   const searchParams = useSearchParams();
   const pathArray = pathname.split("/");
   const communityId = id || pathArray[pathArray.length - 1];
-  const { isLoading, data, refetch } = useAsync(
+  const { error, isLoading, data, refetch } = useAsync(
     fetchCommunityByCname,
     communityId
   );
@@ -60,6 +58,10 @@ export default function CommunityHead() {
       setMembersCount(data.followers);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (error) NotificationMessage("error", error?.message);
+  }, [error]);
 
   const handleMemberCountUpdate = (isFollowed: boolean) => {
     setMembersCount((prevCount) =>

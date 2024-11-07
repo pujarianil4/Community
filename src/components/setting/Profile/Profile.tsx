@@ -23,6 +23,7 @@ import {
   getImageSource,
   getRandomImageLink,
   setClientSideCookie,
+  throwError,
 } from "@/utils/helpers";
 import NotificationMessage from "@/components/common/Notification";
 import { LinkIcon, UploadIcon } from "@/assets/icons";
@@ -38,7 +39,7 @@ export default function Profile() {
   ]);
   const [isLoadingUpadte, setIsLoadingUpdate] = useState(false);
   const [usernameError, setUsernameError] = useState<string>("");
-  const { isLoading, data, refetch, callFunction } = useAsync();
+  const { error, isLoading, data, refetch, callFunction } = useAsync();
   const [isUploading, setIsUploading] = useState(false);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
@@ -55,6 +56,10 @@ export default function Profile() {
     var markDownDesc = turndownService.turndown(content);
   } else {
     var markDownDesc = "";
+  }
+
+  if (error) {
+    throwError(error);
   }
 
   const [user, setUser] = useState<any>({

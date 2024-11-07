@@ -22,6 +22,7 @@ import { Tooltip } from "antd";
 import Link from "next/link";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
+import NotificationMessage from "../common/Notification";
 
 export default function UserHead() {
   const { userId: id } = useParams<{ userId: string }>();
@@ -31,7 +32,7 @@ export default function UserHead() {
   const pathArray = pathname.split("/");
   const userId = id || pathArray[pathArray.length - 1];
 
-  const { isLoading, data, refetch } = useAsync(fetchUser, userId || id);
+  const { error, isLoading, data, refetch } = useAsync(fetchUser, userId || id);
 
   const [membersCount, setMembersCount] = useState<number>(0);
 
@@ -40,6 +41,9 @@ export default function UserHead() {
       setMembersCount(data.fwrs);
     }
   }, [data]);
+  useEffect(() => {
+    if (error) NotificationMessage("error", error?.message);
+  }, [error]);
 
   const handleMemberCountUpdate = (isFollowed: boolean) => {
     setMembersCount((prevCount) =>

@@ -1,4 +1,4 @@
-import { IVotePayload, IPostCommentAPI } from "@/utils/types/types";
+import { IPostCommentAPI } from "@/utils/types/types";
 import { store } from "@contexts/store";
 import { api } from "./api";
 
@@ -28,7 +28,7 @@ export const getPosts = async ({
 
   try {
     const response = await api.get(
-      `/posts?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}&sts=published`
+      `/postsss?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}&sts=published`
     );
     console.log("============Fetched all posts=============", response.data);
     return response.data;

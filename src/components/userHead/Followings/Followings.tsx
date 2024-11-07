@@ -11,6 +11,7 @@ import "./index.scss";
 import { getImageSource } from "@/utils/helpers";
 import FollowListLoader from "@/components/common/loaders/followList";
 import VirtualList from "@/components/common/virtualList";
+import NotificationMessage from "@/components/common/Notification";
 
 interface IFollowings {
   uid: string;
@@ -27,7 +28,10 @@ export default function Followings({ uid, entityType }: IFollowings) {
     page,
     limit,
   };
-  const { isLoading, data, refetch } = useAsync(getFollowinsByUserId, payload);
+  const { error, isLoading, data, refetch } = useAsync(
+    getFollowinsByUserId,
+    payload
+  );
   const refetchRoute = (state: RootState) => state?.common.refetch.user;
   const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
 
@@ -47,6 +51,10 @@ export default function Followings({ uid, entityType }: IFollowings) {
   useEffect(() => {
     if (page !== 1) refetch();
   }, [page]);
+
+  useEffect(() => {
+    if (error) NotificationMessage("error", error?.message);
+  }, [error]);
 
   // if (!isLoading && data?.length === 0 && page === 1) {
   //   return <EmptyData />;

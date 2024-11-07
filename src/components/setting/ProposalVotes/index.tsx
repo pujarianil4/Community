@@ -17,6 +17,7 @@ import CButton from "@/components/common/Button";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import NotificationMessage from "@/components/common/Notification";
+import { throwError } from "@/utils/helpers";
 
 export default function ProposalVotes() {
   const [page, setPage] = useState<number>(1);
@@ -31,6 +32,7 @@ export default function ProposalVotes() {
   const [{}, [user]] = useRedux([userNameSelector]);
 
   const {
+    error,
     isLoading,
     data: proposalsData,
     refetch,
@@ -39,6 +41,10 @@ export default function ProposalVotes() {
     page,
     limit,
   });
+
+  if (error) {
+    throwError(error);
+  }
 
   const selectedCount = selectedProposals.size;
 

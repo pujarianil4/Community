@@ -11,7 +11,7 @@ import { fetchNetworth } from "@/services/api/networthApi";
 import { fetchVotedProposalsByUname } from "@/services/api/proposalApi";
 import useAsync from "@/hooks/useAsync";
 import CButton from "@/components/common/Button";
-import { formatNumber, getImageSource } from "@/utils/helpers";
+import { formatNumber, getImageSource, throwError } from "@/utils/helpers";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import DropdownWithSearch from "@/components/common/dropdownWithSearch";
@@ -26,28 +26,32 @@ import Image from "next/image";
 export default function Deligate() {
   const userNameSelector = (state: RootState) => state?.user.profile;
   const [{}, [user]] = useRedux([userNameSelector]);
-  const {
-    isLoading: usersLoading,
-    data: userList,
-    callFunction,
-  } = useAsync(getFollowersByUserId, {
-    userId: user?.id,
-    type: "u",
-  });
+  const { isLoading: usersLoading, data: userList } = useAsync(
+    getFollowersByUserId,
+    {
+      userId: user?.id,
+      type: "u",
+    }
+  );
   const {
     isLoading: networthLoading,
     data: networthData,
     refetch: refetchNetworth,
   } = useAsync(fetchNetworth);
 
-  const { data: proposalsData, refetch: refetchVoted } = useAsync(
-    fetchVotedProposalsByUname,
-    {
-      uname: user?.username,
-      page: 1,
-      limit: 100,
-    }
-  );
+  const {
+    error,
+    data: proposalsData,
+    refetch: refetchVoted,
+  } = useAsync(fetchVotedProposalsByUname, {
+    uname: user?.username,
+    page: 1,
+    limit: 100,
+  });
+
+  if (error) {
+    throwError(error);
+  }
 
   const userData = useMemo(() => {
     return userList?.map((item: any) => item?.user);
