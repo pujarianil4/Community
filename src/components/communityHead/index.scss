@@ -38,8 +38,8 @@
     .details {
       position: absolute;
       top: 130px;
-      left: 8%;
-      width: 84%;
+      left: 4%;
+      width: 92%;
       height: 240px;
       z-index: 2;
       background-color: var(--primary-bg);
@@ -49,6 +49,9 @@
         width: 96%;
         left: 2%;
         top: 88px;
+        // height: 185px;
+      }
+      @include lessThan(md) {
         height: 185px;
       }
       .detailed_data {
@@ -117,7 +120,8 @@
           flex-direction: column;
           p {
             font-size: $font-size-xsm;
-            color: var(--primary-text);
+            color: var(--light);
+            font-weight: $font-weight-medium;
             margin-bottom: 4px;
             @include lessThan(md) {
               font-size: $font-size-xxsm;
@@ -126,9 +130,9 @@
           h4 {
             font-size: 16px;
             color: var(--primary-text);
+            font-weight: $font-weight-semi-bold;
             @include lessThan(md) {
               font-size: $font-size-sm;
-              font-weight: $font-weight-semi-bold;
             }
           }
         }
@@ -138,11 +142,10 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        padding: 0.75rem 0.75rem 0;
+        // padding: 0.75rem 0.75rem 0;
+        padding: 12px 20px 0px 25px;
         height: fit-content;
-        @include lessThan(md) {
-          padding: 0.3rem 0.2rem 0;
-        }
+
         p {
           font-size: 14px;
           color: var(--primary-text);
@@ -169,6 +172,32 @@
         }
         .social_bx {
           text-align: end;
+          .views {
+            // margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--label-text);
+            justify-content: center;
+            margin: 6px 0px 10px 0px;
+            span {
+              font-size: $font-size-xsm;
+              @include lessThan(lg) {
+                font-size: $font-size-xxsm;
+              }
+            }
+            svg {
+              // color: #fff;
+              @include lessThan(lg) {
+                width: 14px;
+              }
+            }
+            @include lessThan(md) {
+            }
+            @include lessThan(sm) {
+            }
+          }
+
           .edit_comunity {
             background: var(--tertiary-bg) !important;
             color: var(--primary) !important;
@@ -183,7 +212,7 @@
       }
 
       .socials {
-        width: 120px;
+        // width: 120px;
         height: 28px;
         /* padding: 10px; */
         margin-left: auto;
@@ -191,10 +220,12 @@
         gap: 24px;
         align-items: center;
         justify-content: flex-end;
-        padding: 5px 0px 0px 5px;
+        // padding: 5px 0px 0px 5px;
         margin-top: 11px;
         @include lessThan(md) {
-          gap: 1rem;
+          gap: 0.75rem;
+          height: 10px;
+          margin-top: 10px;
         }
         div {
           cursor: pointer;

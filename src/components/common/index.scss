@@ -306,6 +306,13 @@
   color: var(--primary);
   font-size: 12px;
   margin-top: 5px;
+  cursor: pointer;
+  @include lessThan(lg) {
+    font-size: $font-size-xxsm;
+  }
+  :hover {
+    opacity: 0.9;
+  }
 }
 
 // Virtual-List

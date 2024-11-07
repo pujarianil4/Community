@@ -250,3 +250,17 @@ export function throwError(error: any, customMessage?: string): never {
   // console.error("Error occurred:", { error, message });
   throw new Error(message);
 }
+export function convertNumber(value: number, decimals = 1) {
+  const suffixes = [
+    { value: 1e6, suffix: "M" },
+    { value: 1e3, suffix: "k" },
+  ];
+
+  for (const { value: data, suffix } of suffixes) {
+    if (value >= data) {
+      return (value / data).toFixed(decimals).replace(/\.0+$/, "") + suffix;
+    }
+  }
+
+  return value.toString();
+}

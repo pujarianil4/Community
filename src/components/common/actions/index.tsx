@@ -5,13 +5,15 @@ import { AiOutlineRetweet } from "react-icons/ai";
 import Link from "next/link";
 import { GoComment } from "react-icons/go";
 import { numberWithCommas } from "@/utils/helpers";
-import { SaveIcon, ShareIcon } from "@/assets/icons";
 import { IPost, IVotePayload } from "@/utils/types/types";
 import { sendVote } from "@/services/api/userApi";
 import ShareButton from "../shareButton";
 import { PiBookmarkSimpleDuotone } from "react-icons/pi";
 import CPopup from "../popup";
 import NotificationMessage from "../Notification";
+import { Tooltip } from "antd";
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
 
 // save post Api
 // import { savePost } from "@/services/api/userApi";
@@ -36,7 +38,19 @@ export default function Actions({
   showSave = false,
 }: IProps) {
   const { up, down, id, isVoted, ccount, text, media, sts } = post;
+
+  const userNameSelector = (state: RootState) => state?.user;
+
+  const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
+
+  const noUser = user?.profile?.id;
+
+  useEffect(() => {
+    console.log("userData", noUser);
+  }, [user]);
+
   const isArchived = sts === "archived";
+  const isDisabled = isArchived || !noUser;
   const [vote, setVote] = useState<Vote>({
     value: Number(up) + Number(down),
     type: "",
@@ -55,7 +69,7 @@ export default function Actions({
   const handleSelectRepost = () => {};
 
   const handleVote = async (action: string) => {
-    if (isArchived) return; // no action if post deleted
+    if (isDisabled) return; // no action if post deleted
     const previousVote = { ...vote };
 
     let newVote: Vote = { ...vote };
@@ -100,7 +114,7 @@ export default function Actions({
 
   //handle save post
   const handleSave = async () => {
-    if (isArchived) return;
+    if (isDisabled) return;
     try {
       if (id) {
         // const response = await savePost(id, true);
@@ -114,57 +128,83 @@ export default function Actions({
   };
 
   return (
-    <div className={`actions ${isArchived ? "no_action" : ""}`}>
-      <div className='up_down'>
-        <span>
-          <PiArrowFatUpDuotone
-            className={vote.type == "up" || isVoted ? "active" : ""}
-            onClick={() => handleVote("up")}
-            size={18}
-          />
-          <span>{vote.value}</span>{" "}
-        </span>
-        <span>
-          <PiArrowFatDownDuotone
-            className={vote.type == "down" ? "active" : ""}
-            onClick={() => handleVote("down")}
-            size={18}
-          />
-          {/* <span> {vote.value}</span> */}
-        </span>
-      </div>
-      <Link href={`post/${id}`} as={`/post/${id}`}>
-        <div className='comments'>
-          <GoComment size={18} />
-          <span>{numberWithCommas(ccount) || "comments"}</span>
-        </div>
-      </Link>
-      {showSave && (
-        <CPopup
-          onSelect={handleSelectRepost}
-          onAction='hover'
-          position='top'
-          list={[{ label: "Repost with Description" }, { label: "Repost" }]}
-        >
-          <div className='other'>
-            <AiOutlineRetweet size={16} />
-            <span>RePost</span>
+    <div>
+      <Tooltip title={isArchived ? "No action, this post is Deleted" : ""}>
+        <div className={`actions ${isArchived ? "" : ""}`}>
+          <div className='up_down'>
+            <span>
+              <PiArrowFatUpDuotone
+                className={vote.type == "up" || isVoted ? "active" : ""}
+                onClick={() => handleVote("up")}
+                size={18}
+              />
+              <span>{vote.value}</span>{" "}
+            </span>
+            <span>
+              <PiArrowFatDownDuotone
+                className={vote.type == "down" ? "active" : ""}
+                onClick={() => handleVote("down")}
+                size={18}
+              />
+              {/* <span> {vote.value}</span> */}
+            </span>
           </div>
-        </CPopup>
-      )}
-      {showShare && (
-        <ShareButton
-          postTitle={text}
-          postUrl={postUrl}
-          postImage={media?.[0] || ""}
-        />
-      )}
-      {showSave && (
-        <div className='other' onClick={handleSave}>
-          <PiBookmarkSimpleDuotone size={16} />
-          <span>Save</span>
+          <Link href={`post/${id}`} as={`/post/${id}`}>
+            <div className='comments'>
+              <GoComment size={18} />
+              <span>{numberWithCommas(ccount) || "comments"}</span>
+            </div>
+          </Link>
+          {/* {showSave && !isArchived && (
+            <CPopup
+              onSelect={handleSelectRepost}
+              onAction='hover'
+              position='top'
+              list={[{ label: "Repost with Description" }, { label: "Repost" }]}
+            >
+              <div className='other'>
+                <AiOutlineRetweet size={16} />
+                <span>RePost</span>
+              </div>
+            </CPopup>
+          )} */}
+          {showSave &&
+            (isDisabled ? (
+              <div className='other disabled'>
+                <AiOutlineRetweet size={16} />
+                <span>RePost</span>
+              </div>
+            ) : (
+              <CPopup
+                onSelect={handleSelectRepost}
+                onAction='hover'
+                position='top'
+                list={[
+                  { label: "Repost with Description" },
+                  { label: "Repost" },
+                ]}
+              >
+                <div className='other'>
+                  <AiOutlineRetweet size={16} />
+                  <span>RePost</span>
+                </div>
+              </CPopup>
+            ))}
+          {showShare && (
+            <ShareButton
+              postTitle={text}
+              postUrl={postUrl}
+              postImage={media?.[0] || ""}
+            />
+          )}
+          {showSave && (
+            <div className='other' onClick={handleSave}>
+              <PiBookmarkSimpleDuotone size={16} />
+              <span>Save</span>
+            </div>
+          )}
         </div>
-      )}
+      </Tooltip>
     </div>
   );
 }

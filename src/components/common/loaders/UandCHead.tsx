@@ -11,6 +11,11 @@ export default function UandCHeadLoader() {
             <div className='user_name'>
               <h4 className='skeleton'></h4>
               <p className='skeleton'></p>
+              <div className='socials'>
+                <div className='logo skeleton'></div>
+                <div className='logo skeleton'></div>
+                <div className='logo skeleton'></div>
+              </div>
             </div>
           </div>
           <div className='stats box'>
@@ -26,12 +31,13 @@ export default function UandCHeadLoader() {
           <p className='skeleton'></p>
 
           <div className='social_bx'>
+            <p className='skeleton'> </p>
             <button className='skeleton'></button>
-            <div className='socials'>
+            {/* <div className='socials'>
               <div className='logo skeleton'></div>
               <div className='logo skeleton'></div>
               <div className='logo skeleton'></div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

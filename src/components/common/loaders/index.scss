@@ -19,8 +19,8 @@
   .details {
     position: absolute;
     top: 130px;
-    left: 8%;
-    width: 84%;
+    left: 4%;
+    width: 92%;
     height: 240px;
     z-index: 2;
     background-color: var(--primary-bg);
@@ -67,12 +67,41 @@
 
         .user_name {
           height: 48px;
+          @include lessThan(lg) {
+            min-height: 15px;
+          }
+          .socials {
+            // width: 120px;
+            height: 28px;
+            padding: 0px 0.75rem 0.75rem 0rem;
+            // margin-left: auto;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            justify-content: flex-end;
+            align-items: center;
+            cursor: pointer;
+            margin-top: 11px;
+            @include lessThan(md) {
+              gap: 10px;
+              margin-top: 5px;
+            }
+
+            .logo {
+              width: 20px;
+              // height: 16px;
+              @include lessThan(xl) {
+                min-height: 15px;
+              }
+            }
+          }
           h4,
           p {
             width: 80px !important;
             height: 16px !important;
             @include lessThan(xl) {
               width: 30px !important;
+              min-height: 15px;
             }
           }
           h4 {
@@ -108,11 +137,9 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: 0.75rem 0.75rem 0;
+      padding: 12px 20px 0px 25px;
       height: 86px;
-      @include lessThan(md) {
-        padding: 0.3rem 0.2rem 0;
-      }
+
       p {
         width: 100%;
         height: 16px;
@@ -130,26 +157,9 @@
     }
     .social_bx {
       text-align: end;
-
-      .socials {
-        width: 120px;
-        height: 28px;
-        padding: 0 0.75rem 0.75rem;
-        // margin-left: auto;
-        display: flex;
-        gap: 16px;
-        align-items: center;
-        justify-content: flex-end;
-        align-items: center;
-        cursor: pointer;
-        margin-top: 11px;
-        @include lessThan(md) {
-          gap: 10px;
-        }
-        .logo {
-          width: 20px;
-          // height: 16px;
-        }
+      p {
+        width: 100%;
+        height: 16px;
       }
     }
   }

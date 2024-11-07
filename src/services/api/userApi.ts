@@ -61,7 +61,7 @@ export const fetchUserByUserName = async (username: string) => {
 };
 
 export const fetchUser = async (username: string) => {
-  const uid = store.getState().user?.profile.uid;
+  const uid = store.getState().user?.profile.id;
   if (!username) {
     return null;
   }
