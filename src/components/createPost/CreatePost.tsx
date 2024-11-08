@@ -381,7 +381,7 @@ const CreatePost: React.FC<Props> = ({
         <div>
           <Image
             loading='lazy'
-            src={getImageSource(user?.img.pro, "u")}
+            src={getImageSource(user?.img?.pro, "u")}
             alt='user_img'
             width={48}
             height={48}
