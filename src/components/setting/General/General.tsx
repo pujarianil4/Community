@@ -21,8 +21,8 @@ export default function General() {
       children: (
         <>
           <TelegramConnect />
-          <Discord />
-          <TwitterConnect />
+          {/* <Discord /> */}
+          {/* <TwitterConnect /> */}
         </>
       ),
     },
@@ -84,12 +84,13 @@ export default function General() {
 
         {/* Session Accordion */}
 
-        <Collapse
+        {/* <Collapse
           items={SessionItems}
           accordion
           expandIconPosition='end'
           className='accordion_cls'
-        />
+        /> */}
+
         {/* Governance */}
         {/* <Governance /> */}
         {/* <Collapse

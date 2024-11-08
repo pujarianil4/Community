@@ -23,7 +23,7 @@ export default function WalletsPage() {
   };
   return (
     <div className='wallete_page'>
-      {error || (!userProfile.id && !isLoading) ? (
+      {/* {error || (!userProfile.id && !isLoading) ? (
         <div className='login'>
           <h2>Please connect your wallet</h2>
           <CButton auth='auth' onClick={showModal}>
@@ -32,6 +32,16 @@ export default function WalletsPage() {
         </div>
       ) : (
         <General />
+      )} */}
+      {userProfile.id && !isLoading ? (
+        <General />
+      ) : (
+        <div className='login'>
+          <h2>Please connect your wallet</h2>
+          <CButton auth='auth' onClick={showModal}>
+            LogIn
+          </CButton>
+        </div>
       )}
       <SignUpModal
         modalTab={modalTab}
