@@ -16,6 +16,7 @@ import FeedList from "../feedPost/feedList";
 import Followers from "../userHead/followers/Followers";
 import {
   convertNumber,
+  formatNumber,
   getImageSource,
   numberWithCommas,
   setToLocalStorage,
@@ -206,6 +207,9 @@ export default function CommunityHead() {
                   <div className='names'>
                     <h4>{data?.name}</h4>
                     <span className='username'>@{data?.username}</span>
+                    <p className='username'>{`Total Supply: ${formatNumber(
+                      data?.tSupply
+                    )} ${data?.ticker}`}</p>
                     <div className='socials'>
                       <div className='disabled'>
                         <DiscordIcon />
