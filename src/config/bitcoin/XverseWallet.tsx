@@ -15,7 +15,7 @@ import Wallet, {
   signMessage,
 } from "sats-connect";
 import { useLocalStorage } from "./useLocalstorage";
-
+import { setClientSideCookie } from "@/utils/helpers";
 export interface ISignupData {
   username: string;
   name: string;
@@ -132,6 +132,7 @@ const XverseWallet: React.FC<XverseWalletProps> = ({
                 pubKey: address,
               });
               setUserAuthData({ user: loginResponse });
+              setClientSideCookie("sid", response?.ip);
             }
           } else if (walletRoute === "linkWallet") {
             const linkResponse = await linkAddress({

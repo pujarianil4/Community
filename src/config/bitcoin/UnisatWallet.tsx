@@ -8,7 +8,7 @@ import unisatLogo from "@/assets/walletIcon/unisat.svg";
 import { useSelector } from "react-redux";
 import NotificationMessage from "@/components/common/Notification";
 import { handleLogIn, handleSignup } from "@/services/api/authapi";
-
+import { setClientSideCookie } from "@/utils/helpers";
 export interface ISignupData {
   username: string;
   name: string;
@@ -96,6 +96,7 @@ const UnisatWallet: React.FC<UnisatWalletProps> = ({
             pubKey: address,
           });
           setUserAuthData({ user: response });
+          setClientSideCookie("sid", response?.ip);
         } else if (walletRoute === "linkWallet") {
           // Handle wallet linking case
           response = await linkAddress({

@@ -109,6 +109,7 @@ const TronAuthComponent = ({
             pubKey: address,
           });
           setUserAuthData({ user: true });
+          setClientSideCookie("sid", response?.ip || "");
         } else if (walletRoute == "linkWallet") {
           const response = await linkAddress({
             sig: signedMessage,
@@ -123,8 +124,8 @@ const TronAuthComponent = ({
         await selectedAdapter.disconnect();
         localStorage.clear();
         console.error("Error signing the message:", error);
-        const msg = error.response.data.message;
-        const code = error.response.data.statusCode;
+        const msg = error.message;
+        const code = error.statusCode;
 
         if (msg == "User not Registered!" && code == 404) {
           setUserAuthData({ notRegistered: true });

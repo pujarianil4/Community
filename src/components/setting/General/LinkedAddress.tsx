@@ -11,7 +11,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import NotificationMessage from "@/components/common/Notification";
 import AuthModal from "@/components/common/auth/AuthModal";
-import { AddIcon, DeleteIcon, EtherIcon } from "@/assets/icons";
+import {
+  AddIcon,
+  DeleteIcon,
+  EtherIcon,
+  SolanaIcon,
+  TronIcon,
+  CosmosIcon,
+  BitcoinIcon,
+} from "@/assets/icons";
 
 const linkAddress = () => {
   const { openConnectModal } = useConnectModal();
@@ -85,6 +93,23 @@ const linkAddress = () => {
       });
   };
 
+  const getWalletIcon = (walletType: string) => {
+    switch (walletType) {
+      case "EVM":
+        return <EtherIcon />;
+      case "Solana":
+        return <SolanaIcon />;
+      case "Tron":
+        return <TronIcon />;
+      case "Cosmos":
+        return <CosmosIcon />;
+      case "Bitcoin":
+        return <BitcoinIcon />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div>
       <div>
@@ -98,7 +123,8 @@ const linkAddress = () => {
           <div key={wallet.address} className='addresses'>
             <div>
               <div>
-                <EtherIcon />
+                {/* <EtherIcon /> */}
+                {getWalletIcon(wallet.typ)}
                 <span className='telegram-user-details'>
                   {wallet.address} ({wallet.typ})
                 </span>

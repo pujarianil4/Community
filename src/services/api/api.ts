@@ -189,6 +189,7 @@ const getTokens = (): { id: string | null; token: string | null } => {
 const clearTokens = (): void => {
   Cookies.remove("id");
   Cookies.remove("token");
+  Cookies.remove("sid");
 };
 
 // Create Axios instance

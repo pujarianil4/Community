@@ -85,6 +85,7 @@ export default function CosmosAuthComponent({
             pubKey: address,
           });
           setUserAuthData({ user: true });
+          setClientSideCookie("sid", response?.ip || "");
         } else if (walletRoute == "linkWallet") {
           const response = await linkAddress({
             sig: signedMessage,
@@ -100,8 +101,8 @@ export default function CosmosAuthComponent({
       } catch (error: any) {
         disconnect();
         console.error("Error signing the message:", error);
-        const msg = error.response.data.message;
-        const code = error.response.data.statusCode;
+        const msg = error.message;
+        const code = error.statusCode;
 
         if (msg == "User not Registered!" && code == 404) {
           setUserAuthData({ notRegistered: true });

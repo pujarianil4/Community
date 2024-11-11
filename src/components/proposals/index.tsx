@@ -11,12 +11,13 @@ import ProposalList from "./proposalList";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { debounce } from "@/utils/helpers";
-
+import { Tooltip } from "antd";
 interface IPrpos {
   cid: number;
   cname: string;
+  enableCreate: boolean;
 }
-export default function Proposals({ cid, cname }: IPrpos) {
+export default function Proposals({ cid, cname, enableCreate }: IPrpos) {
   const router = useRouter();
   const [refetchProposal, setRefetchProposal] = useState(false);
   const [searchVal, setSearchVal] = useState("");
@@ -53,9 +54,15 @@ export default function Proposals({ cid, cname }: IPrpos) {
               onChange={handleSearch}
             />
           </div>
-          <CButton onClick={handleRedirect}>
-            <AddIcon /> Create Proposal
-          </CButton>
+          <Tooltip
+            title={
+              !enableCreate ? "Join the community to create a proposal" : ""
+            }
+          >
+            <CButton onClick={handleRedirect} disabled={!enableCreate}>
+              <AddIcon /> Create Proposal
+            </CButton>
+          </Tooltip>
         </section>
         <ProposalList
           cid={cid}

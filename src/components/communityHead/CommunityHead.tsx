@@ -40,7 +40,7 @@ import { CreateCommunityModal } from "../sidebar/CreateCommunityModal";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import { BsEye } from "react-icons/bs";
-
+import { Tooltip } from "antd";
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
@@ -56,7 +56,7 @@ export default function CommunityHead() {
   );
 
   const [membersCount, setMembersCount] = useState<number>(0);
-
+  console.log("communitydata", data);
   useEffect(() => {
     if (data) {
       setMembersCount(data.followers);
@@ -90,7 +90,13 @@ export default function CommunityHead() {
       {
         key: "4",
         label: "Proposals",
-        content: <Proposals cid={data?.id} cname={data?.name} />,
+        content: (
+          <Proposals
+            cid={data?.id}
+            cname={data?.name}
+            enableCreate={data?.isFollowed}
+          />
+        ),
       },
     ];
 
@@ -276,9 +282,22 @@ export default function CommunityHead() {
             {/* <Link href={`p`} as={`/p`}>
               <CButton className='btn'>Proposal</CButton>
             </Link> */}
-            <CButton onClick={handleCreatePost} className='btn'>
-              <AddIcon /> Create Post
-            </CButton>
+
+            <Tooltip
+              title={
+                !data?.isFollowed ? "Join the community to create a post" : ""
+              }
+            >
+              <CButton
+                onClick={handleCreatePost}
+                className='btn'
+                disabled={!data?.isFollowed}
+              >
+                <AddIcon /> Create Post
+              </CButton>
+            </Tooltip>
+
+            {/* </Tooltip> */}
           </div>
           (
           <CTabs
@@ -319,7 +338,11 @@ export default function CommunityHead() {
                         ))}
                     </>
                   ) : (
-                    <Proposals cid={data?.id} cname={data?.name} />
+                    <Proposals
+                      cid={data?.id}
+                      cname={data?.name}
+                      enableCreate={data?.isFollowed}
+                    />
                   ),
               },
             ]}
