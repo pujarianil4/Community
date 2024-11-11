@@ -216,15 +216,15 @@
 
       .socials {
         // width: 120px;
-        height: 28px;
+        height: 16px;
         /* padding: 10px; */
         margin-left: auto;
         display: flex;
         gap: 24px;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: flex-start;
         // padding: 5px 0px 0px 5px;
-        margin-top: 11px;
+        margin-top: 12px;
         @include lessThan(md) {
           gap: 0.75rem;
           height: 10px;
@@ -239,10 +239,6 @@
 
           svg {
             opacity: 0.7;
-            // @include lessThan(md) {
-            //   width: 13px;
-            //   height: auto;
-            // }
           }
         }
       }
