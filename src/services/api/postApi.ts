@@ -1,4 +1,4 @@
-import { IVotePayload, IPostCommentAPI } from "@/utils/types/types";
+import { IPostCommentAPI } from "@/utils/types/types";
 import { store } from "@contexts/store";
 import { api } from "./api";
 

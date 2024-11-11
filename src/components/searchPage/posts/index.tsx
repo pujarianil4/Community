@@ -16,6 +16,7 @@ import EmptyData from "@/components/common/Empty";
 import { usePathname, useSearchParams } from "next/navigation";
 import NotificationMessage from "@/components/common/Notification";
 import VirtualList from "@/components/common/virtualList";
+import { throwError } from "@/utils/helpers";
 
 interface List {
   value: string;
@@ -66,6 +67,10 @@ export default function Posts() {
     refetch,
   } = useAsync(fetchDataByType(pathname.split("/")[1]), getPayload());
 
+  if (error) {
+    throwError(error);
+  }
+
   const handleFilter = (filter: List) => {
     setPosts([]);
     callFunction(fetchDataByType(pathname.split("/")[1]), {
@@ -110,7 +115,7 @@ export default function Posts() {
   }, [page]);
 
   useEffect(() => {
-    if (error) NotificationMessage("error", error?.message); // error?.response?.data?.message
+    if (error) NotificationMessage("error", (error as any)?.message); // error?.response?.data?.message
   }, [error]);
 
   return (
@@ -120,7 +125,7 @@ export default function Posts() {
         <CFilter
           list={[
             { value: "ccount", title: "trending" },
-            { value: "time", title: "latest" },
+            { value: "cta", title: "latest" },
             { value: "up", title: "vote" },
           ]}
           callBack={handleFilter}

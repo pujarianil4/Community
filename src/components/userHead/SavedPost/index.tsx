@@ -13,6 +13,7 @@ import EmptyData from "@/components/common/Empty";
 import FeedPostLoader from "@/components/common/loaders/Feedpost";
 import { IPost } from "@/utils/types/types";
 import VirtualList from "@/components/common/virtualList";
+import NotificationMessage from "@/components/common/Notification";
 
 interface List {
   value: string;
@@ -43,7 +44,10 @@ export default function FeedList() {
     limit,
     sts: "draft",
   };
-  const { isLoading, data, refetch } = useAsync(getPostsByuName, payload);
+  const { error, isLoading, data, refetch } = useAsync(
+    getPostsByuName,
+    payload
+  );
 
   // useEffect(() => {
   //   if (shouldRefetchUser || shouldRefetchPost) {
@@ -73,6 +77,10 @@ export default function FeedList() {
   useEffect(() => {
     if (page !== 1) refetch();
   }, [page]);
+
+  useEffect(() => {
+    if (error) NotificationMessage("error", error?.message);
+  }, [error]);
 
   if (page < 2 && isLoading) {
     return loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />);

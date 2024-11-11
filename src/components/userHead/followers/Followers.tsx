@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import "./index.scss";
 import FollowListLoader from "@/components/common/loaders/followList";
 import VirtualList from "@/components/common/virtualList";
+import NotificationMessage from "@/components/common/Notification";
 
 interface IFollowers {
   uid: string;
@@ -28,7 +29,10 @@ export default function Followers({ uid, entityType }: IFollowers) {
     limit,
   };
 
-  const { isLoading, data, refetch } = useAsync(getFollowersByUserId, payload);
+  const { error, isLoading, data, refetch } = useAsync(
+    getFollowersByUserId,
+    payload
+  );
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -49,6 +53,10 @@ export default function Followers({ uid, entityType }: IFollowers) {
       dispatch(actions.resetRefetch());
     }
   }, [refetchData]);
+
+  useEffect(() => {
+    if (error) NotificationMessage("error", error?.message);
+  }, [error]);
 
   // if (!isLoading && data?.length === 0 && page === 1) {
   //   return <EmptyData />;
