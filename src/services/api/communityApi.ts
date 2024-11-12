@@ -38,7 +38,7 @@ export const fetchCommunities = async ({
 export const createCommunity = async (data: any) => {
   try {
     const response = await api.post("/community", data);
-    await followApi({ fwid: response.data.id, typ: "c" });
+    // await followApi({ fwid: response.data.id, typ: "c" });
     return response.data;
   } catch (error) {
     console.error("Create Community Error: ", error);

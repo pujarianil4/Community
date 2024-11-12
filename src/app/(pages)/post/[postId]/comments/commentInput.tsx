@@ -50,7 +50,6 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     const turndownService = new TurndownService();
     const markDown = turndownService.turndown(commentBody);
     const postData: IPostCommentAPI = {
-      uid: user?.uid,
       content: markDown,
       img: commentImg,
       pid: +postId,
@@ -75,6 +74,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
           parentComment: parentComment || null,
           comments: [],
         };
+        console.log("MY_DATA", data);
         onComment(data);
         setCommentBody("");
         setCommentImg(null);

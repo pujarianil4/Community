@@ -58,15 +58,19 @@ export interface IPost {
 
 export interface IComment {
   id: number;
-  img: IImsg;
+  uid: number;
+  pid: number;
+  pcid: number | null;
   content: string;
   up: number;
   down: number;
-  rCount: number;
+  rCount: number | null;
   cta: string;
+  uta: string;
   user: IUser;
-  post: IPost;
-  community?: ICommunity;
+  img: string;
+  parentComment?: IComment | null;
+  comments?: IComment[];
 }
 
 export interface IFollowAPI {
@@ -80,7 +84,7 @@ export interface IFollowersAPI {
 }
 
 export interface IPostCommentAPI {
-  uid: number;
+  // uid: number;
   content: string;
   img?: string | null;
   pid: number;

@@ -244,11 +244,9 @@ export function throwError(error: any, customMessage?: string): never {
 
   const message = customMessage
     ? customMessage
-    : error?.statusCode === 404
-    ? "Failed to load data. Please try again later."
-    : error?.message || defaultErrorMessage;
-
-  // console.error("Error occurred:", { error, message });
+    : // : error?.statusCode === 404
+      // ? "Failed to load data. Please try again later."
+      error?.message || defaultErrorMessage;
   throw new Error(message);
 }
 export function convertNumber(value: number, decimals = 1) {
