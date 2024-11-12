@@ -54,14 +54,22 @@ export default function Proposals({ cid, cname, enableCreate }: IPrpos) {
               onChange={handleSearch}
             />
           </div>
+
           <Tooltip
             title={
               !enableCreate ? "Join the community to create a proposal" : ""
             }
+            placement='top'
           >
-            <CButton onClick={handleRedirect} disabled={!enableCreate}>
-              <AddIcon /> Create Proposal
-            </CButton>
+            <div>
+              <CButton
+                onClick={enableCreate ? handleRedirect : undefined}
+                className='btn'
+                disabled={!enableCreate}
+              >
+                <AddIcon /> Create Proposal
+              </CButton>
+            </div>
           </Tooltip>
         </section>
         <ProposalList

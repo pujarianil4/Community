@@ -40,6 +40,8 @@ import { CreateCommunityModal } from "../sidebar/CreateCommunityModal";
 import NotificationMessage from "../common/Notification";
 import { BsEye } from "react-icons/bs";
 import { Tooltip } from "antd";
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
@@ -61,6 +63,16 @@ export default function CommunityHead() {
       setMembersCount(data.followers);
     }
   }, [data]);
+
+  const refetchRoute = (state: RootState) => state?.common.refetch.user;
+  const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
+
+  useEffect(() => {
+    if (refetchData == true) {
+      refetch();
+      dispatch(actions.resetRefetch());
+    }
+  }, [refetchData]);
 
   useEffect(() => {
     if (error) NotificationMessage("error", error?.message);
@@ -156,9 +168,9 @@ export default function CommunityHead() {
     return data;
   };
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  // useEffect(() => {
+  //   refetch();
+  // }, []);
 
   useEffect(() => {
     if (data) {
@@ -293,17 +305,18 @@ export default function CommunityHead() {
               title={
                 !data?.isFollowed ? "Join the community to create a post" : ""
               }
+              placement='top'
             >
-              <CButton
-                onClick={handleCreatePost}
-                className='btn'
-                disabled={!data?.isFollowed}
-              >
-                <AddIcon /> Create Post
-              </CButton>
+              <div>
+                <CButton
+                  onClick={data?.isFollowed ? handleCreatePost : undefined}
+                  className='btn'
+                  disabled={!data?.isFollowed}
+                >
+                  <AddIcon /> Create Post
+                </CButton>
+              </div>
             </Tooltip>
-
-            {/* </Tooltip> */}
           </div>
           (
           <CTabs
