@@ -175,14 +175,16 @@
         }
         .social_bx {
           text-align: end;
+          width: 13%;
           .views {
             // margin-top: 8px;
             display: flex;
             align-items: center;
             gap: 5px;
             color: var(--label-text);
-            justify-content: center;
+            justify-content: flex-end;
             margin: 6px 0px 10px 0px;
+            width: 80%;
             span {
               font-size: $font-size-xsm;
               @include lessThan(lg) {

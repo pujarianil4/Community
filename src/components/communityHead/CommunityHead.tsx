@@ -39,7 +39,9 @@ import FollowListLoader from "../common/loaders/followList";
 import { CreateCommunityModal } from "../sidebar/CreateCommunityModal";
 import NotificationMessage from "../common/Notification";
 import { BsEye } from "react-icons/bs";
-
+import { Tooltip } from "antd";
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
@@ -55,12 +57,22 @@ export default function CommunityHead() {
   );
 
   const [membersCount, setMembersCount] = useState<number>(0);
-
+  console.log("communitydata", data);
   useEffect(() => {
     if (data) {
       setMembersCount(data.followers);
     }
   }, [data]);
+
+  const refetchRoute = (state: RootState) => state?.common.refetch.user;
+  const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
+
+  useEffect(() => {
+    if (refetchData == true) {
+      refetch();
+      dispatch(actions.resetRefetch());
+    }
+  }, [refetchData]);
 
   useEffect(() => {
     if (error) NotificationMessage("error", error?.message);
@@ -93,7 +105,13 @@ export default function CommunityHead() {
       {
         key: "4",
         label: "Proposals",
-        content: <Proposals cid={data?.id} cname={data?.name} />,
+        content: (
+          <Proposals
+            cid={data?.id}
+            cname={data?.name}
+            enableCreate={data?.isFollowed}
+          />
+        ),
       },
     ];
 
@@ -150,9 +168,9 @@ export default function CommunityHead() {
     return data;
   };
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  // useEffect(() => {
+  //   refetch();
+  // }, []);
 
   useEffect(() => {
     if (data) {
@@ -282,9 +300,23 @@ export default function CommunityHead() {
             {/* <Link href={`p`} as={`/p`}>
               <CButton className='btn'>Proposal</CButton>
             </Link> */}
-            <CButton onClick={handleCreatePost} className='btn'>
-              <AddIcon /> Create Post
-            </CButton>
+
+            <Tooltip
+              title={
+                !data?.isFollowed ? "Join the community to create a post" : ""
+              }
+              placement='top'
+            >
+              <div>
+                <CButton
+                  onClick={data?.isFollowed ? handleCreatePost : undefined}
+                  className='btn'
+                  disabled={!data?.isFollowed}
+                >
+                  <AddIcon /> Create Post
+                </CButton>
+              </div>
+            </Tooltip>
           </div>
           (
           <CTabs
@@ -325,7 +357,11 @@ export default function CommunityHead() {
                         ))}
                     </>
                   ) : (
-                    <Proposals cid={data?.id} cname={data?.name} />
+                    <Proposals
+                      cid={data?.id}
+                      cname={data?.name}
+                      enableCreate={data?.isFollowed}
+                    />
                   ),
               },
             ]}

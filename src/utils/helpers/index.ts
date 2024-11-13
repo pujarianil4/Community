@@ -22,7 +22,8 @@ export function getClientSideCookie(name: string) {
 
   if (cookies[name]) {
     try {
-      return JSON.parse(cookies[name]);
+      // return JSON.parse(cookies[name]);
+      return cookies[name];
     } catch (error) {
       console.error("Error parsing cookie:", error);
       return null;

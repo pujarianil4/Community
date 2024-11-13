@@ -81,7 +81,7 @@ export default function EvmAuthComponent({
           //   netWrth: userdata?.netWrth || 0,
           //   effectiveNetWrth: userdata?.effectiveNetWrth || 0,
           // };
-          // setClientSideCookie("authToken", JSON.stringify(user));
+          setClientSideCookie("sid", response?.ip || "");
           // dispatch(actions.setUserData(user));
           // dispatch(actions.setRefetchUser(true));
           //setUserAuthData(user);
