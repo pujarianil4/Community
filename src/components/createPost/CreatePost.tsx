@@ -1,40 +1,31 @@
 "use client";
 
-import React, { useState, useEffect, useRef, memo } from "react";
-import dynamic from "next/dynamic";
+import React, { useState, useEffect } from "react";
 import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
-import {
-  MdDeleteOutline,
-  MdEmojiEmotions,
-  MdOutlineGifBox,
-} from "react-icons/md";
+import { MdDeleteOutline } from "react-icons/md";
 import { uploadMultipleFiles } from "@/services/api/commonApi";
 import { getFollowinsByUserId } from "@/services/api/userApi";
-// import { LocalStore } from "@/utils/helpers";
 import Image from "next/image";
 import useRedux from "@/hooks/useRedux";
 import { RootState } from "@/contexts/store";
 import DropdownWithSearch from "../common/dropdownWithSearch";
 import useAsync from "@/hooks/useAsync";
 import { getImageSource } from "@/utils/helpers";
-import { ErrorType, ICommunity } from "@/utils/types/types";
+import { ICommunity } from "@/utils/types/types";
 import NotificationMessage from "../common/Notification";
 import CButton from "../common/Button";
 import TiptapEditor from "../common/tiptapEditor";
 import TurndownService from "turndown";
 import { BackIcon, LinkIcon } from "@/assets/icons";
 import FocusableDiv from "../common/focusableDiv";
-import VirtualList from "@/components/common/virtualList";
 import { patchPost, getPostsByuName } from "@/services/api/postApi";
 import { IPost } from "@/utils/types/types";
-import PostLoader from "./postLoader";
-import MarkdownRenderer from "../common/MarkDownRender";
-import { identifyMediaType } from "@/utils/helpers";
 
 import { createPost } from "@/services/api/postApi";
-import EmptyData from "../common/Empty";
 import Drafts from "./drafts";
+import EmojiPicker from "../common/emoji";
+import { FileInput } from "../common/FileInput";
 interface Props {
   setIsPostModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isPostModalOpen: boolean;
@@ -78,44 +69,6 @@ export const Img: React.FC<{
 // Set displayName for Img component
 Img.displayName = "Img";
 
-interface FileInputProps {
-  onChange: (files: FileList) => void;
-  children: React.ReactNode;
-}
-
-export const FileInput: React.FC<FileInputProps> = React.memo(
-  ({ onChange, children }) => {
-    const fileRef = useRef<HTMLInputElement>(null);
-
-    const onPickFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-      console.log("event.target.files", event.target.files);
-
-      if (event.target.files && event.target.files.length > 0) {
-        onChange(event.target.files);
-      }
-      //reset value to select same image again
-      event.target.value = "";
-    };
-
-    return (
-      <div onClick={() => fileRef.current && fileRef.current.click()}>
-        {children}
-        <input
-          multiple
-          ref={fileRef}
-          onChange={onPickFile}
-          accept='image/*,video/*'
-          type='file'
-          style={{ display: "none" }}
-        />
-      </div>
-    );
-  }
-);
-
-// Set displayName for FileInput component
-FileInput.displayName = "FileInput";
-
 const userNameSelector = (state: RootState) => state?.user?.profile;
 const refetchPost = (state: RootState) => state.common.refetch.post;
 const refetchCommunitySelector = (state: RootState) =>
@@ -141,7 +94,6 @@ const CreatePost: React.FC<Props> = ({
   const followCList = communityList?.map((item: any) => item.followedCommunity);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
   const [isLoadingDraftPost, setIsLoadingDraftPost] = useState(false);
-  const [isDisabled, setISDisabled] = useState(false);
   const [pics, setPics] = useState<File[]>([]);
   const [uploadedImg, setUploadedImg] = useState<File[]>([]);
   const [content, setContent] = useState<string>("");
@@ -154,7 +106,6 @@ const CreatePost: React.FC<Props> = ({
 
   const [page, setPage] = useState(1);
   const [draftPosts, setDraftPosts] = useState<any[]>([]);
-  console.log("LENGTH", draftPosts?.length);
   const limit = 9;
   const turndownService = new TurndownService();
   const markDownContent = turndownService.turndown(content);
@@ -447,11 +398,12 @@ const CreatePost: React.FC<Props> = ({
                   <FileInput onChange={handleUploadFile}>
                     <LuImagePlus color='#636466' size={20} />
                   </FileInput>
-                  <div>
+                  {/* TODO: temp disabled feature is not decided yet */}
+                  {/* <div>
                     <LinkIcon />
-                  </div>
+                  </div> */}
                   <div>
-                    <MdEmojiEmotions color='#636466' size={20} />
+                    <EmojiPicker setEmoji={setContent} />
                   </div>
                 </div>
               </FocusableDiv>

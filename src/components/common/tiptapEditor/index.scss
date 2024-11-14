@@ -12,11 +12,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
     max-width: 500px;
     flex-wrap: wrap;
     @include lessThan(md) {
       justify-content: flex-start;
+    }
+    .emoji {
+      position: relative;
     }
     .icon {
       padding: 4px 8px;
@@ -45,6 +48,9 @@
         background-color: var(--tertiary-bg);
         color: var(--primary);
         cursor: pointer;
+        svg {
+          color: var(--primary);
+        }
       }
     }
 
@@ -53,7 +59,9 @@
 
       &:hover {
         background-color: transparent;
-        color: var(--primary-text);
+        svg {
+          color: var(--primary-text);
+        }
         cursor: not-allowed;
       }
     }
@@ -62,6 +70,9 @@
       background-color: var(--tertiary-bg);
       color: var(--primary);
       cursor: pointer;
+      svg {
+        color: var(--primary) !important;
+      }
     }
   }
 
@@ -118,9 +129,9 @@
     cursor: text;
     div {
       p {
-        font-size: $font-size-xsm;
+        font-size: $font-size-sm;
         @include lessThan(md) {
-          font-size: $font-size-xxsm;
+          font-size: $font-size-xsm;
         }
       }
     }
