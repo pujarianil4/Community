@@ -32,6 +32,7 @@ import ProfileAvatar from "@/components/common/loaders/profileAvatar";
 import TiptapEditor from "@components/common/tiptapEditor";
 import TurndownService from "turndown";
 import FocusableDiv from "@/components/common/focusableDiv";
+import { IMAGE_FILE_TYPES } from "@/utils/constants";
 
 export default function Profile() {
   const [{ dispatch, actions }, [userData]] = useRedux([
@@ -283,7 +284,7 @@ export default function Profile() {
             ref={fileRefs.cover}
             onChange={onCoverImg}
             type='file'
-            accept='image/*'
+            accept={IMAGE_FILE_TYPES}
             name='img'
             style={{ visibility: "hidden" }}
           />
@@ -312,7 +313,7 @@ export default function Profile() {
             ref={fileRefs.avatar}
             onChange={onPickFile}
             type='file'
-            accept='image/*'
+            accept={IMAGE_FILE_TYPES}
             name='img'
             style={{ visibility: "hidden" }}
           />

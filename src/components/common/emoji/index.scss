@@ -1,0 +1,37 @@
+.emoji-picker-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  svg {
+    cursor: pointer;
+    color: var(--secondary-text) !important;
+    &:hover {
+      color: var(--primary) !important;
+    }
+  }
+}
+
+.picker-modal {
+  position: absolute;
+  width: 100%;
+  min-width: 320px;
+  max-width: 700px;
+  height: 360px;
+  z-index: 10;
+  top: -356px; // Default position (above the icon)
+}
+
+.close-icon {
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+  padding: 5px;
+  color: var(--light);
+  position: absolute;
+  z-index: 11;
+  top: 0px;
+  right: 0px;
+  // top: 25px;
+  // right: 5px;
+}
