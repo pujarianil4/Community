@@ -176,13 +176,11 @@ const CreatePost: React.FC<Props> = ({
 
   const [isEditingPost, setIsEditingPost] = useState(false);
 
-  console.log("page", page);
   const closeBtn = document.querySelector(".ant-modal-close");
 
   const handlePost = async (postStatus: "draft" | "published") => {
     const turndownService = new TurndownService();
     const markDownContent = turndownService.turndown(content);
-    console.log("handlePost", selectedOption, defaultCommunity);
 
     try {
       if (postStatus === "draft") {
@@ -206,7 +204,7 @@ const CreatePost: React.FC<Props> = ({
       } else {
         // Otherwise, create a new post
         await createPost(data);
-        NotificationMessage("success", "Post Created Succesfuly");
+        NotificationMessage("success", `Post ${postStatus} Succesfuly`);
       }
       setIsLoadingDraftPost(false);
       setIsLoadingPost(false);
@@ -216,7 +214,7 @@ const CreatePost: React.FC<Props> = ({
       resetPostForm();
     } catch (error: any) {
       console.log("error", error);
-      NotificationMessage("error", error?.response?.data?.message);
+      NotificationMessage("error", error?.message);
       setIsLoadingPost(false);
       // setIsPostModalOpen(false);
       // resetPostForm();
@@ -364,7 +362,7 @@ const CreatePost: React.FC<Props> = ({
       // resetPostForm();
     } catch (error: any) {
       console.log("error", error);
-      NotificationMessage("error", error?.response?.data?.message);
+      NotificationMessage("error", error?.message);
       setIsLoadingPost(false);
       // setIsPostModalOpen(false);
       // resetPostForm();
@@ -424,6 +422,7 @@ const CreatePost: React.FC<Props> = ({
                   autoFocus={false}
                   maxCharCount={300}
                   className='box_height'
+                  // hideBtn={["h1", "h2", "h3", "code"]}
                 />
                 <div className='file_container'>
                   {pics.map((picFile, index) => (

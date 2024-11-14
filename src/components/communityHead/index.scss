@@ -44,6 +44,7 @@
       z-index: 2;
       background-color: var(--primary-bg);
       border-radius: 0.75rem;
+      min-height: fit-content;
       // padding: 0.5rem;
       @include lessThan(xl) {
         width: 96%;
@@ -281,6 +282,30 @@
         font-size: $font-size-xxsm !important;
       }
       svg {
+        @include lessThan(md) {
+          width: 12px;
+        }
+        @include lessThan(sm) {
+          width: 9px;
+        }
+      }
+    }
+    .disable {
+      padding: 8px !important;
+      background: var(--tertiary-bg) !important;
+      color: var(--label-text) !important;
+      font-size: 14px !important;
+      cursor: pointer;
+      top: 15px;
+      @include lessThan(xl) {
+        font-size: $font-size-sm !important;
+        top: 0px;
+      }
+      @include lessThan(md) {
+        font-size: $font-size-xxsm !important;
+      }
+      svg {
+        color: var(--label-text);
         @include lessThan(md) {
           width: 12px;
         }

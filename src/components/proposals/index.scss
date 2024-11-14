@@ -55,6 +55,9 @@
         }
       }
     }
+    .disable {
+      color: var(--label-text) !important;
+    }
   }
 }
 

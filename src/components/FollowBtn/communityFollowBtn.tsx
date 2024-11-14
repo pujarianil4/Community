@@ -6,7 +6,7 @@ import useRedux from "@/hooks/useRedux";
 import useAsync from "@/hooks/useAsync";
 import "./index.scss";
 import { ICommunity } from "@/utils/types/types";
-
+import NotificationMessage from "../common/Notification";
 interface IProps {
   communityData: ICommunity;
   onSuccess?: (isFollowed: boolean) => void;
@@ -43,7 +43,8 @@ export default function CommunityFollowButton({
         setIsUnFollowLoading(false);
         onSuccess && onSuccess(false);
       }
-    } catch (error) {
+    } catch (error: any) {
+      NotificationMessage("error", error?.message);
       console.error("Error handling follow:", error);
     }
   };

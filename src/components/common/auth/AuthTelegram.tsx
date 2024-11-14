@@ -76,7 +76,7 @@ const TelegramAuth = () => {
                   })
                   .catch((err) => {
                     console.error("Failed to link Telegram Profile:", err);
-                    NotificationMessage("error", err?.response?.data?.message);
+                    NotificationMessage("error", err?.message);
                   });
               } else {
                 console.error("Invalid Telegram data received:", data);

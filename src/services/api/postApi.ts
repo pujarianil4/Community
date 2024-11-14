@@ -127,7 +127,7 @@ export const patchPost = async (postId: number, data: any) => {
 // update post
 export const deletePost = async (postId: string | number) => {
   try {
-    const response = await api.delete(`/posts/${postId}`);
+    const response = await api.patch(`/posts/delete/${postId}`);
     return response.data;
   } catch (error) {
     console.error("GET_POSTS_ERROR", error);

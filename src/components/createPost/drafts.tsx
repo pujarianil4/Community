@@ -92,7 +92,7 @@ const Drafts: React.FC<Props> = ({
       // resetPostForm();
     } catch (error: any) {
       console.log("error", error);
-      NotificationMessage("error", error?.response?.data?.message);
+      NotificationMessage("error", error?.message);
       setIsLoadingPost(false);
       // setIsPostModalOpen(false);
       // resetPostForm();

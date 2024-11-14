@@ -14,6 +14,7 @@ import { FileInput } from "@/components/createPost/CreatePost";
 import { LuImagePlus } from "react-icons/lu";
 import { RiText } from "react-icons/ri";
 import CButton from "@/components/common/Button";
+
 interface ICommentInputProps {
   onComment: (newComment: IComment) => void;
   setIsReplying?: (val: boolean) => void;
@@ -74,7 +75,6 @@ const CommentInput: React.FC<ICommentInputProps> = ({
           parentComment: parentComment || null,
           comments: [],
         };
-        console.log("MY_DATA", data);
         onComment(data);
         setCommentBody("");
         setCommentImg(null);
@@ -146,6 +146,8 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     scrollToEditor();
   }, [setIsReplying]);
 
+  const isFormValid = commentBody.trim() !== "";
+
   return (
     <div className='comment_input' ref={containerRef}>
       <div ref={commentInputRef} className={isDisabled ? "delete_disable" : ""}>
@@ -154,7 +156,6 @@ const CommentInput: React.FC<ICommentInputProps> = ({
           setContent={setCommentBody}
           content={commentBody}
           maxCharCount={300}
-          // autoFocus={true}
         />
       </div>
       {imgLoading && (
@@ -196,7 +197,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
         </div>
         <CButton
           className='comment_btn'
-          disabled={isDisabled || (commentBody === "" && commentImg == null)}
+          disabled={!isFormValid}
           onClick={() => handlePostComment()}
         >
           Comment
