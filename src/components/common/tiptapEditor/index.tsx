@@ -21,6 +21,7 @@ import {
 } from "react-icons/ai";
 import { LinkModal } from "./linkModal";
 import { GoUnlink } from "react-icons/go";
+import EmojiPicker from "../emoji";
 
 // const maxCharCount = 300;
 
@@ -126,7 +127,6 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === " " && isModalVisible) {
-      // Prevent the modal from opening when space is pressed
       event.preventDefault();
       setIsModalVisible(false);
     }
@@ -323,6 +323,9 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
             <GoUnlink size={16} />
           </button>
         )}
+        <button className='icon emoji'>
+          <EmojiPicker setEmoji={setContent} />
+        </button>
       </div>
       <div
         className='editor_content'

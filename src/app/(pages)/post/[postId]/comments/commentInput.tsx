@@ -10,11 +10,11 @@ import NotificationMessage from "@/components/common/Notification";
 import TiptapEditor from "@/components/common/tiptapEditor";
 import Image from "next/image";
 import { MdDeleteOutline } from "react-icons/md";
-import { FileInput } from "@/components/createPost/CreatePost";
 import { LuImagePlus } from "react-icons/lu";
 import { RiText } from "react-icons/ri";
 import CButton from "@/components/common/Button";
 
+import { FileInput } from "@/components/common/FileInput";
 interface ICommentInputProps {
   onComment: (newComment: IComment) => void;
   setIsReplying?: (val: boolean) => void;

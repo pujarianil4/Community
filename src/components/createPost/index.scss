@@ -160,6 +160,15 @@
             padding-left: 6px;
           }
           svg {
+            cursor: pointer;
+            color: var(--primary);
+
+            &:hover {
+              stroke: var(--primary);
+              path {
+                stroke: var(--primary);
+              }
+            }
             @include lessThan(md) {
               width: 12px;
               height: 12px;

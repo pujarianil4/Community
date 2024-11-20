@@ -25,6 +25,7 @@ import {
 import Avatar from "@/components/common/loaders/userAvatar";
 import ProfileAvatar from "@/components/common/loaders/profileAvatar";
 import DropdownWithSearch from "../common/dropdownWithSearch";
+import { IMAGE_FILE_TYPES } from "@/utils/constants";
 
 interface ICommunityForm {
   name?: string;
@@ -350,7 +351,7 @@ export const CreateCommunity = ({
             onChange={onCoverImg}
             type='file'
             name='file'
-            accept='image/*'
+            accept={IMAGE_FILE_TYPES}
             style={{ visibility: "hidden" }}
           />
         </div>
@@ -380,7 +381,7 @@ export const CreateCommunity = ({
             onChange={onPickFile}
             type='file'
             name='file'
-            accept='image/*'
+            accept={IMAGE_FILE_TYPES}
             style={{ visibility: "hidden" }}
           />
         </div>
