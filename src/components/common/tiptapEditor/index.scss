@@ -12,7 +12,7 @@
     display: flex;
     // justify-content: space-between;
     align-items: center;
-    gap: 5px;
+    gap: 2px;
     max-width: 500px;
     flex-wrap: wrap;
     @include lessThan(md) {
