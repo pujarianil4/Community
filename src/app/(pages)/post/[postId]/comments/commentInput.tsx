@@ -36,6 +36,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
 }) => {
   const isArchived = status === "archived";
   const [commentBody, setCommentBody] = useState("");
+  const [content, setContent] = useState<string>("");
   const [commentImg, setCommentImg] = useState(null);
   const [imgLoading, setImageLoading] = useState<boolean>(false);
   const [showToolbar, setShowToolbar] = useState<boolean>(false);
@@ -44,12 +45,13 @@ const CommentInput: React.FC<ICommentInputProps> = ({
   const commentInputRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const noUser = user?.profile?.id;
-
+  const turndownService = new TurndownService();
+  const markDownContent = turndownService.turndown(content);
   const isDisabled = isArchived || !noUser;
 
   const handlePostComment = async () => {
     const turndownService = new TurndownService();
-    const markDown = turndownService.turndown(commentBody);
+    const markDown = turndownService.turndown(content);
     const postData: IPostCommentAPI = {
       content: markDown,
       img: commentImg,
@@ -76,7 +78,7 @@ const CommentInput: React.FC<ICommentInputProps> = ({
           comments: [],
         };
         onComment(data);
-        setCommentBody("");
+        setContent("");
         setCommentImg(null);
         setCommentCount((prev: number) => prev + 1);
         if (setChildCommentCount)
@@ -146,16 +148,19 @@ const CommentInput: React.FC<ICommentInputProps> = ({
     scrollToEditor();
   }, [setIsReplying]);
 
-  const isFormValid = commentBody.trim() !== "";
-
+  const isFormValid = () => {
+    const isFilled = markDownContent?.trim() !== "";
+    return isFilled;
+  };
   return (
     <div className='comment_input' ref={containerRef}>
       <div ref={commentInputRef} className={isDisabled ? "delete_disable" : ""}>
         <TiptapEditor
-          showToolbar={showToolbar}
-          setContent={setCommentBody}
-          content={commentBody}
+          setContent={setContent}
+          content={content}
           maxCharCount={300}
+          className='box_height'
+          // hideBtn={["h1", "h2", "h3", "code"]}
         />
       </div>
       {imgLoading && (
@@ -197,7 +202,8 @@ const CommentInput: React.FC<ICommentInputProps> = ({
         </div>
         <CButton
           className='comment_btn'
-          disabled={!isFormValid}
+          // disabled={!isFormValid()}
+          disabled={isDisabled || !isFormValid()}
           onClick={() => handlePostComment()}
         >
           Comment
