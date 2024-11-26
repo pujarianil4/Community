@@ -343,9 +343,15 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
             <GoUnlink size={16} />
           </button>
         )}
-        <button className='icon emoji'>
-          <EmojiPicker setEmoji={setContent} />
-        </button>
+        <div className='icon emoji'>
+          <EmojiPicker
+            insertEmoji={(emoji) => {
+              if (editor) {
+                editor.chain().focus().insertContent(emoji).run();
+              }
+            }}
+          />
+        </div>
       </div>
       <div
         className='editor_content'
