@@ -4,6 +4,10 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
+import Heading from "@tiptap/extension-heading";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import ListItem from "@tiptap/extension-list-item";
 import "./index.scss";
 import {
   FaBold,
@@ -26,10 +30,26 @@ import EmojiPicker from "../emoji";
 // const maxCharCount = 300;
 
 const createExtensions = (placeHolder: string) => [
-  StarterKit,
-  Placeholder.configure({
-    placeholder: "type here...",
+  // StarterKit,
+  StarterKit.configure({
+    paragraph: {
+      HTMLAttributes: {
+        class: "paragraph",
+      },
+    },
   }),
+  Heading.configure({
+    levels: [1, 2, 3], // Support H1, H2, H3
+  }),
+  BulletList,
+  OrderedList,
+  ListItem,
+  Placeholder.configure({
+    placeholder: placeHolder || "Type here...",
+  }),
+  // Placeholder.configure({
+  //   placeholder: "type here...",
+  // }),
   Link.configure({
     openOnClick: true,
     autolink: false,
@@ -290,9 +310,15 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
         >
           <GoUnlink size={16} />
         </button>
-        <button className='icon emoji'>
-          <EmojiPicker setEmoji={setContent} />
-        </button>
+        <div className='icon emoji'>
+          <EmojiPicker
+            insertEmoji={(emoji) => {
+              if (editor) {
+                editor.chain().focus().insertContent(emoji).run();
+              }
+            }}
+          />
+        </div>
       </div>
       <div
         className='editor_content'

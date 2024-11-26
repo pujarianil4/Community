@@ -373,7 +373,7 @@ const CreatePost: React.FC<Props> = ({
                   setContent={setContent}
                   content={content}
                   autoFocus={false}
-                  maxCharCount={300}
+                  maxCharCount={1000}
                   className='box_height'
                 />
                 <div className='file_container'>
@@ -402,9 +402,6 @@ const CreatePost: React.FC<Props> = ({
                   {/* <div>
                     <LinkIcon />
                   </div> */}
-                  <div>
-                    <EmojiPicker setEmoji={setContent} />
-                  </div>
                 </div>
               </FocusableDiv>
             </div>

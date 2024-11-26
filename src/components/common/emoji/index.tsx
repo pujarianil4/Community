@@ -40,25 +40,23 @@
 
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import dynamic from "next/dynamic";
 import "./index.scss";
-import { EmojiClickData } from "emoji-picker-react";
 import { MdEmojiEmotions } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
-
-// Dynamically import the emoji-picker-react component
-const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 interface IProps {
-  setEmoji: (emoji: any) => void;
+  // setEmoji: (emoji: any) => void;
+  insertEmoji: (emoji: string) => void;
 }
 
-export default function EmojiPicker({ setEmoji }: IProps) {
+export default function EmojiPicker({ insertEmoji }: IProps) {
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const pickerRef = useRef<HTMLDivElement>(null);
-  //<span className="emoji">${emojiObject.emoji}</span>
-  const onEmojiClick = (emojiObject: EmojiClickData) => {
-    setEmoji((prevInput: any) => prevInput + emojiObject.emoji);
+
+  const handleEmojiPickup = (emoji: any) => {
+    insertEmoji(emoji.native);
     setShowPicker(false);
   };
 
@@ -83,19 +81,17 @@ export default function EmojiPicker({ setEmoji }: IProps) {
   }, []);
 
   return (
-    // <div>
     <div className='emoji-picker-container'>
       <MdEmojiEmotions size={20} onClick={togglePicker} />
       {showPicker && (
         <div className='picker-modal' ref={pickerRef}>
-          <div className='close-icon' onClick={() => setShowPicker(false)}>
+          {/* <div className='close-icon' onClick={() => setShowPicker(false)}>
             <AiOutlineClose size={18} />
-          </div>
+          </div> */}
           <Picker
-            onEmojiClick={onEmojiClick}
-            previewConfig={{ showPreview: false }}
-            width='100%'
-            height={350}
+            data={data}
+            onEmojiSelect={handleEmojiPickup}
+            previewPosition='none'
           />
         </div>
       )}
