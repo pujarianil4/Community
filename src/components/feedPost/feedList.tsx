@@ -50,7 +50,6 @@ export default function FeedList({
   //   userId: string;
   //   communityId: string;
   // }>();
-  console.log("post uid", id);
 
   const [page, setPage] = useState(1);
   const [posts, setPosts] = useState<IPost[]>([]);
@@ -69,7 +68,6 @@ export default function FeedList({
   const userNameSelector = (state: RootState) => state?.user;
   const [{ dispatch, actions }, [shouldRefetchUser, shouldRefetchPost, user]] =
     useRedux([refetchRoute, refetchPost, userNameSelector]);
-  console.log("user feed", user);
   const { error, isLoading, data, refetch, callFunction } = useAsync(
     getFunctionByMethod[method],
     {
@@ -115,11 +113,21 @@ export default function FeedList({
   };
 
   useEffect(() => {
-    if (
-      shouldRefetchUser ||
-      shouldRefetchPost ||
-      typeof user?.profile?.id === "number"
-    ) {
+    if (typeof user?.profile?.id === "number") {
+      callFunction(getFunctionByMethod[method], {
+        nameId: id,
+        sortby,
+        order: "DESC",
+        page: 1,
+        limit: limit,
+      });
+      setPosts([]);
+      setPage(1);
+    }
+  }, [user.profile.id]);
+
+  useEffect(() => {
+    if (shouldRefetchUser || shouldRefetchPost) {
       callFunction(getFunctionByMethod[method], {
         nameId: id,
         sortby,
@@ -131,7 +139,7 @@ export default function FeedList({
       setPage(1);
       dispatch(actions.resetRefetch());
     }
-  }, [shouldRefetchUser, shouldRefetchPost, user?.profile?.id]);
+  }, [shouldRefetchUser, shouldRefetchPost]);
 
   useEffect(() => {
     if (data && data?.length > 0) {
@@ -147,13 +155,11 @@ export default function FeedList({
     if (page !== 1) refetch();
   }, [page]);
 
-  useEffect(() => {
-    // refetchPost;
+  // useEffect(() => {
+  //   // refetchPost;
 
-    shouldRefetchPost;
-
-    console.log("refetchpost");
-  }, [user.profile.id]);
+  //   shouldRefetchPost;
+  // }, [user.profile.id]);
 
   if (page < 2 && isLoading) {
     return loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />);

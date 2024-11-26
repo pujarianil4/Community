@@ -17,7 +17,7 @@ export default function FeedListData() {
     } else {
       setId(null);
     }
-  }, [user?.profile?.id]);
+  }, [user.profile.id]);
 
   return (
     <>
