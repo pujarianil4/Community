@@ -54,6 +54,7 @@ export interface IPost {
   media?: string[];
   // img?: string;
   community: ICommunity;
+  vCount: number;
 }
 
 export interface IComment {

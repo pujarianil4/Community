@@ -259,6 +259,8 @@ const CreatePost: React.FC<Props> = ({
   };
 
   const handleEditPost = async (post: any) => {
+    console.log("draftPost", post);
+
     setPost(post);
     setIsEditingPost(true); // Enable editing mode
 

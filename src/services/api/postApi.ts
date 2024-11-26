@@ -156,3 +156,14 @@ export const postComments = async (data: IPostCommentAPI) => {
     console.error("POST_COMMENT_ERROR: ", error);
   }
 };
+
+// view post
+export const viewPost = async (postId: number | undefined) => {
+  try {
+    const response = await api.patch(`/posts/vc/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+    throw error;
+  }
+};
