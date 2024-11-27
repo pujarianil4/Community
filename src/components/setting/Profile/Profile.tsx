@@ -45,7 +45,8 @@ export default function Profile() {
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
-
+  const [charCount, setCharCount] = useState(0);
+  const maxChars = 300;
   const [imageError, setImageError] = useState(false);
   const fileRefs = {
     cover: useRef<HTMLInputElement>(null),
@@ -114,13 +115,23 @@ export default function Profile() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    if (name === "desc" && value.length > maxChars) return;
     if (name === "username") {
       debouncedCheckUsername(value);
+    } else if (name === "desc") {
+      if (value.length <= maxChars) {
+        setCharCount(value.length);
+        setUser((prevUser: any) => ({
+          ...prevUser,
+          [name]: value,
+        }));
+      }
+    } else {
+      setUser((prevUser: any) => ({
+        ...prevUser,
+        [name]: value,
+      }));
     }
-    setUser((prevUser: any) => ({
-      ...prevUser,
-      [name]: value,
-    }));
   };
 
   useEffect(() => {
@@ -142,7 +153,7 @@ export default function Profile() {
       };
       setUser(userData);
       setOriginalUser(userData);
-      setContent(data?.desc);
+      // setContent(data?.desc);
     }
   }, [data]);
 
@@ -160,7 +171,8 @@ export default function Profile() {
     if (user.username !== originalUser.username)
       updates.username = user.username;
     if (user.name !== originalUser.name) updates.name = user.name;
-    if (markDownDesc !== originalUser.desc) updates.desc = markDownDesc;
+    // if (markDownDesc !== originalUser.desc) updates.desc = markDownDesc;
+    if (user.desc !== originalUser.desc) updates.desc = user.desc;
     if (user.img.pro !== originalUser.img.pro) {
       if (updates.img) {
         updates.img.pro = user.img.pro;
@@ -206,7 +218,7 @@ export default function Profile() {
         .catch((error) => {
           console.error("Error updating user:", error);
           NotificationMessage("error", error?.message);
-          NotificationMessage("error", error?.response?.data?.message);
+          // NotificationMessage("error", error?.response?.data?.message);
           // Optionally show error message
         });
     }
@@ -348,16 +360,33 @@ export default function Profile() {
           onChange={handleChange}
           name='desc'
           defaultValue={user.desc}
+          maxLength={maxChars}
         /> */}
 
-        <FocusableDiv>
+        {/* <FocusableDiv>
           <TiptapEditor
             setContent={setContent}
             content={content}
             autoFocus={true}
-            maxCharCount={200}
+            maxCharCount={300}
           />
-        </FocusableDiv>
+        </FocusableDiv> */}
+        {/* <div>
+          {charCount}/{maxChars}
+        </div> */}
+        <div className='textarea-container'>
+          <textarea
+            rows={5}
+            cols={10}
+            onChange={handleChange}
+            name='desc'
+            defaultValue={user.desc}
+            maxLength={maxChars}
+          />
+          <span className='char-counter'>
+            {`${user.desc?.length || 0}/${maxChars}`}
+          </span>
+        </div>
       </div>
       <div className='btns'>
         <p

@@ -18,7 +18,7 @@ const discord = () => {
               NotificationMessage("success", "Discord Profile linked.");
             })
             .catch((err) => {
-              NotificationMessage("error", err?.response?.data?.message);
+              NotificationMessage("error", err?.message);
               throw err;
             });
 

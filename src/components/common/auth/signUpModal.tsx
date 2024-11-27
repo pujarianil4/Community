@@ -257,8 +257,7 @@ export const SignUpModal = ({
               auth='auth'
               disabled={
                 usernameError === "Username already exists" ||
-                !signUpData?.username ||
-                !signUpData?.name
+                !signUpData?.username
               }
               onClick={() => handleAuth()}
               size={18}

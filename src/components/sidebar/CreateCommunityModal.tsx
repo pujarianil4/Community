@@ -119,6 +119,8 @@ export const CreateCommunity = ({
   const [content, setContent] = useState<string>("");
   const turndownService = new TurndownService();
   const markDownContent = turndownService.turndown(content);
+  const [charCount, setCharCount] = useState(0);
+  const maxChars = 300;
 
   const onPickFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -254,7 +256,7 @@ export const CreateCommunity = ({
       | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-
+    if (name === "metadata" && value.length > maxChars) return;
     if (name === "username") {
       // If the user clears the field, ensure the success message is cleared
       if (value === "") {
@@ -266,6 +268,11 @@ export const CreateCommunity = ({
           setForm((prevForm) => ({ ...prevForm, [name]: value }));
         }
       }
+    } else if (name === "metadata") {
+      if (value.length <= maxChars) {
+        setCharCount(value.length);
+        setForm((prevForm) => ({ ...prevForm, [name]: value }));
+      }
     } else {
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
     }
@@ -276,7 +283,8 @@ export const CreateCommunity = ({
       form.name?.trim() !== "" &&
       form.username?.trim() !== "" &&
       form.ticker?.trim() !== "" &&
-      markDownContent?.trim() !== "";
+      // markDownContent?.trim() !== "";
+      form.metadata?.trim() !== "";
 
     // Check if the usernameError is not an error and all fields are filled
     const isUsernameValid =
@@ -290,7 +298,7 @@ export const CreateCommunity = ({
       console.log("Form", form);
       const communityForm = {
         ...form,
-        metadata: markDownContent,
+        // metadata: markDownContent,
       };
       await callFunction(createCommunity, communityForm);
       NotificationMessage("success", "Community Created");
@@ -420,13 +428,20 @@ export const CreateCommunity = ({
       </div>
       <div className='info'>
         <span className='label'>Description</span>
-        {/* <textarea
-          name='metadata'
-          value={form.metadata}
-          rows={5}
-          cols={10}
-          onChange={handleForm}
-        > */}
+
+        <div className='textarea-container'>
+          <textarea
+            rows={5}
+            cols={10}
+            onChange={handleForm}
+            name='metadata'
+            value={form.metadata}
+            maxLength={maxChars}
+          />
+          <span className='char-counter'>
+            {`${form.metadata?.length || 0}/${maxChars}`}
+          </span>
+        </div>
         {/* <div className='editor'>
           <TiptapEditor
             setContent={setContent}
@@ -435,14 +450,14 @@ export const CreateCommunity = ({
           />
         </div> */}
 
-        <FocusableDiv>
+        {/* <FocusableDiv>
           <TiptapEditor
             setContent={setContent}
             content={content}
             autoFocus={true}
             maxCharCount={100}
           />
-        </FocusableDiv>
+        </FocusableDiv> */}
 
         {/* </textarea> */}
       </div>

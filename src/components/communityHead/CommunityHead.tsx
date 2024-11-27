@@ -310,10 +310,11 @@ export default function CommunityHead() {
               <div>
                 <CButton
                   onClick={data?.isFollowed ? handleCreatePost : undefined}
-                  className='btn'
+                  className={!data?.isFollowed ? "disable" : "btn"}
                   disabled={!data?.isFollowed}
                 >
-                  <AddIcon /> Create Post
+                  <AddIcon fill={!data?.isFollowed ? "#8ba2ad" : "#ebb82a"} />{" "}
+                  Create Post
                 </CButton>
               </div>
             </Tooltip>

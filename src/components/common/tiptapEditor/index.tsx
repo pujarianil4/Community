@@ -72,6 +72,7 @@ interface TiptapEditorProps {
   autoFocus?: boolean;
   maxCharCount?: number;
   className?: string;
+  hideBtn?: string[];
 }
 
 const TiptapEditor: React.FC<TiptapEditorProps> = ({
@@ -82,6 +83,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   autoFocus = false,
   maxCharCount = 2000,
   className = "customHeight",
+  hideBtn = [],
 }) => {
   const [remainingChars, setRemainingChars] = useState<number>(
     maxCharCount - (content?.length || 0)
@@ -214,102 +216,133 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({
   return (
     <main className='tiptap_editor_container'>
       <div className={`toolbar_items ${!showToolbar ? "hide_toolbar" : ""}`}>
-        <button
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`${editor.isActive("bold") ? "is-active" : ""} icon `}
-        >
-          <FaBold size={14} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`${editor.isActive("italic") ? "is-active" : ""} icon`}
-        >
-          <FaItalic size={14} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={`${editor.isActive("strike") ? "is-active" : ""} icon`}
-        >
-          <FaStrikethrough size={14} />
-        </button>
-        <button
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 1 }).run()
-          }
-          className={`${
-            editor.isActive("heading", { level: 1 }) ? "is-active" : ""
-          } icon`}
-        >
-          <LuHeading1 size={18} />
-        </button>
-        <button
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 2 }).run()
-          }
-          className={`${
-            editor.isActive("heading", { level: 2 }) ? "is-active" : ""
-          } icon`}
-        >
-          <LuHeading2 size={18} />
-        </button>
-        <button
-          onClick={() =>
-            editor.chain().focus().toggleHeading({ level: 3 }).run()
-          }
-          className={`${
-            editor.isActive("heading", { level: 3 }) ? "is-active" : ""
-          } icon`}
-        >
-          <LuHeading3 size={18} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`${editor.isActive("bulletList") ? "is-active" : ""} icon`}
-        >
-          <AiOutlineUnorderedList size={18} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`${
-            editor.isActive("orderedList") ? "is-active" : ""
-          } icon`}
-        >
-          <AiOutlineOrderedList size={18} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleCode().run()}
-          className={`${editor.isActive("code") ? "is-active" : ""} icon`}
-        >
-          <FaCode />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={`${editor.isActive("codeBlock") ? "is-active" : ""} icon`}
-        >
-          <RiCodeBlock size={18} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={`${editor.isActive("blockQuote") ? "is-active" : ""} icon`}
-        >
-          <FaQuoteRight size={18} />
-        </button>
-
-        <button
-          onClick={openModal}
-          className={`${editor.isActive("link") ? "is-active" : ""} icon`}
-        >
-          <AiOutlineLink size={18} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().unsetLink().run()}
-          disabled={!editor.isActive("link")}
-          className={`${
-            editor.isActive("link") ? "is-active" : "disabled"
-          } icon `}
-        >
-          <GoUnlink size={16} />
-        </button>
+        {!hideBtn.includes("bold") && (
+          <button
+            onClick={() => editor.chain().focus().toggleBold().run()}
+            className={`${editor.isActive("bold") ? "is-active" : ""} icon `}
+          >
+            <FaBold size={14} />
+          </button>
+        )}
+        {!hideBtn.includes("italic") && (
+          <button
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+            className={`${editor.isActive("italic") ? "is-active" : ""} icon`}
+          >
+            <FaItalic size={14} />
+          </button>
+        )}
+        {!hideBtn.includes("strike") && (
+          <button
+            onClick={() => editor.chain().focus().toggleStrike().run()}
+            className={`${editor.isActive("strike") ? "is-active" : ""} icon`}
+          >
+            <FaStrikethrough size={14} />
+          </button>
+        )}
+        {!hideBtn.includes("h1") && (
+          <button
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 1 }).run()
+            }
+            className={`${
+              editor.isActive("heading", { level: 1 }) ? "is-active" : ""
+            } icon`}
+          >
+            <LuHeading1 size={18} />
+          </button>
+        )}
+        {!hideBtn.includes("h2") && (
+          <button
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 2 }).run()
+            }
+            className={`${
+              editor.isActive("heading", { level: 2 }) ? "is-active" : ""
+            } icon`}
+          >
+            <LuHeading2 size={18} />
+          </button>
+        )}
+        {!hideBtn.includes("h3") && (
+          <button
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 3 }).run()
+            }
+            className={`${
+              editor.isActive("heading", { level: 3 }) ? "is-active" : ""
+            } icon`}
+          >
+            <LuHeading3 size={18} />
+          </button>
+        )}
+        {!hideBtn.includes("bulletList") && (
+          <button
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            className={`${
+              editor.isActive("bulletList") ? "is-active" : ""
+            } icon`}
+          >
+            <AiOutlineUnorderedList size={18} />
+          </button>
+        )}
+        {!hideBtn.includes("orderedList") && (
+          <button
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            className={`${
+              editor.isActive("orderedList") ? "is-active" : ""
+            } icon`}
+          >
+            <AiOutlineOrderedList size={18} />
+          </button>
+        )}
+        {!hideBtn.includes("code") && (
+          <button
+            onClick={() => editor.chain().focus().toggleCode().run()}
+            className={`${editor.isActive("code") ? "is-active" : ""} icon`}
+          >
+            <FaCode />
+          </button>
+        )}
+        {!hideBtn.includes("codeBlock") && (
+          <button
+            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+            className={`${
+              editor.isActive("codeBlock") ? "is-active" : ""
+            } icon`}
+          >
+            <RiCodeBlock size={18} />
+          </button>
+        )}
+        {!hideBtn.includes("blockQuote") && (
+          <button
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            className={`${
+              editor.isActive("blockQuote") ? "is-active" : ""
+            } icon`}
+          >
+            <FaQuoteRight size={18} />
+          </button>
+        )}
+        {!hideBtn.includes("link") && (
+          <button
+            onClick={openModal}
+            className={`${editor.isActive("link") ? "is-active" : ""} icon`}
+          >
+            <AiOutlineLink size={18} />
+          </button>
+        )}
+        {!hideBtn.includes("link") && (
+          <button
+            onClick={() => editor.chain().focus().unsetLink().run()}
+            disabled={!editor.isActive("link")}
+            className={`${
+              editor.isActive("link") ? "is-active" : "disabled"
+            } icon `}
+          >
+            <GoUnlink size={16} />
+          </button>
+        )}
         <div className='icon emoji'>
           <EmojiPicker
             insertEmoji={(emoji) => {

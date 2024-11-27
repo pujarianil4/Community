@@ -245,7 +245,7 @@ const SideBar: React.FC = () => {
   const getCommunities = async (cmnties: Array<any>) => {
     const inFormat = cmnties.map((cm: any) => {
       return {
-        key: "c/" + cm.followedCommunity.username,
+        key: "c/" + cm?.followedCommunity?.username,
         label: (
           <>
             {/* <div className='community_item'>
@@ -257,7 +257,7 @@ const SideBar: React.FC = () => {
               />
               <span>{cm?.name}</span>
             </div> */}
-            <CHead community={cm.followedCommunity} />
+            <CHead community={cm?.followedCommunity} />
           </>
         ),
       };
