@@ -38,6 +38,8 @@ export default function Actions({
   showSave = false,
 }: IProps) {
   const { up, down, id, isVoted, ccount, text, media, sts } = post;
+  // const [isUpVoted, setIsUpVoted] = useState(false);
+  const isUpVoted = true;
 
   const userNameSelector = (state: RootState) => state?.user;
 
