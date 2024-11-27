@@ -179,14 +179,13 @@
           }
         }
       }
-    }
-
-    .active {
-      color: var(--primary);
-      path {
-        &:first-child {
-          fill: var(--primary);
-          opacity: 1;
+      .active {
+        color: var(--primary);
+        path {
+          &:first-child {
+            fill: var(--primary);
+            opacity: 1;
+          }
         }
       }
     }

@@ -53,49 +53,6 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
     router.push(`/post/${id}`);
   };
 
-  const handleVote = async (action: string) => {
-    const previousVote = { ...vote };
-
-    let newVote: Vote = { ...vote };
-
-    if (action === "up") {
-      if (vote.type === "down") {
-        newVote = { value: vote.value + 2, type: "up" };
-      } else if (vote.type === "up") {
-        newVote = { value: vote.value - 1, type: "" };
-      } else {
-        newVote = { value: vote.value + 1, type: "up" };
-      }
-    } else if (action === "down") {
-      if (vote.type === "up") {
-        newVote = { value: vote.value - 2, type: "down" };
-      } else if (vote.type === "down") {
-        newVote = { value: vote.value + 1, type: "" };
-      } else {
-        newVote = { value: vote.value - 1, type: "down" };
-      }
-    }
-
-    setVote(newVote);
-
-    try {
-      if (id) {
-        const payload: IVotePayload = {
-          typ: "p",
-          cntId: id,
-          voteTyp: newVote.type,
-        };
-        const afterVote = await sendVote(payload);
-        console.log("updated", afterVote, payload);
-
-        // setVote({ value: updatedPost.voteCount, type: newVote.type });
-      }
-    } catch (error) {
-      console.error("Vote failed:", error);
-      setVote(previousVote);
-    }
-  };
-
   const moreActionCall = async (data: any) => {
     if (sts != "archived") {
       if (data == "edit") {

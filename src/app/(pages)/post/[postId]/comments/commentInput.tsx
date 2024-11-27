@@ -21,7 +21,7 @@ interface ICommentInputProps {
   postId: number;
   setCommentCount: React.Dispatch<React.SetStateAction<number>>;
   setChildCommentCount?: React.Dispatch<React.SetStateAction<number>>;
-  status: string;
+  status?: string;
 }
 
 const CommentInput: React.FC<ICommentInputProps> = ({

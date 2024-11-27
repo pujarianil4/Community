@@ -44,7 +44,7 @@ export interface IPost {
   uid: number;
   cid: number;
   text: string;
-  isVoted?: boolean;
+  voteStatus?: 1 | 0 | -1;
   up: number;
   down: number;
   ccount: number;
@@ -71,6 +71,7 @@ export interface IComment {
   img: string;
   parentComment?: IComment | null;
   comments?: IComment[];
+  voteStatus?: 1 | -1 | 0;
 }
 
 export interface IFollowAPI {
@@ -140,6 +141,7 @@ export interface IVotePayload {
   typ: string;
   cntId: number;
   voteTyp: "up" | "down" | "";
+  // voteTyp: 1 | 0 | -1;
 }
 
 export interface IVoteProposalPayload {
