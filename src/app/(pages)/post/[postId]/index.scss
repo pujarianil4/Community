@@ -167,7 +167,7 @@
             }
           }
         }
-        .active {
+        &.active {
           color: var(--primary);
           path {
             &:first-child {

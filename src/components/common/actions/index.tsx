@@ -100,7 +100,6 @@ export default function Actions({
           voteTyp: newVote.type == 1 ? "up" : "down",
         };
         const afterVote = await sendVote(payload);
-        console.log("updated", afterVote, payload);
 
         // setVote({ value: updatedPost.voteCount, type: newVote.type });
       }

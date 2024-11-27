@@ -86,7 +86,6 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
         try {
           // Call view count API
           await viewPost(id);
-          console.log("View count updated for post ID:", id);
         } catch (error) {
           console.error("Failed to update view count:", error);
         }
