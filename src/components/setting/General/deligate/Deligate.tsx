@@ -101,7 +101,7 @@ export default function Deligate() {
       refetchNetworth();
       setBtnLoader({ ...btnLoader, delegate: false });
     } catch (error: any) {
-      NotificationMessage("error", error?.response.data.message);
+      NotificationMessage("error", error?.message);
       setWarningModal(false);
     }
   };
@@ -145,7 +145,7 @@ export default function Deligate() {
       );
       setBtnLoader({ ...btnLoader, undoId: 0 });
     } catch (error: any) {
-      NotificationMessage("error", error?.response.data.message);
+      NotificationMessage("error", error?.message);
     }
   };
 

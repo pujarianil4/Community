@@ -43,7 +43,7 @@ export default function VoteSection() {
       );
       refetch();
     } catch (error: any) {
-      NotificationMessage("error", error.response.data.message);
+      NotificationMessage("error", error?.message);
     }
   };
 

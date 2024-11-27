@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/contexts/store";
 import CreatePost from "../createPost/CreatePost";
 import { Modal } from "antd";
-import { deletePost } from "@/services/api/postApi";
+import { deletePost, viewPost } from "@/services/api/postApi";
 import useRedux from "@/hooks/useRedux";
 
 const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
@@ -65,11 +65,31 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
     }
   };
 
+  // useEffect(() => {
+  //   if (isViewed) {
+  //     stayTimerRef.current = setTimeout(() => {
+  //       //call view count api
+
+  //       console.log("viewed", id);
+  //     }, 3000);
+  //   } else {
+  //     if (stayTimerRef.current) {
+  //       clearTimeout(stayTimerRef.current);
+  //       stayTimerRef.current = null;
+  //     }
+  //   }
+  // }, [isViewed]);
+
   useEffect(() => {
-    if (isViewed) {
-      stayTimerRef.current = setTimeout(() => {
-        //call view count api
-        console.log("viewed", id);
+    if (isViewed && !self) {
+      stayTimerRef.current = setTimeout(async () => {
+        try {
+          // Call view count API
+          await viewPost(id);
+          console.log("View count updated for post ID:", id);
+        } catch (error) {
+          console.error("Failed to update view count:", error);
+        }
       }, 3000);
     } else {
       if (stayTimerRef.current) {
@@ -77,7 +97,14 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
         stayTimerRef.current = null;
       }
     }
-  }, [isViewed]);
+
+    // Cleanup on unmount
+    return () => {
+      if (stayTimerRef.current) {
+        clearTimeout(stayTimerRef.current);
+      }
+    };
+  }, [id, isViewed]);
 
   if (!post) {
     return <PostPageLoader />;

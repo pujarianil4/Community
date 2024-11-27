@@ -64,10 +64,11 @@ export default function Proposals({ cid, cname, enableCreate }: IPrpos) {
             <div>
               <CButton
                 onClick={enableCreate ? handleRedirect : undefined}
-                className='btn'
+                className={!enableCreate ? "disable" : "button"}
                 disabled={!enableCreate}
               >
-                <AddIcon /> Create Proposal
+                <AddIcon fill={!enableCreate ? "#8ba2ad" : "#ebb82a"} /> Create
+                Proposal
               </CButton>
             </div>
           </Tooltip>

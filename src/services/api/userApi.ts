@@ -306,3 +306,14 @@ export const isUserFollowed = async ({
     throw error;
   }
 };
+
+// view user
+export const viewUser = async (id: number | undefined) => {
+  try {
+    const response = await api.patch(`/users/vc/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("GET_POSTS_ERROR", error);
+    throw error;
+  }
+};

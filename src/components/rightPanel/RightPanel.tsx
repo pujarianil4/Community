@@ -85,13 +85,13 @@ export default function RightPanel() {
       <div className='card'>
         <div className='card_heading'>
           <h2>Trending Post</h2>
-          <div>
+          {/* <div>
             <Link href={"/"} as={"/"}>
               <span>
                 View All <RightUpIcon />
               </span>
             </Link>
-          </div>
+          </div> */}
         </div>
         {isPostLoading ? (
           <>

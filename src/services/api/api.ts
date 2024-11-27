@@ -162,15 +162,19 @@ interface TokenResponse {
 
 // Encrypt token before saving to cookies
 export const encryptToken = (token: string): string => {
-  return AES.encrypt(token, SECRET_KEY).toString();
+  return AES.encrypt(token, SECRET_KEY.trim()).toString();
 };
 
 // Decrypt token function
-export const decryptToken = (encryptedToken: string): string => {
-  const bytes = AES.decrypt(encryptedToken, SECRET_KEY);
-  return bytes.toString(CryptoJS.enc.Utf8);
+export const decryptToken = (encryptedToken: string): string | null => {
+  try {
+    const bytes = AES.decrypt(encryptedToken, SECRET_KEY.trim());
+    return bytes.toString(CryptoJS.enc.Utf8) || null;
+  } catch (error) {
+    console.error("Token decryption failed:", error);
+    return null;
+  }
 };
-
 // Save encrypted tokens in cookies
 const saveTokens = (id: string, token: string): void => {
   Cookies.set("id", id, { path: "/" });

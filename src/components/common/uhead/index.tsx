@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./index.scss";
-import { getImageSource, timeAgo } from "@/utils/helpers";
+import { formatNumber, getImageSource, timeAgo } from "@/utils/helpers";
 import { BsEye } from "react-icons/bs";
 
 import { ICommunity, IPost, IUser } from "@/utils/types/types";
@@ -31,7 +31,7 @@ export default function UHead({
   post,
 }: IProps) {
   const [open, setOpen] = useState(false);
-  const { user, community, cta, sts } = post;
+  const { user, community, cta, sts, vCount } = post;
 
   const popupList: Array<List> = [
     {
@@ -117,7 +117,7 @@ export default function UHead({
             </div>
           </CPopup>
           <div className='views'>
-            <span>2323</span> <BsEye />
+            <span>{formatNumber(vCount || 0, 1)}</span> <BsEye />
           </div>
         </div>
       )}

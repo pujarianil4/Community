@@ -1,7 +1,13 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from "react";
 import useAsync from "@/hooks/useAsync";
-import { fetchUser } from "@/services/api/userApi";
+import { fetchUser, viewUser } from "@/services/api/userApi";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import "./userhead.scss";
 // import UandCHeadLoader from "../common/loaders/UandCHead";
@@ -14,7 +20,11 @@ import MarkdownRenderer from "../common/MarkDownRender";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { DiscordIcon, TelegramIcon, TwitterIcon } from "@/assets/icons";
-import { getImageSource, numberWithCommas } from "@/utils/helpers";
+import {
+  formatNumber,
+  getImageSource,
+  numberWithCommas,
+} from "@/utils/helpers";
 import UserFollowButton from "../FollowBtn/userFollowbtn";
 import FollowListLoader from "../common/loaders/followList";
 import SavedPost from "./SavedPost";
@@ -23,17 +33,31 @@ import Link from "next/link";
 import NotificationMessage from "../common/Notification";
 import { BsEye } from "react-icons/bs";
 import { convertNumber } from "@/utils/helpers/index";
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
 export default function UserHead() {
   const { userId: id } = useParams<{ userId: string }>();
+  const userNameSelector = (state: RootState) => state?.user;
+
+  const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
+  console.log("user", user?.profile?.id);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const pathArray = pathname.split("/");
   const userId = id || pathArray[pathArray.length - 1];
+  const stayTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const { error, isLoading, data, refetch } = useAsync(fetchUser, userId || id);
-
   const [membersCount, setMembersCount] = useState<number>(0);
+
+  const [isSelf, setIsSelf] = useState<boolean>(false);
+  console.log("isSelf", isSelf);
+  useEffect(() => {
+    if (user?.profile?.id && data?.id) {
+      setIsSelf(user.profile.id === data.id);
+    }
+  }, [user?.profile?.id, data?.id]);
 
   useEffect(() => {
     if (data) {
@@ -43,6 +67,32 @@ export default function UserHead() {
   useEffect(() => {
     if (error) NotificationMessage("error", error?.message);
   }, [error]);
+
+  useEffect(() => {
+    if (data?.id && !isSelf) {
+      console.log("");
+      stayTimerRef.current = setTimeout(async () => {
+        try {
+          await viewUser(data.id);
+          console.log("View count updated for user ID:", data.id);
+        } catch (error) {
+          console.error("Failed to update view count:", error);
+        }
+      }, 3000);
+    } else {
+      if (stayTimerRef.current) {
+        clearTimeout(stayTimerRef.current);
+        stayTimerRef.current = null;
+      }
+    }
+
+    // Cleanup on component unmount
+    return () => {
+      if (stayTimerRef.current) {
+        clearTimeout(stayTimerRef.current);
+      }
+    };
+  }, [data?.id]);
 
   const handleMemberCountUpdate = (isFollowed: boolean) => {
     setMembersCount((prevCount) =>
@@ -258,7 +308,7 @@ export default function UserHead() {
 
                 <div className='social_bx'>
                   <div className='views'>
-                    <span>{convertNumber(data?.vCount || 0, 1)}</span>
+                    <span>{formatNumber(data?.vCount || 0, 1)}</span>
                     {/* <span> 2500</span> */}
                     <BsEye />
                   </div>
