@@ -5,7 +5,7 @@ import { api } from "./api";
 export const handleLogIn = async (payload: {
   sig: `0x${string}` | string | undefined;
   msg: string;
-  typ: string
+  typ: string;
   pubKey?: PublicKey | string | null;
 }) => {
   const response = await api.post("/auth/login", payload);
@@ -28,7 +28,7 @@ export const handleLogOut = async () => {
 
 export const handleSignup = async (
   username: string | undefined,
-  name: string | undefined,
+  name: string | null,
   sig: string | undefined,
   msg: string,
   typ: string,
@@ -54,7 +54,7 @@ export const handleSignup = async (
 export const linkAddress = async (payload: {
   sig: `0x${string}` | string | undefined;
   msg: string;
-  typ: string
+  typ: string;
   pubKey?: PublicKey | string;
 }) => {
   const response = await api.post("/users/address", payload);
