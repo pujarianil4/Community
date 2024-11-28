@@ -80,7 +80,7 @@ const UnisatWallet: React.FC<UnisatWalletProps> = ({
         if (walletRoute === "auth" && isSignUp) {
           response = await handleSignup(
             signUpData?.username,
-            signUpData?.name,
+            signUpData?.name ? signUpData?.name : null,
             signature,
             message,
             "Cosmos",
