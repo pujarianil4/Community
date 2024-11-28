@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./index.scss";
 import { LuImagePlus } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
@@ -109,7 +109,6 @@ const CreatePost: React.FC<Props> = ({
   const limit = 9;
   const turndownService = new TurndownService();
   const markDownContent = turndownService.turndown(content);
-
   const [uploadingSkeletons, setUploadingSkeletons] = useState<number[]>([]);
   const payload = {
     nameId: user?.username,
@@ -233,6 +232,7 @@ const CreatePost: React.FC<Props> = ({
         });
         setDraftPosts([]);
         setIsPostModalOpen(false);
+        setInitialState({ text: "", media: [], community: null });
       }
     });
   }, [closeBtn]);
@@ -258,9 +258,36 @@ const CreatePost: React.FC<Props> = ({
     return isFilled;
   };
 
-  const handleEditPost = async (post: any) => {
-    console.log("draftPost", post);
+  const [initialState, setInitialState] = useState({
+    text: content,
+    media: pics,
+    community: selectedOption,
+  });
+  const [hasChanged, setHasChanged] = useState(false);
 
+  const checkForChanges = useCallback(() => {
+    // Compare the text
+    const textChanged = initialState.text.trim() !== markDownContent?.trim();
+
+    const normalizedInitialMedia = initialState.media || [];
+    const picUrls = pics.map((pic: any) =>
+      pic instanceof File ? URL.createObjectURL(pic) : pic.url
+    );
+
+    // Compare the media
+    const mediaChanged =
+      picUrls.length !== normalizedInitialMedia.length ||
+      picUrls.some((url, index) => url !== normalizedInitialMedia[index]);
+    const communityChanged = initialState.community?.id !== selectedOption?.id;
+
+    setHasChanged(textChanged || mediaChanged || communityChanged);
+  }, [pics, markDownContent, initialState, selectedOption]);
+
+  useEffect(() => {
+    checkForChanges();
+  }, [pics, checkForChanges, content, selectedOption]);
+
+  const handleEditPost = async (post: any) => {
     setPost(post);
     setIsEditingPost(true); // Enable editing mode
 
@@ -276,6 +303,11 @@ const CreatePost: React.FC<Props> = ({
       setPics(mediaFiles); // For rendering in the Img component
       setUploadedImg(post.media); // Set the media URLs to uploadedImg
     }
+    setInitialState({
+      text: post.text,
+      media: post.media,
+      community: post.community,
+    });
 
     setIsDraft(false); // Close draft view
   };
@@ -411,7 +443,7 @@ const CreatePost: React.FC<Props> = ({
             <div className='media'>
               <CButton
                 loading={isLoadingPost}
-                disabled={!isFormValid()}
+                disabled={!isFormValid() || !hasChanged}
                 onClick={handleUpdatePost}
                 className='create_btn'
               >
@@ -422,7 +454,7 @@ const CreatePost: React.FC<Props> = ({
             <div className='media'>
               <CButton
                 loading={isLoadingDraftPost}
-                disabled={!isFormValid()}
+                disabled={!isFormValid() || !hasChanged}
                 onClick={() => handlePost("draft")}
                 className='create_btn'
               >
@@ -430,7 +462,7 @@ const CreatePost: React.FC<Props> = ({
               </CButton>
               <CButton
                 loading={isLoadingPost}
-                disabled={!isFormValid()}
+                disabled={!isFormValid() || !hasChanged}
                 onClick={() => handlePost("published")}
                 className='create_btn'
               >

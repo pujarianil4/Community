@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CButton from "@/components/common/Button";
 import { followApi, UnFollowAPI } from "@/services/api/userApi";
 import useRedux from "@/hooks/useRedux";
@@ -7,6 +7,7 @@ import useAsync from "@/hooks/useAsync";
 import "./index.scss";
 import { ICommunity } from "@/utils/types/types";
 import NotificationMessage from "../common/Notification";
+import { RootState } from "@/contexts/store";
 interface IProps {
   communityData: ICommunity;
   onSuccess?: (isFollowed: boolean) => void;
@@ -16,15 +17,24 @@ export default function CommunityFollowButton({
   communityData,
   onSuccess,
 }: IProps) {
+  const userNameSelector = (state: RootState) => state?.user;
+  const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
+
   const { isLoading: isLoadingFollow, callFunction } = useAsync();
-  const [{ dispatch, actions }] = useRedux();
-  const [isFollowed, setIsFollowed] = useState<boolean>(
-    communityData?.isFollowed as boolean
-  );
+
+  // State for isFollowed
+  const [isFollowed, setIsFollowed] = useState<boolean | boolean>(false);
+  useEffect(() => {
+    if (communityData?.isFollowed !== undefined && user?.profile?.id) {
+      setIsFollowed(communityData?.isFollowed);
+    }
+  }, [communityData, user?.profile?.id]);
+
   const [isUnfollowLoading, setIsUnFollowLoading] = useState<boolean>(false);
 
   const handleFollowToggle = async () => {
     try {
+      if (isFollowed === null) return;
       if (!isFollowed) {
         await callFunction(followApi, { typ: "c", fwid: communityData?.id });
         dispatch(actions.setRefetchCommunity(true));
@@ -58,6 +68,7 @@ export default function CommunityFollowButton({
         className='follow_btn'
         loading={isLoadingFollow || isUnfollowLoading}
         onClick={handleFollowToggle}
+        disabled={isFollowed === null}
       >
         {isFollowed ? "Joined" : "Join"}
       </CButton>
