@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "next/navigation";
 import CButton from "../common/Button";
 import { fetchProposalByID, voteToProposal } from "@/services/api/proposalApi";
@@ -19,28 +19,26 @@ export default function VoteSection() {
     refetch,
   } = useAsync(fetchProposalByID, proposalId);
 
-  console.log("proposalData", proposalData);
-
-  const proposalVote = (state: RootState) => state?.common?.proposal;
-  const [{ dispatch, actions }, [proposalVoteData]] = useRedux([proposalVote]);
+  // const proposalVote = (state: RootState) => state?.common?.proposal;
+  // const [{ dispatch, actions }, [proposalVoteData]] = useRedux([proposalVote]);
   // const { isVoted, up, down } = proposalVoteData;
   // const { isVoted, up: up, down: down } = proposalData;
-  const [value, setValue] = useState<string>(proposalData?.isVoted && "up");
+  // const [value, setValue] = useState<string>(proposalData?.voteStatus && "up");
 
-  const handleVote = async (value: string) => {
+  const handleVote = async (value: "up" | "down") => {
     const payload: IVoteProposalPayload = {
       pid: +proposalId,
       typ: value,
     };
     try {
       await voteToProposal(payload);
-      dispatch(
-        actions.setProposalData(
-          value == "up"
-            ? { isVoted: true, up: proposalData?.up, down: proposalData?.down }
-            : { isVoted: false, up: proposalData?.up, down: proposalData?.down }
-        )
-      );
+      // dispatch(
+      //   actions.setProposalData(
+      //     value == "up"
+      //       ? { isVoted: true, up: proposalData?.up, down: proposalData?.down }
+      //       : { isVoted: false, up: proposalData?.up, down: proposalData?.down }
+      //   )
+      // );
       refetch();
     } catch (error: any) {
       NotificationMessage("error", error?.message);
@@ -55,21 +53,25 @@ export default function VoteSection() {
       ) : (
         <>
           <CButton
-            className={`option ${value == "up" ? "yes" : ""}`}
+            className={`option ${
+              Number(proposalData?.voteStatus) > 0 ? "yes" : ""
+            }`}
             // onClick={() => setValue("up")}
             onClick={() => {
               handleVote("up");
-              setValue("up");
+              // setValue("up");
             }}
           >
             Yes
           </CButton>
           <CButton
-            className={`option ${value == "down" ? "no" : ""}`}
+            className={`option ${
+              Number(proposalData?.voteStatus) < 0 ? "no" : ""
+            }`}
             // onClick={() => setValue("down")}
             onClick={() => {
               handleVote("down");
-              setValue("down");
+              // setValue("down");
             }}
           >
             No
