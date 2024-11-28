@@ -44,9 +44,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
   });
   const [{ dispatch, actions }] = useRedux();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
   const userInfo = useSelector((state: RootState) => state.user.profile);
-
   // const self = user.id == userInfo.uid;
   const self = user.id == userInfo.id;
   const handleRedirectPost = () => {
@@ -81,7 +79,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
   // }, [isViewed]);
 
   useEffect(() => {
-    if (isViewed && !self) {
+    if (isViewed && !self && userInfo?.id) {
       stayTimerRef.current = setTimeout(async () => {
         try {
           // Call view count API

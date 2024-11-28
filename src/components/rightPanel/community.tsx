@@ -14,9 +14,15 @@ interface IProps {
 }
 export default function Community({ community }: IProps) {
   const [memberCount, setMemberCount] = useState(community.followers);
+  const [updatedCommunity, setUpdatedCommunity] =
+    useState<ICommunity>(community);
+  useEffect(() => {
+    setUpdatedCommunity(community);
+  }, [community]);
 
   const handleFollowStatusChange = (isFollowed: boolean) => {
     setMemberCount((prevCount) => (isFollowed ? prevCount + 1 : prevCount - 1));
+    setUpdatedCommunity((prev) => ({ ...prev, isFollowed }));
   };
 
   // const communityId = community?.username;

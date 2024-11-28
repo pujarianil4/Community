@@ -40,7 +40,6 @@ export default function UserHead() {
   const userNameSelector = (state: RootState) => state?.user;
 
   const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
-  console.log("user", user?.profile?.id);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -52,7 +51,6 @@ export default function UserHead() {
   const [membersCount, setMembersCount] = useState<number>(0);
 
   const [isSelf, setIsSelf] = useState<boolean>(false);
-  console.log("isSelf", isSelf);
   useEffect(() => {
     if (user?.profile?.id && data?.id) {
       setIsSelf(user.profile.id === data.id);
@@ -69,8 +67,7 @@ export default function UserHead() {
   }, [error]);
 
   useEffect(() => {
-    if (data?.id && !isSelf) {
-      console.log("");
+    if (data?.id && !isSelf && user?.profile?.id) {
       stayTimerRef.current = setTimeout(async () => {
         try {
           await viewUser(data.id);
