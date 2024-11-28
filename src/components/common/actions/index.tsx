@@ -27,7 +27,8 @@ interface IProps {
 
 interface Vote {
   value: number;
-  type: "up" | "down" | "";
+  // type: "up" | "down" | "";
+  type: 1 | -1 | 0;
 }
 
 // TODO: add actions share, save
@@ -37,10 +38,7 @@ export default function Actions({
   showShare = false,
   showSave = false,
 }: IProps) {
-  const { up, down, id, isVoted, ccount, text, media, sts } = post;
-  // const [isUpVoted, setIsUpVoted] = useState(false);
-  const isUpVoted = true;
-
+  const { up, down, id, voteStatus, ccount, text, media, sts } = post;
   const userNameSelector = (state: RootState) => state?.user;
 
   const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
@@ -55,7 +53,7 @@ export default function Actions({
   const isDisabled = isArchived || !noUser;
   const [vote, setVote] = useState<Vote>({
     value: Number(up) + Number(down),
-    type: "",
+    type: voteStatus || 0,
   });
 
   // Dynamic URL creation
@@ -70,30 +68,28 @@ export default function Actions({
 
   const handleSelectRepost = () => {};
 
-  const handleVote = async (action: string) => {
+  const handleVote = async (action: number) => {
     if (isDisabled) return; // no action if post deleted
     const previousVote = { ...vote };
-
     let newVote: Vote = { ...vote };
 
-    if (action === "up") {
-      if (vote.type === "down") {
-        newVote = { value: vote.value + 2, type: "up" };
-      } else if (vote.type === "up") {
-        newVote = { value: vote.value - 1, type: "up" };
+    if (action === 1) {
+      if (vote.type === -1) {
+        newVote = { value: vote.value + 2, type: 1 };
+      } else if (vote.type === 1) {
+        newVote = { value: vote.value - 1, type: 0 };
       } else {
-        newVote = { value: vote.value + 1, type: "up" };
+        newVote = { value: vote.value + 1, type: 1 };
       }
-    } else if (action === "down") {
-      if (vote.type === "up") {
-        newVote = { value: vote.value - 2, type: "down" };
-      } else if (vote.type === "down") {
-        newVote = { value: vote.value + 1, type: "down" };
+    } else if (action === -1) {
+      if (vote.type === 1) {
+        newVote = { value: vote.value - 2, type: -1 };
+      } else if (vote.type === -1) {
+        newVote = { value: vote.value + 1, type: 0 };
       } else {
-        newVote = { value: vote.value - 1, type: "down" };
+        newVote = { value: vote.value - 1, type: -1 };
       }
     }
-
     setVote(newVote);
 
     try {
@@ -101,10 +97,9 @@ export default function Actions({
         const payload: IVotePayload = {
           typ: type,
           cntId: id,
-          voteTyp: newVote.type,
+          voteTyp: newVote.type == 1 ? "up" : "down",
         };
         const afterVote = await sendVote(payload);
-        console.log("updated", afterVote, payload);
 
         // setVote({ value: updatedPost.voteCount, type: newVote.type });
       }
@@ -136,16 +131,16 @@ export default function Actions({
           <div className='up_down'>
             <span>
               <PiArrowFatUpDuotone
-                className={vote.type == "up" || isVoted ? "active" : ""}
-                onClick={() => handleVote("up")}
+                className={vote.type == 1 ? "active" : ""}
+                onClick={() => handleVote(1)}
                 size={18}
               />
               <span>{vote.value}</span>{" "}
             </span>
             <span>
               <PiArrowFatDownDuotone
-                className={vote.type == "down" ? "active" : ""}
-                onClick={() => handleVote("down")}
+                className={vote.type == -1 ? "active" : ""}
+                onClick={() => handleVote(-1)}
                 size={18}
               />
               {/* <span> {vote.value}</span> */}

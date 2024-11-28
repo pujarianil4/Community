@@ -20,7 +20,8 @@ interface ICommentItemProps {
 
 interface Vote {
   value: number;
-  type: "up" | "down" | "";
+  // type: "up" | "down" | "";
+  type: 1 | -1 | 0;
 }
 const CommentItem: React.FC<ICommentItemProps> = React.memo(
   ({ comment, postId, onReply, setCommentCount }) => {
@@ -33,29 +34,28 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
     );
     const [vote, setVote] = useState<Vote>({
       value: Number(comment.up) + Number(comment.down),
-      type: "",
+      type: comment?.voteStatus || 0,
     });
-
-    const handleVote = async (action: string) => {
+    const handleVote = async (action: number) => {
       const previousVote = { ...vote };
 
       let newVote: Vote = { ...vote };
 
-      if (action === "up") {
-        if (vote.type === "down") {
-          newVote = { value: vote.value + 2, type: "up" };
-        } else if (vote.type === "up") {
-          newVote = { value: vote.value - 1, type: "" };
+      if (action === 1) {
+        if (vote.type === -1) {
+          newVote = { value: vote.value + 2, type: 1 };
+        } else if (vote.type === 1) {
+          newVote = { value: vote.value - 1, type: 0 };
         } else {
-          newVote = { value: vote.value + 1, type: "up" };
+          newVote = { value: vote.value + 1, type: 1 };
         }
-      } else if (action === "down") {
-        if (vote.type === "up") {
-          newVote = { value: vote.value - 2, type: "down" };
-        } else if (vote.type === "down") {
-          newVote = { value: vote.value + 1, type: "" };
+      } else if (action === -1) {
+        if (vote.type === 1) {
+          newVote = { value: vote.value - 2, type: -1 };
+        } else if (vote.type === -1) {
+          newVote = { value: vote.value + 1, type: 0 };
         } else {
-          newVote = { value: vote.value - 1, type: "down" };
+          newVote = { value: vote.value - 1, type: -1 };
         }
       }
 
@@ -66,7 +66,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
           const payload: IVotePayload = {
             typ: "c",
             cntId: comment.id,
-            voteTyp: newVote.type,
+            voteTyp: newVote.type == 1 ? "up" : "down",
           };
           const afterVote = await sendVote(payload);
           console.log("updated", afterVote, payload);
@@ -134,14 +134,14 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
         <div className='actions'>
           <div className='up_down'>
             <PiArrowFatUpDuotone
-              className={vote.type == "up" || comment?.isVoted ? "active" : ""}
-              onClick={() => handleVote("up")}
+              className={vote.type == 1 ? "active" : ""}
+              onClick={() => handleVote(1)}
               size={18}
             />
             <span>{vote.value}</span>
             <PiArrowFatDownDuotone
-              className={vote.type == "down" ? "active" : ""}
-              onClick={() => handleVote("down")}
+              className={vote.type == -1 ? "active" : ""}
+              onClick={() => handleVote(-1)}
               size={18}
             />
           </div>
