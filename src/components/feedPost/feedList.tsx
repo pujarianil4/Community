@@ -208,6 +208,7 @@ export default function FeedList({
             renderComponent={(index: number, post: IPost) => (
               <FeedPost key={index} post={post} />
             )}
+            footerHeight={100}
           />
 
           {isLoading && page > 1 && <FeedPostLoader />}

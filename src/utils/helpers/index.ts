@@ -246,7 +246,8 @@ export function throwError(error: any, customMessage?: string): never {
     ? customMessage
     : // : error?.statusCode === 404
       // ? "Failed to load data. Please try again later."
-      error?.message || defaultErrorMessage;
+      // error?.message || defaultErrorMessage;
+      defaultErrorMessage;
   throw new Error(message);
 }
 export function convertNumber(value: number, decimals = 1) {
