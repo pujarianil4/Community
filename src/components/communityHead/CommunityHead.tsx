@@ -42,6 +42,7 @@ import { BsEye } from "react-icons/bs";
 import { Tooltip } from "antd";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
+import Link from "next/link";
 export default function CommunityHead() {
   const { communityId: id } = useParams<{ communityId: string }>();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
@@ -269,10 +270,20 @@ export default function CommunityHead() {
                     {/* <span> 2500</span> */}
                     <BsEye />
                   </div>
-                  <CommunityFollowButton
-                    communityData={data}
-                    onSuccess={handleMemberCountUpdate}
-                  />
+                  <div className='btns'>
+                    <CommunityFollowButton
+                      communityData={data}
+                      onSuccess={handleMemberCountUpdate}
+                    />
+
+                    <Link
+                      href={`/tool/${communityId}`}
+                      as={`/tool/${communityId}`}
+                    >
+                      {" "}
+                      <CButton>Open Toolbox</CButton>
+                    </Link>
+                  </div>
 
                   {/* <CButton
                     className='edit_comunity'

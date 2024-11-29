@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { MenuProps } from "antd";
 
 import { Menu } from "antd";
@@ -15,6 +15,7 @@ import { FaChevronDown } from "react-icons/fa6";
 import { BsWindowStack } from "react-icons/bs";
 import { TbBandageOff } from "react-icons/tb";
 import { LuUsers } from "react-icons/lu";
+import { LuBarChart3 } from "react-icons/lu";
 
 import "./index.scss";
 
@@ -67,17 +68,27 @@ const LodingCommunities = [
 
 const overviews = [
   {
-    key: "about",
+    key: "insights",
+    label: "Insights",
+    icon: <LuBarChart3 size={20} />,
+  },
+  {
+    key: "queues",
     label: "Queues",
     icon: <BsWindowStack size={20} />,
   },
   {
-    key: "help",
+    key: "postandcomments",
+    label: "Post and Comments",
+    icon: <BsWindowStack size={20} />,
+  },
+  {
+    key: "restricted_users",
     label: "Restricted Users",
     icon: <TbBandageOff size={20} />,
   },
   {
-    key: "best_of_numa",
+    key: "members",
     label: "Members",
     icon: <LuUsers size={20} />,
   },
@@ -85,17 +96,17 @@ const overviews = [
 
 const settings = [
   {
-    key: "about",
+    key: "general_settings",
     label: "General Settings",
     icon: <BsWindowStack size={20} />,
   },
   {
-    key: "help",
+    key: "rules",
     label: "Rules",
     icon: <TbBandageOff size={20} />,
   },
   {
-    key: "best_of_numa",
+    key: "guide",
     label: "Community Guide",
     icon: <LuUsers size={20} />,
   },
@@ -103,6 +114,10 @@ const settings = [
 
 const DashBoardSideBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const pathArray = pathname.split("/");
+  const activeKey = pathArray[3];
+  console.log("path", pathArray, activeKey);
 
   const router = useRouter();
   const { community } = useParams<{ community: string }>();
@@ -111,8 +126,12 @@ const DashBoardSideBar: React.FC = () => {
     community
   );
   const items: MenuItem[] = [
-    { key: "", icon: <IoMdArrowBack size={20} />, label: "Exit Tool" },
-    { key: "", icon: <FaChevronDown size={12} />, label: `c/${community}` },
+    { key: "exit", icon: <IoMdArrowBack size={20} />, label: "Exit Tool" },
+    {
+      key: "dropdown",
+      icon: <FaChevronDown size={12} />,
+      label: `c/${community}`,
+    },
 
     {
       type: "divider",
@@ -143,14 +162,19 @@ const DashBoardSideBar: React.FC = () => {
   };
 
   const onClick: MenuProps["onClick"] = (e) => {
-    if (e.key[0] === "c" && e.key[1] === "/") {
-      const path = extractNextString(e.key);
-      router.push(`/${path}`);
-    } else if (e.key === "popular") {
-      router.push("/popular");
-    } else if (!["popular"].includes(e.key)) {
-      router.push(`/${e.key}`);
+    if (e.key == "exit") {
+      router.push(`/c/${community}`);
+    } else {
+      router.push(`/tool/${community}/${e.key}`);
     }
+    // if (e.key[0] === "c" && e.key[1] === "/") {
+    //   const path = extractNextString(e.key);
+    //   router.push(`/${path}`);
+    // } else if (e.key === "popular") {
+    //   router.push("/popular");
+    // } else if (!["popular"].includes(e.key)) {
+    //   router.push(`/${e.key}`);
+    // }
   };
 
   return (
@@ -163,7 +187,8 @@ const DashBoardSideBar: React.FC = () => {
       <div className={`sidebar_container ${isOpen && "open"}`}>
         <div className='custom-menu'>
           <Menu
-            defaultSelectedKeys={["1"]}
+            // defaultSelectedKeys={["insights"]}
+            selectedKeys={[activeKey]}
             defaultOpenKeys={["overviews", "settings"]}
             mode='inline'
             theme='dark'

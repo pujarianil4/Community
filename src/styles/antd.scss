@@ -143,8 +143,10 @@
       width: 30px;
     }
   }
+
   .ant-menu-item-selected {
     background-color: var(--secondary-bg) !important;
+    border-left: 2px solid var(--primary) !important;
   }
   .ant-menu-item-divider {
     border-color: var(--divider) !important;
