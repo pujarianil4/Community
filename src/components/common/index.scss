@@ -21,6 +21,29 @@
   }
 }
 
+.CButton_reverse {
+  padding: 7px 15px !important;
+  background-color: var(--tertiary-bg) !important;
+  border: 0px !important;
+  border-radius: 5px !important;
+  color: var(--primary) !important;
+  font-weight: 500 !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: var(--tertiary-bg) !important;
+    filter: brightness(0.8);
+    // color: var(--primary-text) !important;
+  }
+  &:disabled {
+    background-color: var(--primary-disable) !important;
+    color: var(--label-text) !important;
+    opacity: 0.9;
+    cursor: not-allowed !important;
+  }
+}
+
 .CInput {
   background: transparent !important;
   border: 1px solid var(--primary-border) !important;

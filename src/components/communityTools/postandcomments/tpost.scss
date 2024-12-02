@@ -1,6 +1,7 @@
 .tpost_container {
   .searchings {
     display: flex;
+
     align-items: center;
     gap: 10px;
     input {
@@ -9,5 +10,7 @@
     .cfilter_container {
       width: 125px;
     }
+  }
+  .posts {
   }
 }

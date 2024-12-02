@@ -45,7 +45,7 @@ export default function CFilter({
   return (
     <div className='cfilter_container'>
       <Popover
-        placement='bottomRight'
+        placement='bottomLeft'
         className='filter_popover'
         overlayClassName='filter_popover'
         open={isOpen}

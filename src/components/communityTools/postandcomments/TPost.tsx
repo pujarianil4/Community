@@ -1,10 +1,24 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import "./tpost.scss";
 import CInput from "@components/common/Input";
 import CFilter from "@components/common/Filter";
 import CDatePicker from "@/components/common/DatePicker";
+import useAsync from "@/hooks/useAsync";
+import { getPosts } from "@/services/api/postApi";
+import TPostCard from "./cards/TPostCard";
+import { IPost } from "@/utils/types/types";
 export default function TPost() {
+  const { error, isLoading, data, refetch, callFunction } = useAsync(
+    getPosts,
+    {}
+  );
+
+  console.log("Data1", error, isLoading, data);
+  useEffect(() => {
+    console.log("Data", data);
+  }, [data]);
+
   return (
     <div className='tpost_container'>
       <div className='searchings'>
@@ -27,6 +41,11 @@ export default function TPost() {
             defaultListIndex={0}
           />
         </div>
+      </div>
+      <div className='posts'>
+        {data?.map((post: IPost) => (
+          <TPostCard post={post} />
+        ))}
       </div>
     </div>
   );
