@@ -1,6 +1,5 @@
-import { store } from "@contexts/store";
+import { getUserID } from "@/utils/helpers";
 import { api } from "./api";
-import { followApi } from "./userApi";
 
 // Fetch Communities
 export const fetchCommunities = async ({
@@ -16,13 +15,13 @@ export const fetchCommunities = async ({
   limit: number;
   period?: "hourly" | "daily" | "monthly" | "yearly" | "";
 }) => {
-  const uid = store.getState().user?.profile?.id;
-  let url = `/community?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}`;
-
-  if (period) {
-    url += `&period=${period}`;
-  }
   try {
+    const uid = await getUserID();
+    let url = `/community?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}`;
+
+    if (period) {
+      url += `&period=${period}`;
+    }
     const response = await api.get(url);
     const data = Array.isArray(response?.data?.communities)
       ? response?.data?.communities
@@ -48,9 +47,9 @@ export const createCommunity = async (data: any) => {
 
 // Fetch Community by Name
 export const fetchCommunityByCname = async (cName: string) => {
-  const uid = store.getState().user?.profile?.id;
   if (!cName) return null;
   try {
+    const uid = await getUserID();
     const { data } = await api.get(`/community/cname/${cName}?uid=${uid}`);
     return Array.isArray(data) ? data[0] : data;
   } catch (error) {

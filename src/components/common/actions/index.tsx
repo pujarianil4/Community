@@ -27,7 +27,6 @@ interface IProps {
 
 interface Vote {
   value: number;
-  // type: "up" | "down" | "";
   type: 1 | -1 | 0;
 }
 
@@ -40,7 +39,6 @@ export default function Actions({
 }: IProps) {
   const { up, down, id, voteStatus, ccount, text, media, sts } = post;
   const userNameSelector = (state: RootState) => state?.user;
-
   const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
 
   const noUser = user?.profile?.id;
@@ -52,7 +50,7 @@ export default function Actions({
   const isArchived = sts === "archived";
   const isDisabled = isArchived || !noUser;
   const [vote, setVote] = useState<Vote>({
-    value: Number(up) + Number(down),
+    value: Number(up) - Number(down),
     type: voteStatus || 0,
   });
 

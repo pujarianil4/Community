@@ -14,12 +14,10 @@ interface Iprops {
   params: any;
 }
 
-export default async function PostPage({ params }: Iprops) {
-  const { postId } = params;
-  const postData = await getPostsByPostId(postId);
+export default function PostPage({ params }: Iprops) {
   return (
     <PageWraper hideRightPanel>
-      <PageContainer postData={postData} />
+      <PageContainer />
     </PageWraper>
   );
 }
