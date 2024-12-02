@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Virtuoso } from "react-virtuoso";
 
 import useAsync from "@/hooks/useAsync";
 import {
@@ -8,7 +7,6 @@ import {
   getPostsBycName,
   getPostsByuName,
 } from "@/services/api/postApi";
-import { useParams } from "next/navigation";
 
 import FeedPost from "./feedPost";
 import { RootState } from "@/contexts/store";
@@ -21,7 +19,6 @@ import CFilter from "../common/Filter";
 import { IPost } from "@/utils/types/types";
 import VirtualList from "../common/virtualList";
 import { throwError } from "@/utils/helpers";
-import { profile } from "console";
 
 const getFunctionByMethod = {
   allPosts: getPosts,

@@ -39,7 +39,6 @@ export default function Actions({
 }: IProps) {
   const { up, down, id, voteStatus, ccount, text, media, sts } = post;
   const userNameSelector = (state: RootState) => state?.user;
-
   const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
 
   const noUser = user?.profile?.id;
