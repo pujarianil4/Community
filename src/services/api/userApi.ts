@@ -1,10 +1,9 @@
 import { api } from "./api";
 import { store } from "@contexts/store";
-import { IFollowersAPI, IUser } from "@/utils/types/types";
-import { PublicKey } from "@solana/web3.js";
+import { IUser } from "@/utils/types/types";
 
-import { IFollowAPI, IPostCommentAPI, IVotePayload } from "@/utils/types/types";
-import { getClientSideCookie } from "@/utils/helpers";
+import { IFollowAPI, IVotePayload } from "@/utils/types/types";
+import { getUserID } from "@/utils/helpers";
 import { setUserData, setUserError, setUserLoading } from "@/contexts/reducers";
 
 // Follow API
@@ -38,8 +37,7 @@ export const UnFollowAPI = async ({
 // Vote
 export const sendVote = async (payload: IVotePayload) => {
   try {
-    const user = getClientSideCookie("authToken");
-    const response = await api.post("/vote", { ...payload, uid: user?.uid });
+    const response = await api.post("/vote", payload);
     return response.data;
   } catch (error) {
     throw error;
@@ -61,11 +59,12 @@ export const fetchUserByUserName = async (username: string) => {
 };
 
 export const fetchUser = async (username: string) => {
-  const uid = store.getState().user?.profile.id;
+  // const uid = store.getState().user?.profile.id;
   if (!username) {
     return null;
   }
   try {
+    const uid = await getUserID();
     const { data } = await api.get(`/users/uname/${username}?uid=${uid}`);
     return Array.isArray(data) ? data[0] : data;
     // const isFollowed = await isUserFollowed({

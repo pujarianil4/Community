@@ -47,6 +47,7 @@ export default function RightPanel() {
   useEffect(() => {
     const topPost = postByComments?.slice(0, 3);
     const topCommunity = communities?.slice(0, 3);
+    console.log("TOP_POST", topPost);
     setTopPosts(topPost);
     setTopCommunities(topCommunity);
   }, [postByComments, communities]);

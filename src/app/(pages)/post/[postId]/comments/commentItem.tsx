@@ -33,7 +33,7 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
       childComments?.length
     );
     const [vote, setVote] = useState<Vote>({
-      value: Number(comment.up) + Number(comment.down),
+      value: Number(comment.up) - Number(comment.down),
       type: comment?.voteStatus || 0,
     });
     const handleVote = async (action: number) => {

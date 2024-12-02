@@ -52,7 +52,7 @@ export default function Post({ post }: IProps) {
             </div>
             <div className='post_comment'>
               <span>
-                <PiArrowFatUpDuotone size={15} /> {post.up || 0}
+                <PiArrowFatUpDuotone size={15} /> {post.up - post.down || 0}
               </span>
 
               <span>

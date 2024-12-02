@@ -1,4 +1,3 @@
-import { store } from "@contexts/store";
 import { api } from "./api";
 
 export const fetchNetworth = async () => {

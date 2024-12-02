@@ -1,5 +1,4 @@
 import { PublicKey } from "@solana/web3.js";
-
 import { api } from "./api";
 
 export const handleLogIn = async (payload: {
@@ -18,8 +17,6 @@ export const handleLogIn = async (payload: {
 export const handleLogOut = async () => {
   try {
     const response = await api.patch("/auth/logout");
-
-    // removeFromLocalStorage("userSession");
     return response.data;
   } catch (error) {
     throw error;
