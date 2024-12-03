@@ -94,7 +94,7 @@ const TronAuthComponent = ({
         if (walletRoute == "auth" && isSignUp) {
           response = await handleSignup(
             signUpData?.username,
-            signUpData?.name,
+            signUpData?.name ? signUpData?.name : null,
             signedMessage,
             sigMsg,
             "Tron",

@@ -117,7 +117,7 @@ const XverseWallet: React.FC<XverseWalletProps> = ({
             if (isSignUp && signUpData) {
               const signUpResponse = await handleSignup(
                 signUpData.username,
-                signUpData.name,
+                signUpData?.name ? signUpData?.name : null,
                 signature,
                 messageToSign,
                 "Cosmos",
