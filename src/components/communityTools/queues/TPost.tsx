@@ -22,10 +22,24 @@ export default function TPost() {
   return (
     <div className='tpost_container'>
       <div className='searchings'>
-        <CInput placeholder='Search for Post' />
+        {/* <CInput placeholder='Search for Post' /> */}
 
-        <CDatePicker />
-        <div>
+        {/* <CDatePicker /> */}
+        <div className='filters'>
+          <CFilter
+            list={[
+              {
+                value: "post",
+                title: "Posts",
+              },
+              {
+                value: "comments",
+                title: "Comments",
+              },
+            ]}
+            callBack={() => {}}
+            defaultListIndex={0}
+          />
           <CFilter
             list={[
               {

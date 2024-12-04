@@ -4,22 +4,22 @@ import TPost from "@/components/communityTools/queues/TPost";
 import CommunityToolWraper from "@/components/Wrapers/communityToolWraper";
 import React from "react";
 
-export default function PostandComments() {
+export default function Queue() {
   const tabs = [
     {
       key: "1",
-      label: "Post",
+      label: "Needs Approval",
       content: <TPost />,
     },
     {
       key: "2",
-      label: "Comments",
+      label: "Edited",
       content: <TComment />,
     },
   ];
   return (
     <CommunityToolWraper hideRightPanel>
-      <h1>Post</h1>
+      <CTabs items={tabs} />
     </CommunityToolWraper>
   );
 }

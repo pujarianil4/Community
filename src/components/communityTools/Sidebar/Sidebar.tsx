@@ -188,7 +188,7 @@ const DashBoardSideBar: React.FC = () => {
         <div className='custom-menu'>
           <Menu
             // defaultSelectedKeys={["insights"]}
-            selectedKeys={[activeKey]}
+            selectedKeys={[activeKey == "" ? "insights" : activeKey]}
             defaultOpenKeys={["overviews", "settings"]}
             mode='inline'
             theme='dark'
