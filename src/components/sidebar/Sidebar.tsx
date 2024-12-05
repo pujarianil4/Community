@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { MenuProps, Modal } from "antd";
 import { AiOutlinePlus } from "react-icons/ai";
 
@@ -123,7 +123,10 @@ const SideBar: React.FC = () => {
   const [communityList, SetCommunityList] = useState<Array<any>>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [recentCommunities, setRecentCommunities] = useState([]);
-
+  const pathname = usePathname();
+  const pathArray = pathname.split("/");
+  const activeKey = pathArray[1];
+  console.log("path", pathArray, activeKey);
   const refetchCommunitySelector = (state: RootState) =>
     state.common.refetch.community;
   const userSelector = (state: RootState) => state.user.profile;
@@ -138,7 +141,7 @@ const SideBar: React.FC = () => {
   const router = useRouter();
 
   const items: MenuItem[] = [
-    { key: "", icon: <HomeIcon />, label: "Home" },
+    { key: "home", icon: <HomeIcon />, label: "Home" },
     { key: "popular", icon: <StatIcon />, label: "Popular" },
     {
       key: "communities",
@@ -219,6 +222,8 @@ const SideBar: React.FC = () => {
       router.push(`/${path}`);
     } else if (e.key === "popular") {
       router.push("/popular");
+    } else if (e.key == "home") {
+      router.push(`/`);
     } else if (!["popular"].includes(e.key)) {
       router.push(`/${e.key}`);
     }
@@ -325,7 +330,7 @@ const SideBar: React.FC = () => {
       <div className={`sidebar_container ${isOpen && "open"}`}>
         <div className='custom-menu'>
           <Menu
-            defaultSelectedKeys={["1"]}
+            selectedKeys={[activeKey == "" ? "home" : activeKey]}
             defaultOpenKeys={["community", "categories", "recentCommunity"]}
             mode='inline'
             theme='dark'

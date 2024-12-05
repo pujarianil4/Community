@@ -1,0 +1,376 @@
+@import "/src/styles";
+.sidebar_container {
+  // position: fixed;
+  background-color: var(--secondary-bg);
+  z-index: 50;
+  width: 290px;
+  height: calc(100vh - 80px);
+  overflow-y: scroll;
+  transition: left ease-in-out 0.2s;
+  // @media (width < 700px) {
+  //   width: 200px;
+  //   left: 0px;
+  // }
+  @include lessThan(xl) {
+    width: 250px;
+  }
+  @include lessThan(lg) {
+    position: absolute;
+    left: -300px;
+    width: 250px;
+  }
+  @include lessThan(md) {
+    width: 210px;
+  }
+}
+
+.open {
+  left: 0;
+}
+
+.hamburger {
+  position: absolute;
+  top: -55px;
+  margin: 0px 15px;
+  z-index: 11;
+  display: none;
+  color: var(--primary);
+  @include lessThan(lg) {
+    display: block;
+    width: 40px;
+    cursor: pointer;
+  }
+}
+.community_item {
+  min-width: 200px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  .img,
+  img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  .content {
+    width: 100px;
+  }
+  .createText {
+    color: var(--primary) !important;
+    background: transparent !important;
+    padding: 0px !important;
+    @include lessThan(md) {
+      font-size: $font-size-xsm !important;
+    }
+    svg {
+      @include lessThan(md) {
+        width: 10px;
+      }
+    }
+  }
+}
+
+// .create_community_container {
+//   padding: 10px;
+//   .avatar {
+//     display: flex;
+//     flex-direction: column;
+//     position: relative;
+//     width: 100px;
+//     .label {
+//       font-size: 12px;
+//       color: var(--label-text);
+//     }
+//     img {
+//       width: 100px;
+//       height: 100px;
+//       border-radius: 50%;
+//       object-fit: cover;
+//       background: var(--secondary-bg);
+//     }
+//     .msg {
+//       position: absolute;
+//       right: -80px;
+//       bottom: 0px;
+//     }
+//     .upload {
+//       position: absolute;
+
+//       right: 0px;
+//       bottom: 0px;
+//       background: var(--secondary-bg);
+//       border-radius: 50%;
+//       width: 30px;
+//       height: 30px;
+//       cursor: pointer;
+//       svg {
+//         margin: 4px;
+//       }
+//     }
+//   }
+//   .info {
+//     display: flex;
+//     flex-direction: column;
+//     margin: 10px 0px;
+//     .label {
+//       font-size: 12px;
+//       color: var(--label-text);
+//     }
+//     input {
+//       padding: 10px;
+//       background: transparent;
+//       border: 1px solid var(--primary-border);
+//       border-radius: 5px;
+//       color: var(--primary-text);
+//       outline: none;
+//     }
+
+//     textarea {
+//       resize: none;
+//       padding: 10px;
+//       background: transparent;
+//       border: 1px solid var(--primary-border);
+//       border-radius: 5px;
+//       color: var(--primary-text);
+//       outline: none;
+//     }
+//   }
+//   .btns {
+//     margin: 10px 0px;
+//     display: flex;
+//     justify-content: end;
+//     align-items: center;
+//     position: relative;
+//     .user_msg {
+//       position: absolute;
+//       left: 0px;
+//       color: var(--success);
+//     }
+//     .user_msg_error {
+//       position: absolute;
+//       left: 0px;
+//       color: var(--error);
+//     }
+
+//     p {
+//       height: 16px;
+//     }
+
+//     .error {
+//       color: var(--error);
+//     }
+
+//     .success {
+//       color: var(--success);
+//     }
+//   }
+// }
+
+.community-model {
+  width: fit-content !important;
+  margin: 0 auto !important;
+  background-color: #000;
+
+  .ant-model-content {
+    width: 630px !important;
+    background-color: #000 !important;
+  }
+  .create_community_container {
+    width: 700px;
+    // height: 700px;
+    padding: 10px 15px;
+    // background: var(--black);
+
+    @include lessThan(md) {
+      width: 100%;
+      padding: 10px 8px 8px 8px;
+      margin-top: 1rem;
+    }
+    .cover_bx {
+      background-color: var(--primary-disable);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      width: 100%;
+      height: 160px;
+      border-bottom-right-radius: 10px;
+      border-bottom-left-radius: 10px;
+      @include lessThan(md) {
+        height: 90px;
+      }
+      .label {
+        font-size: 12px;
+        color: var(--label-text);
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        // border-radius: 50%;
+        object-fit: cover;
+        background: var(--secondary-bg);
+      }
+      .cvrmsg {
+        position: absolute;
+        right: 5px;
+        bottom: 5px;
+      }
+      .upload {
+        position: absolute;
+        right: 8px;
+        bottom: 10px;
+        background: #242424;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        svg {
+          margin: 7px;
+        }
+      }
+    }
+
+    .search_input {
+      background-color: transparent;
+      border: 1px solid var(--primary-border);
+    }
+
+    .avatar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin-top: -53px;
+      margin-left: 2rem;
+      border-radius: 8px;
+      @include lessThan(md) {
+        width: 60px;
+        height: 60px;
+        margin-top: -36px;
+      }
+      .label {
+        font-size: 12px;
+        color: var(--label-text);
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 16px;
+        object-fit: cover;
+        // background: var(--secondary-bg);
+        // margin-left: 2rem;
+      }
+      .msg {
+        position: absolute;
+        right: -80px;
+        bottom: 0px;
+      }
+      .upload {
+        position: absolute;
+        right: -12px;
+        bottom: -7px;
+        background: #242424;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+        svg {
+          margin: 7px;
+        }
+      }
+    }
+    .info {
+      display: flex;
+      flex-direction: column;
+      margin: 16px 0px;
+      .label {
+        font-size: 16px;
+        color: var(--black);
+        margin-bottom: 0.4rem;
+        font-weight: 600;
+        @include lessThan(md) {
+          font-size: $font-size-xsm;
+        }
+        @include lessThan(xsm) {
+          font-size: $font-size-xxsm;
+        }
+      }
+      input {
+        padding: 12px 16px;
+        background: transparent;
+        border: 1px solid var(--primary-border);
+        border-radius: 8px;
+        color: var(--primary-text);
+        outline: none;
+        @include lessThan(md) {
+          padding: 10px 12px;
+        }
+        &:focus {
+          border: 1px solid var(--black);
+        }
+      }
+      textarea {
+        resize: none;
+        padding: 10px;
+        background: transparent;
+        border: 1px solid var(--primary-border);
+        border-radius: 12px;
+        color: var(--primary-text);
+        outline: none;
+        width: 100%;
+        &:focus {
+          border: 1px solid var(--black);
+        }
+      }
+      .textarea-container {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+      }
+
+      .char-counter {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-size: 12px;
+        color: #888;
+        pointer-events: none;
+      }
+
+      .editor {
+        padding: 12px 16px;
+        background: transparent;
+        border: 1px solid var(--primary-border);
+        border-radius: 8px;
+      }
+    }
+    .save_btn {
+      background: var(--tertiary-bg) !important;
+      color: var(--primary) !important;
+      font-size: 14px !important;
+    }
+    .btns {
+      margin: 10px 0px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      p {
+        height: 16px;
+      }
+
+      .user_msg_error {
+        color: var(--error);
+        margin-right: 1rem;
+      }
+
+      .user_msg {
+        color: var(--success);
+        margin-right: 1rem;
+      }
+    }
+  }
+}

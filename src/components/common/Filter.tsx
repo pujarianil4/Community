@@ -1,3 +1,4 @@
+"use client";
 import { Popover } from "antd";
 import React, { useState } from "react";
 import { GoChevronDown } from "react-icons/go";
@@ -21,13 +22,13 @@ export default function CFilter({
   selectedFilter, // Use selectedFilter
 }: ICFilter) {
   const [selected, setSelected] = useState(
-    selectedFilter || list[defaultListIndex].title
+    selectedFilter || list[defaultListIndex]?.title
   );
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (listItem: List) => {
     callBack(listItem);
-    setSelected(listItem.title);
+    setSelected(listItem?.title);
     setIsOpen(false);
   };
 
@@ -44,7 +45,7 @@ export default function CFilter({
   return (
     <div className='cfilter_container'>
       <Popover
-        placement='bottomRight'
+        placement='bottomLeft'
         className='filter_popover'
         overlayClassName='filter_popover'
         open={isOpen}
