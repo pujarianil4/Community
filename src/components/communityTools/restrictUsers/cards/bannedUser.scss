@@ -1,0 +1,86 @@
+@import "/src/styles";
+
+.user_ban_bx {
+  margin-top: 2rem;
+  background: #1f1f1f;
+  border-radius: 8px;
+  color: white;
+
+  .table_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .ant-btn-primary {
+      background-color: #1677ff;
+      border: none;
+    }
+  }
+
+  .ant-table {
+    background-color: #000;
+    border-radius: 8px;
+
+    // .ant-table-row {
+    //   &:hover .action-buttons {
+    //     display: block !important;
+    //   }
+    // }
+    .ant-table-thead > tr > th {
+      background-color: #333;
+      color: white;
+    }
+
+    .ant-table-tbody {
+      background: var(--white) !important;
+      color: var(--black) !important;
+    }
+    .ant-table-tbody > tr > td {
+      color: var(--black);
+      // border-bottom: var(--secondary-bg) !important;
+    }
+
+    .ant-empty-description {
+      color: gray;
+    }
+
+    .reason_bx {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      .action-buttons {
+        display: flex;
+        gap: 5px;
+        height: 40px;
+        // display: none;
+
+        .unban_btn {
+          background-color: red;
+          border-radius: 50%;
+          padding: 10px;
+          svg {
+            width: 20px;
+            height: 20px;
+          }
+        }
+
+        .edit_btn {
+          background-color: var(--secondary-bg);
+          border-radius: 50%;
+          padding: 10px;
+          svg {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+    }
+  }
+}
