@@ -24,6 +24,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { HomeIcon, StatIcon } from "@/assets/icons";
 import useAsync from "@/hooks/useAsync";
 import { fetchCommunityByCname } from "@/services/api/communityApi";
+import { FaBullseye } from "react-icons/fa";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -75,11 +76,6 @@ const overviews = [
   {
     key: "queues",
     label: "Queues",
-    icon: <BsWindowStack size={20} />,
-  },
-  {
-    key: "postandcomments",
-    label: "Post and Comments",
     icon: <BsWindowStack size={20} />,
   },
   {
@@ -188,12 +184,13 @@ const DashBoardSideBar: React.FC = () => {
         <div className='custom-menu'>
           <Menu
             // defaultSelectedKeys={["insights"]}
-            selectedKeys={[activeKey]}
+            selectedKeys={[activeKey == "" ? "insights" : activeKey]}
             defaultOpenKeys={["overviews", "settings"]}
             mode='inline'
             theme='dark'
             onClick={onClick}
             items={items}
+            openKeys={["overviews", "settings"]}
           />
         </div>
       </div>

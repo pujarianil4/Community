@@ -4,12 +4,19 @@
 
     align-items: center;
     gap: 10px;
+    justify-content: end;
     input {
-      width: 80%;
+      width: 300px;
     }
     .cfilter_container {
       width: 125px;
     }
+  }
+  .filters {
+    display: flex;
+
+    align-items: center;
+    gap: 10px;
   }
   .posts {
   }

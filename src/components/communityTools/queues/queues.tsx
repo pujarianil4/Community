@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import "./tpost.scss";
+import "./queues.scss";
 import CInput from "@components/common/Input";
 import CFilter from "@components/common/Filter";
 import CDatePicker from "@/components/common/DatePicker";
@@ -8,7 +8,7 @@ import useAsync from "@/hooks/useAsync";
 import { getPosts } from "@/services/api/postApi";
 import TPostCard from "./cards/TPostCard";
 import { IPost } from "@/utils/types/types";
-export default function TPost() {
+export default function Queues() {
   const { error, isLoading, data, refetch, callFunction } = useAsync(
     getPosts,
     {}
@@ -22,10 +22,24 @@ export default function TPost() {
   return (
     <div className='tpost_container'>
       <div className='searchings'>
-        <CInput placeholder='Search for Post' />
+        {/* <CInput placeholder='Search for Post' /> */}
 
-        <CDatePicker />
-        <div>
+        {/* <CDatePicker /> */}
+        <div className='filters'>
+          <CFilter
+            list={[
+              {
+                value: "post",
+                title: "Posts",
+              },
+              {
+                value: "comments",
+                title: "Comments",
+              },
+            ]}
+            callBack={() => {}}
+            defaultListIndex={0}
+          />
           <CFilter
             list={[
               {
