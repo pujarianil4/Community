@@ -33,7 +33,8 @@ import TiptapEditor from "@components/common/tiptapEditor";
 import TurndownService from "turndown";
 import FocusableDiv from "@/components/common/focusableDiv";
 import { IMAGE_FILE_TYPES } from "@/utils/constants";
-
+import { useImageNameValidator } from "@hooks/useImageNameValidator";
+import { notification } from "antd";
 export default function Profile() {
   const [{ dispatch, actions }, [userData]] = useRedux([
     (state: RootState) => state.user.profile,
@@ -46,6 +47,7 @@ export default function Profile() {
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [charCount, setCharCount] = useState(0);
+  const { validateImage, error: err, clearError } = useImageNameValidator();
   const maxChars = 300;
   const [imageError, setImageError] = useState(false);
   const fileRefs = {
@@ -229,6 +231,15 @@ export default function Profile() {
       try {
         setIsUploadingAvatar(true);
         const file = event.target.files[0];
+        if (!validateImage(file)) {
+          console.error("Validation failed:", err);
+          NotificationMessage(
+            "error",
+            "Image name should not exceed 25 characters."
+          );
+          setIsUploadingAvatar(false);
+          return;
+        }
         const imgURL = await uploadSingleFile(file);
         console.log("IMGURL", imgURL);
         setUser({ ...user, img: { ...user.img, pro: imgURL } });
@@ -250,6 +261,15 @@ export default function Profile() {
       try {
         setIsUploadingCover(true);
         const file = event.target.files[0];
+        if (!validateImage(file)) {
+          console.error("Validation failed:", err);
+          NotificationMessage(
+            "error",
+            "Image name should not exceed 25 characters."
+          );
+          setIsUploadingAvatar(false);
+          return;
+        }
         const imgURL = await uploadSingleFile(file);
         console.log("IMGURL", imgURL);
         setUser({ ...user, img: { ...user.img, cvr: imgURL } });

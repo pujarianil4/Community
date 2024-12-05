@@ -65,7 +65,11 @@ export default function CommunityHead() {
   }, [data]);
 
   const refetchRoute = (state: RootState) => state?.common.refetch.user;
-  const [{ dispatch, actions }, [refetchData]] = useRedux([refetchRoute]);
+  const userNameSelector = (state: RootState) => state?.user;
+  const [{ dispatch, actions }, [refetchData, user]] = useRedux([
+    refetchRoute,
+    userNameSelector,
+  ]);
 
   useEffect(() => {
     if (refetchData == true) {
@@ -73,6 +77,12 @@ export default function CommunityHead() {
       dispatch(actions.resetRefetch());
     }
   }, [refetchData]);
+
+  useEffect(() => {
+    if (typeof user?.profile?.id === "number") {
+      refetch();
+    }
+  }, [user.profile.id]);
 
   useEffect(() => {
     if (error) NotificationMessage("error", error?.message);

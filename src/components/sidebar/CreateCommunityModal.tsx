@@ -26,7 +26,8 @@ import Avatar from "@/components/common/loaders/userAvatar";
 import ProfileAvatar from "@/components/common/loaders/profileAvatar";
 import DropdownWithSearch from "../common/dropdownWithSearch";
 import { IMAGE_FILE_TYPES } from "@/utils/constants";
-
+//image name length chekcer
+import { useImageNameValidator } from "@hooks/useImageNameValidator";
 interface ICommunityForm {
   name?: string;
   username?: string;
@@ -103,6 +104,7 @@ export const CreateCommunity = ({
     ticker: "",
   });
 
+  const { validateImage, error: err, clearError } = useImageNameValidator();
   const [usernameError, setUsernameError] = useState({
     type: "",
     msg: "",
@@ -114,6 +116,7 @@ export const CreateCommunity = ({
   };
   const closeBtn = document.querySelector(".ant-modal-close");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  console.log("searchterm", searchTerm);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [content, setContent] = useState<string>("");
@@ -127,6 +130,15 @@ export const CreateCommunity = ({
       try {
         setIsUploadingAvatar(true);
         const file = event.target.files[0];
+        if (!validateImage(file)) {
+          console.error("Validation failed:", err);
+          NotificationMessage(
+            "error",
+            "Image name should not exceed 25 characters."
+          );
+          setIsUploadingAvatar(false);
+          return;
+        }
         const imgURL = await uploadSingleFile(file);
         setImgSrc(imgURL);
         setForm((prevForm) => ({
@@ -151,6 +163,15 @@ export const CreateCommunity = ({
       try {
         setIsUploadingCover(true);
         const file = event.target.files[0];
+        if (!validateImage(file)) {
+          console.error("Validation failed:", err);
+          NotificationMessage(
+            "error",
+            "Image name should not exceed 25 characters."
+          );
+          setIsUploadingAvatar(false);
+          return;
+        }
         const imgURL = await uploadSingleFile(file);
         setImgSrcCover(imgURL);
         setForm((prevForm) => ({
@@ -421,7 +442,7 @@ export const CreateCommunity = ({
           options={tickers}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-          selected={form?.ticker}
+          selected={searchTerm}
           placeholder='Select Ticker'
           isStringArray={true}
         />
