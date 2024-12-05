@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import "./tpost.scss";
+import "./queues.scss";
 import CInput from "@components/common/Input";
 import CFilter from "@components/common/Filter";
 import CDatePicker from "@/components/common/DatePicker";
@@ -8,7 +8,7 @@ import useAsync from "@/hooks/useAsync";
 import { getPosts } from "@/services/api/postApi";
 import TPostCard from "./cards/TPostCard";
 import { IPost } from "@/utils/types/types";
-export default function TPost() {
+export default function Queues() {
   const { error, isLoading, data, refetch, callFunction } = useAsync(
     getPosts,
     {}
