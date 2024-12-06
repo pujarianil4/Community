@@ -326,6 +326,13 @@ export const CreateCommunity = ({
 
   const handleUpdateCommunity = () => {};
 
+  useEffect(() => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      ticker: searchTerm,
+    }));
+  }, [searchTerm]);
+
   return (
     <div className='create_community_container'>
       <div className='cover_bx'>
