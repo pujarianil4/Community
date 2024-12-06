@@ -1,9 +1,7 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { MenuProps } from "antd";
-
-import { Menu } from "antd";
+import { Menu, MenuProps } from "antd";
 import { FiBookmark, FiGlobe } from "react-icons/fi";
 
 import { FcAbout } from "react-icons/fc";
@@ -14,21 +12,21 @@ import { IoMdArrowBack } from "react-icons/io";
 import { FaChevronDown } from "react-icons/fa6";
 import { BsWindowStack } from "react-icons/bs";
 import { TbBandageOff } from "react-icons/tb";
-import { LuUsers } from "react-icons/lu";
-import { LuBarChart3 } from "react-icons/lu";
-
-import "./index.scss";
-
+import { LuUsers, LuBarChart3 } from "react-icons/lu";
 import { RxHamburgerMenu } from "react-icons/rx";
 
-import { HomeIcon, StatIcon } from "@/assets/icons";
+import "./index.scss";
 import useAsync from "@/hooks/useAsync";
 import { fetchCommunityByCname } from "@/services/api/communityApi";
 import { FaBullseye } from "react-icons/fa";
+import { getFollowinsByUserId } from "@/services/api/userApi";
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
+import { ICommunity } from "@/utils/types/types";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
-const LodingCommunities = [
+const loadingCommunities: MenuItem[] = [
   {
     key: "loading1",
     label: (
@@ -111,24 +109,61 @@ const settings = [
 const DashBoardSideBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const pathArray = pathname.split("/");
-  const activeKey = pathArray[3];
-  console.log("path", pathArray, activeKey);
+  const activeKey = pathname.split("/")[3] || "insights";
+  console.log("path", activeKey);
 
+  const userSelector = (state: RootState) => state?.user?.profile;
+  const [{ dispatch, actions }, [user]] = useRedux([userSelector]);
   const router = useRouter();
   const { community } = useParams<{ community: string }>();
-  const { error, isLoading, data, refetch } = useAsync(
-    fetchCommunityByCname,
-    community
-  );
+
+  const { isLoading, data: communityList } = useAsync(getFollowinsByUserId, {
+    userId: user?.id,
+    type: "c",
+  });
+
+  const followCList = communityList?.map((item: any) => item.followedCommunity);
+
+  const handleCommunitySelect = (username: string) => {
+    const pathname = usePathname();
+    const router = useRouter();
+    const pathSegments = pathname.split("/");
+    const toolIndex = pathSegments.indexOf("tool");
+
+    if (toolIndex !== -1 && pathSegments[toolIndex + 1]) {
+      pathSegments[toolIndex + 1] = username;
+
+      const updatedPath = pathSegments.join("/");
+      console.log("new url", updatedPath);
+      router.push(updatedPath);
+    }
+  };
+
   const items: MenuItem[] = [
-    { key: "exit", icon: <IoMdArrowBack size={20} />, label: "Exit Tool" },
+    {
+      key: "exit",
+      icon: <IoMdArrowBack size={20} />,
+      label: "Exit Tool",
+    },
     {
       key: "dropdown",
-      icon: <FaChevronDown size={12} />,
       label: `c/${community}`,
-    },
 
+      children: isLoading
+        ? loadingCommunities
+        : followCList?.map((item: ICommunity) => ({
+            key: item.username,
+            label: (
+              <div
+                className='community_item'
+                onClick={() => handleCommunitySelect(item.username)}
+              >
+                <div className='content'>{item.username}</div>
+              </div>
+            ),
+          })),
+      icon: <FaChevronDown size={12} />,
+    },
     {
       type: "divider",
     },
@@ -143,9 +178,8 @@ const DashBoardSideBar: React.FC = () => {
       children: settings,
     },
   ];
-
   const extractNextString = (input: string) => {
-    const startIndex = input.indexOf("c/");
+    const startIndex = input.indexOf("tool/");
     if (startIndex !== -1) {
       const endIndex = input.indexOf("/", startIndex + 2);
       if (endIndex !== -1) {
@@ -160,6 +194,9 @@ const DashBoardSideBar: React.FC = () => {
   const onClick: MenuProps["onClick"] = (e) => {
     if (e.key == "exit") {
       router.push(`/c/${community}`);
+    } else if (e.key === "dropdwon") {
+      console.log("this works");
+      return;
     } else {
       router.push(`/tool/${community}/${e.key}`);
     }
@@ -180,19 +217,15 @@ const DashBoardSideBar: React.FC = () => {
         size={30}
         onClick={() => setIsOpen(!isOpen)}
       />
-      <div className={`sidebar_container ${isOpen && "open"}`}>
-        <div className='custom-menu'>
-          <Menu
-            // defaultSelectedKeys={["insights"]}
-            selectedKeys={[activeKey == "" ? "insights" : activeKey]}
-            defaultOpenKeys={["overviews", "settings"]}
-            mode='inline'
-            theme='dark'
-            onClick={onClick}
-            items={items}
-            openKeys={["overviews", "settings"]}
-          />
-        </div>
+      <div className={`sidebar_container ${isOpen ? "open" : ""}`}>
+        <Menu
+          selectedKeys={[activeKey]}
+          defaultOpenKeys={["overviews", "settings"]}
+          mode='inline'
+          theme='dark'
+          onClick={onClick}
+          items={items}
+        />
       </div>
     </>
   );

@@ -11,7 +11,6 @@ import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
 import { allUser } from "@/services/api/userApi";
 import { IUser } from "@/utils/types/types";
-
 interface UserBanForm {
   user: string | null | undefined;
   rule: string | null | undefined;
@@ -23,15 +22,21 @@ interface UserBanForm {
 interface BanModelProps {
   isModalOpen: boolean;
   onClose: () => void;
-  editData?: UserBanForm;
+  initialData?: UserBanForm;
   onSubmit?: (data: UserBanForm) => void;
   submitButtonText?: string;
 }
 
-export const BanModel = ({
+export const MuteModel = ({
   isModalOpen,
   onClose,
-  editData,
+  initialData = {
+    user: "",
+    rule: "",
+    duration: "",
+    modNote: "",
+    msg: "",
+  },
   onSubmit,
   submitButtonText = "Ban User",
 }: BanModelProps) => (
@@ -41,25 +46,16 @@ export const BanModel = ({
     className='community-model'
     footer={null}
   >
-    <CreateCommunity
-      onClose={onClose}
-      submitButtonText={submitButtonText}
-      editData={editData}
-      onSubmit={onSubmit}
-    />
+    <CreateCommunity onClose={onClose} submitButtonText={submitButtonText} />
   </Modal>
 );
 
 export const CreateCommunity = ({
   onClose,
   submitButtonText,
-  editData,
-  onSubmit,
 }: {
   onClose: () => void;
   submitButtonText: string;
-  editData?: UserBanForm;
-  onSubmit?: (data: UserBanForm) => void;
 }) => {
   const [form, setForm] = useState<UserBanForm>({
     user: "",
@@ -69,7 +65,6 @@ export const CreateCommunity = ({
     msg: "",
   });
 
-  console.log("edit data", editData);
   const userNameSelector = (state: RootState) => state?.user;
   const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
   const userId = user?.profile?.id;
@@ -80,23 +75,7 @@ export const CreateCommunity = ({
   console.log("get all user", data);
   const [selectedOption, setSelectedOption] = useState<IUser | null>(null);
   const [userSearchTerm, setUserSearchTerm] = useState<string>("");
-  const [ruleSearchTerm, setRuleSearchTerm] = useState<string>("");
   const [durationSearchTerm, setDurationSearchTerm] = useState<string>("");
-
-  useEffect(() => {
-    if (editData) {
-      setForm({
-        user: editData.user ?? "",
-        rule: editData.rule ?? "",
-        duration: editData.duration ?? "",
-        modNote: editData.modNote ?? "",
-        msg: editData.msg ?? "",
-      });
-      if (editData.user) {
-        setSelectedOption({ username: editData.user });
-      }
-    }
-  }, [editData]);
 
   const handleFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -110,13 +89,9 @@ export const CreateCommunity = ({
   };
 
   const isFormValid = () => {
-    return (
-      selectedOption !== null &&
-      form.rule?.trim() !== "" &&
-      form.duration?.trim() !== ""
-    );
+    return selectedOption !== null && form.duration?.trim() !== "";
   };
-
+  console.log("isform", isFormValid());
   const handleBanUser = async () => {
     try {
       await callFunction(createCommunity, form);
@@ -142,18 +117,7 @@ export const CreateCommunity = ({
           placeholder='Search and Select User'
         />
       </div>
-      <div className='info'>
-        <span className='label'>Violation*</span>
-        <DropdownWithSearch
-          onSelect={(value) => handleDropdownSelect("rule", value)}
-          options={["Rule 1: Spam", "Rule 2: Harassment"]}
-          searchTerm={ruleSearchTerm}
-          setSearchTerm={setRuleSearchTerm}
-          selected={form.rule}
-          placeholder='Select Rule'
-          isStringArray
-        />
-      </div>
+
       <div className='info'>
         <span className='label'>Duration*</span>
         <DropdownWithSearch
@@ -176,23 +140,13 @@ export const CreateCommunity = ({
           placeholder='Add a note for moderators (optional)'
         />
       </div>
-      <div className='info'>
-        <span className='label'>Message to User</span>
-        <textarea
-          rows={5}
-          name='msg'
-          value={form.msg ?? ""}
-          onChange={handleFormChange}
-          placeholder='Message to the user (optional)'
-        />
-      </div>
       <div className='btns'>
         <CButton
           disabled={!isFormValid()}
           onClick={handleBanUser}
           loading={isLoading}
         >
-          {submitButtonText}
+          Mute
         </CButton>
       </div>
     </div>

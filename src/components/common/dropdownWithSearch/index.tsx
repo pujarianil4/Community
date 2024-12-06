@@ -34,7 +34,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
   isStringArray = false,
 }) => {
   const [visible, setVisible] = useState(false);
-
+  // console.log("dropdwon data", options, onSelect, selected, defaultCommunity);
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
