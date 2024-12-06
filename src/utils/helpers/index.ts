@@ -283,6 +283,6 @@ export async function getUserID(): Promise<number> {
     return id;
   } catch (error) {
     console.error("Failed to retrieve user ID:", error);
-    throw new Error("Unable to fetch user ID. Please try again.");
+    return 0;
   }
 }

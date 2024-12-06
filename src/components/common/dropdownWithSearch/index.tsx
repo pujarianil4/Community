@@ -68,6 +68,10 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
     setVisible(false);
   };
 
+  const handleClose = () => {
+    setSearchTerm("");
+  };
+
   useEffect(() => {
     if (selected) {
       setSearchTerm(isStringArray ? selected : selected?.username);
@@ -90,7 +94,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
             onBlur={handleBlur}
           />
           {searchTerm && (
-            <div className='close_icon' onClick={() => setSearchTerm("")}>
+            <div className='close_icon' onClick={handleClose}>
               <CloseIcon />
             </div>
           )}

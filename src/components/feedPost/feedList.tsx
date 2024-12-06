@@ -158,9 +158,9 @@ export default function FeedList({
   //   shouldRefetchPost;
   // }, [user.profile.id]);
 
-  if (page < 2 && isLoading) {
-    return loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />);
-  }
+  // if (page < 2 && isLoading) {
+  //   return loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />);
+  // }
 
   return (
     <>
@@ -194,6 +194,8 @@ export default function FeedList({
 
       {!isLoading && posts?.length === 0 ? (
         <EmptyData />
+      ) : page < 2 && isLoading ? (
+        loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />)
       ) : (
         <>
           <VirtualList
@@ -205,7 +207,7 @@ export default function FeedList({
             renderComponent={(index: number, post: IPost) => (
               <FeedPost key={index} post={post} />
             )}
-            footerHeight={100}
+            footerHeight={150}
           />
 
           {isLoading && page > 1 && <FeedPostLoader />}
