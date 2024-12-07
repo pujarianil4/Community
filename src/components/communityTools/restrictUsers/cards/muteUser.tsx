@@ -17,31 +17,21 @@ interface IProps {
   usersData: IUser[];
 }
 
-export default function BannedUser({ usersData }: IProps) {
-  const [isRemoveBanModalVisible, setIsRemoveBanModalVisible] = useState(false);
+export default function MuteUser({ usersData }: IProps) {
+  const [isRemoveMuteModalVisible, setisRemoveMuteModalVisible] =
+    useState(false);
   const [isEditBanModalVisible, setIsEditBanModalVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState<IUser | null>(null);
 
   // Handle Remove Ban Modal
-  const handleRemoveBan = (user: IUser) => {
+  const handleRemoveMute = (user: IUser) => {
     setCurrentUser(user);
-    setIsRemoveBanModalVisible(true);
+    setisRemoveMuteModalVisible(true);
   };
 
   const confirmRemoveBan = () => {
     message.success(`Ban removed for ${currentUser?.username}`);
-    setIsRemoveBanModalVisible(false);
-  };
-
-  // Handle Edit Ban Modal
-  const handleEditBan = (user: IUser) => {
-    setCurrentUser(user);
-    setIsEditBanModalVisible(true);
-  };
-
-  const saveEditBan = (values: any) => {
-    message.success(`Ban details updated for ${currentUser?.username}`);
-    setIsEditBanModalVisible(false);
+    setisRemoveMuteModalVisible(false);
   };
 
   const columns = [
@@ -56,29 +46,16 @@ export default function BannedUser({ usersData }: IProps) {
       dataIndex: "duration",
       key: "duration",
     },
-    {
-      title: "Date",
-      dataIndex: "cta",
-      key: "cta",
-    },
+
     {
       title: "Note",
-      dataIndex: "note",
       key: "note",
-    },
-    {
-      title: "Reason",
-      key: "reason",
       render: (_: any, user: IUser) => (
         <div className='reason_bx'>
-          <span>{user.reason}</span>
+          <span>{user.note}</span>
           <div className='action-buttons'>
-            <span className='unban_btn' onClick={() => handleRemoveBan(user)}>
+            <span className='unban_btn' onClick={() => handleRemoveMute(user)}>
               <FaBan color='white' />
-            </span>
-
-            <span className='edit_btn' onClick={() => handleEditBan(user)}>
-              <FaRegEdit color='#fff' />
             </span>
           </div>
         </div>
@@ -98,7 +75,7 @@ export default function BannedUser({ usersData }: IProps) {
             <Empty
               description={
                 <>
-                  <div>No Banned Users Found</div>
+                  <div>No Mute Users Found</div>
                   <div>Start by banning a user to populate this list.</div>
                 </>
               }
@@ -110,30 +87,17 @@ export default function BannedUser({ usersData }: IProps) {
       {/* Remove Ban Modal */}
       <Modal
         title='Confirm Remove Ban'
-        open={isRemoveBanModalVisible}
+        open={isRemoveMuteModalVisible}
         onOk={confirmRemoveBan}
-        onCancel={() => setIsRemoveBanModalVisible(false)}
+        onCancel={() => setisRemoveMuteModalVisible(false)}
         okText='Remove'
         cancelText='Cancel'
       >
         <p>
-          Are you sure you want to remove the ban for
+          They'll be able to participate in your community again.
           <b> {currentUser?.username}</b>?
         </p>
       </Modal>
-      <BanModel
-        isModalOpen={isEditBanModalVisible}
-        onClose={() => setIsEditBanModalVisible(false)}
-        editData={{
-          user: currentUser?.username ?? "",
-          rule: currentUser?.reason ?? "",
-          duration: currentUser?.duration ?? "",
-          modNote: currentUser?.note ?? "",
-          msg: "",
-        }}
-        onSubmit={saveEditBan}
-        submitButtonText='Save Changes'
-      />
     </section>
   );
 }

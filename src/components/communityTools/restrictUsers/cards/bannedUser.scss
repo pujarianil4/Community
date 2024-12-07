@@ -33,17 +33,29 @@
     //   }
     // }
     .ant-table-thead > tr > th {
-      background-color: #333;
+      background-color: var(--secondary-bg) !important;
       color: white;
+      border-bottom: 1px solid var(--primary-border) !important;
     }
 
     .ant-table-tbody {
       background: var(--white) !important;
       color: var(--black) !important;
+      .ant-table-placeholder {
+        background: transparent !important;
+      }
+      .ant-table-row {
+        .ant-table-cell-row-hover {
+          background: var(--tertiary) !important;
+        }
+      }
     }
+    .ant-table-tbody > tr > th {
+    }
+
     .ant-table-tbody > tr > td {
       color: var(--black);
-      // border-bottom: var(--secondary-bg) !important;
+      border-bottom: 1px solid var(--primary-border) !important;
     }
 
     .ant-empty-description {

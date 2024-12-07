@@ -316,3 +316,18 @@ export const viewUser = async (id: number | undefined) => {
     throw error;
   }
 };
+
+// get all users list
+export const allUser = async (userId: string) => {
+  try {
+    const response = await api.get(`/users/?page=1&limit=50&uid=${userId}`);
+    console.log("response", response.data);
+    if (response.data) {
+      return response.data;
+    }
+    throw new Error("user not available");
+  } catch (error) {
+    console.error("GET_ALL_USER", error);
+    throw error;
+  }
+};

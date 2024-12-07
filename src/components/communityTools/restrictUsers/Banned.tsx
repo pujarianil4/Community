@@ -1,9 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./banned.scss";
 import CInput from "@components/common/Input";
 import useAsync from "@/hooks/useAsync";
-import { fetchUser } from "@/services/api/userApi";
+import { allUser } from "@/services/api/userApi";
 import BannedUser from "./cards/BannedUser";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
@@ -12,15 +12,17 @@ import { BanModel } from "./banModel";
 export default function TPost() {
   const [rejectModal, setRejectModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const itemsPerPage = 5; // Number of items per page
 
   const userNameSelector = (state: RootState) => state?.user;
   const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
   const userId = user?.profile?.id;
   const { error, isLoading, data, refetch, callFunction } = useAsync(
-    fetchUser,
+    allUser,
     userId
   );
+  console.log("get all user", data);
 
   const handleRejectModal = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -53,41 +55,54 @@ export default function TPost() {
     },
     {
       id: 3,
-      username: "jane_smith",
-      duration: "1 Week",
-      date: "2024-12-02",
-      note: "Inappropriate comments",
-      reason: "Rule 2: Harassment",
+      username: "alice_wonder",
+      duration: "1 Month",
+      date: "2024-12-03",
+      note: "Offensive language",
+      reason: "Rule 3: Offensive Language",
     },
     {
       id: 4,
-      username: "jane_smith",
-      duration: "1 Week",
-      date: "2024-12-02",
-      note: "Inappropriate comments",
-      reason: "Rule 2: Harassment",
+      username: "alice_wonder",
+      duration: "1 Month",
+      date: "2024-12-03",
+      note: "Offensive language",
+      reason: "Rule 3: Offensive Language",
     },
     {
       id: 5,
-      username: "jane_smith",
-      duration: "1 Week",
-      date: "2024-12-02",
-      note: "Inappropriate comments",
-      reason: "Rule 2: Harassment",
+      username: "alice_wonder",
+      duration: "1 Month",
+      date: "2024-12-03",
+      note: "Offensive language",
+      reason: "Rule 3: Offensive Language",
     },
     {
       id: 6,
-      username: "jane_smith",
-      duration: "1 Week",
-      date: "2024-12-02",
-      note: "Inappropriate comments",
-      reason: "Rule 2: Harassment",
+      username: "alice_wonder",
+      duration: "1 Month",
+      date: "2024-12-03",
+      note: "Offensive language",
+      reason: "Rule 3: Offensive Language",
+    },
+    {
+      id: 7,
+      username: "alice_wonder",
+      duration: "1 Month",
+      date: "2024-12-03",
+      note: "Offensive language",
+      reason: "Rule 3: Offensive Language",
     },
   ];
 
-  // Calculate paginated data
-  const totalPages = Math.ceil(sampleUsersData.length / itemsPerPage);
-  const paginatedData = sampleUsersData.slice(
+  // Filter users based on the search query
+  const filteredUsers = sampleUsersData.filter((user) =>
+    user.username?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Calculate paginated data for filtered users
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const paginatedData = filteredUsers.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -96,6 +111,11 @@ export default function TPost() {
     if (page > 0 && page <= totalPages) {
       setCurrentPage(page);
     }
+  };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to the first page when searching
   };
 
   return (
@@ -109,8 +129,12 @@ export default function TPost() {
         <p>Ban evasion filter</p>
       </div>
       <div className='searchings'>
-        <CInput placeholder='Search Users' />
-        {/* Pagination placed here */}
+        <CInput
+          placeholder='Search Users'
+          value={searchQuery}
+          onChange={handleSearch}
+        />
+        {/* Pagination */}
         <div className='pagination'>
           <button
             disabled={currentPage === 1}
