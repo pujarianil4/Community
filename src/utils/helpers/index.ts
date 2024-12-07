@@ -1,3 +1,5 @@
+import { store } from "@/contexts/store";
+import { getUserProfile } from "@/services/api/userApi";
 import { parseCookies, setCookie, destroyCookie } from "nookies";
 
 export function setClientSideCookie(
@@ -246,7 +248,8 @@ export function throwError(error: any, customMessage?: string): never {
     ? customMessage
     : // : error?.statusCode === 404
       // ? "Failed to load data. Please try again later."
-      error?.message || defaultErrorMessage;
+      // error?.message || defaultErrorMessage;
+      defaultErrorMessage;
   throw new Error(message);
 }
 export function convertNumber(value: number, decimals = 1) {
@@ -262,4 +265,24 @@ export function convertNumber(value: number, decimals = 1) {
   }
 
   return value.toString();
+}
+
+let cachedUID: number | null = null;
+export async function getUserID(): Promise<number> {
+  if (cachedUID !== null) {
+    return cachedUID;
+  }
+  try {
+    const uid = store.getState().user?.profile?.id;
+    if (uid) {
+      cachedUID = uid;
+      return uid;
+    }
+    const { id } = await getUserProfile();
+    cachedUID = id;
+    return id;
+  } catch (error) {
+    console.error("Failed to retrieve user ID:", error);
+    return 0;
+  }
 }

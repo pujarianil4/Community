@@ -91,8 +91,8 @@ function Navbar() {
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
     setModalTab(1);
+    setIsModalOpen(false);
   };
 
   const handleClosePostModal = () => {

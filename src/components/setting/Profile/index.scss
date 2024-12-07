@@ -146,6 +146,10 @@
       position: relative;
       display: inline-block;
       width: 100%;
+
+      textarea {
+        font-family: $font-family-name !important;
+      }
     }
 
     .char-counter {

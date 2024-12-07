@@ -34,7 +34,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
   isStringArray = false,
 }) => {
   const [visible, setVisible] = useState(false);
-  // console.log("dropdwon data", options, onSelect, selected, defaultCommunity);
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -64,14 +64,20 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
     if (onSelect) {
       onSelect(item);
     }
+
     setSearchTerm(isStringArray ? item : item?.username);
     setVisible(false);
+  };
+
+  const handleClose = () => {
+    setSearchTerm("");
   };
 
   useEffect(() => {
     if (selected) {
       setSearchTerm(isStringArray ? selected : selected?.username);
     } else {
+      onSelect("");
       setSearchTerm("");
     }
   }, [selected, isStringArray]);
@@ -90,7 +96,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
             onBlur={handleBlur}
           />
           {searchTerm && (
-            <div className='close_icon' onClick={() => setSearchTerm("")}>
+            <div className='close_icon' onClick={handleClose}>
               <CloseIcon />
             </div>
           )}

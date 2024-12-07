@@ -103,10 +103,6 @@ export default function Comments({ postId, setCommentCount, status }: Iprops) {
     }
   }, [commentsData]);
 
-  useEffect(() => {
-    console.log("actualData", commentsData);
-  }, [actualData]);
-
   const onSelect = (selectedKeys: React.Key[], info: any) => {
     console.log("selected", selectedKeys, info);
   };

@@ -11,8 +11,14 @@ import { fetchCommunities } from "@/services/api/communityApi";
 import { ICommunity, IPost } from "@/utils/types/types";
 import Community from "./community";
 import Link from "next/link";
+import { RootState } from "@/contexts/store";
+import { useSelector } from "react-redux";
+
 export default function RightPanel() {
   const pathName = usePathname();
+
+  const userInfo = useSelector((state: RootState) => state.user.profile);
+
   const isProposalPage =
     pathName.split("/")[1] === "p" &&
     pathName.split("/")[2] !== "create-proposal"
@@ -23,14 +29,25 @@ export default function RightPanel() {
     getPosts,
     { sortby: "ccount" }
   );
-  const { isLoading, data: communities } = useAsync(fetchCommunities, "pCount");
+  const {
+    isLoading,
+    data: communities,
+    refetch,
+  } = useAsync(fetchCommunities, "pCount");
 
   const [topPosts, setTopPosts] = useState<IPost[]>([]);
   const [topCommunities, setTopCommunities] = useState<ICommunity[]>([]);
 
   useEffect(() => {
+    if (userInfo.id) {
+      refetch();
+    }
+  }, [userInfo.id]);
+
+  useEffect(() => {
     const topPost = postByComments?.slice(0, 3);
     const topCommunity = communities?.slice(0, 3);
+    console.log("TOP_POST", topPost);
     setTopPosts(topPost);
     setTopCommunities(topCommunity);
   }, [postByComments, communities]);
@@ -42,6 +59,7 @@ export default function RightPanel() {
       </div>
     );
   }
+
   return (
     <div className='rightpanel_container'>
       {/* <div className='createCommunity'>
@@ -50,7 +68,7 @@ export default function RightPanel() {
       </div> */}
       <div className='card'>
         <div className='card_heading'>
-          <h2> Suggestions</h2>
+          <h2>Suggestions</h2>
           <div>
             <Link href={"/communities"} as={"/communities"}>
               <span>

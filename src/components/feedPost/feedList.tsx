@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Virtuoso } from "react-virtuoso";
 
 import useAsync from "@/hooks/useAsync";
 import {
@@ -8,7 +7,6 @@ import {
   getPostsBycName,
   getPostsByuName,
 } from "@/services/api/postApi";
-import { useParams } from "next/navigation";
 
 import FeedPost from "./feedPost";
 import { RootState } from "@/contexts/store";
@@ -30,7 +28,7 @@ const getFunctionByMethod = {
 
 interface IFeedList {
   method: keyof typeof getFunctionByMethod;
-  id: string | null;
+  id?: string | null;
   sortby?: string;
   order?: string;
 }
@@ -62,6 +60,11 @@ export default function FeedList({
     title: "All",
   });
 
+  const refetchRoute = (state: RootState) => state?.common.refetch.user;
+  const refetchPost = (state: RootState) => state.common.refetch.post;
+  const userNameSelector = (state: RootState) => state?.user;
+  const [{ dispatch, actions }, [shouldRefetchUser, shouldRefetchPost, user]] =
+    useRedux([refetchRoute, refetchPost, userNameSelector]);
   const { error, isLoading, data, refetch, callFunction } = useAsync(
     getFunctionByMethod[method],
     {
@@ -77,11 +80,6 @@ export default function FeedList({
     throwError(error, "Failed to load posts. Please try again later.");
   }
 
-  const refetchRoute = (state: RootState) => state?.common.refetch.user;
-  const refetchPost = (state: RootState) => state.common.refetch.post;
-  const userNameSelector = (state: RootState) => state?.user;
-  const [{ dispatch, actions }, [shouldRefetchUser, shouldRefetchPost, user]] =
-    useRedux([refetchRoute, refetchPost, userNameSelector]);
   const loadingArray = Array(5).fill(() => 0);
 
   const handleFilter = (filter: List) => {
@@ -112,6 +110,20 @@ export default function FeedList({
   };
 
   useEffect(() => {
+    if (typeof user?.profile?.id === "number") {
+      callFunction(getFunctionByMethod[method], {
+        nameId: id,
+        sortby,
+        order: "DESC",
+        page: 1,
+        limit: limit,
+      });
+      setPosts([]);
+      setPage(1);
+    }
+  }, [user.profile.id]);
+
+  useEffect(() => {
     if (shouldRefetchUser || shouldRefetchPost) {
       callFunction(getFunctionByMethod[method], {
         nameId: id,
@@ -140,13 +152,15 @@ export default function FeedList({
     if (page !== 1) refetch();
   }, [page]);
 
-  useEffect(() => {
-    console.log("user", user.uid == id, user, id);
-  }, [user]);
+  // useEffect(() => {
+  //   // refetchPost;
 
-  if (page < 2 && isLoading) {
-    return loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />);
-  }
+  //   shouldRefetchPost;
+  // }, [user.profile.id]);
+
+  // if (page < 2 && isLoading) {
+  //   return loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />);
+  // }
 
   return (
     <>
@@ -180,6 +194,8 @@ export default function FeedList({
 
       {!isLoading && posts?.length === 0 ? (
         <EmptyData />
+      ) : page < 2 && isLoading ? (
+        loadingArray.map((_: any, i: number) => <FeedPostLoader key={i} />)
       ) : (
         <>
           <VirtualList
@@ -191,6 +207,7 @@ export default function FeedList({
             renderComponent={(index: number, post: IPost) => (
               <FeedPost key={index} post={post} />
             )}
+            footerHeight={150}
           />
 
           {isLoading && page > 1 && <FeedPostLoader />}

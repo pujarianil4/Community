@@ -1,6 +1,6 @@
 import { IPostCommentAPI } from "@/utils/types/types";
-import { store } from "@contexts/store";
 import { api } from "./api";
+import { getUserID } from "@/utils/helpers";
 
 // Create Post
 export const createPost = async (data: any) => {
@@ -24,9 +24,8 @@ export const getPosts = async ({
   page: number;
   limit: number;
 }) => {
-  const uid = store.getState().user?.profile?.id;
-
   try {
+    const uid = await getUserID();
     const response = await api.get(
       `/posts?sortBy=${sortby}&order=${order}&page=${page}&limit=${limit}&uid=${uid}&sts=published`
     );
@@ -50,8 +49,8 @@ export const getPostsBycName = async ({
   limit: number;
   sts: string;
 }) => {
-  const uid = store.getState().user?.profile?.id;
   try {
+    const uid = await getUserID();
     const response = await api.get(
       `/posts/community/cname/${nameId}?page=${page}&limit=${limit}&uid=${uid}` +
         (sts ? `&sts=${sts}` : "")
@@ -76,8 +75,8 @@ export const getPostsByuName = async ({
   limit: number;
   sts: "draft" | "published" | "archived" | "";
 }) => {
-  const uid = store.getState().user?.profile?.id;
   try {
+    const uid = await getUserID();
     const response = await api.get(
       `/posts/username/${nameId}?page=${page}&limit=${limit}&uid=${uid}` +
         (sts ? `&sts=${sts}` : "")
@@ -92,8 +91,8 @@ export const getPostsByuName = async ({
 
 // fetch post by postid
 export const getPostsByPostId = async (postId: string) => {
-  const uid = store.getState().user?.profile?.id;
   try {
+    const uid = await getUserID();
     const response = await api.get(`/posts/${postId}?uid=${uid}`);
     return response.data;
   } catch (error) {
@@ -136,8 +135,8 @@ export const deletePost = async (postId: string | number) => {
 };
 // fetch post comments
 export const fetchComments = async (postId: string) => {
-  const uid = store.getState().user?.profile?.id;
   try {
+    const uid = await getUserID();
     const response = await api.get(
       `/comments/post/${postId}?page=1&limit=100&uid=${uid}`
     );

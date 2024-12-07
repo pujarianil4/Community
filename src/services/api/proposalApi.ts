@@ -1,6 +1,6 @@
 import { IProposalForm, IVoteProposalPayload } from "@/utils/types/types";
-import { store } from "@contexts/store";
 import { api } from "./api";
+import { getUserID } from "@/utils/helpers";
 
 // Create Proposal
 export const createProposal = async (payload: IProposalForm) => {
@@ -29,8 +29,8 @@ export const fetchAllProposals = async ({
   page: number;
   limit: number;
 }) => {
-  const uid = store.getState().user?.profile?.id;
   try {
+    const uid = await getUserID();
     const { data } = await api.get(
       `/governance/proposal?page=${page}&limit=${limit}&uid=${uid}`
     );
@@ -55,8 +55,8 @@ export const voteToProposal = async (payload: IVoteProposalPayload) => {
 
 // fetch proposal by id
 export const fetchProposalByID = async (proposalId: number) => {
-  const uid = store.getState().user?.profile?.id;
   try {
+    const uid = await getUserID();
     const { data } = await api.get(
       `/governance/proposal/${proposalId}?uid=${uid}`
     );
@@ -90,8 +90,8 @@ export const fetchProposalsByCId = async ({
   page: number;
   limit: number;
 }) => {
-  const uid = store.getState().user?.profile?.id;
   try {
+    const uid = await getUserID();
     const { data } = await api.get(
       `/governance/proposal/c/${cid}?page=${page}&limit=${limit}&uid=${uid}`
     );
@@ -121,7 +121,6 @@ export const fetchVotedProposalsByUname = async ({
 };
 
 export const revokeProposals = async (pid: number[] = []) => {
-  console.log("PID", pid);
   let url = `/governance/vote/revoke`;
   if (pid.length > 0) {
     const queryParam = encodeURIComponent(JSON.stringify(pid));
@@ -148,8 +147,8 @@ export const fetchSearchProposal = async ({
   limit: number;
 }) => {
   if (search?.length < 3) return null;
-  const uid = store.getState().user?.profile?.id;
   try {
+    const uid = await getUserID();
     const { data } = await api.get(
       `/search/inProposal?cid=${cid}&keyword=${search}&page=${page}&limit=${limit}&uid=${uid}`
     );
