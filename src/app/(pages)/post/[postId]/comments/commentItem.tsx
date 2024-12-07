@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { IComment, IVotePayload } from "@/utils/types/types";
 import { sendVote } from "@/services/api/userApi";
 import Link from "next/link";
@@ -10,6 +10,7 @@ import { PiArrowFatDownDuotone, PiArrowFatUpDuotone } from "react-icons/pi";
 import { GoComment } from "react-icons/go";
 import { ShareIcon } from "@/assets/icons";
 import CommentInput from "./commentInput";
+import ShareButton from "@/components/common/shareButton";
 
 interface ICommentItemProps {
   comment: IComment;
@@ -89,6 +90,16 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
       setIsReplying(val);
     };
 
+    // Dynamic URL creation
+    const [postUrl, setPostUrl] = useState("");
+
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        const currentDomain = window.location.origin;
+        setPostUrl(`${currentDomain}/post/${postId}`);
+      }
+    }, [postId]);
+
     return (
       <div
         ref={scrollableContainerRef}
@@ -155,10 +166,15 @@ const CommentItem: React.FC<ICommentItemProps> = React.memo(
               <span>{childCommentCount > 0 ? childCommentCount : "Reply"}</span>
             </div>
           )}
-          <div className='share'>
+          {/* <div className='share'>
             <ShareIcon width={18} />
             <span>Share</span>
-          </div>
+          </div> */}
+          <ShareButton
+            postTitle={comment?.content}
+            postUrl={postUrl}
+            postImage={comment?.img || ""}
+          />
         </div>
 
         {isReplying && (

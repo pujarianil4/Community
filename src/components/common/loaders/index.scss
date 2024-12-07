@@ -427,10 +427,10 @@
 .img_u {
   width: 100px;
   height: 100px;
-  border-radius: 50%;
+  border-radius: 16px;
   object-fit: cover;
   /* background: var(--secondary-bg); */
-  margin-left: 2rem;
+  // margin-left: 1.5rem;
 }
 .img_p {
   width: 100%;

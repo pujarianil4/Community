@@ -34,7 +34,6 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
   isStringArray = false,
 }) => {
   const [visible, setVisible] = useState(false);
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -64,6 +63,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
     if (onSelect) {
       onSelect(item);
     }
+
     setSearchTerm(isStringArray ? item : item?.username);
     setVisible(false);
   };
@@ -76,6 +76,7 @@ const DropdownWithSearch: React.FC<DropdownWithSearchProps> = ({
     if (selected) {
       setSearchTerm(isStringArray ? selected : selected?.username);
     } else {
+      onSelect("");
       setSearchTerm("");
     }
   }, [selected, isStringArray]);
