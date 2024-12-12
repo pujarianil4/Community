@@ -90,7 +90,7 @@ const overviews = [
 
 const settings = [
   {
-    key: "general_settings",
+    key: "general",
     label: "General Settings",
     icon: <BsWindowStack size={20} />,
   },
