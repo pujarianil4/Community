@@ -7,7 +7,7 @@ import { allUser } from "@/services/api/userApi";
 import BannedUser from "./cards/BannedUser";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
-import { BanModel } from "./banModel";
+import { CreateBanModel } from "./createBanModal";
 
 export default function TPost() {
   const [rejectModal, setRejectModal] = useState(false);
@@ -158,7 +158,7 @@ export default function TPost() {
       </div>
       {/* Replace the Modal with BanModel */}
       {rejectModal && (
-        <BanModel isModalOpen={rejectModal} onClose={handleModalClose} />
+        <CreateBanModel isModalOpen={rejectModal} onClose={handleModalClose} />
       )}
     </div>
   );

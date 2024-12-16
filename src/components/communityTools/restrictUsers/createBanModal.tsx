@@ -28,7 +28,7 @@ interface BanModelProps {
   submitButtonText?: string;
 }
 
-export const BanModel = ({
+export const CreateBanModel = ({
   isModalOpen,
   onClose,
   editData,
@@ -41,7 +41,7 @@ export const BanModel = ({
     className='community-model'
     footer={null}
   >
-    <CreateCommunity
+    <BanModal
       onClose={onClose}
       submitButtonText={submitButtonText}
       editData={editData}
@@ -50,7 +50,7 @@ export const BanModel = ({
   </Modal>
 );
 
-export const CreateCommunity = ({
+export const BanModal = ({
   onClose,
   submitButtonText,
   editData,
@@ -120,7 +120,7 @@ export const CreateCommunity = ({
   const handleBanUser = async () => {
     try {
       await callFunction(createCommunity, form);
-      NotificationMessage("success", "Community Created");
+      NotificationMessage("success", "ban user successfully");
       onClose();
     } catch (error: any) {
       const errorMessage =
