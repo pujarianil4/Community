@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import "./bannedUser.scss";
+import "./index.scss";
 import { Table, Empty, Modal, message } from "antd";
 import { FaRegEdit } from "react-icons/fa";
 import { FaBan } from "react-icons/fa";
-import { BanModel } from "../banModel";
+import { CreateBanModel } from "../createBanModal";
 interface IUser {
   username: string | null;
   duration: string | null;
@@ -115,13 +115,14 @@ export default function BannedUser({ usersData }: IProps) {
         onCancel={() => setIsRemoveBanModalVisible(false)}
         okText='Remove'
         cancelText='Cancel'
+        className='removeModal'
       >
         <p>
           Are you sure you want to remove the ban for
           <b> {currentUser?.username}</b>?
         </p>
       </Modal>
-      <BanModel
+      <CreateBanModel
         isModalOpen={isEditBanModalVisible}
         onClose={() => setIsEditBanModalVisible(false)}
         editData={{

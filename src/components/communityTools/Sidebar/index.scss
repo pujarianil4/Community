@@ -374,3 +374,27 @@
     }
   }
 }
+
+.popover_content {
+  position: absolute;
+  top: 53px;
+  left: -66px;
+  background: var(--tertiary-bg);
+  height: 110px;
+  overflow: scroll;
+  .community_item {
+    min-width: 250px;
+    height: 45px;
+    // width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--black);
+    border-bottom: 1px solid var(--primary-border);
+    cursor: pointer;
+    padding: 5px 15px 5px 15px;
+    &:hover {
+      background: rgb(88, 88, 88);
+    }
+  }
+}

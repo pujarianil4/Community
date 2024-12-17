@@ -27,7 +27,7 @@ interface BanModelProps {
   submitButtonText?: string;
 }
 
-export const MuteModel = ({
+export const CreateMuteModal = ({
   isModalOpen,
   onClose,
   initialData = {
@@ -46,11 +46,11 @@ export const MuteModel = ({
     className='community-model'
     footer={null}
   >
-    <CreateCommunity onClose={onClose} submitButtonText={submitButtonText} />
+    <MuteModal onClose={onClose} submitButtonText={submitButtonText} />
   </Modal>
 );
 
-export const CreateCommunity = ({
+export const MuteModal = ({
   onClose,
   submitButtonText,
 }: {
@@ -92,7 +92,7 @@ export const CreateCommunity = ({
     return selectedOption !== null && form.duration?.trim() !== "";
   };
   console.log("isform", isFormValid());
-  const handleBanUser = async () => {
+  const handleMuteUser = async () => {
     try {
       await callFunction(createCommunity, form);
       NotificationMessage("success", "Community Created");
@@ -143,7 +143,7 @@ export const CreateCommunity = ({
       <div className='btns'>
         <CButton
           disabled={!isFormValid()}
-          onClick={handleBanUser}
+          onClick={handleMuteUser}
           loading={isLoading}
         >
           Mute
