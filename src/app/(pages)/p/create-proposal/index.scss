@@ -87,7 +87,7 @@
     }
   }
   .proposal_btn {
-    margin-left: calc(100% - 60px);
+    margin-left: calc(100% - 115px);
     margin-top: 0.5rem;
     padding: 8px !important;
     background: var(--tertiary-bg) !important;
@@ -120,6 +120,15 @@
     &::placeholder {
       color: var(--label-text) !important;
     }
+  }
+  .ant-picker-cell-inner {
+    border: 1px solid var(--primary) !important;
+    &:hover {
+      background: var(--primary) !important;
+    }
+  }
+  .ant-picker-cell-inner::before {
+    border: 1px solid var(--primary) !important;
   }
 
   svg {

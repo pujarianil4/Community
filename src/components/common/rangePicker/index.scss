@@ -1,0 +1,115 @@
+@import "/src/styles";
+
+.p-range-picker {
+  .ant-picker {
+    background: transparent !important;
+    border: 1px solid var(--primary-border) !important;
+    padding: 12px !important;
+
+    input {
+      color: var(--primary-text) !important;
+
+      &::placeholder {
+        color: var(--label-text) !important;
+      }
+    }
+
+    svg {
+      color: var(--primary);
+    }
+  }
+}
+
+.ant-picker-dropdown {
+  .ant-picker-panel-container {
+    background: var(--secondary-bg) !important;
+
+    .ant-picker-content {
+      .ant-picker-cell {
+        color: var(--label-text);
+
+        &-hover {
+          background-color: var(--primary);
+        }
+
+        &-in-view {
+          &.ant-picker-cell-today {
+            // background: #ffd700 !important;
+            .ant-picker-cell-inner {
+              &::before {
+                border: 1px solid var(--primary) !important;
+              }
+            }
+          }
+
+          &.ant-picker-cell-selected,
+          &.ant-picker-cell-range-start,
+          &.ant-picker-cell-range-end,
+          &.ant-picker-cell-in-range {
+            // background: $range-background;
+            // color: $background-color;
+            // &:hover {
+            //   background-color: #ffd700 !important;
+            // }
+          }
+
+          &.ant-picker-cell-in-range:not(.ant-picker-cell-disabled):before,
+          &.ant-picker-cell-range-start:not(.ant-picker-cell-disabled):before,
+          &.ant-picker-cell-range-end:not(.ant-picker-cell-disabled):before {
+            background: rgb(142, 135, 135);
+          }
+
+          &.ant-picker-cell-range-start:not(.ant-picker-cell-disabled),
+          &.ant-picker-cell-range-end:not(.ant-picker-cell-disabled) {
+            .ant-picker-cell-inner {
+              background: var(--primary) !important;
+            }
+          }
+        }
+      }
+    }
+  }
+  .ant-picker-header {
+    color: var(--black) !important;
+    button {
+      color: var(--black) !important;
+    }
+  }
+
+  .ant-picker-body {
+    .ant-picker-content {
+      th {
+        color: var(--black) !important;
+      }
+    }
+  }
+  .ant-picker-cell-in-view {
+    color: var(--black) !important;
+
+    .ant-picker-cell {
+      .ant-picker-cell-inner {
+        border: 1px solid var(--primary) !important;
+        &::before {
+          content: "";
+          border: 1px solid var(--primary) !important;
+        }
+      }
+    }
+
+    .ant-picker-cell-today {
+      .ant-picker-cell-inner {
+        &::hover {
+          background: var(--primary) !important;
+        }
+        &::before {
+          content: "";
+          border: 1px solid var(--primary) !important;
+        }
+      }
+    }
+  }
+
+  .ant-picker-cell-disabled {
+    color: var(--label-text) !important;
+  }
+}
