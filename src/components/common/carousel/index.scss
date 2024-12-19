@@ -5,16 +5,16 @@
   padding: 1rem 0;
   display: flex;
   align-items: center;
-  height: 400px;
+  max-height: 400px;
   margin: 12px 0;
   // max-width: 560px;
   border-radius: 8px;
-  @include lessThan(xl) {
-    height: 320px;
-  }
-  @include lessThan(md) {
-    height: auto;
-  }
+  // @include lessThan(xl) {
+  //   height: 320px;
+  // }
+  // @include lessThan(md) {
+  //   height: auto;
+  // }
 }
 
 .carousel {
