@@ -7,7 +7,6 @@ import CButton from "@/components/common/Button";
 export default function CommuniytGuide() {
   const [isGuideEnable, setIsGuideEnable] = useState(false);
   const [guideLinesContents, setGuideLinesContent] = useState("");
-  const [resourcesContent, setResourcesContent] = useState("");
 
   const onChange = (checked: boolean) => {
     setIsGuideEnable(checked);
@@ -22,9 +21,7 @@ export default function CommuniytGuide() {
       <div className='guideLine_item enable'>
         <div>
           <p>Enable community guide</p>
-          <span>
-            Appears in the sidebar on desktop and About in the Reddit app.
-          </span>
+          <span>Appears in the sidebar on desktop.</span>
         </div>
         <Switch className='custom-switch' onChange={onChange} />
       </div>
@@ -35,27 +32,24 @@ export default function CommuniytGuide() {
             setContent={setGuideLinesContent}
             content={guideLinesContents}
             autoFocus={false}
-            maxCharCount={1000}
+            maxCharCount={500}
             className='box_height'
             placeHolder='add guidelines'
-            hideBtn={["h1", "h2", "h3", "code", "codeBlock", "blockQuote"]}
+            hideBtn={[
+              "h1",
+              "h2",
+              "h3",
+              "code",
+              "codeBlock",
+              "blockQuote",
+              "bold",
+              "italic",
+              "strike",
+            ]}
           />
         </div>
       </div>
-      <div className='guideLine_item'>
-        <p>Resources</p>
-        <div className='editor_container'>
-          <TiptapEditor
-            setContent={setResourcesContent}
-            content={resourcesContent}
-            autoFocus={false}
-            maxCharCount={1000}
-            className='box_height'
-            placeHolder='add resources'
-            hideBtn={["h1", "h2", "h3", "code", "codeBlock", "blockQuote"]}
-          />
-        </div>
-      </div>
+
       <div className='guideLine_btn'>
         <CButton onClick={handleSave}>Save</CButton>
       </div>
