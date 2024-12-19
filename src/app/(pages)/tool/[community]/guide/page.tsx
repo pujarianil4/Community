@@ -1,10 +1,12 @@
+"use client";
 import React from "react";
 import CommunityToolWraper from "@/components/Wrapers/communityToolWraper";
+import CommuniytGuide from "@/components/communityTools/guide";
 
-export default function ToolPage() {
+export default function General() {
   return (
     <CommunityToolWraper hideRightPanel>
-      <h1 style={{ color: "white" }}>Insights</h1>
+      <CommuniytGuide />
     </CommunityToolWraper>
   );
 }
