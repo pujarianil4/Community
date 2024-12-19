@@ -1,10 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import "./bannedUser.scss";
+import "./index.scss";
 import { Table, Empty, Modal, message } from "antd";
-import { FaRegEdit } from "react-icons/fa";
 import { FaBan } from "react-icons/fa";
-import { BanModel } from "../banModel";
 interface IUser {
   username: string | null;
   duration: string | null;
@@ -20,7 +18,6 @@ interface IProps {
 export default function MuteUser({ usersData }: IProps) {
   const [isRemoveMuteModalVisible, setisRemoveMuteModalVisible] =
     useState(false);
-  const [isEditBanModalVisible, setIsEditBanModalVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState<IUser | null>(null);
 
   // Handle Remove Ban Modal

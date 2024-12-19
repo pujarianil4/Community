@@ -1,13 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { Menu, MenuProps } from "antd";
-import { FiBookmark, FiGlobe } from "react-icons/fi";
-
-import { FcAbout } from "react-icons/fc";
-import { IoIosHelpCircleOutline } from "react-icons/io";
-import { PiGlobeStand } from "react-icons/pi";
-import { MdOutlineTopic, MdContentPaste } from "react-icons/md";
+import { Menu, MenuProps, Popover } from "antd";
+import Image from "next/image";
 import { IoMdArrowBack } from "react-icons/io";
 import { FaChevronDown } from "react-icons/fa6";
 import { BsWindowStack } from "react-icons/bs";
@@ -18,7 +13,6 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import "./index.scss";
 import useAsync from "@/hooks/useAsync";
 import { fetchCommunityByCname } from "@/services/api/communityApi";
-import { FaBullseye } from "react-icons/fa";
 import { getFollowinsByUserId } from "@/services/api/userApi";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
@@ -123,21 +117,47 @@ const DashBoardSideBar: React.FC = () => {
   });
 
   const followCList = communityList?.map((item: any) => item.followedCommunity);
+  console.log("followlist", followCList);
 
   const handleCommunitySelect = (username: string) => {
-    const pathname = usePathname();
-    const router = useRouter();
     const pathSegments = pathname.split("/");
     const toolIndex = pathSegments.indexOf("tool");
 
-    if (toolIndex !== -1 && pathSegments[toolIndex + 1]) {
+    if (toolIndex !== -1) {
       pathSegments[toolIndex + 1] = username;
 
       const updatedPath = pathSegments.join("/");
-      console.log("new url", updatedPath);
+      console.log("Navigating to:", updatedPath);
       router.push(updatedPath);
+    } else {
+      console.error("Tool segment not found in the path");
     }
   };
+
+  const popoverContent = isLoading
+    ? loadingCommunities.map((item: any) => (
+        <div key={item?.key}>{item.label}</div>
+      ))
+    : followCList?.map((item: ICommunity) => (
+        <div
+          key={item.username}
+          className='community_item'
+          onClick={() => {
+            handleCommunitySelect(item.username);
+          }}
+        >
+          <div className='img'>
+            <Image
+              src={item?.img.pro}
+              width={20}
+              alt='communitylogo'
+              height={20}
+            />
+          </div>
+
+          <div className='content'>{item.username}</div>
+        </div>
+      ));
 
   const items: MenuItem[] = [
     {
@@ -146,22 +166,16 @@ const DashBoardSideBar: React.FC = () => {
       label: "Exit Tool",
     },
     {
-      key: "dropdown",
-      label: `c/${community}`,
+      key: "community",
+      label: (
+        <Popover
+          content={<div className='popover_content'>{popoverContent}</div>}
+          trigger='click'
+        >
+          <span>c/{community}</span>
+        </Popover>
+      ),
 
-      children: isLoading
-        ? loadingCommunities
-        : followCList?.map((item: ICommunity) => ({
-            key: item.username,
-            label: (
-              <div
-                className='community_item'
-                onClick={() => handleCommunitySelect(item.username)}
-              >
-                <div className='content'>{item.username}</div>
-              </div>
-            ),
-          })),
       icon: <FaChevronDown size={12} />,
     },
     {
@@ -194,7 +208,7 @@ const DashBoardSideBar: React.FC = () => {
   const onClick: MenuProps["onClick"] = (e) => {
     if (e.key == "exit") {
       router.push(`/c/${community}`);
-    } else if (e.key === "dropdwon") {
+    } else if (e.key === "community") {
       console.log("this works");
       return;
     } else {

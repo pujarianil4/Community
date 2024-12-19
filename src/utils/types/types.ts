@@ -37,6 +37,9 @@ export interface ICommunity {
   sts: number;
   cta: string;
   uta: string;
+  twitter?: string;
+  telegram?: string;
+  discord?: string;
 }
 
 export interface IPost {

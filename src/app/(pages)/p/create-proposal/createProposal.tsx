@@ -11,6 +11,7 @@ import { DatePicker } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from "next/navigation";
 import { createProposal } from "@/services/api/proposalApi";
+import CustomRangePicker from "@/components/common/rangePicker";
 
 const { RangePicker } = DatePicker;
 
@@ -201,7 +202,7 @@ export default function CreateProposal({ cname, cid }: IProps) {
         onChange={handleProposalForm}
         name='validity'
       /> */}
-      <RangePicker
+      {/* <RangePicker
         onChange={onChange}
         value={[
           dates[0] ? dayjs(dates[0]) : null,
@@ -212,6 +213,12 @@ export default function CreateProposal({ cname, cid }: IProps) {
         // onFocus={() =>
         //   setFormErrors((prevErrors) => ({ ...prevErrors, date: "" }))
         // }
+      /> */}
+      <CustomRangePicker
+        value={dates}
+        onChange={onChange}
+        disabledDate={disabledDateFunction}
+        className=''
       />
       <p className='error_message'>{formErrors.date && formErrors.date}</p>
 
@@ -220,7 +227,7 @@ export default function CreateProposal({ cname, cid }: IProps) {
         className='proposal_btn'
         onClick={handleCreateProposal}
       >
-        Save
+        Create Proposal
       </CButton>
     </main>
   );

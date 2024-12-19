@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./banned.scss";
 import CInput from "@components/common/Input";
 import useAsync from "@/hooks/useAsync";
@@ -7,7 +7,7 @@ import { allUser } from "@/services/api/userApi";
 import MuteUser from "./cards/muteUser";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
-import { MuteModel } from "./muteModel";
+import { CreateMuteModal } from "./createMuteModal";
 
 export default function TPost() {
   const [rejectModal, setRejectModal] = useState(false);
@@ -158,7 +158,7 @@ export default function TPost() {
       </div>
       {/* Replace the Modal with BanModel */}
       {rejectModal && (
-        <MuteModel isModalOpen={rejectModal} onClose={handleModalClose} />
+        <CreateMuteModal isModalOpen={rejectModal} onClose={handleModalClose} />
       )}
     </div>
   );
