@@ -23,6 +23,7 @@ interface IProps {
   showShare?: boolean;
   showSave?: boolean;
   type: "c" | "p";
+  disable?: boolean;
 }
 
 interface Vote {
@@ -36,6 +37,7 @@ export default function Actions({
   type,
   showShare = false,
   showSave = false,
+  disable = false,
 }: IProps) {
   const { up, down, id, voteStatus, ccount, text, media, sts } = post;
   const userNameSelector = (state: RootState) => state?.user;
@@ -48,7 +50,7 @@ export default function Actions({
   }, [user]);
 
   const isArchived = sts === "archived";
-  const isDisabled = isArchived || !noUser;
+  const isDisabled = disable || isArchived || !noUser;
   const [vote, setVote] = useState<Vote>({
     value: Number(up) - Number(down),
     type: voteStatus || 0,
@@ -123,7 +125,7 @@ export default function Actions({
   };
 
   return (
-    <div>
+    <div style={isDisabled ? { opacity: "0.3" } : {}}>
       <Tooltip title={isArchived ? "No action, this post is Deleted" : ""}>
         <div className={`actions ${isArchived ? "" : ""}`}>
           <div className='up_down'>
