@@ -1,0 +1,54 @@
+@import "/src/styles";
+
+.community_guideLine_container {
+  width: 100%;
+  max-width: 700px;
+  h1 {
+    margin-bottom: 1.25rem;
+  }
+
+  .guideLine_item {
+    width: 100%;
+    margin: 1.5rem 0;
+
+    & > p {
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .enable {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span {
+      font-size: $font-size-xsm;
+      color: var(--label-text);
+    }
+  }
+  color: var(--primary-text);
+
+  .editor_container {
+    padding: 10px;
+    border: 1px solid var(--primary-border);
+
+    border-radius: 12px;
+    .tiptap_editor_container {
+      .box_height {
+        min-height: 80px;
+      }
+    }
+  }
+
+  .guideLine_btn {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.custom-switch.ant-switch-checked {
+  background-color: var(--success) !important;
+}
+
+.custom-switch {
+  background-color: var(--error) !important;
+}
