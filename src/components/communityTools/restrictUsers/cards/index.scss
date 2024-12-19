@@ -104,3 +104,32 @@
     }
   }
 }
+
+.removeModal {
+  .ant-modal-content {
+    .ant-modal-footer {
+      .ant-btn-primary {
+        background-color: var(--primary) !important;
+        color: var(--white) !important;
+        border-color: var(--primary) !important;
+        transition: background-color 0.3s ease, color 0.3s ease;
+
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+
+  .ant-btn-default {
+    background-color: var(--primary-disable) !important;
+    color: var(--black) !important;
+    border-color: var(--primary-disable) !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    &:hover {
+      background-color: #333 !important;
+      color: white !important;
+    }
+  }
+}
