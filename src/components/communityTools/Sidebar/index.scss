@@ -52,9 +52,17 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
+    @include lessThan(md) {
+      width: 22px;
+      height: 22px;
+    }
   }
   .content {
     width: 100px;
+    font-size: $font-size-sm;
+    @include lessThan(md) {
+      font-size: $font-size-xsm;
+    }
   }
   .createText {
     color: var(--primary) !important;
@@ -376,25 +384,55 @@
 }
 
 .popover_content {
-  position: absolute;
-  top: 53px;
-  left: -66px;
+  // position: absolute !important;
+  // top: 65px;
+  // left: -62px;
+  margin-left: 24px;
+  margin-top: -15px;
+  padding: 6px;
   background: var(--tertiary-bg);
-  height: 110px;
-  overflow: scroll;
+  border-radius: 8px;
+  height: 237px;
+  width: 250px;
+  max-height: fit-content;
+  overflow-x: auto;
+  @include lessThan(xl) {
+    width: 200px;
+  }
+  @include lessThan(md) {
+    width: 170px;
+  }
+
   .community_item {
-    min-width: 250px;
     height: 45px;
-    // width: 100%;
+    min-width: 0px;
     display: flex;
+    border-radius: 8px;
     align-items: center;
     gap: 10px;
     color: var(--black);
-    border-bottom: 1px solid var(--primary-border);
+    background: var(--tertiary-bg);
+    // border-bottom: 1px solid var(--primary-border);
     cursor: pointer;
-    padding: 5px 15px 5px 15px;
+    padding: 5px;
     &:hover {
-      background: rgb(88, 88, 88);
+      background: var(--white);
+    }
+    @include lessThan(lg) {
+      height: 40px;
+    }
+    @include lessThan(md) {
+      height: 35px;
     }
   }
+}
+
+.icon-up {
+  transform: rotate(180deg);
+  transition: transform 0.3s;
+}
+
+.icon-down {
+  transform: rotate(0deg);
+  transition: transform 0.3s;
 }

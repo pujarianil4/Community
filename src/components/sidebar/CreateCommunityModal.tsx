@@ -324,6 +324,7 @@ export const CreateCommunity = ({
       await callFunction(createCommunity, communityForm);
       NotificationMessage("success", "Community Created");
       refetchCommunities();
+      clearCommunityForm();
       onClose();
     } catch (error: any) {
       let errorMessage;
@@ -353,6 +354,19 @@ export const CreateCommunity = ({
       ticker: searchTerm,
     }));
   }, [searchTerm]);
+
+  const clearCommunityForm = () => {
+    setForm({
+      img: {
+        pro: imgSrc,
+        cvr: imgSrcCover,
+      },
+      name: "",
+      username: "",
+      metadata: "",
+      ticker: "",
+    });
+  };
 
   return (
     <div className='create_community_container'>

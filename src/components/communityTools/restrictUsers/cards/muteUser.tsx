@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import "./index.scss";
 import { Table, Empty, Modal, message } from "antd";
 import { FaBan } from "react-icons/fa";
+import NotificationMessage from "@/components/common/Notification";
 interface IUser {
   username: string | null;
   duration: string | null;
@@ -27,7 +28,7 @@ export default function MuteUser({ usersData }: IProps) {
   };
 
   const confirmRemoveBan = () => {
-    message.success(`Ban removed for ${currentUser?.username}`);
+    NotificationMessage("success", `Ban removed for ${currentUser?.username}`);
     setisRemoveMuteModalVisible(false);
   };
 
@@ -89,6 +90,7 @@ export default function MuteUser({ usersData }: IProps) {
         onCancel={() => setisRemoveMuteModalVisible(false)}
         okText='Remove'
         cancelText='Cancel'
+        className='removeModal'
       >
         <p>
           They'll be able to participate in your community again.

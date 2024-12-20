@@ -5,6 +5,7 @@ import { Table, Empty, Modal, message } from "antd";
 import { FaRegEdit } from "react-icons/fa";
 import { FaBan } from "react-icons/fa";
 import { CreateBanModel } from "../createBanModal";
+import NotificationMessage from "@/components/common/Notification";
 interface IUser {
   username: string | null;
   duration: string | null;
@@ -29,7 +30,8 @@ export default function BannedUser({ usersData }: IProps) {
   };
 
   const confirmRemoveBan = () => {
-    message.success(`Ban removed for ${currentUser?.username}`);
+    NotificationMessage("success", `Ban removed for ${currentUser?.username}`);
+
     setIsRemoveBanModalVisible(false);
   };
 
