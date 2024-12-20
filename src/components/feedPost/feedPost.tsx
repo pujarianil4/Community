@@ -24,6 +24,8 @@ const MarkdownRenderer = dynamic(() => import("../common/MarkDownRender"), {
 interface IProps {
   post: IPost;
   overlayClassName?: string;
+  repost?: boolean;
+  hide?: boolean;
 }
 
 interface Vote {
@@ -32,7 +34,12 @@ interface Vote {
 }
 
 const imgLink = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-export default function FeedPost({ post, overlayClassName }: IProps) {
+export default function FeedPost({
+  post,
+  overlayClassName,
+  repost,
+  hide,
+}: IProps) {
   const { text, up, down, cta, media, user, community, id, ccount, sts } = post;
   const postRef = useRef<HTMLDivElement | null>(null);
   const stayTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -111,6 +118,7 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
     <>
       <div
         ref={postRef}
+        style={hide ? { border: "1px solid #353535" } : {}}
         className={`postcard_container ${overlayClassName} ${
           sts === "archived" ? "archived_post" : ""
         }`}
@@ -161,14 +169,20 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
             event.stopPropagation();
           }}
         >
-          <MarkdownRenderer
-            markdownContent={text}
-            limit={5}
-            showViewMore={true}
-          />
-          {media && media?.length > 0 && <SwipeCarousel assets={media} />}
+          {repost ? (
+            <FeedPost post={post} repost={false} hide={true} />
+          ) : (
+            <>
+              <MarkdownRenderer
+                markdownContent={text}
+                limit={5}
+                showViewMore={true}
+              />
+              {media && media?.length > 0 && <SwipeCarousel assets={media} />}
+            </>
+          )}
         </div>
-        <Actions type='p' post={post} showSave showShare />
+        <Actions type='p' post={post} showSave showShare disable={hide} />
       </div>
       <Modal
         footer={<></>}

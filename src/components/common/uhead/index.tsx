@@ -97,7 +97,7 @@ export default function UHead({
           {community?.username} &nbsp;
         </Link>
       </div>
-      <p className='post_time'>
+      <p style={{ fontSize: "12px" }} className='post_time'>
         &bull; {timeAgo(cta)}
         {sts == "archived" ? (
           <span className='d_post'> [Deleted Post]</span>

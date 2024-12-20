@@ -205,7 +205,7 @@ export default function FeedList({
             setPage={setPage}
             limit={limit}
             renderComponent={(index: number, post: IPost) => (
-              <FeedPost key={index} post={post} />
+              <FeedPost key={index} post={post} repost={index % 2 == 0} />
             )}
             footerHeight={150}
           />
