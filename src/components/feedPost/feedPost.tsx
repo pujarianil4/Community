@@ -161,7 +161,11 @@ export default function FeedPost({ post, overlayClassName }: IProps) {
             event.stopPropagation();
           }}
         >
-          <MarkdownRenderer markdownContent={text} />
+          <MarkdownRenderer
+            markdownContent={text}
+            limit={5}
+            showViewMore={true}
+          />
           {media && media?.length > 0 && <SwipeCarousel assets={media} />}
         </div>
         <Actions type='p' post={post} showSave showShare />
