@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { Menu, MenuProps, Popover } from "antd";
 import Image from "next/image";
@@ -20,44 +20,15 @@ import { ICommunity } from "@/utils/types/types";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
-const loadingCommunities: MenuItem[] = [
-  {
-    key: "loading1",
-    label: (
-      <div className='community_item'>
-        <div className='img skeleton'></div>
-        <div className='content skeleton'></div>
-      </div>
-    ),
-  },
-  {
-    key: "loading2",
-    label: (
-      <div className='community_item'>
-        <div className='img skeleton'></div>
-        <div className='content skeleton'></div>
-      </div>
-    ),
-  },
-  {
-    key: "loading3",
-    label: (
-      <div className='community_item'>
-        <div className='img skeleton'></div>
-        <div className='content skeleton'></div>
-      </div>
-    ),
-  },
-  {
-    key: "loading4",
-    label: (
-      <div className='community_item'>
-        <div className='img skeleton'></div>
-        <div className='content skeleton'></div>
-      </div>
-    ),
-  },
-];
+const loadingCommunities: MenuProps["items"] = Array(4).fill({
+  key: `loading`,
+  label: (
+    <div className='community_item'>
+      <div className='img skeleton'></div>
+      <div className='content skeleton'></div>
+    </div>
+  ),
+});
 
 const overviews = [
   {
@@ -106,18 +77,29 @@ const DashBoardSideBar: React.FC = () => {
   const activeKey = pathname.split("/")[3] || "insights";
   console.log("path", activeKey);
 
+  const [popoverOpen, setPopoverOpen] = useState(false);
   const userSelector = (state: RootState) => state?.user?.profile;
   const [{ dispatch, actions }, [user]] = useRedux([userSelector]);
   const router = useRouter();
   const { community } = useParams<{ community: string }>();
-
-  const { isLoading, data: communityList } = useAsync(getFollowinsByUserId, {
+  console.log("user", user);
+  const {
+    isLoading,
+    data: communityList,
+    refetch,
+  } = useAsync(getFollowinsByUserId, {
     userId: user?.id,
     type: "c",
   });
 
   const followCList = communityList?.map((item: any) => item.followedCommunity);
   console.log("followlist", followCList);
+
+  useEffect(() => {
+    if (user?.id && !communityList) {
+      refetch();
+    }
+  }, [user?.id]);
 
   const handleCommunitySelect = (username: string) => {
     const pathSegments = pathname.split("/");
@@ -135,26 +117,23 @@ const DashBoardSideBar: React.FC = () => {
   };
 
   const popoverContent = isLoading
-    ? loadingCommunities.map((item: any) => (
-        <div key={item?.key}>{item.label}</div>
+    ? loadingCommunities.map((item: any, idx) => (
+        <div key={`loading-${idx}`}>{item.label}</div>
       ))
     : followCList?.map((item: ICommunity) => (
         <div
           key={item.username}
           className='community_item'
-          onClick={() => {
-            handleCommunitySelect(item.username);
-          }}
+          onClick={() => handleCommunitySelect(item.username)}
         >
           <div className='img'>
             <Image
-              src={item?.img.pro}
+              src={item?.img?.pro}
               width={20}
-              alt='communitylogo'
               height={20}
+              alt='communitylogo'
             />
           </div>
-
           <div className='content'>{item.username}</div>
         </div>
       ));
@@ -171,12 +150,21 @@ const DashBoardSideBar: React.FC = () => {
         <Popover
           content={<div className='popover_content'>{popoverContent}</div>}
           trigger='click'
+          open={popoverOpen}
+          onOpenChange={setPopoverOpen}
         >
-          <span>c/{community}</span>
+          <div>c/{community}</div>
         </Popover>
       ),
 
-      icon: <FaChevronDown size={12} />,
+      icon: (
+        <span>
+          <FaChevronDown
+            size={12}
+            className={popoverOpen ? "icon-up" : "icon-down"}
+          />{" "}
+        </span>
+      ),
     },
     {
       type: "divider",

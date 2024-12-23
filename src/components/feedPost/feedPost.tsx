@@ -173,7 +173,11 @@ export default function FeedPost({
             <FeedPost post={post} repost={false} hide={true} />
           ) : (
             <>
-              <MarkdownRenderer markdownContent={text} />
+              <MarkdownRenderer
+                markdownContent={text}
+                limit={5}
+                showViewMore={true}
+              />
               {media && media?.length > 0 && <SwipeCarousel assets={media} />}
             </>
           )}

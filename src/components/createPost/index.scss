@@ -126,6 +126,12 @@
       @include lessThan(md) {
         margin-top: 0.5rem;
       }
+
+      .dropdown_with_search {
+        .search_input {
+          width: 50%;
+        }
+      }
       textarea {
         width: 100%;
         background: transparent;
