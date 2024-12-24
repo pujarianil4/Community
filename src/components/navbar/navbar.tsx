@@ -3,7 +3,7 @@
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import React, { useEffect, useRef, useState, ChangeEvent, memo } from "react";
-import { Modal, Popover } from "antd";
+import { Popover, Badge, Modal } from "antd";
 import { useDisconnect } from "wagmi";
 import { PiUserCircleDuotone } from "react-icons/pi";
 
@@ -12,11 +12,12 @@ import "./navbar.scss";
 import CButton from "../common/Button";
 import { FaRegBell } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
-
+import Link from "next/link";
 import { AddIcon } from "@/assets/icons";
 
 import useRedux from "@/hooks/useRedux";
 
+import VirtualList from "../common/virtualList";
 import { fetchUserById } from "@services/api/userApi";
 
 import CreatePost from "../createPost/CreatePost";
@@ -27,7 +28,6 @@ import {
   getClientSideCookie,
   setClientSideCookie,
 } from "@/utils/helpers";
-import Link from "next/link";
 
 import { sigMsg } from "@/utils/constants";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -41,11 +41,18 @@ import { IoMdArrowBack } from "react-icons/io";
 import { handleLogOut } from "@/services/api/authapi";
 import { IUser } from "@/utils/types/types";
 import { clearTokens } from "@/services/api/api";
+import EmptyData from "../common/Empty";
+import FeedPostLoader from "../common/loaders/Feedpost";
+import Notification from "../common/notifications";
+import Notify from "../common/notifications/notify";
 export interface ISignupData {
   username: string;
   name: string;
 }
 
+export interface INotification {
+  message: string;
+}
 const msg = sigMsg;
 
 const commonSelector = (state: RootState) => state?.common;
@@ -78,10 +85,14 @@ function Navbar() {
   const [modalTab, setModalTab] = useState(3);
   const [discordUser, setDiscordUser] = useState(null);
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const [notificationVisible, setNotificationVisible] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
 
+  const [page, setPage] = useState(1);
+  const [notifications, setNotifications] = useState<INotification[]>([]);
+  const limit = 10;
   const showCreatePost = () => {
     setIsPostModalOpen(true);
   };
@@ -93,6 +104,9 @@ function Navbar() {
   const handleCancel = () => {
     setModalTab(1);
     setIsModalOpen(false);
+  };
+  const toggleNotifications = () => {
+    setNotificationVisible(!notificationVisible);
   };
 
   const handleClosePostModal = () => {
@@ -136,6 +150,45 @@ function Navbar() {
     console.log("profileUpdate", profile, userProfile);
   }, [profile]);
 
+  const notificationsData = [
+    { id: 1, message: "Your post received a new comment!" },
+    { id: 2, message: "Your profile was updated successfully." },
+    { id: 3, message: "New follower added to your profile!" },
+    { id: 4, message: "New follower added to your profile 4!" },
+    { id: 5, message: "New follower added to your profile 5!" },
+    { id: 6, message: "New follower added to your profile 6!" },
+  ];
+
+  // useEffect(() => {
+  //   if (notificationsData && notificationsData?.length > 0) {
+  //     if (page === 1) {
+  //       setNotifications(notificationsData);
+  //     } else {
+  //       setNotifications((prevNotifications) => [
+  //         ...prevNotifications,
+  //         ...notificationsData,
+  //       ]);
+  //     }
+  //   }
+  // }, [notificationsData]);
+
+  // useEffect(() => {
+  //   if (notificationsData && notificationsData?.length > 0) {
+  //     if (page === 1) {
+  //       setNotifications(notificationsData); // Set notifications only if page is 1
+  //     } else {
+  //       setNotifications((prevNotifications) => [
+  //         ...prevNotifications,
+  //         ...notificationsData,
+  //       ]);
+  //     }
+  //   }
+  // }, [notificationsData, page]); // Add page as dependency to prevent infinite loop
+
+  // useEffect(() => {
+  //   if (page !== 1) refetch();
+  // }, [page]);
+
   const content = (
     <div className='user_popover'>
       <Link
@@ -165,6 +218,38 @@ function Navbar() {
           <span className='text_main'>Log Out</span>
         </span>
       </div>
+    </div>
+  );
+
+  const NotificationContent = (
+    <div className='notification_list'>
+      {/* <div className='notification-header'>
+        <h3>Notifications</h3>
+      </div> */}
+      {notificationsData.length === 0 ? (
+        <EmptyData />
+      ) : (
+        <>
+          <Notification notifications={notificationsData} />
+          {/* <VirtualList
+            listData={notificationsData}
+            isLoading={isLoading}
+            page={1}
+            setPage={1}
+            limit={4}
+            renderComponent={(index: number, post: any) => (
+              <Notify key={index} notifications={post} />
+            )}
+            footerHeight={10}
+          /> */}
+
+          <div className='see_all_bx'>
+            <Link href='/notifications'>
+              <div className='see_text'> See All !</div>
+            </Link>
+          </div>
+        </>
+      )}
     </div>
   );
 
@@ -203,7 +288,19 @@ function Navbar() {
                   <AddIcon />
                   <span>Create Post</span>
                 </CButton>
-                <FaRegBell className='notification' size={25} />
+
+                <Popover
+                  content={NotificationContent}
+                  trigger='click'
+                  open={notificationVisible}
+                  onOpenChange={setNotificationVisible}
+                  placement='bottom'
+                  overlayClassName='noti_popup'
+                >
+                  <Badge count={notifications.length} offset={[10, 0]}>
+                    <FaRegBell className='notification' size={25} />
+                  </Badge>
+                </Popover>
                 <div className='user_icon'>
                   <Popover
                     placement='bottomRight'

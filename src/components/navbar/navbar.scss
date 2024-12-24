@@ -351,7 +351,30 @@
       }
     }
     &:hover {
-      background-color: var(--tertiary-bg);
+      background-color: var(--secondary-bg);
+    }
+  }
+}
+
+.notification_list {
+  background-color: transparent;
+  border-radius: 8px;
+  width: 315px;
+  // height: max-content;
+
+  .see_all_bx {
+    border-top: 1px solid var(--primary-border);
+    padding: 0.8rem;
+
+    .see_text {
+      text-align: center;
+      padding: 0.5rem;
+      border-radius: 8px;
+      background-color: var(--secondary-border);
+      color: var(--primary);
+      &:hover {
+        opacity: 0.9;
+      }
     }
   }
 }
@@ -618,5 +641,11 @@
       color: var(--primary);
       cursor: pointer;
     }
+  }
+}
+
+.noti_popup {
+  .ant-popover-content {
+    margin-right: 1rem;
   }
 }
