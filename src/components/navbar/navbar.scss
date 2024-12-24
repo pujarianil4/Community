@@ -73,6 +73,12 @@
       .mobile_search_icon {
         display: none;
       }
+
+      .ant-badge .ant-badge-count {
+        background: var(--primary) !important;
+        color: var(--white);
+        box-shadow: 0 0 0 1px var(--primary) !important;
+      }
     }
 
     @include lessThan(md) {

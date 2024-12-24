@@ -297,7 +297,7 @@ function Navbar() {
                   placement='bottom'
                   overlayClassName='noti_popup'
                 >
-                  <Badge count={notifications.length} offset={[10, 0]}>
+                  <Badge count={notificationsData.length} offset={[10, 0]}>
                     <FaRegBell className='notification' size={25} />
                   </Badge>
                 </Popover>
