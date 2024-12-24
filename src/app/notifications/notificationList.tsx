@@ -7,7 +7,7 @@ import Notify from "@/components/common/notifications/notify";
 import VirtualList from "@/components/common/virtualList";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Popover, Switch } from "antd";
-
+import NotificationLoader from "@/components/common/loaders/notification";
 interface NotificationFilter {
   post: boolean;
   comment: boolean;
@@ -128,8 +128,8 @@ export default function Notifications() {
           <IoSettingsOutline size={25} />
         </Popover>
       </div>
-      {!isLoading && filteredNotifications?.length === 0 ? (
-        <EmptyData />
+      {/* {!isLoading && filteredNotifications?.length === 0 ? (
+        <EmptyData />  
       ) : (
         <VirtualList
           listData={filteredNotifications}
@@ -142,6 +142,27 @@ export default function Notifications() {
           )}
           footerHeight={150}
         />
+      )} */}
+      {!isLoading && filteredNotifications?.length === 0 ? (
+        <EmptyData />
+      ) : page < 2 && isLoading ? (
+        <NotificationLoader />
+      ) : (
+        <>
+          <VirtualList
+            listData={filteredNotifications}
+            isLoading={isLoading}
+            page={1}
+            setPage={setPage}
+            limit={4}
+            renderComponent={(index: number, post: any) => (
+              <Notify key={index} notifications={post} />
+            )}
+            footerHeight={150}
+          />
+
+          {isLoading && page > 1 && <NotificationLoader />}
+        </>
       )}
     </div>
   );
