@@ -17,8 +17,8 @@
 
   .content {
     margin: 12px 0 12px 56px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--primary-border);
+    // padding-bottom: 8px;
+    // border-bottom: 1px solid var(--primary-border);
     cursor: pointer;
     @include lessThan(md) {
       border-bottom: none;

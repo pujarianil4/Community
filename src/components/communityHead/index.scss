@@ -40,7 +40,7 @@
       top: 130px;
       left: 4%;
       width: 92%;
-      height: 240px;
+      height: 260px;
       z-index: 2;
       background-color: var(--primary-bg);
       border-radius: 0.75rem;
@@ -53,7 +53,7 @@
         // height: 185px;
       }
       @include lessThan(md) {
-        height: 185px;
+        height: 200px;
       }
       .detailed_data {
         max-width: 700px;
@@ -155,7 +155,7 @@
         justify-content: space-between;
         align-items: flex-start;
         // padding: 0.75rem 0.75rem 0;
-        padding: 12px 20px 0px 25px;
+        padding: 12px 10px 0px 25px;
         height: fit-content;
 
         p {
@@ -174,17 +174,17 @@
           color: var(--primary) !important;
           font-size: $font-size-sm !important;
           @include lessThan(md) {
-            height: 22px !important;
+            height: 25px !important;
             font-size: $font-size-xxsm !important;
           }
         }
 
         .desc_bx {
-          padding: 10px;
+          padding: 10px 14px 0px 3px;
         }
         .social_bx {
           text-align: end;
-          width: 13%;
+          width: 15%;
           .views {
             // margin-top: 8px;
             display: flex;
@@ -193,7 +193,7 @@
             color: var(--label-text);
             justify-content: flex-end;
             margin: 6px 0px 10px 0px;
-            width: 80%;
+
             span {
               font-size: $font-size-xsm;
               @include lessThan(lg) {
@@ -206,6 +206,7 @@
                 width: 14px;
               }
             }
+
             @include lessThan(md) {
             }
             @include lessThan(sm) {
@@ -226,6 +227,26 @@
             // display: flex;
             // position: relative;
             // left: -20px;
+
+            .tool_btn {
+              margin-top: 8px;
+
+              .CButton {
+                background: var(--tertiary-bg) !important;
+                color: var(--primary) !important;
+                font-size: 14px !important;
+                padding: 7px 8px !important;
+                &:hover {
+                  background-color: var(--primary) !important;
+                  color: var(--white) !important;
+                }
+                @include lessThan(md) {
+                  font-size: 10px !important;
+                  height: 25px !important;
+                  padding: 5px 6px !important;
+                }
+              }
+            }
           }
         }
       }

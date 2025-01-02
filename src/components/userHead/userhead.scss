@@ -162,7 +162,7 @@
       justify-content: space-between;
       align-items: flex-start;
       // padding: 0.75rem 0.75rem 0;
-      padding: 12px 20px 0px 25px;
+      padding: 12px 10px 0px 25px;
       height: fit-content;
       .about {
         width: 86%;
@@ -183,7 +183,7 @@
         color: var(--primary) !important;
         font-size: $font-size-sm !important;
         @include lessThan(md) {
-          height: 22px !important;
+          height: 25px !important;
           font-size: $font-size-xxsm !important;
         }
       }

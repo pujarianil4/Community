@@ -57,15 +57,21 @@ const msg = sigMsg;
 
 const commonSelector = (state: RootState) => state?.common;
 const userNameSelector = (state: RootState) => state?.user;
+const notificationSelector = (state: RootState) => state?.notification;
 
-const tgBotName = process.env.TG_BOT_NAME;
+// setup for websocket
+import { connectSocket, disconnectSocket } from "@/utils/helpers/websocket";
+
 function Navbar() {
   const secretCode = process.env.NEXT_PUBLIC_DISCORD_ID;
   const userAccount = useAccount();
 
-  const [{ dispatch, actions }, [{ profile, isLoading, error }, common]] =
-    useRedux([userNameSelector, commonSelector]);
+  const [
+    { dispatch, actions },
+    [{ profile, isLoading, error }, common, { notifications, unreadCount }],
+  ] = useRedux([userNameSelector, commonSelector, notificationSelector]);
   const userProfile: IUser = profile;
+  console.log("notifuication redux", notifications);
   const userData: any = getClientSideCookie("authToken");
   const { disconnect } = useDisconnect();
   const { openConnectModal } = useConnectModal();
@@ -91,7 +97,7 @@ function Navbar() {
   };
 
   const [page, setPage] = useState(1);
-  const [notifications, setNotifications] = useState<INotification[]>([]);
+  const [notification, setNotifications] = useState<INotification[]>([]);
   const limit = 10;
   const showCreatePost = () => {
     setIsPostModalOpen(true);
@@ -121,6 +127,7 @@ function Navbar() {
     try {
       const logout = await handleLogOut();
       clearTokens();
+      disconnectSocket();
       dispatch(actions.setUserData({} as IUser));
       // Add a short delay before reloading the page
       setTimeout(() => {
@@ -129,6 +136,7 @@ function Navbar() {
     } catch (error) {
       setUserSession(null);
       clearTokens();
+      disconnectSocket();
       dispatch(actions.setUserData({} as IUser));
       // Add a short delay before reloading the page
       setTimeout(() => {
@@ -136,6 +144,13 @@ function Navbar() {
       }, 1000);
     }
   };
+
+  useEffect(() => {
+    if (userProfile.id) {
+      // Connect WebSocket on user login
+      const socket = connectSocket(userProfile.id, dispatch);
+    }
+  }, [userProfile.id]);
 
   useEffect(() => {
     // fetchFromCookies();
@@ -297,7 +312,7 @@ function Navbar() {
                   placement='bottom'
                   overlayClassName='noti_popup'
                 >
-                  <Badge count={notificationsData.length} offset={[10, 0]}>
+                  <Badge count={unreadCount} offset={[10, 0]}>
                     <FaRegBell className='notification' size={25} />
                   </Badge>
                 </Popover>

@@ -2,10 +2,12 @@ import React from "react";
 import { Popover } from "antd";
 import "./index.scss";
 import { PiDotsThreeBold } from "react-icons/pi";
+import { timeAgo } from "@/utils/helpers";
 // Define the structure of a notification
 interface Notification {
   id: number;
   message: string;
+  cta: string;
 }
 
 interface NotificationProps {
@@ -13,8 +15,7 @@ interface NotificationProps {
 }
 
 export default function notify({ notifications }: NotificationProps) {
-  const { message } = notifications;
-  console.log("notify", notifications);
+  const { message, cta, id } = notifications;
 
   const content = (
     <div
@@ -45,17 +46,11 @@ export default function notify({ notifications }: NotificationProps) {
           <div className='text_ox'>
             <div className='title'>
               <span className='text_bx'>
-                username replied to your post in postuser
+                {id} replied to your post in postuser
               </span>
               <span className='time'>
                 <span> • </span>
-                <time
-                  dateTime='2024-11-13T10:27:08.000Z'
-                  title='Wednesday, November 13, 2024 at 3:57:08 PM GMT+5:30'
-                  className=''
-                >
-                  Nov 13
-                </time>
+                {timeAgo(cta)}
               </span>
             </div>
             <div className='message'>{message}</div>
