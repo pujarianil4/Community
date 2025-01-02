@@ -24,7 +24,9 @@ PageWrapperProps) {
       <Navbar />
       <Wraper>
         <DashBoardSideBar />
-        <MainPanel className={`${hideRightPanel ? "hidden_right_panel" : ""}`}>
+        <MainPanel
+          className={`${hideRightPanel ? "hidden_right_panel" : ""} tool_panel`}
+        >
           {children}
         </MainPanel>
         {!hideRightPanel && <RightPanel />}
