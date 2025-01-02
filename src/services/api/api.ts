@@ -194,6 +194,7 @@ const clearTokens = (): void => {
   Cookies.remove("id");
   Cookies.remove("token");
   Cookies.remove("sid");
+  localStorage.removeItem("recentCommunity");
 };
 
 // Create Axios instance

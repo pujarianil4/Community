@@ -19,6 +19,9 @@
     justify-content: space-between;
     gap: 10px;
     margin-top: 10px;
+    .CInput {
+      font-size: $font-size-md !important;
+    }
     input {
       width: 40%;
     }
