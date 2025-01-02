@@ -1,0 +1,108 @@
+@import "/src/styles";
+
+.notfy_container {
+  .main_text {
+    color: var(--black);
+    font-size: 24px;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+    @include lessThan(md) {
+      width: 100%;
+      font-size: 18px;
+    }
+    svg {
+      @include lessThan(md) {
+        width: 22px;
+      }
+    }
+  }
+
+  .notification-container {
+    border-radius: 8px;
+    margin-bottom: 10px;
+    width: 60%;
+    @include lessThan(md) {
+      width: 100%;
+    }
+    .notification-list {
+      background: var(--secondary-bg);
+      border-radius: 8px;
+    }
+  }
+}
+
+.settings-popup {
+  color: var(--black);
+  background: var(--tertiary-bg);
+  padding: 5px 8px;
+  border-radius: 8px;
+  .filter_bx {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 8px;
+    border-radius: 8px;
+    gap: 1rem;
+    cursor: pointerss;
+    &:hover {
+      background: var(--white);
+    }
+
+    span {
+      font-size: $font-size-xsm;
+    }
+  }
+
+  // .ant-checkbox-wrapper {
+  //   .ant-checkbox {
+  //     &-inner {
+  //       width: 18px;
+  //       height: 18px;
+  //       border: 1px solid var(--primary);
+  //       border-radius: 4px;
+  //       background-color: var(--secondary-bg) !important;
+
+  //       &:after {
+  //         border-color: var(--primary) !important;
+  //         border-width: 2px;
+  //       }
+  //     }
+
+  //     &-checked {
+  //       .ant-checkbox-inner {
+  //         background-color: var(--secondary-bg) !important;
+  //       }
+  //     }
+
+  //     &:hover {
+  //       .ant-checkbox-inner {
+  //         border-color: var(--primary);
+  //       }
+  //     }
+  //   }
+  // }
+
+  .ant-switch {
+    min-width: 34px !important;
+    .ant-switch-inner {
+      &:hover {
+        // background: var(--tertiary-bg) !important;
+        opacity: 0.9;
+      }
+    }
+    &.ant-switch-checked {
+      background-color: var(--primary) !important;
+      &:hover {
+        // background: var(--primary) !important;
+        opacity: 0.9;
+      }
+    }
+
+    .ant-switch-handle {
+      // background-color: black; // Toggle knob color
+    }
+  }
+}
