@@ -76,7 +76,7 @@ export default function BannedUser({ usersData }: IProps) {
           <span>{user.reason}</span>
           <div className='action-buttons'>
             <span className='unban_btn' onClick={() => handleRemoveBan(user)}>
-              <FaBan color='white' />
+              <FaBan color='#fe4242' />
             </span>
 
             <span className='edit_btn' onClick={() => handleEditBan(user)}>

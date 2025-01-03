@@ -53,7 +53,7 @@ export default function MuteUser({ usersData }: IProps) {
           <span>{user.note}</span>
           <div className='action-buttons'>
             <span className='unban_btn' onClick={() => handleRemoveMute(user)}>
-              <FaBan color='white' />
+              <FaBan color='#fe4242' />
             </span>
           </div>
         </div>
