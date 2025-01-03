@@ -54,8 +54,8 @@ export default function CreateProposal({ cname, cid }: IProps) {
     }
     if (value) {
       setDates(value);
-      const formattedStartDate = value[0]?.format("YYYY-MM-DD") || "";
-      const formattedEndDate = value[1]?.format("YYYY-MM-DD") || "";
+      const formattedStartDate = value[0]?.format("YYYY-MM-DD HH-mm-ss") || "";
+      const formattedEndDate = value[1]?.format("YYYY-MM-DD HH-mm-ss") || "";
 
       setProposalForm({
         ...proposalForm,

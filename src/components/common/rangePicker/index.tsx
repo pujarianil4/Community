@@ -34,6 +34,8 @@ const CustomRangePicker: React.FC<IRangePickerProps> = ({
       allowClear={allowClear}
       disabledDate={disabledDate}
       className={className}
+      showTime
+      format='YYYY-MM-DD HH:mm'
     />
   );
 };
