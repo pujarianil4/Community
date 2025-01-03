@@ -285,14 +285,14 @@ export default function CommunityHead() {
                       communityData={data}
                       onSuccess={handleMemberCountUpdate}
                     />
-
-                    <Link
-                      href={`/tool/${communityId}`}
-                      as={`/tool/${communityId}`}
-                    >
-                      {" "}
-                      <CButton>Open Toolbox</CButton>
-                    </Link>
+                    <div className='tool_btn'>
+                      <Link
+                        href={`/tool/${communityId}`}
+                        as={`/tool/${communityId}`}
+                      >
+                        <CButton>Toolbox</CButton>
+                      </Link>
+                    </div>
                   </div>
 
                   {/* <CButton

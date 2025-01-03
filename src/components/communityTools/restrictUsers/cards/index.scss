@@ -40,10 +40,19 @@
     //     display: block !important;
     //   }
     // }
+    .ant-table-thead > tr:first-child > *:first-child {
+      border-start-start-radius: 0px !important;
+    }
+    .ant-table-thead > tr:first-child > *:last-child {
+      border-start-end-radius: 0px !important;
+    }
     .ant-table-thead > tr > th {
-      background-color: var(--secondary-bg) !important;
+      background-color: var(--white) !important;
       color: white;
       border-bottom: 1px solid var(--primary-border) !important;
+      &::before {
+        background-color: var(--white) !important;
+      }
     }
 
     .ant-table-tbody {
@@ -82,22 +91,29 @@
         // display: none;
 
         .unban_btn {
-          background-color: red;
+          // background-color: red;
           border-radius: 50%;
           padding: 10px;
           svg {
             width: 20px;
             height: 20px;
           }
+          &:hover {
+            background-color: var(--secondary-bg);
+          }
         }
 
         .edit_btn {
-          background-color: var(--secondary-bg);
+          // background-color: var(--secondary-bg);
           border-radius: 50%;
           padding: 10px;
           svg {
             width: 20px;
             height: 20px;
+          }
+
+          &:hover {
+            background-color: var(--secondary-bg);
           }
         }
       }

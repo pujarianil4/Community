@@ -125,9 +125,9 @@ export default function TPost() {
           <span>Ban User</span>
         </div>
       </div>
-      <div>
+      {/* <div>
         <p>Ban evasion filter</p>
-      </div>
+      </div> */}
       <div className='searchings'>
         <CInput
           placeholder='Search Users'

@@ -3,6 +3,8 @@ import React from "react";
 import "./index.scss";
 import { PiDotsThreeBold } from "react-icons/pi";
 import { Popover } from "antd";
+import EmptyData from "../Empty";
+
 // Define the structure of a notification
 interface Notification {
   id: number;
@@ -35,11 +37,11 @@ const Notification: React.FC<NotificationProps> = ({ notifications }) => {
 
       <div className='notification-list'>
         {notifications.length === 0 ? (
-          <p>No notifications available.</p>
+          <EmptyData />
         ) : (
           // Correctly map over the notifications
           notifications.map((notification) => (
-            <div className='notification-item'>
+            <div key={notification.id} className='notification-item'>
               <div className='noti_ox'>
                 <div className='noti_inn'>
                   <span className='avatar_bx'>

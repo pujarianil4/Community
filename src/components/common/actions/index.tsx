@@ -11,9 +11,11 @@ import ShareButton from "../shareButton";
 import { PiBookmarkSimpleDuotone } from "react-icons/pi";
 import CPopup from "../popup";
 import NotificationMessage from "../Notification";
-import { Tooltip } from "antd";
+import { Tooltip, Modal } from "antd";
 import { RootState } from "@/contexts/store";
 import useRedux from "@/hooks/useRedux";
+
+import RePost from "@/components/createPost/RePost";
 
 // save post Api
 // import { savePost } from "@/services/api/userApi";
@@ -43,6 +45,8 @@ export default function Actions({
   const userNameSelector = (state: RootState) => state?.user;
   const [{ dispatch, actions }, [user]] = useRedux([userNameSelector]);
 
+  const [isRepostModalOpen, setIsRePostModalOpen] = useState(false);
+
   const noUser = user?.profile?.id;
 
   useEffect(() => {
@@ -66,7 +70,13 @@ export default function Actions({
     }
   }, [id]);
 
-  const handleSelectRepost = () => {};
+  const handleSelectRepost = (label: string) => {
+    if (label == "Repost with Description") {
+      setIsRePostModalOpen(true);
+    } else if (label === "Repost") {
+      NotificationMessage("success", "Reposted successfully");
+    }
+  };
 
   const handleVote = async (action: number) => {
     if (isDisabled) return; // no action if post deleted
@@ -202,6 +212,20 @@ export default function Actions({
           )}
         </div>
       </Tooltip>
+      <Modal
+        footer={<></>}
+        centered
+        className='create_post_modal'
+        open={isRepostModalOpen}
+        onClose={() => setIsRePostModalOpen(false)}
+        onCancel={() => setIsRePostModalOpen(false)}
+      >
+        <RePost
+          isPostModalOpen={isRepostModalOpen}
+          setIsPostModalOpen={setIsRePostModalOpen}
+          editPost={post}
+        />
+      </Modal>
     </div>
   );
 }

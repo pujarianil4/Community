@@ -8,16 +8,34 @@ import VirtualList from "@/components/common/virtualList";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Popover, Switch } from "antd";
 import NotificationLoader from "@/components/common/loaders/notification";
+import { RootState } from "@/contexts/store";
+import useRedux from "@/hooks/useRedux";
+
+interface Notification {
+  id: number;
+  message: string;
+  type: string;
+  cta: string;
+}
+
 interface NotificationFilter {
-  post: boolean;
-  comment: boolean;
+  post: boolean; // no type added
+  comment: boolean; // no type added
   mention: boolean;
-  upvotesPost: boolean;
+  upvotesPost: boolean; //type p
   upvotesComment: boolean;
   followers: boolean;
 }
+const commonSelector = (state: RootState) => state?.common;
+const userNameSelector = (state: RootState) => state?.user;
+const notificationSelector = (state: RootState) => state?.notification;
 
 export default function Notifications() {
+  const [
+    { dispatch, actions },
+    [{ profile, isLoading, error }, common, { notifications, unreadCount }],
+  ] = useRedux([userNameSelector, commonSelector, notificationSelector]);
+
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState<NotificationFilter>({
     post: true,
@@ -28,7 +46,6 @@ export default function Notifications() {
     followers: true,
   });
 
-  const isLoading = false;
   const notificationsData = [
     { id: 1, type: "post", message: "Your post received a new comment!" },
     {
@@ -143,14 +160,16 @@ export default function Notifications() {
           footerHeight={150}
         />
       )} */}
-      {!isLoading && filteredNotifications?.length === 0 ? (
+      {/* {!isLoading && filteredNotifications?.length === 0 ? ( */}
+      {!isLoading && notifications?.length === 0 ? (
         <EmptyData />
       ) : page < 2 && isLoading ? (
         <NotificationLoader />
       ) : (
         <>
           <VirtualList
-            listData={filteredNotifications}
+            // listData={filteredNotifications}
+            listData={notifications}
             isLoading={isLoading}
             page={1}
             setPage={setPage}
